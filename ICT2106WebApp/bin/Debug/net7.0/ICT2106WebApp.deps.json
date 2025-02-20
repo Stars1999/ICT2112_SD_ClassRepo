@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "ICT2106WebApp/1.0.0": {
+        "runtime": {
+          "ICT2106WebApp.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ICT2106WebApp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

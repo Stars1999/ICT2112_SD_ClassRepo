@@ -3,5 +3,62 @@
 @{
     ViewData["Title"] = "Logger Page";
 }
-<h2>Logger Page</h2>
-<p>This is the logger page for monitoring logs.</p>
+
+<h2>Application Logs</h2>
+
+<!-- Filter Form -->
+<form method="get">
+    <label for="date">Filter by Date:</label>
+    <input type="date" id="date" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+
+    <label for="location">Filter by Location:</label>
+    <select id="location" name="FilterLocation">
+        <option value="">All Locations</option>
+        @foreach (var location in Model.AvailableLocations)
+        {
+            <option value="@location" selected="@(Model.FilterLocation == location ? "selected" : null)">@location</option>
+        }
+    </select>
+
+    <button type="submit">Filter</button>
+    <a href="/Logger" class="btn">Reset</a> <!-- Reset Button -->
+</form>
+
+<!-- Responsive Table Container -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Log ID</th>
+                <th>Timestamp</th>
+                <th>Description</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Logs != null && Model.Logs.Count > 0)
+            {
+                @foreach (var log in Model.Logs)
+                {
+                    <tr>
+                        <td>@log.LogID</td>
+                        <td>@log.LogTimestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@log.LogDescription</td>
+                        <td>@log.LogLocation</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">No logs available.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Download Button -->
+<form method="post" asp-page-handler="DownloadLogs">
+    <button type="submit">Download Logs</button>
+</form>

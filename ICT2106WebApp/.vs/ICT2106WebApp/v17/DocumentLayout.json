@@ -38,21 +38,19 @@
               "RelativeToolTip": "wwwroot\\css\\site.css",
               "ViewState": "AgIAACwAAAAAAAAAAAAIwEAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-02-20T14:18:04.062Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-20T14:18:04.062Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "ICT2106WebApp",
+              "Title": "ICT2106WebApp.csproj",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
               "RelativeDocumentMoniker": "ICT2106WebApp.csproj",
               "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
               "RelativeToolTip": "ICT2106WebApp.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-02-20T14:05:47.824Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-20T14:05:47.824Z"
             },
             {
               "$type": "Document",
@@ -62,7 +60,7 @@
               "RelativeDocumentMoniker": "Pages\\Logger.cshtml.cs",
               "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml.cs",
               "RelativeToolTip": "Pages\\Logger.cshtml.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAwDwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAxwDwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-20T13:45:50.435Z",
               "EditorCaption": ""
@@ -77,8 +75,7 @@
               "RelativeToolTip": "Pages\\Logger.cshtml",
               "ViewState": "AgIAAAsAAAAAAAAAAAAgwBkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-02-20T13:45:16.169Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-20T13:45:16.169Z"
             }
           ]
         }

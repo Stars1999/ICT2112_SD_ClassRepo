@@ -9,12 +9,66 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Utilities;
 
+// MongoDB packages
+using MongoDB.Driver;
+using MongoDB.Bson; // Bson - Binary JSON
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddLogging(); // Add logging for testing MongoDB
+
+// Register MongoDB client as a singleton
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("MongoDbConnection"); // "MongoDbConnection" credentials stored in appsettings.json
+    return new MongoClient(connectionString);
+});
+
+// Register the database as a singleton , database transactions will use same instance
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase("inf2112");
+});
+
 
 var app = builder.Build();
+
+// Get logger instance
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+// MongoDB testing, FYI test pass, able to insert into collection
+app.Lifetime.ApplicationStarted.Register(async () =>
+{
+    using var scope = app.Services.CreateScope();
+    var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
+    var collection = database.GetCollection<BsonDocument>("testCollection");
+
+    try
+    {
+        // Insert Data
+        var document = new BsonDocument { { "name", "Test User" }, { "email", "test@example.com" } };
+        await collection.InsertOneAsync(document);
+        logger.LogInformation("✅ Test document inserted into MongoDB.");
+
+        // Read Data
+        var firstDocument = await collection.Find(new BsonDocument()).FirstOrDefaultAsync();
+        if (firstDocument != null)
+        {
+            logger.LogInformation("📌 Retrieved Document: {Document}", firstDocument.ToJson());
+        }
+        else
+        {
+            logger.LogWarning("⚠️ No data found in MongoDB.");
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError("❌ MongoDB test failed: {ErrorMessage}", ex.Message);
+    }
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

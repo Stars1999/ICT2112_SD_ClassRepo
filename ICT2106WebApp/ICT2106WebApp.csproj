@@ -8,9 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
-    <Folder Include="Interfaces\" />
     <Folder Include="Gateway\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.2.1" />
   </ItemGroup>
 
 </Project>

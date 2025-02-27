@@ -1,7 +1,10 @@
+using ICT2106WebApp.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<LoggerService>(); // Register LoggerService
 
 var app = builder.Build();
 

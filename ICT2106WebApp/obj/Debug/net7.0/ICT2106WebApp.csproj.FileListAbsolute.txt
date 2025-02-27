@@ -67,3 +67,11 @@ C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_
 C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb
 C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
 C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\DnsClient.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Bson.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Driver.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\SharpCompress.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Snappier.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ZstdSharp.dll
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.AssemblyReference.cache
+C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106W.DE167C20.Up2Date

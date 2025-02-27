@@ -1,27 +1,34 @@
 ﻿@page
-@model ICT2106WebApp.Pages.LoggerModel
+@model ICT2106WebApp.Pages.Logger
 @{
     ViewData["Title"] = "Logger Page";
 }
 
 <h2>Application Logs</h2>
 
+<!-- Add Log Button -->
+<form method="post" class="log-action">
+    <button type="submit" asp-page-handler="AddLog" class="btn-primary">Add Log</button>
+</form>
+
 <!-- Filter Form -->
-<form method="get">
-    <label for="date">Filter by Date:</label>
-    <input type="date" id="date" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+<form method="get" class="filter-form">
+    <div class="filter-container">
+        <label for="date">Filter by Date:</label>
+        <input type="date" id="date" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
 
-    <label for="location">Filter by Location:</label>
-    <select id="location" name="FilterLocation">
-        <option value="">All Locations</option>
-        @foreach (var location in Model.AvailableLocations)
-        {
-            <option value="@location" selected="@(Model.FilterLocation == location ? "selected" : null)">@location</option>
-        }
-    </select>
+        <label for="location">Filter by Location:</label>
+        <select id="location" name="FilterLocation">
+            <option value="">All Locations</option>
+            @foreach (var location in Model.AvailableLocations)
+            {
+                <option value="@location" selected="@(Model.FilterLocation == location ? "selected" : null)">@location</option>
+            }
+        </select>
 
-    <button type="submit">Filter</button>
-    <a href="/Logger" class="btn">Reset</a> <!-- Reset Button -->
+        <button type="submit" class="btn-filter">Filter</button>
+        <a href="/Logger" class="btn-reset">Reset</a> <!-- Reset Button -->
+    </div>
 </form>
 
 <!-- Responsive Table Container -->
@@ -29,7 +36,6 @@
     <table>
         <thead>
             <tr>
-                <th>Log ID</th>
                 <th>Timestamp</th>
                 <th>Description</th>
                 <th>Location</th>
@@ -41,7 +47,6 @@
                 @foreach (var log in Model.Logs)
                 {
                     <tr>
-                        <td>@log.LogID</td>
                         <td>@log.LogTimestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td>@log.LogDescription</td>
                         <td>@log.LogLocation</td>
@@ -51,7 +56,7 @@
             else
             {
                 <tr>
-                    <td colspan="4">No logs available.</td>
+                    <td colspan="3">No logs available.</td>
                 </tr>
             }
         </tbody>
@@ -59,6 +64,79 @@
 </div>
 
 <!-- Download Button -->
-<form method="post" asp-page-handler="DownloadLogs">
-    <button type="submit">Download Logs</button>
+<form method="post" asp-page-handler="DownloadLogs" class="log-action">
+    <button type="submit" class="btn-download">Download Logs</button>
 </form>
+
+<!-- Styles for Better UI -->
+<style>
+    .log-action {
+        margin-bottom: 15px;
+    }
+
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background-color: #4A4A4A; /* Darker grey */
+        color: white; /* White text for contrast */
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .btn-primary, .btn-filter, .btn-reset, .btn-download {
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-filter {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-reset {
+        background-color: #dc3545;
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        display: inline-block;
+    }
+
+    .btn-download {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-primary:hover, .btn-filter:hover, .btn-reset:hover, .btn-download:hover {
+        opacity: 0.8;
+    }
+</style>

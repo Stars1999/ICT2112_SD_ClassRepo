@@ -64,9 +64,11 @@
 </div>
 
 <!-- Download Button -->
-<form method="post" asp-page-handler="DownloadLogs" class="log-action">
-    <button type="submit" class="btn-download">Download Logs</button>
+<form method="get" action="/Logger">
+    <input type="hidden" name="handler" value="DownloadLog">
+    <button type="submit" class="btn btn-primary">Download Logs</button>
 </form>
+
 
 <!-- Styles for Better UI -->
 <style>

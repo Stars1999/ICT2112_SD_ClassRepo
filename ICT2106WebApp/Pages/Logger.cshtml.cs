@@ -36,5 +36,24 @@ namespace ICT2106WebApp.Pages
             _loggerService.AddLog(DateTime.Now, "Hardcoded log entry", "System");
             return RedirectToPage();
         }
+
+        public IActionResult OnGetDownloadLog()
+        {
+            try
+            {
+                var fileContent = _loggerService.DownloadLog();
+                if (fileContent == null || fileContent.Length == 0)
+                {
+                    return Content("No logs available to download.");
+                }
+
+                return File(fileContent, "text/csv", "Logs.csv");
+            }
+            catch (Exception ex)
+            {
+                return Content($"Error generating log file: {ex.Message}");
+            }
+        }
+
     }
 }

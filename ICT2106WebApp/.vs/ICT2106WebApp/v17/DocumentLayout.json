@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\models\\logmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:models\\logmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\pages\\logger.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:pages\\logger.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\pages\\logger.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:pages\\logger.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\services\\loggerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,8 +19,8 @@
       "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:interfaces\\iloggerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\pages\\logger.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:pages\\logger.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\models\\logmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:models\\logmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -30,11 +34,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "ILoggerService.cs",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Interfaces\\ILoggerService.cs",
               "RelativeDocumentMoniker": "Interfaces\\ILoggerService.cs",
@@ -47,13 +51,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Logger.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Logger.cshtml.cs",
               "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml.cs",
               "RelativeToolTip": "Pages\\Logger.cshtml.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAgwCYAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAwwDgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-20T13:45:50.435Z",
               "EditorCaption": ""
@@ -61,19 +65,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Logger.cshtml",
+              "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml",
+              "RelativeDocumentMoniker": "Pages\\Logger.cshtml",
+              "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml",
+              "RelativeToolTip": "Pages\\Logger.cshtml",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAEMAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-27T04:53:53.587Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "LoggerService.cs",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Services\\LoggerService.cs",
               "RelativeDocumentMoniker": "Services\\LoggerService.cs",
               "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Services\\LoggerService.cs",
               "RelativeToolTip": "Services\\LoggerService.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAqwDkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADoAAAAAAAAAAAAuwD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-27T03:53:02.66Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "LogModel.cs",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Models\\LogModel.cs",
               "RelativeDocumentMoniker": "Models\\LogModel.cs",
@@ -86,7 +103,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",

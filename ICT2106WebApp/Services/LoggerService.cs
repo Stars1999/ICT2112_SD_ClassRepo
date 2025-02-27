@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace ICT2106WebApp.Services
 {
@@ -54,6 +55,23 @@ namespace ICT2106WebApp.Services
                                   .Select(log => log.LogLocation)
                                   .Distinct()
                                   .ToList();
+        }
+
+        public byte[] DownloadLog()
+        {
+            var logs = _logsCollection.Find(_ => true).ToList();
+            StringBuilder csvBuilder = new StringBuilder();
+
+            // Add CSV Header
+            csvBuilder.AppendLine("LogTimestamp,LogDescription,LogLocation");
+
+            // Add Log Entries
+            foreach (var log in logs)
+            {
+                csvBuilder.AppendLine($"{log.LogTimestamp},{log.LogDescription},{log.LogLocation}");
+            }
+
+            return Encoding.UTF8.GetBytes(csvBuilder.ToString());
         }
 
     }

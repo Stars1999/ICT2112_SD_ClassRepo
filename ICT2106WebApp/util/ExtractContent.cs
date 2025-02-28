@@ -152,18 +152,18 @@ namespace Utilities
 
 			// Collect each run's text and formatting
 			var runsList = new List<Dictionary<string, object>>();
+			var runs = paragraph.Elements<Run>().ToList(); // Convert to List to get index
 
-			foreach (var run in paragraph.Elements<Run>())
+			for (int i = 0; i < runs.Count; i++)
 			{
+				var run = runs[i];
 				string runText = string.Join("", run.Descendants<Text>().Select(t => t.Text));
+
 				if (string.IsNullOrWhiteSpace(runText))
 				{
 					Console.WriteLine("Continue\n");
 					continue; // Skip empty runs
 				}
-
-				bool runBold = (run.RunProperties?.Bold != null);
-				bool runItalic = (run.RunProperties?.Italic != null);
 
 				// Extract Font Type
 				string runfontType = run.RunProperties?.RunFonts?.Ascii?.Value ?? "Default Font";
@@ -171,25 +171,58 @@ namespace Utilities
 				string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
 				int runFontSize = runFontSizeRaw != null ? int.Parse(runFontSizeRaw) / 2 : 12; // Default to 12pt
 
-				Console.WriteLine("run run:");
-				Console.WriteLine(runText);
-				Console.WriteLine("\n");
+				// Console.WriteLine("run run:");
+				// Console.WriteLine(runText);
+				// Console.WriteLine("\n");
 
-				// runsList.Add(new Dictionary<string, object>
-				// {
-				// 		{ "text", runText },
-				// 		{ "styling", PropertiesList}
-				// });
+				// for bold
+				var boldElement = run.RunProperties?.Bold;
+				if (boldElement != null)
+					isBold = true;
+				else
+					isBold = false;
+
+				// for italic
+				var italicElement = run.RunProperties?.Italic;
+				if (italicElement != null)
+					isItalic = true;
+				else
+					isItalic = false;
+
+				if (PropertiesList.Count > 0 && PropertiesList[0] is Dictionary<string, object> firstDict)
+				{
+					string json = JsonSerializer.Serialize(firstDict, new JsonSerializerOptions { WriteIndented = true });
+					// Console.WriteLine("Serialized JSON:\n" + json);
+
+					// Convert JSON back to a dictionary (deserialize)
+					var modifiedDict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+					// Modify values after deserializing
+					if (modifiedDict != null)
+					{
+						// in runs and we need to modify it due to changes in the run portion
+						modifiedDict["bold"] = isBold;
+						modifiedDict["italic"] = isItalic;
+						modifiedDict["alignment"] = alignment;
+						modifiedDict["fontsize"] = fontSize;
+						modifiedDict["fonttype"] = paraFontType;
+						// modifiedDict["color"] = color;
+						// modifiedDict["highlight"] = highlight;
+						// Assign it back to PropertiesList[0]
+						PropertiesList[0] = modifiedDict;
+					}
+					// Print modified dictionary
+					Console.WriteLine("Modified JSON:\n" + JsonSerializer.Serialize(PropertiesList[0], new JsonSerializerOptions { WriteIndented = true }));
+				}
 				runsList.Add(new Dictionary<string, object>
 				{
 					{ "type", "text_run" },
 					{ "content", runText },
-					{ "styling", PropertiesList}
+					{ "styling", PropertiesList[0]}
 				});
 			}
 
 			Console.WriteLine($"Total runs found: {runsList.Count}");
-
 			if (!runsList.Any())
 			{
 				if (runsList.Count == 0)
@@ -209,6 +242,49 @@ namespace Utilities
 					};
 				}
 
+			}
+			else if (runsList.Count > 1)
+			{
+				Console.WriteLine("If there is runs\n");
+				// to see the content.
+				// foreach (var run in runsList) // `run` is a Dictionary<string, object>
+				// {
+				// 	Console.WriteLine("Run Details:");
+				// 	foreach (var kvp in run) // `kvp` is KeyValuePair<string, object>
+				// 	{
+				// 		if (kvp.Value is List<object> styleObjects) // Check if value is List<object>
+				// 		{
+				// 			Console.WriteLine($"{kvp.Key}:");
+				// 			foreach (var styleObject in styleObjects) // Iterate over list items
+				// 			{
+				// 				if (styleObject is Dictionary<string, object> styleDict) // Ensure it's a dictionary
+				// 				{
+				// 					Console.WriteLine("if styling is true:");
+				// 					foreach (var styleKvp in styleDict) // Iterate dictionary key-value pairs
+				// 					{
+				// 						Console.WriteLine($"  - {styleKvp.Key}: {styleKvp.Value}");
+				// 					}
+				// 				}
+				// 				else
+				// 				{
+				// 					Console.WriteLine($"  - Unexpected type: {styleObject.GetType()}");
+				// 				}
+				// 			}
+				// 		}
+				// 		else
+				// 		{
+				// 			Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+				// 		}
+				// 	}
+				// 	Console.WriteLine("------------");
+				// }
+				var finalDictionary = new Dictionary<string, object>
+					{
+						{ "type", FormatExtractor.GetParagraphType(style) },
+						{ "content", text },
+						{ "runs", runsList } // ✅ Store the entire runsList as a key-value pair
+					};
+				return finalDictionary;
 			}
 			else
 			{

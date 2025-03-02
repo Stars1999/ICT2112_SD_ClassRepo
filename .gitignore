@@ -1,4 +1,7 @@
 /bin
 /obj
 /.vs
+\obj\
+/bin/
+bin/
 .DS_Store

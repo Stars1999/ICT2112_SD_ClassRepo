@@ -1,7 +1,8 @@
 /bin
 /obj
 /.vs
-\obj\
+**/obj/
+**/obj
 /bin/
 bin/
 .DS_Store

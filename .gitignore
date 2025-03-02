@@ -3,6 +3,7 @@
 /.vs
 **/obj/
 **/obj
+**/Debug/
 /bin/
 bin/
 .DS_Store

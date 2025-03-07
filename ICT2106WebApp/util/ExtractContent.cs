@@ -32,10 +32,10 @@ namespace Utilities
 			// ✅ Extract Font Type & Font Size from Paragraph Style
 			string fontType = "Default Font";
 			string? fontSizeRaw = null;
-            string fontColor = "000000"; // Default to black color
-            string highlightColor = "none"; // Default to no highlight
+			string fontColor = "000000"; // Default to black color
+			string highlightColor = "none"; // Default to no highlight
 
-            string styleId = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value ?? "Normal";
+			string styleId = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value ?? "Normal";
 			var stylesPart = doc.MainDocumentPart?.StyleDefinitionsPart;
 
 			// ✅ Check if StyleDefinitionsPart exists
@@ -49,12 +49,12 @@ namespace Utilities
 					fontType = paragraphStyle.StyleRunProperties?.RunFonts?.Ascii?.Value ?? "Default Font";
 					fontSizeRaw = paragraphStyle.StyleRunProperties?.FontSize?.Val?.Value;
 
-                    // Extract color from style definition
-                    if (paragraphStyle.StyleRunProperties?.Color?.Val?.Value != null)
-                    {
-                        fontColor = paragraphStyle.StyleRunProperties.Color.Val.Value;
-                    }
-                }
+					// Extract color from style definition
+					if (paragraphStyle.StyleRunProperties?.Color?.Val?.Value != null)
+					{
+						fontColor = paragraphStyle.StyleRunProperties.Color.Val.Value;
+					}
+				}
 			}
 
 			// ✅ Convert font size from half-points
@@ -82,84 +82,84 @@ namespace Utilities
 					{ "alignment", alignment },
 					{"fontsize", fontSize},
 					{"fonttype", paraFontType},
-                    {"fontcolor", fontColor},
-                    {"highlight", highlightColor},
-                },
+					{"fontcolor", fontColor},
+					{"highlight", highlightColor},
+				},
 			};
-            // Console.WriteLine(paraFontSize);
-            // Console.WriteLine(paraFontType);
+			// Console.WriteLine(paraFontSize);
+			// Console.WriteLine(paraFontType);
 
-            // Detect type of lists (will probably add more in the future)
-            if (paragraph.ParagraphProperties?.NumberingProperties != null)
-            {
-                var numberingProperties = paragraph.ParagraphProperties.NumberingProperties;
-                var numberingId = numberingProperties.NumberingId?.Val?.Value;
+			// Detect type of lists (will probably add more in the future)
+			if (paragraph.ParagraphProperties?.NumberingProperties != null)
+			{
+				var numberingProperties = paragraph.ParagraphProperties.NumberingProperties;
+				var numberingId = numberingProperties.NumberingId?.Val?.Value;
 
-                Console.WriteLine($"Numbering ID: {numberingId}");
+				Console.WriteLine($"Numbering ID: {numberingId}");
 
-                if (numberingId != null)
-                {
-                    // Detect the type of list based on NumberingId
-                    switch (numberingId)
-                    {
-                        case 1:
-                            // Numbered list
-                            Console.WriteLine("Numbered list item detected.");
-                            paragraphData["type"] = "numbered_list";
-                            break;
+				if (numberingId != null)
+				{
+					// Detect the type of list based on NumberingId
+					switch (numberingId)
+					{
+						case 1:
+							// Numbered list
+							Console.WriteLine("Numbered list item detected.");
+							paragraphData["type"] = "numbered_list";
+							break;
 
-                        case 2:
-                            // Bulleted list
-                            Console.WriteLine("Bulleted list item detected.");
-                            paragraphData["type"] = "bulleted_list";
-                            break;
+						case 2:
+							// Bulleted list
+							Console.WriteLine("Bulleted list item detected.");
+							paragraphData["type"] = "bulleted_list";
+							break;
 
-                        case 3:
-                            // Lowercase Lettered list (a, b, c, ...)
-                            Console.WriteLine("Lowercase Lettered list item detected.");
-                            paragraphData["type"] = "lowercase_lettered_list";
-                            break;
+						case 3:
+							// Lowercase Lettered list (a, b, c, ...)
+							Console.WriteLine("Lowercase Lettered list item detected.");
+							paragraphData["type"] = "lowercase_lettered_list";
+							break;
 
-                        case 5:
-                            // Roman Numeral (I, II, III, ...)
-                            Console.WriteLine("Roman numeral list item detected.");
-                            paragraphData["type"] = "roman_numeral_list";
-                            break;
+						case 5:
+							// Roman Numeral (I, II, III, ...)
+							Console.WriteLine("Roman numeral list item detected.");
+							paragraphData["type"] = "roman_numeral_list";
+							break;
 
-                        case 6:
-                            // Uppercase Lettered list (A, B, C, ...)
-                            Console.WriteLine("Uppercase Lettered list item detected.");
-                            paragraphData["type"] = "uppercase_lettered_list";
-                            break;
+						case 6:
+							// Uppercase Lettered list (A, B, C, ...)
+							Console.WriteLine("Uppercase Lettered list item detected.");
+							paragraphData["type"] = "uppercase_lettered_list";
+							break;
 
-                        case 8:
-                            // Numbered with parenthesis list 1), 2), 3), ...
-                            Console.WriteLine("Numbered with parenthesis list item detected.");
-                            paragraphData["type"] = "numbered_parenthesis_list";
-                            break;
+						case 8:
+							// Numbered with parenthesis list 1), 2), 3), ...
+							Console.WriteLine("Numbered with parenthesis list item detected.");
+							paragraphData["type"] = "numbered_parenthesis_list";
+							break;
 
-                        case 9:
-                            // Lowercase Lettered with parenthesis list a), b), c), ...
-                            Console.WriteLine("Lowercase Lettered with parenthesis list item detected.");
-                            paragraphData["type"] = "lowercase_lettered_parenthesis_list";
-                            break;
+						case 9:
+							// Lowercase Lettered with parenthesis list a), b), c), ...
+							Console.WriteLine("Lowercase Lettered with parenthesis list item detected.");
+							paragraphData["type"] = "lowercase_lettered_parenthesis_list";
+							break;
 
-                        default:
-                            // Handle other cases if needed
-                            Console.WriteLine("Unrecognized list type detected.");
-                            paragraphData["type"] = "unknown_list";
-                            break;
-                    }
+						default:
+							// Handle other cases if needed
+							Console.WriteLine("Unrecognized list type detected.");
+							paragraphData["type"] = "unknown_list";
+							break;
+					}
 
-                    paragraphData["content"] = text;
-                    paragraphData["styling"] = PropertiesList;
+					paragraphData["content"] = text;
+					paragraphData["styling"] = PropertiesList;
 
-                    return paragraphData;
-                }
-            }
+					return paragraphData;
+				}
+			}
 
-            // ✅ Detect Page Breaks
-            if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.Page))
+			// ✅ Detect Page Breaks
+			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.Page))
 			{
 				Console.WriteLine("Detect page break\n");
 				paragraphData["type"] = "page_break";
@@ -250,26 +250,22 @@ namespace Utilities
 				string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
 				int runFontSize = runFontSizeRaw != null ? int.Parse(runFontSizeRaw) / 2 : 12; // Default to 12pt
 
-                // Extract font color from run
-                string runFontColor = fontColor; // Default to paragraph color
-                if (run.RunProperties?.Color?.Val?.Value != null)
-                {
-                    runFontColor = run.RunProperties.Color.Val.Value;
-                }
+				// Extract font color from run
+				string runFontColor = fontColor; // Default to paragraph color
+				if (run.RunProperties?.Color?.Val?.Value != null)
+				{
+					runFontColor = run.RunProperties.Color.Val.Value;
+				}
 
-                // Extract highlight color from run
-                var runHighlightColor = highlightColor; // Default to paragraph highlight
-                if (run.RunProperties?.Highlight?.Val?.Value != null)
-                {
-                    runHighlightColor = run.RunProperties.Highlight.Val;
-                }
+				// Extract highlight color from run
+				var runHighlightColor = highlightColor; // Default to paragraph highlight
+				if (run.RunProperties?.Highlight?.Val?.Value != null)
+				{
+					runHighlightColor = run.RunProperties.Highlight.Val;
+				}
 
-                // Console.WriteLine("run run:");
-                // Console.WriteLine(runText);
-                // Console.WriteLine("\n");
-
-                // for bold
-                var boldElement = run.RunProperties?.Bold;
+				// for bold
+				var boldElement = run.RunProperties?.Bold;
 				if (boldElement != null)
 					isBold = true;
 				else
@@ -299,10 +295,10 @@ namespace Utilities
 						modifiedDict["alignment"] = alignment;
 						modifiedDict["fontsize"] = fontSize;
 						modifiedDict["fonttype"] = runfontType;
-                        modifiedDict["fontcolor"] = runFontColor;
-                        modifiedDict["highlight"] = runHighlightColor;
-                        // Assign it back to PropertiesList[0]
-                        PropertiesList[0] = modifiedDict;
+						modifiedDict["fontcolor"] = runFontColor;
+						modifiedDict["highlight"] = runHighlightColor;
+						// Assign it back to PropertiesList[0]
+						PropertiesList[0] = modifiedDict;
 					}
 					// Print modified dictionary
 					Console.WriteLine("Modified JSON:\n" + JsonSerializer.Serialize(PropertiesList[0], new JsonSerializerOptions { WriteIndented = true }));
@@ -443,7 +439,13 @@ namespace Utilities
 				tableData.Add(rowData);
 			}
 
-			return new Dictionary<string, object> { { "type", "table" }, { "content", tableData } };
+			// return new Dictionary<string, object> { { "type", "table" }, { "content", tableData } };
+
+			// Using String isntead of table
+			string jsonString = JsonSerializer.Serialize(tableData);
+			// List<List<string>> deserializedTableData = JsonConvert.DeserializeObject<List<List<string>>>(jsonString);
+			return new Dictionary<string, object> { { "type", "table" }, { "content", jsonString } };
+
 		}
 
 		public static List<Dictionary<string, object>> ExtractImagesFromDrawing

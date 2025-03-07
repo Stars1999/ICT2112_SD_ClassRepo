@@ -23,7 +23,6 @@ Current Focus for next commit:
 1. Footer: not registering page number
 
 2. metadata of paragraph
-
    - Font type
    - Font Color
    - Highlighting
@@ -31,4 +30,46 @@ Current Focus for next commit:
    - indented text
    - Numbered list
 
-3. Format & structure of the node
+7 March updates:
+
+- Margin [Ryan]
+- Orientation [Ryan]
+- Page Size [Ryan]
+- Column Num [Ryan]
+- Column Spacing [Ryan]
+
+To do for Xavier's part
+
+1. Serialize "content:Table" [Remarks: Done in Extractcontent.cs]
+2. Serialize content of run into a string, Parageaph_run [Remarks: To follow up
+   and discuss again]
+3. Use Class to create object [Remarks: Not Done]
+
+These are what they wanted but no stating of the format. list types, nested
+list, math equations images footnotes endnotes pagebreaks text boxes callout
+comments annotation)
+
+image styles
+
+1. Width & height
+2. Resolution (pixel/DPI)
+3. Different image formats (PNG, GIF, JPG & JPEG)
+4. Image alignment (Align left, Center, Align right, Justify)
+5. Image position:
+
+For text
+
+1. font: Sting
+2. styles: String
+3. color: String
+4. textSpacing: float
+5. alignment: String
+
+for layout
+
+1. -headers: String
+2. -footers: String
+3. -margins: float
+4. -orlentation: String
+5. -pagesize: float
+6. -columnNum: int

@@ -1,58 +1,61 @@
-public class MetaData
+namespace ICT2106WebApp.Services.mod2grp6
 {
-    private string id;
-    private string fileName;
-    private string lastModified;
-    private string createdDate;
-    private string size;
-
-    public string GetId()
+    public class MetaData
     {
-        return id;
-    }
+        private string id;
+        private string fileName;
+        private string lastModified;
+        private string createdDate;
+        private string size;
 
-    public string GetFileName()
-    {
-        return fileName;
-    }
+        public string GetId()
+        {
+            return id;
+        }
 
-    public string GetLastModified()
-    {
-        return lastModified;
-    }
+        public string GetFileName()
+        {
+            return fileName;
+        }
 
-    public string GetCreatedDate()
-    {
-        return createdDate;
-    }
+        public string GetLastModified()
+        {
+            return lastModified;
+        }
 
-    public string GetSize()
-    {
-        return size;
-    }
+        public string GetCreatedDate()
+        {
+            return createdDate;
+        }
 
-    public void SetId(string id)
-    {
-        this.id = id;
-    }
+        public string GetSize()
+        {
+            return size;
+        }
 
-    public void SetFileName(string fileName)
-    {
-        this.fileName = fileName;
-    }
+        public void SetId(string id)
+        {
+            this.id = id;
+        }
 
-    public void SetLastModified(string lastModified)
-    {
-        this.lastModified = lastModified;
-    }
+        public void SetFileName(string fileName)
+        {
+            this.fileName = fileName;
+        }
 
-    public void SetCreatedDate(string createdDate)
-    {
-        this.createdDate = createdDate;
-    }
+        public void SetLastModified(string lastModified)
+        {
+            this.lastModified = lastModified;
+        }
 
-    public void SetSize(string size)
-    {
-        this.size = size;
+        public void SetCreatedDate(string createdDate)
+        {
+            this.createdDate = createdDate;
+        }
+
+        public void SetSize(string size)
+        {
+            this.size = size;
+        }
     }
 }

@@ -1,34 +1,17 @@
-
-public interface IFormatDocument
+namespace ICT2106WebApp.Services.mod2grp6
 {
-    // <summary>
-    // Start formatting the content
-    // </summary>
-    // <param name="content">The format content</param>
-    // <returns>Boolean indicating success</returns>
-    bool StartFormatting(Format content);
+    public interface IFormatDocument
+    {
 
-    // <summary>
-    // Format the headings
-    // </summary>
-    /// <returns>Boolean indicating success</returns>
-    bool FormatHeadings();
+        bool StartFormatting(Format content);
 
-    // <summary>
-    // Format the paragraphs
-    // </summary>
-    // <returns>Boolean indicating success</returns>
-    bool FormatParagraphs();
 
-    // <summary>
-    // Apply base formatting
-    // </summary>
-    // <returns>List of nodes</returns>
-    ///List<Node> ApplyBaseFormatting();
+        bool FormatHeadings();
 
-    // <summary>
-    // Process metadata
-    // </summary>
-    // <returns>Metadata</returns>
-    MetaData ProcessMetaData();
+
+        bool FormatParagraphs();
+
+
+        MetaData ProcessMetaData();
+    }
 }

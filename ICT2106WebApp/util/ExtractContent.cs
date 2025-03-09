@@ -7,12 +7,13 @@ using System.Text.Json;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using Utilities;
 
 namespace Utilities
 {
 
-	public static class ExtractContent
+	public static partial class ExtractContent
 	{
 		public static Dictionary<string, object> ExtractParagraph
 		(
@@ -417,7 +418,6 @@ namespace Utilities
 		}
 
 
-
 		public static Dictionary<string, object> ExtractTable
 		(
 			Table table
@@ -446,70 +446,6 @@ namespace Utilities
 			// List<List<string>> deserializedTableData = JsonConvert.DeserializeObject<List<List<string>>>(jsonString);
 			return new Dictionary<string, object> { { "type", "table" }, { "content", jsonString } };
 
-		}
-
-		public static List<Dictionary<string, object>> ExtractImagesFromDrawing
-		(
-			WordprocessingDocument doc,
-			DocumentFormat.OpenXml.Wordprocessing.Drawing drawing)
-		{
-			var imageList = new List<Dictionary<string, object>>();
-
-			// 1. Ensure MainDocumentPart is not null
-			var mainPart = doc.MainDocumentPart;
-			if (mainPart == null)
-			{
-				Console.WriteLine("Error: MainDocumentPart is null.");
-				return imageList;
-			}
-
-			// 2. Find the Blip element
-			var blip = drawing.Descendants<DocumentFormat.OpenXml.Drawing.Blip>().FirstOrDefault();
-			if (blip == null)
-			{
-				Console.WriteLine("No Blip found in Drawing.");
-				return imageList;
-			}
-
-			// 3. Get the relationship ID (embed)
-			string? embed = blip.Embed?.Value;
-			if (string.IsNullOrEmpty(embed))
-			{
-				Console.WriteLine("Embed is null or empty.");
-				return imageList;
-			}
-
-			// 4. Retrieve the ImagePart using the relationship ID
-			var part = mainPart.GetPartById(embed);
-			if (part == null)
-			{
-				Console.WriteLine($"No part found for embed ID: {embed}");
-				return imageList;
-			}
-
-			// 5. Cast part to ImagePart
-			if (part is not ImagePart imagePart)
-			{
-				Console.WriteLine("Part is not an ImagePart.");
-				return imageList;
-			}
-
-			// 6. Save the image locally
-			string fileName = $"Image_{embed}.png";
-			using (var stream = imagePart.GetStream())
-			using (var fileStream = new FileStream(fileName, FileMode.Create))
-			{
-				stream.CopyTo(fileStream);
-			}
-
-			// 7. Add image info to the result list
-			imageList.Add(new Dictionary<string, object>
-			{
-				{ "type", "image" },
-				{ "filename", fileName }
-			});
-
-			return imageList;
 		}
 
 	}

@@ -73,18 +73,8 @@ namespace Utilities
 				stream.CopyTo(fileStream);
 			}
 
-			// 7. Add image info to the result list
-			// imageList.Add(new Dictionary<string, object>
-			// {
-			// 	{ "type", "image" },
-			// 	{ "filename", fileName }
-			// });
-
-
 			// 7. Extract image dimensions from the XML (EMUs)
 			// For inline images, the extent is usually found in wp:extent element.
-			// using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
-
 			long cx = 0;
 			long cy = 0;
 			var inline = drawing.Descendants<DocumentFormat.OpenXml.Drawing.Wordprocessing.Inline>().FirstOrDefault();
@@ -120,10 +110,6 @@ namespace Utilities
 				{
 					// horizontalResolution = img.HorizontalResolution;
 					// verticalResolution = img.VerticalResolution;
-
-					// horizontalResolution = img.Metadata.HorizontalResolution;
-					// verticalResolution = img.Metadata.VerticalResolution;
-
 					horizontalResolution = img.Metadata.HorizontalResolution;
 					verticalResolution = img.Metadata.VerticalResolution;
 				}
@@ -143,18 +129,50 @@ namespace Utilities
 			};
 
 			// 10. Get image alignment from the parent Paragraph (if available)
-			string alignment = "Not specified (?)";
+			// string alignment = "Not specified (?)";
+			// var parentParagraph = drawing.Ancestors<Paragraph>().FirstOrDefault();
+			// if (parentParagraph != null && parentParagraph.ParagraphProperties?.Justification != null)
+			// {
+			// 	// The Justification value is an enum (e.g., left, center, right, both)
+			// 	// alignment = parentParagraph.ParagraphProperties.Justification.Val.Value;
+			// 	Console.WriteLine(parentParagraph.ParagraphProperties.Justification.Val);
+			// 	alignment = parentParagraph.ParagraphProperties.Justification.Val.ToString();
+			// }
+
+			// 10. Get image alignment from the parent Paragraph (if available)
+			string alignment = "Not specified";
 			var parentParagraph = drawing.Ancestors<Paragraph>().FirstOrDefault();
-			if (parentParagraph != null && parentParagraph.ParagraphProperties?.Justification != null)
+			if (parentParagraph != null &&
+				parentParagraph.ParagraphProperties?.Justification != null &&
+				parentParagraph.ParagraphProperties.Justification.Val != null)
 			{
-				// The Justification value is an enum (e.g., left, center, right, both)
-				// alignment = parentParagraph.ParagraphProperties.Justification.Val.Value;
-				Console.WriteLine(parentParagraph.ParagraphProperties.Justification.Val);
-				alignment = parentParagraph.ParagraphProperties.Justification.Val.ToString();
+				// Extract the underlying enum value
+				var justValue = parentParagraph.ParagraphProperties.Justification.Val.Value;
 
+				if (justValue == DocumentFormat.OpenXml.Wordprocessing.JustificationValues.Left)
+				{
+					alignment = "Left Align (Ctrl + L)";
+				}
+				else if (justValue == DocumentFormat.OpenXml.Wordprocessing.JustificationValues.Center)
+				{
+					alignment = "Center Align (Ctrl + E)";
+				}
+				else if (justValue == DocumentFormat.OpenXml.Wordprocessing.JustificationValues.Right)
+				{
+					alignment = "Right Align (Ctrl + R)";
+				}
+				else if (justValue == DocumentFormat.OpenXml.Wordprocessing.JustificationValues.Both)
+				{
+					alignment = "Justify (Ctrl + J)";
+				}
+				else
+				{
+					alignment = justValue.ToString();
+				}
 			}
+			Console.WriteLine("Image Alignment: " + alignment);
 
-			// 11. Get image position (for floating images)
+			// 11.Get image position(for floating images)
 			string imagePosition = "Inline (position determined by text flow)";
 			// var anchorElement = drawing.Descendants<WP.Anchor>().FirstOrDefault();
 			var anchorElement = drawing.Descendants<DocumentFormat.OpenXml.Drawing.Wordprocessing.Anchor>().FirstOrDefault();
@@ -170,6 +188,7 @@ namespace Utilities
 				string verticalPos = verticalPosElem?.PositionOffset?.Text ?? "Not specified";
 				imagePosition = $"Horizontal Offset: {horizontalPos}, Vertical Offset: {verticalPos}";
 			}
+
 
 			// 12. Add all the extracted information into a dictionary
 			var imageInfo = new Dictionary<string, object>

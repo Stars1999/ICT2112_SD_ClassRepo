@@ -1,4 +1,5 @@
-namespace ICT2106WebApp.Services.mod2grp6{
+namespace ICT2106WebApp.mod2grp6
+{
     public class FormatManager : IFormatDocument
     {
         private Format content;

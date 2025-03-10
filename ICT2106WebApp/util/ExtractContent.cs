@@ -184,18 +184,6 @@ namespace Utilities
 
 				return paragraphData;
 			}
-			// ✅ Check if paragraph is completely empty
-			if (string.IsNullOrWhiteSpace(text) && !paragraph.Elements<Break>().Any())
-			{
-				Console.WriteLine("Completely empty\n");
-
-				paragraphData["type"] = "empty_paragraph1";
-				paragraphData["content"] = "";
-				paragraphData["styling"] = PropertiesList;
-
-				return paragraphData;
-			}
-
 			if (paragraph.Descendants<DocumentFormat.OpenXml.Math.OfficeMath>().Any())
 			{
 				Console.WriteLine("Goes to math extractor\n");
@@ -205,6 +193,17 @@ namespace Utilities
 				// var mathContent = MathExtractor.ExtractParagraphsWithMath(paragraph);
 				// elements.AddRange(MathExtractor.ExtractParagraphsWithMath(paragraph)); // ✅ Extract paragraphs & Unicode math
 				// return mathContent;
+			}
+			// ✅ Check if paragraph is completely empty
+			if (string.IsNullOrWhiteSpace(text) && !paragraph.Elements<Break>().Any() && havemath == false)
+			{
+				Console.WriteLine("Completely empty\n");
+
+				paragraphData["type"] = "empty_paragraph1";
+				paragraphData["content"] = "";
+				paragraphData["styling"] = PropertiesList;
+
+				return paragraphData;
 			}
 
 			// Check for page/line breaks at the paragraph level
@@ -314,7 +313,7 @@ namespace Utilities
 			}
 
 			Console.WriteLine($"Total runs found: {runsList.Count}");
-			if (!runsList.Any())
+			if (!runsList.Any() && havemath == false)
 			{
 				if (runsList.Count == 0)
 				{

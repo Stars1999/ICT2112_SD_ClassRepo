@@ -3,4 +3,5 @@
 /.vs
 .DS_Store
 *.png
+/Images
 output.json

@@ -66,7 +66,16 @@ namespace Utilities
 			}
 
 			// 6. Save the image locally
-			string fileName = $"Image_{embed}.png";
+			// 1. Define the folder path (relative or absolute).
+			//    Here, we create a subfolder called "Images" in the current directory.
+			string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+
+			// 2. Make sure the folder exists (this call is safe if it already exists).
+			Directory.CreateDirectory(folderPath);
+
+			// 3. Build the full file path with Path.Combine.
+			string fileName = Path.Combine(folderPath, $"Image_{embed}.png");
+			// string fileName = $"/image/Image_{embed}.png";
 			using (var stream = imagePart.GetStream())
 			using (var fileStream = new FileStream(fileName, FileMode.Create))
 			{

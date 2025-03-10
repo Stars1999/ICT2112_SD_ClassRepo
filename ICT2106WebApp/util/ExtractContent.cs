@@ -439,11 +439,28 @@ namespace Utilities
 				tableData.Add(rowData);
 			}
 
+			// original code: Save with some level of structure
 			// return new Dictionary<string, object> { { "type", "table" }, { "content", tableData } };
 
 			// Using String isntead of table
 			string jsonString = JsonSerializer.Serialize(tableData);
-			// List<List<string>> deserializedTableData = JsonConvert.DeserializeObject<List<List<string>>>(jsonString);
+
+			// if there is a need to deserialize. if not just ignore this
+			List<List<string>> deserializedTableData = JsonSerializer.Deserialize<List<List<string>>>(jsonString);
+			Console.WriteLine("deserializedTableData:");
+			// Iterate through the list to print each row properly
+			foreach (var row in deserializedTableData)
+			{
+				// Console.WriteLine(string.Join(" ", row)); // Joins row elements with a space
+				foreach (var cell in row)
+				{
+					Console.WriteLine($"Cell: {cell}");
+				}
+				Console.WriteLine("End of row\n");
+
+			}
+			// end of sample deserializing
+
 			return new Dictionary<string, object> { { "type", "table" }, { "content", jsonString } };
 
 		}

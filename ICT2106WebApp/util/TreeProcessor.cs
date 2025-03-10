@@ -2,7 +2,7 @@ namespace Utilities
 {
         public class TreeProcessor
     {
-        List<string> nodeOrder = new List<string> { "root", "section", "h1", "h2", "h3", "h4", "h5", "h6", "runsParagraph" };
+        private List<string> nodeOrder = new List<string> { "root", "section", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
         
         public AbstractNode CreateTree(List<AbstractNode> sequentialList)
         {
@@ -20,8 +20,12 @@ namespace Utilities
                 int currentCompositeNodeLevel = nodeOrder.IndexOf(((CompositeNode)nodeStack.Peek()).GetNodeType());
 
                 // Set level of runs to be +1 of runsParagraph
-                if (node.GetNodeType() == "runs") {
+                if (node.GetNodeType() == "text_run") {
                     currentNodeLevel = nodeOrder.IndexOf("runsParagraph") + 1;
+                }
+
+                if (node.GetNodeType() == "cell") {
+                    currentNodeLevel = nodeOrder.IndexOf("row") + 1;
                 }
 
                 if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)

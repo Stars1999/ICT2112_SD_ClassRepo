@@ -43,9 +43,6 @@ namespace ICT2106WebApp.Pages
                 // Insert a test log (replace with actual data if needed)
                 _loggerControl.InsertLog(0, DateTime.Now, "Hardcoded log entry", "System");
 
-                // Notify observers (if implemented in the control class)
-                _loggerControl.NotifyLogsUpdate("Log entry added at " + DateTime.Now);
-
                 return RedirectToPage();
             }
             catch (Exception ex)

@@ -19,9 +19,13 @@ namespace ICT2106WebApp.Control
             _logFilters = new List<ILogFilter_Strategy>();
             _notifyLogUpdate = new NotifyLogUpdate();
         }
-        public void Observer(ILogObserver observer)
+        public void RegisterObserver(ILogObserver observer)
         {
             _notifyLogUpdate.RegisterObserver(observer);
+        }
+        public void DeregisterObserver(ILogObserver observer)
+        {
+            _notifyLogUpdate.DeregisterObserver(observer);
         }
         public void NotifyLogsUpdate(string updateMessage)
         {
@@ -50,10 +54,12 @@ namespace ICT2106WebApp.Control
             try
             {
                 _logger.InsertLog(errorTimeStamp, errorDescription, errorLocation);
+                NotifyLogsUpdate("LogAdded");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error inserting log: {ex.Message}");
+                NotifyLogsUpdate("Error: " + ex.Message);
             }
         }
         public List<Logger_SDM> FilterLogs(DateTime? timestamp, string errorLocation)

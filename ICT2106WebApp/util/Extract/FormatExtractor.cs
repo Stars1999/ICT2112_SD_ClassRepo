@@ -34,14 +34,30 @@ namespace Utilities
 			return fontSizeRaw != null ? int.Parse(fontSizeRaw) / 2 : 12; // Default 12pt
 		}
 
+		// Change the type to header
 		public static string GetParagraphType(string style)
+		{
+			return style switch
+			{
+				"Heading1" => "header",
+				"Heading2" => "header",
+				"Heading3" => "header",
+				"Heading4" => "header",
+				_ => "paragraph",
+			};
+		}
+
+
+		// under style, to indicate which heading
+		public static string GetHeaderType(string style)
 		{
 			return style switch
 			{
 				"Heading1" => "h1",
 				"Heading2" => "h2",
 				"Heading3" => "h3",
-				_ => "paragraph",
+				"Heading4" => "h4",
+				_ => "NA",
 			};
 		}
 	}

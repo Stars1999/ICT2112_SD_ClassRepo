@@ -85,6 +85,7 @@ namespace Utilities
 					{"fonttype", paraFontType},
 					{"fontcolor", fontColor},
 					{"highlight", highlightColor},
+					{"headingType", FormatExtractor.GetHeaderType(style)}
 				},
 			};
 			// Console.WriteLine(paraFontSize);

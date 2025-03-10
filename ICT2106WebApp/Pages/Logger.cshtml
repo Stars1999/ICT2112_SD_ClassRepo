@@ -67,6 +67,8 @@
 
 <!-- Download Button -->
 <form method="get" action="/Logger">
+    <input type="hidden" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="FilterLocation" value="@Model.FilterLocation" />
     <input type="hidden" name="handler" value="DownloadLog">
     <button type="submit" class="btn btn-primary">Download Logs</button>
 </form>

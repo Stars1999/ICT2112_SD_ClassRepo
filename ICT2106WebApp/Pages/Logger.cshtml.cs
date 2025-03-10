@@ -57,18 +57,8 @@ namespace ICT2106WebApp.Pages
 
         public IActionResult OnGetDownloadLog()
         {
-            try
-            {
-                // Implement download logic within LoggerControl
-                _loggerControl.DownloadLogs();
-
-                return Content("Logs downloaded successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error generating log file: {ex.Message}");
-                return Content("An error occurred while generating the log file.");
-            }
+            var csvData = _loggerControl.DownloadLogs(FilterDate, FilterLocation);
+            return File(csvData, "text/csv", "Logs.csv");
         }
 
         public IActionResult OnPostClearLogs()

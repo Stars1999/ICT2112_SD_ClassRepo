@@ -419,128 +419,75 @@ namespace Utilities
 			}
 		}
 
-
-		public static Dictionary<string, object> ExtractTable
-		(
-			Table table
-		)
+		//extract table
+		public static Dictionary<string, object> ExtractTable(Table table)
 		{
-			var tableData = new List<List<string>>();
+			var tableRows = new List<Dictionary<string, object>>();
 
 			foreach (var row in table.Elements<TableRow>())
 			{
-				var rowData = row.Elements<TableCell>()
-					.Select(cell =>
-						string.Join(
-							"",
-							cell.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>()
-								.Select(t => t.Text)
-						)
-					)
-					.ToList(); // ✅ Fixed ambiguous reference
-				tableData.Add(rowData);
-			}
+				// List to hold cell dictionaries for this row.
+				var cellList = new List<Dictionary<string, object>>();
 
-			// original code: Save with some level of structure
-			// return new Dictionary<string, object> { { "type", "table" }, { "content", tableData } };
-
-			// Using String isntead of table
-			string jsonString = JsonSerializer.Serialize(tableData);
-
-			// if there is a need to deserialize. if not just ignore this
-			List<List<string>> deserializedTableData = JsonSerializer.Deserialize<List<List<string>>>(jsonString);
-			Console.WriteLine("deserializedTableData:");
-			// Iterate through the list to print each row properly
-			foreach (var row in deserializedTableData)
-			{
-				// Console.WriteLine(string.Join(" ", row)); // Joins row elements with a space
-				foreach (var cell in row)
+				foreach (var cell in row.Elements<TableCell>())
 				{
-					Console.WriteLine($"Cell: {cell}");
+					// Extract the cell text.
+					string cellText = string.Join("", cell.Descendants<Text>().Select(t => t.Text));
+
+					// Extract basic text formatting from the first run.
+					var firstRun = cell.Descendants<RunProperties>().FirstOrDefault();
+					bool isBold = firstRun?.GetFirstChild<Bold>() != null;
+					bool isItalic = firstRun?.GetFirstChild<Italic>() != null;
+
+					// Create the cell dictionary in the desired format.
+					var cellDict = new Dictionary<string, object>
+			{
+				{ "type", "Cell" },
+				{ "content", cellText },
+				{ "styling", new Dictionary<string, object>
+					{
+						{ "bold", isBold },
+						{ "italic", isItalic }
+					}
 				}
-				Console.WriteLine("End of row\n");
+			};
 
+					cellList.Add(cellDict);
+				}
+
+				// You can also adjust the row styling as needed.
+				var rowStyling = new Dictionary<string, object>
+		{
+			{ "bold", false },
+			{ "italic", true },
+			{ "alignment", "right" },
+			{ "fontsize", 12 },
+			{ "fonttype", "Aptos" },
+			{ "fontcolor", "0E2841" },
+			{ "highlight", "none" }
+		};
+
+				// Create a row dictionary matching the desired structure.
+				var rowDict = new Dictionary<string, object>
+		{
+			{ "type", "Row" },
+			{ "content", "" },
+			{ "runs", cellList },
+			{ "styling", rowStyling }
+		};
+
+				tableRows.Add(rowDict);
 			}
-			// end of sample deserializing
 
-			return new Dictionary<string, object> { { "type", "table" }, { "content", jsonString } };
+			// Create the table dictionary with type "Table" and add the row dictionaries as its "runs".
+			var tableDict = new Dictionary<string, object>
+	{
+		{ "type", "Table" },
+		{ "content", "" },
+		{ "runs", tableRows }
+	};
 
+			return tableDict;
 		}
-
-		// public static Dictionary<string, object> ExtractTable(Table table)
-		// {
-		// 	var tableData = new List<List<Dictionary<string, object>>>();
-
-		// 	foreach (var row in table.Elements<TableRow>())
-		// 	{
-		// 		var rowData = new List<Dictionary<string, object>>();
-
-		// 		foreach (var cell in row.Elements<TableCell>())
-		// 		{
-		// 			// ✅ Extract Text Content
-		// 			string cellText = string.Join(
-		// 				"",
-		// 				cell.Descendants<Text>().Select(t => t.Text)
-		// 			);
-
-		// 			// ✅ Extract Cell Properties (Borders, Background)
-		// 			var cellProps = cell.GetFirstChild<TableCellProperties>();
-
-		// 			string bgColor = cellProps?.GetFirstChild<Shading>()?.Fill ?? "None";
-		// 			// string borderTop = cellProps?.GetFirstChild<TableCellBorders>()?.TopBorder?.Val?.Value ?? "None";
-		// 			// string borderBottom = cellProps?.GetFirstChild<TableCellBorders>()?.BottomBorder?.Val?.Value ?? "None";
-		// 			// string borderLeft = cellProps?.GetFirstChild<TableCellBorders>()?.LeftBorder?.Val?.Value ?? "None";
-		// 			// string borderRight = cellProps?.GetFirstChild<TableCellBorders>()?.RightBorder?.Val?.Value ?? "None";
-		// 			string borderTop = (cellProps?.GetFirstChild<TableCellBorders>()?.TopBorder?.Val?.Value)?.ToString() ?? "None";
-		// 			string borderBottom = (cellProps?.GetFirstChild<TableCellBorders>()?.BottomBorder?.Val?.Value)?.ToString() ?? "None";
-		// 			string borderLeft = (cellProps?.GetFirstChild<TableCellBorders>()?.LeftBorder?.Val?.Value)?.ToString() ?? "None";
-		// 			string borderRight = (cellProps?.GetFirstChild<TableCellBorders>()?.RightBorder?.Val?.Value)?.ToString() ?? "None";
-
-		// 			// ✅ Extract Font & Text Formatting
-		// 			var firstRun = cell.Descendants<RunProperties>().FirstOrDefault();
-		// 			string fontName = firstRun?.GetFirstChild<RunFonts>()?.Ascii?.Value ?? "Default";
-		// 			string fontSize = firstRun?.GetFirstChild<FontSize>()?.Val?.Value ?? "Default";
-		// 			bool isBold = firstRun?.GetFirstChild<Bold>() != null;
-		// 			bool isItalic = firstRun?.GetFirstChild<Italic>() != null;
-
-		// 			// ✅ Extract Text Alignment
-		// 			string alignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.Value ?? "Left";
-
-		// 			// ✅ Store all extracted data in a dictionary
-		// 			var cellData = new Dictionary<string, object>
-		// 		{
-		// 			{ "text", cellText },
-		// 			{ "background_color", bgColor },
-		// 			{ "borders", new Dictionary<string, string>
-		// 				{
-		// 					{ "top", borderTop },
-		// 					{ "bottom", borderBottom },
-		// 					{ "left", borderLeft },
-		// 					{ "right", borderRight }
-		// 				}
-		// 			},
-		// 			{ "font", new Dictionary<string, object>
-		// 				{
-		// 					{ "name", fontName },
-		// 					{ "size", fontSize },
-		// 					{ "bold", isBold },
-		// 					{ "italic", isItalic }
-		// 				}
-		// 			},
-		// 			{ "alignment", alignment }
-		// 		};
-
-		// 			rowData.Add(cellData);
-		// 		}
-
-		// 		tableData.Add(rowData);
-		// 	}
-
-		// 	return new Dictionary<string, object>
-		// {
-		// 		{ "table", tableData }
-		// };
-		// }
-
 	}
 }

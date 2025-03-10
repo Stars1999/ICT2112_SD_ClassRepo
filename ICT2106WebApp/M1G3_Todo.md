@@ -78,3 +78,12 @@ for layout
 Table:
 
 1. table styling
+
+to do: table format like this { "type": "Table", "content": "", "runs": [ {
+"type": "Row", "content": "", "runs": [ { "type": "Cell", "content": "",
+"styling": { "bold": false, "italic": true } } ], "styling": { "bold": false,
+"italic": true, "alignment": "right", "fontsize": 12, "fonttype": "Aptos",
+"fontcolor": "0E2841", "highlight": "none" } } ] }
+
+2. Citation pulling back
+3. Fix math if got time

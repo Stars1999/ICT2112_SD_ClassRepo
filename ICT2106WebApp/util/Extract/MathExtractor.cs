@@ -258,6 +258,18 @@ namespace Utilities
 				case MathRun mathRun:
 					return string.Join("", mathRun.Descendants<MathText>().Select(t => t.Text));
 
+				// ✅ Handle Grouping Symbols (Parentheses, Brackets)
+				// this is causing issue, Should be used for bracket
+				// case Delimiter delimiter:
+				// 	var delimiterProps = delimiter.GetFirstChild<DelimiterProperties>();
+				// 	string leftDelimiter = delimiterProps?.FirstChild?.InnerText ?? "(";  // Default to "("
+				// 	string rightDelimiter = delimiterProps?.LastChild?.InnerText ?? ")";  // Default to ")"
+
+				// 	// Extract the expression inside the delimiters
+				// 	string insideContent = GetMathString(delimiter.Elements<MathRun>().FirstOrDefault());
+
+				// 	return $"{leftDelimiter}{insideContent}{rightDelimiter}";
+
 				default:
 					if (element.HasChildren)
 					{
@@ -275,4 +287,72 @@ namespace Utilities
 			}
 		}
 	}
+
+	// private static string GetMathString(OpenXmlElement element)
+	// {
+	//     if (element == null) return ""; // ✅ Prevents null exceptions
+
+	//     switch (element)
+	//     {
+	//         case Fraction fraction:
+	//             string numerator = GetMathString(fraction.Numerator ?? new Run());
+	//             string denominator = GetMathString(fraction.Denominator ?? new Run());
+	//             return $"({numerator}/{denominator})";
+
+	//         case Radical radical:
+	//             var baseElement = radical.Elements<Base>().FirstOrDefault();
+	//             string baseText = baseElement != null ? GetMathString(baseElement) : "?";
+	//             return $"√({baseText})";
+
+	//         case Nary nary:
+	//             string naryChar = "∑"; // Default to summation
+	//             var naryProps = nary.GetFirstChild<NaryProperties>();
+	//             if (naryProps?.ControlProperties?.FirstChild != null)
+	//             {
+	//                 naryChar = naryProps.ControlProperties.FirstChild.InnerText;
+	//             }
+
+	//             string subscript = GetMathString(nary.SubArgument ?? new Run());
+	//             string superscript = GetMathString(nary.SuperArgument ?? new Run());
+	//             string mainArg = GetMathString(nary.Elements<Base>().FirstOrDefault() ?? new Run());
+
+	//             return $"{naryChar}[{subscript},{superscript}]({mainArg})";
+
+	//         case Superscript superscript:
+	//             string baseSup = GetMathString(superscript.Base ?? new Run());
+	//             string exponent = GetMathString(superscript.SuperArgument ?? new Run());
+	//             return $"{baseSup}^{exponent}";
+
+	//         case Subscript subscript:
+	//             string baseSub = GetMathString(subscript.Base ?? new Run());
+	//             string sub = GetMathString(subscript.SubArgument ?? new Run());
+	//             return $"{baseSub}_{sub}";
+
+	//         case Delimiter delimiter:
+	//             var delimiterProps = delimiter.GetFirstChild<DelimiterProperties>();
+	//             string leftDelimiter = delimiterProps?.FirstChild?.InnerText ?? "(";
+	//             string rightDelimiter = delimiterProps?.LastChild?.InnerText ?? ")";
+	//             string insideContent = GetMathString(delimiter.Elements<MathRun>().FirstOrDefault() ?? new Run());
+	//             return $"{leftDelimiter}{insideContent}{rightDelimiter}";
+
+	//         case MathRun mathRun:
+	//             return string.Join("", mathRun.Descendants<MathText>().Select(t => t.Text));
+
+	//         default:
+	//             if (element.HasChildren)
+	//             {
+	//                 var childStrings = new List<string>();
+	//                 foreach (var child in element.ChildElements)
+	//                 {
+	//                     childStrings.Add(GetMathString(child));
+	//                 }
+	//                 return string.Concat(childStrings);
+	//             }
+	//             else
+	//             {
+	//                 return element.InnerText;
+	//             }
+	//     }
+	// }
+
 }

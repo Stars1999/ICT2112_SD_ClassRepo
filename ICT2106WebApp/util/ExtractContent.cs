@@ -85,7 +85,6 @@ namespace Utilities
 					{"fonttype", paraFontType},
 					{"fontcolor", fontColor},
 					{"highlight", highlightColor},
-					{"headingType", FormatExtractor.GetHeaderType(style)}
 				},
 			};
 			// Console.WriteLine(paraFontSize);
@@ -190,6 +189,8 @@ namespace Utilities
 
 				mathContent = MathExtractor.ExtractParagraphsWithMath(paragraph);
 				havemath = true;
+				paragraphData["type"] = "math";
+
 				// var mathContent = MathExtractor.ExtractParagraphsWithMath(paragraph);
 				// elements.AddRange(MathExtractor.ExtractParagraphsWithMath(paragraph)); // ✅ Extract paragraphs & Unicode math
 				// return mathContent;
@@ -393,7 +394,8 @@ namespace Utilities
 
 					return new Dictionary<string, object>
 					{
-						{ "type", FormatExtractor.GetParagraphType(style) },
+						// { "type", FormatExtractor.GetParagraphType(style) },
+						{ "type", "math" },
 						{ "content", mathstring },
 						{ "styling", PropertiesList}
 					};
@@ -464,6 +466,81 @@ namespace Utilities
 			return new Dictionary<string, object> { { "type", "table" }, { "content", jsonString } };
 
 		}
+
+		// public static Dictionary<string, object> ExtractTable(Table table)
+		// {
+		// 	var tableData = new List<List<Dictionary<string, object>>>();
+
+		// 	foreach (var row in table.Elements<TableRow>())
+		// 	{
+		// 		var rowData = new List<Dictionary<string, object>>();
+
+		// 		foreach (var cell in row.Elements<TableCell>())
+		// 		{
+		// 			// ✅ Extract Text Content
+		// 			string cellText = string.Join(
+		// 				"",
+		// 				cell.Descendants<Text>().Select(t => t.Text)
+		// 			);
+
+		// 			// ✅ Extract Cell Properties (Borders, Background)
+		// 			var cellProps = cell.GetFirstChild<TableCellProperties>();
+
+		// 			string bgColor = cellProps?.GetFirstChild<Shading>()?.Fill ?? "None";
+		// 			// string borderTop = cellProps?.GetFirstChild<TableCellBorders>()?.TopBorder?.Val?.Value ?? "None";
+		// 			// string borderBottom = cellProps?.GetFirstChild<TableCellBorders>()?.BottomBorder?.Val?.Value ?? "None";
+		// 			// string borderLeft = cellProps?.GetFirstChild<TableCellBorders>()?.LeftBorder?.Val?.Value ?? "None";
+		// 			// string borderRight = cellProps?.GetFirstChild<TableCellBorders>()?.RightBorder?.Val?.Value ?? "None";
+		// 			string borderTop = (cellProps?.GetFirstChild<TableCellBorders>()?.TopBorder?.Val?.Value)?.ToString() ?? "None";
+		// 			string borderBottom = (cellProps?.GetFirstChild<TableCellBorders>()?.BottomBorder?.Val?.Value)?.ToString() ?? "None";
+		// 			string borderLeft = (cellProps?.GetFirstChild<TableCellBorders>()?.LeftBorder?.Val?.Value)?.ToString() ?? "None";
+		// 			string borderRight = (cellProps?.GetFirstChild<TableCellBorders>()?.RightBorder?.Val?.Value)?.ToString() ?? "None";
+
+		// 			// ✅ Extract Font & Text Formatting
+		// 			var firstRun = cell.Descendants<RunProperties>().FirstOrDefault();
+		// 			string fontName = firstRun?.GetFirstChild<RunFonts>()?.Ascii?.Value ?? "Default";
+		// 			string fontSize = firstRun?.GetFirstChild<FontSize>()?.Val?.Value ?? "Default";
+		// 			bool isBold = firstRun?.GetFirstChild<Bold>() != null;
+		// 			bool isItalic = firstRun?.GetFirstChild<Italic>() != null;
+
+		// 			// ✅ Extract Text Alignment
+		// 			string alignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.Value ?? "Left";
+
+		// 			// ✅ Store all extracted data in a dictionary
+		// 			var cellData = new Dictionary<string, object>
+		// 		{
+		// 			{ "text", cellText },
+		// 			{ "background_color", bgColor },
+		// 			{ "borders", new Dictionary<string, string>
+		// 				{
+		// 					{ "top", borderTop },
+		// 					{ "bottom", borderBottom },
+		// 					{ "left", borderLeft },
+		// 					{ "right", borderRight }
+		// 				}
+		// 			},
+		// 			{ "font", new Dictionary<string, object>
+		// 				{
+		// 					{ "name", fontName },
+		// 					{ "size", fontSize },
+		// 					{ "bold", isBold },
+		// 					{ "italic", isItalic }
+		// 				}
+		// 			},
+		// 			{ "alignment", alignment }
+		// 		};
+
+		// 			rowData.Add(cellData);
+		// 		}
+
+		// 		tableData.Add(rowData);
+		// 	}
+
+		// 	return new Dictionary<string, object>
+		// {
+		// 		{ "table", tableData }
+		// };
+		// }
 
 	}
 }

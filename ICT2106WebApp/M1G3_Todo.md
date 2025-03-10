@@ -49,7 +49,7 @@ These are what they wanted but no stating of the format. list types, nested
 list, math equations images footnotes endnotes pagebreaks text boxes callout
 comments annotation)
 
-image styles
+image styles [All should be done for now]
 
 1. Width & height
 2. Resolution (pixel/DPI)
@@ -60,10 +60,11 @@ image styles
 For text
 
 1. font: Sting
-2. styles: String
+2. styles: String ?? What is styles
 3. color: String
-4. textSpacing: float
+4. textSpacing: float [between each line] [Need to do]
 5. alignment: String
+6. Highlight: ??undefined in their class diagram
 
 for layout
 
@@ -73,3 +74,7 @@ for layout
 4. -orlentation: String
 5. -pagesize: float
 6. -columnNum: int
+
+Table:
+
+1. table styling

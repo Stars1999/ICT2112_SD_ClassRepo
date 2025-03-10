@@ -91,22 +91,57 @@ app.Run();
 // ✅ Extracts content from Word document
 public static class DocumentProcessor
 {
+
+	static Dictionary<string, string> GetDocumentMetadata(WordprocessingDocument doc, string filepath)
+	{
+		var metadata = new Dictionary<string, string>();
+		if (doc.PackageProperties.Title != null)
+			metadata["Title"] = doc.PackageProperties.Title;
+		if (doc.PackageProperties.Creator != null)
+			metadata["Author"] = doc.PackageProperties.Creator;
+
+
+		// Created & Modified (from the DOCX metadata, not the OS timestamps)
+		if (doc.PackageProperties.Created != null)
+			metadata["CreatedDate_Internal"] = doc.PackageProperties.Created.Value.ToString("u");
+		if (doc.PackageProperties.Modified != null)
+			metadata["LastModified_Internal"] = doc.PackageProperties.Modified.Value.ToString("u");
+
+
+		FileInfo fileInfo = new FileInfo(filepath);
+
+		string fileName = fileInfo.Name;    // "Example.docx"
+		long fileSize = fileInfo.Length;    // size in bytes
+
+		metadata["filename"] = fileName;
+		metadata["size"] = fileSize.ToString();
+
+		Console.WriteLine(metadata);
+		return metadata;
+	}
+
 	public static void RunMyProgram()
 	{
 		string filePath = "Datarepository_v2.docx"; // Change this to your actual file path
 		string jsonOutputPath = "output.json"; // File where JSON will be saved
+
+		string currentDir = Directory.GetCurrentDirectory();
+		string filePath_full = Path.Combine(currentDir, filePath);
+
 
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
 			var documentData = new
 			{
 				// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
+				metadata = GetDocumentMetadata(wordDoc, filePath_full),
 				// headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
 				// !!footer still exists issues. Commented for now
 				// footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
 
 				document = ExtractDocumentContents(wordDoc), // ✅ Calls ExtractDocumentContents()
 			};
+
 
 			// Convert to JSON format with UTF-8 encoding fix (preserves emojis, math, and Chinese)
 			string jsonOutput = JsonSerializer.Serialize(

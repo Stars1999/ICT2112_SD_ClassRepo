@@ -140,7 +140,7 @@ namespace Utilities
 			// }
 
 			// 10. Get image alignment from the parent Paragraph (if available)
-			string alignment = "Not specified";
+			string alignment = "Left Align (Ctrl + L)";
 			var parentParagraph = drawing.Ancestors<Paragraph>().FirstOrDefault();
 			if (parentParagraph != null &&
 				parentParagraph.ParagraphProperties?.Justification != null &&

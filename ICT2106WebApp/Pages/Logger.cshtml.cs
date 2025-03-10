@@ -33,16 +33,7 @@ namespace ICT2106WebApp.Pages
 
             AvailableLocations = _loggerControl.GetAvailableLocations();
 
-            // Apply filters if provided
-            if (FilterDate.HasValue)
-            {
-                Logs = _loggerControl.FilterLogsByTimestamp(FilterDate.Value);
-            }
-
-            if (!string.IsNullOrEmpty(FilterLocation)) // Filtering by location
-            {
-                Logs = _loggerControl.FilterLogsByErrorLocation(FilterLocation);
-            }
+            Logs = _loggerControl.FilterLogs(FilterDate, FilterLocation);
         }
 
         public IActionResult OnPostAddLog()

@@ -25,6 +25,11 @@ namespace ICT2106WebApp.Control
             _notifyLogUpdate.RegisterObserver(observer);
         }
 
+        public void AddLogFilter(ILogFilter_Strategy filter)
+        {
+            _logFilters.Add(filter);
+        }
+
         public List<Logger_SDM> RetrieveAllLogs()
         {
             if (_logRetriever == null)
@@ -52,30 +57,23 @@ namespace ICT2106WebApp.Control
             }
         }
 
-        public List<Logger_SDM> FilterLogsByTimestamp(DateTime timestamp)
+        public List<Logger_SDM> FilterLogs(DateTime? timestamp, string errorLocation)
         {
-            foreach (var filter in _logFilters)
+            var logs = RetrieveAllLogs();
+
+            if (timestamp.HasValue)
             {
-                if (filter is TimestampLogFilter timestampFilter)
-                {
-                    return timestampFilter.FilterLogs(RetrieveAllLogs());
-                }
+                var timestampFilter = new TimestampLogFilter(timestamp.Value);
+                logs = timestampFilter.FilterLogs(logs);
             }
 
-            return new List<Logger_SDM>();
-        }
-
-        public List<Logger_SDM> FilterLogsByErrorLocation(string errorLocation)
-        {
-            foreach (var filter in _logFilters)
+            if (!string.IsNullOrEmpty(errorLocation))
             {
-                if (filter is LocationLogFilter locationFilter)
-                {
-                    return locationFilter.FilterLogs(RetrieveAllLogs());
-                }
+                var locationFilter = new LocationLogFilter(errorLocation);
+                logs = locationFilter.FilterLogs(logs);
             }
 
-            return new List<Logger_SDM>();
+            return logs;
         }
 
         public void DownloadLogs()
@@ -93,11 +91,6 @@ namespace ICT2106WebApp.Control
         public void NotifyLogsUpdate()
         {
             Console.WriteLine("Logs have been updated.");
-        }
-
-        public void AddLogFilter(ILogFilter_Strategy filter)
-        {
-            _logFilters.Add(filter);
         }
     }
 }

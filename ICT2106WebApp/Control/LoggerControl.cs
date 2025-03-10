@@ -23,6 +23,11 @@ namespace ICT2106WebApp.Control
         {
             _notifyLogUpdate.RegisterObserver(observer);
         }
+        public void NotifyLogsUpdate(string updateMessage)
+        {
+            _notifyLogUpdate.NotifyObservers(updateMessage);
+        }
+
         public void AddLogFilter(ILogFilter_Strategy filter)
         {
             _logFilters.Add(filter);
@@ -95,10 +100,6 @@ namespace ICT2106WebApp.Control
         {
             // Implement logic to clear logs
             Console.WriteLine("All logs have been cleared.");
-        }
-        public void NotifyLogsUpdate()
-        {
-            Console.WriteLine("Logs have been updated.");
         }
     }
 }

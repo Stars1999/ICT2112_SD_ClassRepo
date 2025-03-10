@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\pages\\logger.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:pages\\logger.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\pages\\logger.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:pages\\logger.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\control\\loggercontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:control\\loggercontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\kerwin loh\\desktop\\sit\\year 2\\tri 2\\software design\\project\\ict2112_sd_classrepo\\ict2106webapp\\gateway\\loggergateway_tdg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:gateway\\loggergateway_tdg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,58 +18,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Logger.cshtml",
-              "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml",
-              "RelativeDocumentMoniker": "Pages\\Logger.cshtml",
-              "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml*",
-              "RelativeToolTip": "Pages\\Logger.cshtml*",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAAEQAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-03-10T04:19:37.389Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "LoggerControl.cs",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Control\\LoggerControl.cs",
               "RelativeDocumentMoniker": "Control\\LoggerControl.cs",
               "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Control\\LoggerControl.cs",
               "RelativeToolTip": "Control\\LoggerControl.cs",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAuwFsAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwBkAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T04:11:16.804Z",
+              "WhenOpened": "2025-03-10T04:30:58.916Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Logger.cshtml.cs",
               "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml.cs",
               "RelativeDocumentMoniker": "Pages\\Logger.cshtml.cs",
-              "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml.cs",
-              "RelativeToolTip": "Pages\\Logger.cshtml.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAowD4AAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Pages\\Logger.cshtml.cs*",
+              "RelativeToolTip": "Pages\\Logger.cshtml.cs*",
+              "ViewState": "AgIAACsAAAAAAAAAAAAjwDgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T04:12:23.369Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "LoggerGateway_TDG.cs",
-              "DocumentMoniker": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Gateway\\LoggerGateway_TDG.cs",
-              "RelativeDocumentMoniker": "Gateway\\LoggerGateway_TDG.cs",
-              "ToolTip": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Gateway\\LoggerGateway_TDG.cs",
-              "RelativeToolTip": "Gateway\\LoggerGateway_TDG.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAYwEQAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-08T02:08:45.908Z",
+              "WhenOpened": "2025-03-10T04:30:49.555Z",
               "EditorCaption": ""
             }
           ]

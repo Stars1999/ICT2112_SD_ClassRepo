@@ -13,7 +13,7 @@ namespace ICT2106WebApp.Abstract
             observers.Add(observer);
         }
 
-        public void RemoveObserver(ILogObserver observer)
+        public void DeregisterObserver(ILogObserver observer)
         {
             observers.Remove(observer);
         }

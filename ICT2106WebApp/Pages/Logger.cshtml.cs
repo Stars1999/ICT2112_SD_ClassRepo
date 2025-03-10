@@ -44,7 +44,7 @@ namespace ICT2106WebApp.Pages
                 _loggerControl.InsertLog(0, DateTime.Now, "Hardcoded log entry", "System");
 
                 // Notify observers (if implemented in the control class)
-                _loggerControl.NotifyLogsUpdate();
+                _loggerControl.NotifyLogsUpdate("Log entry added at " + DateTime.Now);
 
                 return RedirectToPage();
             }

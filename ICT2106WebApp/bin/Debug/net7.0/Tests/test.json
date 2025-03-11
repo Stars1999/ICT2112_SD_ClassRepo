@@ -1,0 +1,32 @@
+{
+  "bibliographies": [
+    {
+      "BibliographyType": "APA",
+      "Author": "Smith, J.",
+      "Title": "Understanding AI",
+      "Publisher": "TechBooks",
+      "Date": "2020-06-15"
+    },
+    {
+      "BibliographyType": "MLA",
+      "Author": "Doe, J.",
+      "Title": "The Future of Technology",
+      "Publisher": "FuturePress",
+      "Date": "2019-09-21"
+    }
+  ],
+  "citations": [
+    {
+      "CitationType": "APA",
+      "Author": "Brown, K.",
+      "Date": "2021-04-10",
+      "CitationData": ["AI Revolution", "Science Daily"]
+    },
+    {
+      "CitationType": "MLA",
+      "Author": "Taylor, M.",
+      "Date": "2018-07-22",
+      "CitationData": ["Emerging Tech Trends", "Tech Monthly"]
+    }
+  ]
+}

@@ -1,27 +1,9 @@
 public class MLABibliographyScanner : IBibliographyScanner
 {
-    private List<string> bibliographyData = new();
-
     public List<string> ScanBibliographies(List<BibliographyStyle> bibliographies)
     {
-        foreach (var entry in bibliographies)
-        {
-            bibliographyData.Add($"{entry.Author}. \"{entry.Title}.\" {entry.Publisher}, {entry.Date.Year}.");
-        }
-        return bibliographyData;
+        return bibliographies.Select(b => $"{b.Author}. \"{b.Title}.\" {b.Publisher}, {b.Date:yyyy}.").ToList();
     }
 
-    public void FormatBibliography()
-    {
-        // Format MLA bibliography if necessary
-    }
-
-    public void SetBibliographyData(List<string> data) => bibliographyData = data;
-
-    public List<string> GetBibliographyData() => bibliographyData;
-
-    public void UpdateBibliography()
-    {
-        // Logic to update bibliography data
-    }
+    public void FormatBibliography() { /* Additional MLA formatting if needed */ }
 }

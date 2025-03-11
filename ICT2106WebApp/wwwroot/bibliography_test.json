@@ -1,0 +1,11 @@
+{
+    "documents": [
+      {
+        "Title": "Impact of Artificial Intelligence on Society",
+        "Author": "John Smith",
+        "Date": "2024-03-10",
+        "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{Impact of AI}\n\\author{John Smith}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nAI is reshaping industries \\cite{1}. Recent studies \\cite{Doe_2021} highlight its impact.\n\n\\section{Conclusion}\nFuture research is needed \\cite{2}.\n\n\\section{References}\n1. Brown, K. (2021). AI Revolution. Science Daily.\n2. Taylor, M. (2018). Emerging Tech Trends. Tech Monthly.\n\n\\end{document}"
+      }
+    ]
+  }
+  

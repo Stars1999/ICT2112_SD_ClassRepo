@@ -1,28 +1,15 @@
 public class APACitationScanner : ICitationScanner
 {
-    private List<string> citationData = new();
-
-    // formats citations in APA style
     public List<string> ScanCitations(List<CitationStyle> citations)
     {
-        foreach (var citation in citations)
+        Console.WriteLine("[DEBUG] Processing APA citations...");
+        foreach (var c in citations)
         {
-            citationData.Add($"({citation.CitationData[0]}, {citation.CitationData[1]})");
+            Console.WriteLine($"[DEBUG] Citation Found: {c.Author} - {c.Date}");
         }
-        return citationData;
+
+        return citations.Select(c => $"({c.Author}, {c.Date:yyyy})").ToList();
     }
 
-    public void FormatCitation()
-    {
-        // Format APA citations if necessary
-    }
-
-    public void SetCitationData(List<string> data) => citationData = data;
-    
-    public List<string> GetCitationData() => citationData;
-
-    public void UpdateCitation()
-    {
-        // Logic to update citation data
-    }
+    public void FormatCitation() { /* Additional APA citation formatting */ }
 }

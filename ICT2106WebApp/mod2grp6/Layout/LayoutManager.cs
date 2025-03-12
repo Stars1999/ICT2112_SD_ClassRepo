@@ -43,7 +43,10 @@ namespace ICT2106WebApp.mod2grp6.Layout
         {
             return false;
         }
-
+        /* public List<AbstractNode> ApplyTextFormatting()
+        {
+            return null;
+        } */
 
     }
 }

@@ -1,4 +1,4 @@
-namespace ICT2106WebApp.mod2grp6.Format
+namespace ICT2106WebApp.mod2grp6.Layout
 {
     public class Layout
     {

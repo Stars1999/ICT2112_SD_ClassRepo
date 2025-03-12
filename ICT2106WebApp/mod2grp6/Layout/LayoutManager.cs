@@ -1,6 +1,6 @@
 namespace ICT2106WebApp.mod2grp6.Layout
 {
-    public class LayoutManager
+    public class LayoutManager : IFormatLayout
     {
         private Layout content;
 
@@ -44,9 +44,6 @@ namespace ICT2106WebApp.mod2grp6.Layout
             return false;
         }
 
-/*         public List<AbstractNode> ApplyLayoutFormatting()
-        {
-            return null;
-        } */
+
     }
 }

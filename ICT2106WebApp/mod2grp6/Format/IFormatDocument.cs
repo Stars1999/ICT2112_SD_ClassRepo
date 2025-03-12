@@ -1,4 +1,4 @@
-namespace ICT2106WebApp.mod2grp6
+namespace ICT2106WebApp.mod2grp6.Format
 {
     public interface IFormatDocument
     {
@@ -10,8 +10,6 @@ namespace ICT2106WebApp.mod2grp6
 
 
         bool FormatParagraphs();
-
-
         MetaData ProcessMetaData();
     }
 }

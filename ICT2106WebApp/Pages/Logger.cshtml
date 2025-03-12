@@ -22,7 +22,9 @@
             <option value="">All Locations</option>
             @foreach (var location in Model.AvailableLocations)
             {
-                <option value="@location" selected="@(Model.FilterLocation == location ? "selected" : null)">@location</option>
+                <option value="@location" selected="@(Model.FilterLocation == location ? "selected" : null)">
+                    @location
+                </option>
             }
         </select>
 
@@ -47,9 +49,9 @@
                 @foreach (var log in Model.Logs)
                 {
                     <tr>
-                        <td>@log.LogTimestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td>@log.LogDescription</td>
-                        <td>@log.LogLocation</td>
+                        <td>@log.GetLogDetails().Item2.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@log.GetLogDetails().Item3</td>
+                        <td>@log.GetLogDetails().Item4</td>
                     </tr>
                 }
             }
@@ -65,6 +67,8 @@
 
 <!-- Download Button -->
 <form method="get" action="/Logger">
+    <input type="hidden" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="FilterLocation" value="@Model.FilterLocation" />
     <input type="hidden" name="handler" value="DownloadLog">
     <button type="submit" class="btn btn-primary">Download Logs</button>
 </form>

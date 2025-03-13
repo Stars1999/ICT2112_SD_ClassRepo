@@ -121,6 +121,7 @@ namespace ICT2106WebApp.mod2grp6.Format
         }
 
 
+        public bool ProcessMetaData() { return true; }
         /*public bool ProcessMetaData()
         {
             try

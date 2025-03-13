@@ -4,7 +4,7 @@ namespace Utilities
 {
     public class TreeProcessor
     {
-        private List<string> nodeOrder = new List<string> { "root", "section", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
+        private List<string> nodeOrder = new List<string> { "root", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
         
         public CompositeNode CreateTree(List<AbstractNode> sequentialList)
         {

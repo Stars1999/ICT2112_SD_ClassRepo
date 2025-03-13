@@ -2,7 +2,7 @@ namespace Utilities
 {
     public class NodeManager
     {
-        private List<string> nodeOrder = new List<string> { "root", "section", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
+        private List<string> nodeOrder = new List<string> { "root", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
         
         public AbstractNode CreateNode(int id, string nodeType, string content, List<Dictionary<string, object>> styling)
         {

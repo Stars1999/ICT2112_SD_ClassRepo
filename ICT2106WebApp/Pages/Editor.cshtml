@@ -153,92 +153,14 @@ This is a sample LaTeX document.
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const compileBtn = document.getElementById('compile-btn');
-            const downloadPdfBtn = document.getElementById('download-pdf-btn');
-            const saveBtn = document.getElementById('save-btn');
-            const latexEditor = document.getElementById('latex-editor');
-            const errorList = document.getElementById('error-list');
-            const compilationStatus = document.getElementById('compilation-status');
-            
-            // Example event handler for compilation
-            compileBtn.addEventListener('click', function() {
-                compilationStatus.textContent = 'Compiling...';
-                
-                // For ASP.NET integration, we can use AJAX to call a controller method
-                fetch('@Url.Action("CompileLaTeX", "Home")', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        latex: latexEditor.value,
-                        bibliographyStyle: document.getElementById('bibliography-style').value
-                    }),
-                })
-                .then(response => response.json())
+            fetch('/home/load-latex')
+                .then(response => response.text())
                 .then(data => {
-                    compilationStatus.textContent = 'Compilation completed';
-                    
-                    // Handle errors from the server
-                    if (data.errors && data.errors.length > 0) {
-                        errorList.innerHTML = '';
-                        data.errors.forEach(error => {
-                            const errorClass = error.severity === 'high' ? 'error-high' : 'error-medium';
-                            const errorItem = document.createElement('div');
-                            errorItem.className = errorClass;
-                            errorItem.innerHTML = `<strong>Line ${error.lineNumber}:</strong> ${error.message}`;
-                            errorList.appendChild(errorItem);
-                        });
-                    } else {
-                        errorList.innerHTML = ''; // Clear errors if none
-                    }
-                    
-                    // Update PDF preview if available
-                    if (data.pdfUrl) {
-                        document.getElementById('pdf-preview').innerHTML = 
-                            `<iframe src="${data.pdfUrl}" width="100%" height="100%" style="border: none;"></iframe>`;
+                    if (data.trim() !== '') {
+                        document.getElementById('latex-editor').value = data;
                     }
                 })
-                .catch(error => {
-                    compilationStatus.textContent = 'Compilation failed';
-                    console.error('Error:', error);
-                });
-            });
-            
-            downloadPdfBtn.addEventListener('click', function() {
-                window.location.href = '@Url.Action("DownloadPDF", "Home")';
-            });
-            
-            saveBtn.addEventListener('click', function() {
-                fetch('@Url.Action("SaveDocument", "Home")', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        latex: latexEditor.value 
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message || 'Document saved!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to save document');
-                });
-            });
-            
-            // Calculate line and word count
-            function updateDocInfo() {
-                const text = latexEditor.value;
-                const lines = text.split('\n').length;
-                const words = text.split(/\s+/).filter(word => word.length > 0).length;
-                document.getElementById('document-info').textContent = `Lines: ${lines} | Words: ${words}`;
-            }
-            
-            latexEditor.addEventListener('input', updateDocInfo);
-            updateDocInfo(); // Initial count
+                .catch(error => console.error('Error loading LaTeX:', error));
         });
     </script>
 }

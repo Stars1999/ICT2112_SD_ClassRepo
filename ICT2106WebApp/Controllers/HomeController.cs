@@ -11,34 +11,72 @@ public class HomeController : Controller
     {
         try
         {
+            Console.WriteLine("[DEBUG] Convert() called.");
+
             string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
 
             if (!System.IO.File.Exists(jsonFilePath))
             {
-                return Content("Error: JSON file not found! Ensure bibliography_test.json is inside wwwroot.");
+                Console.WriteLine("[ERROR] JSON file not found!");
+                return Content("Error: JSON file not found!");
             }
 
-            // Instantiate the required factories
+            // Step 1: Convert citations & bibliography
+            string jsonData = System.IO.File.ReadAllText(jsonFilePath);
             var citationFactory = new CitationScannerFactory();
             var bibliographyFactory = new BibliographyScannerFactory();
-
-            // Now pass them to BibTeXConverter
             var converter = new BibTeXConverter(citationFactory, bibliographyFactory);
+            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
 
-            // Capture formatted LaTeX content
-            using StringWriter outputWriter = new();
-            Console.SetOut(outputWriter); // Redirect console output
+            // Step 2: Store updated JSON in-memory
+            var latexCompiler = new LatexCompiler();
+            latexCompiler.UpdateJson(updatedJson);
 
-            converter.ConvertAndPrint(jsonFilePath);
+            // Step 3: Generate LaTeX from updated JSON
+            var latexGenerator = new LatexGenerator();
+            latexGenerator.GenerateLatex(latexCompiler.GetUpdatedJson());
 
-            string formattedText = outputWriter.ToString();
-            return Content($"<pre>{formattedText}</pre>", "text/html");
+            string generatedLatex = latexGenerator.GetLatexContent();
+            if (string.IsNullOrEmpty(generatedLatex))
+            {
+                Console.WriteLine("[ERROR] LatexGenerator did not generate any content.");
+            }
+
+            // Step 4: Store LaTeX for editor
+            var editorDoc = new EditorDoc();
+            editorDoc.SetLatexContent(generatedLatex);
+
+            Console.WriteLine("[INFO] LaTeX content successfully stored in EditorDoc.");
+            
+            return RedirectToAction("Editor");
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"[ERROR] {ex.Message}");
             return Content($"Error: {ex.Message}");
         }
     }
+
+
+    [HttpGet("load-latex")]
+    public IActionResult LoadLatex()
+    {
+        Console.WriteLine("[DEBUG] /home/load-latex was accessed.");
+
+        var editorDoc = new EditorDoc();
+        string latexContent = editorDoc.GetLatexContent();
+
+        if (string.IsNullOrEmpty(latexContent))
+        {
+            Console.WriteLine("[ERROR] No LaTeX content found in EditorDoc.");
+            return Content("Error: No LaTeX content found.");
+        }
+
+        Console.WriteLine("[INFO] Returning LaTeX content to the editor.");
+        return Content(latexContent);
+    }
+
+
 
     [HttpGet("editor")]
     public IActionResult Editor()

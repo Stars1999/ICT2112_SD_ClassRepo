@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
 
 public class BibTeXConverter
@@ -14,30 +12,25 @@ public class BibTeXConverter
         _bibliographyFactory = bibliographyFactory;
     }
 
-    public void ConvertAndPrint(string jsonFilePath)
+    public string ConvertCitationsAndBibliography(string jsonData)
     {
-        Console.WriteLine($"[DEBUG] Reading JSON file: {jsonFilePath}");
-
-        var jsonData = File.ReadAllText(jsonFilePath);
         using var document = JsonDocument.Parse(jsonData);
         var root = document.RootElement;
 
         if (!root.TryGetProperty("documents", out JsonElement documents) || documents.GetArrayLength() == 0)
         {
-            Console.WriteLine("[ERROR] JSON data is invalid or contains no documents.");
-            return;
+            Console.WriteLine("[ERROR] No documents found in JSON.");
+            return jsonData; // Return original JSON if nothing to process
         }
 
-        Console.WriteLine($"[DEBUG] Found {documents.GetArrayLength()} LaTeX documents.");
+        var updatedDocuments = new List<object>();
 
         foreach (var doc in documents.EnumerateArray())
         {
             string title = doc.GetProperty("Title").GetString() ?? "Unknown Title";
             string author = doc.GetProperty("Author").GetString() ?? "Unknown Author";
-            string citationStyle = doc.GetProperty("CitationStyle").GetString()?.ToLower() ?? "apa"; // Default to APA
+            string citationStyle = doc.GetProperty("CitationStyle").GetString()?.ToLower() ?? "apa";
             string latexContent = doc.GetProperty("LatexContent").GetString() ?? "";
-
-            Console.WriteLine($"\nProcessing Document: {title} by {author} (Style: {citationStyle})");
 
             try
             {
@@ -57,14 +50,22 @@ public class BibTeXConverter
                     mlaScanner.ApplyMLAFormatting();
                 }
 
-                Console.WriteLine("\nConverted LaTeX Content:\n");
-                Console.WriteLine(latexContent);
-                Console.WriteLine("\n----------------------------------------");
+                updatedDocuments.Add(new
+                {
+                    Title = title,
+                    Author = author,
+                    Date = doc.GetProperty("Date").GetString() ?? "",
+                    CitationStyle = citationStyle,
+                    LatexContent = latexContent
+                });
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR] {ex.Message}");
             }
         }
+
+        // Convert updated documents to JSON string and return as variable
+        return JsonSerializer.Serialize(new { documents = updatedDocuments }, new JsonSerializerOptions { WriteIndented = true });
     }
 }

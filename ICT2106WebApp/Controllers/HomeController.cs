@@ -39,4 +39,10 @@ public class HomeController : Controller
             return Content($"Error: {ex.Message}");
         }
     }
+
+    [HttpGet("editor")]
+    public IActionResult Editor()
+    {
+        return RedirectToPage("/Editor");
+    }
 }

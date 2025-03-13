@@ -1,9 +1,20 @@
-public class MLABibliographyScanner : IBibliographyScanner
+public class MLABibliographyScanner : IMLA
 {
-    public List<string> ScanBibliographies(List<BibliographyStyle> bibliographies)
+    public string FormatCitations(string latexContent)
     {
-        return bibliographies.Select(b => $"{b.Author}. \"{b.Title}.\" {b.Publisher}, {b.Date:yyyy}.").ToList();
+        Console.WriteLine("[DEBUG] Formatting MLA citations...");
+        return latexContent.Replace(@"\cite{", "(").Replace("}", ")");
+
     }
 
-    public void FormatBibliography() { /* Additional MLA formatting if needed */ }
+    public string FormatBibliographies(string latexContent)
+    {
+        Console.WriteLine("[DEBUG] Formatting MLA bibliography...");
+        return latexContent.Replace(@"\bibliographystyle{plain}", @"\bibliographystyle{mla}");
+    }
+
+    public void ApplyMLAFormatting()
+    {
+        Console.WriteLine("[DEBUG] Applying additional MLA bibliography formatting...");
+    }
 }

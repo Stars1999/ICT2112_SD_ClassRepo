@@ -1,15 +1,19 @@
-public class APABibliographyScanner : IBibliographyScanner
+public class APABibliographyScanner : IAPA
 {
-    public List<string> ScanBibliographies(List<BibliographyStyle> bibliographies)
+    public string FormatCitations(string latexContent)
     {
-        Console.WriteLine("[DEBUG] Processing APA bibliographies...");
-        foreach (var b in bibliographies)
-        {
-            Console.WriteLine($"[DEBUG] Bibliography Found: {b.Author} - {b.Title}");
-        }
-
-        return bibliographies.Select(b => $"{b.Author} ({b.Date:yyyy}). {b.Title}. {b.Publisher}.").ToList();
+        Console.WriteLine("[DEBUG] Formatting APA citations...");
+        return latexContent.Replace(@"\cite{", "(").Replace("}", ")");
     }
 
-    public void FormatBibliography() { /* Additional APA formatting if needed */ }
+    public string FormatBibliographies(string latexContent)
+    {
+        Console.WriteLine("[DEBUG] Formatting APA bibliography...");
+        return latexContent.Replace(@"\bibliographystyle{plain}", @"\bibliographystyle{apalike}");
+    }
+
+    public void ApplyAPAFormatting()
+    {
+        Console.WriteLine("[DEBUG] Applying additional APA bibliography formatting...");
+    }
 }

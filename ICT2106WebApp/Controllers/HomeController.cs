@@ -18,8 +18,12 @@ public class HomeController : Controller
                 return Content("Error: JSON file not found! Ensure bibliography_test.json is inside wwwroot.");
             }
 
-            // Create BibTeXConverter instance
-            var converter = new BibTeXConverter();
+            // Instantiate the required factories
+            var citationFactory = new CitationScannerFactory();
+            var bibliographyFactory = new BibliographyScannerFactory();
+
+            // Now pass them to BibTeXConverter
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory);
 
             // Capture formatted LaTeX content
             using StringWriter outputWriter = new();

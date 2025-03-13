@@ -1,11 +1,25 @@
 {
     "documents": [
-      {
-        "Title": "Impact of Artificial Intelligence on Society",
-        "Author": "John Smith",
-        "Date": "2024-03-10",
-        "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{Impact of AI}\n\\author{John Smith}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nAI is reshaping industries \\cite{1}. Recent studies \\cite{Doe_2021} highlight its impact.\n\n\\section{Conclusion}\nFuture research is needed \\cite{2}.\n\n\\section{References}\n1. Brown, K. (2021). AI Revolution. Science Daily.\n2. Taylor, M. (2018). Emerging Tech Trends. Tech Monthly.\n\n\\end{document}"
-      }
+        {
+            "Title": "Impact of Artificial Intelligence on Society",
+            "Author": "John Smith",
+            "Date": "2024-03-10",
+            "CitationStyle": "APA",
+            "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{Impact of AI}\n\\author{John Smith}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nAI is reshaping industries \\cite{Brown_2021}. Recent studies \\cite{Doe_2021} highlight its impact.\n\n\\section{Conclusion}\nFuture research is needed \\cite{Taylor_2018}.\n\n\\section{References}\nBrown, K. (2021). AI Revolution. Science Daily.\nDoe, J. (2021). Machine Learning Advances. AI Journal.\nTaylor, M. (2018). Emerging Tech Trends. Tech Monthly.\n\n\\end{document}"
+        },
+        {
+            "Title": "The Future of Quantum Computing",
+            "Author": "Alice Johnson",
+            "Date": "2024-02-20",
+            "CitationStyle": "MLA",
+            "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{The Future of Quantum Computing}\n\\author{Alice Johnson}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nQuantum computing has the potential to solve complex problems that are infeasible for classical computers \\cite{Shor_1994}. This paper examines recent advancements and challenges.\n\n\\section{Challenges in Quantum Computing}\nScalability, error correction, and hardware limitations remain significant obstacles \\cite{Grover_1996}.\n\n\\section{Works Cited}\nShor, Peter W. \"Algorithms for Quantum Computation: Discrete Logarithms and Factoring.\" SIAM Journal on Computing, 1994.\nGrover, Lov K. \"A Fast Quantum Mechanical Algorithm for Database Search.\" Proceedings of the 28th Annual ACM Symposium on Theory of Computing, 1996.\n\n\\end{document}"
+        },
+        {
+            "Title": "Ethics in AI Decision-Making",
+            "Author": "Michael Adams",
+            "Date": "2024-05-05",
+            "CitationStyle": "MLA",
+            "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{Ethics in AI Decision-Making}\n\\author{Michael Adams}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nThe ethical implications of AI decision-making have sparked significant debate \\cite{Johnson_2023_45}. AI systems often lack transparency \\cite{Williams_2022_112}.\n\n\\section{Case Study: Bias in AI}\nAlgorithmic bias has been observed in various real-world applications \\cite{Lee_2020_87}. Transparency and accountability are critical factors \\cite{Nguyen_2021_56}.\n\n\\section{Works Cited}\nJohnson, Emily. \"AI and Ethics: Balancing Innovation and Responsibility.\" AI Ethics Review, 2023, p. 45.\nWilliams, Robert. \"Transparency in Machine Learning Systems.\" Journal of Artificial Intelligence, 2022, pp. 112-118.\nLee, Jessica. \"Algorithmic Bias in Decision-Making Systems.\" AI & Society, 2020, p. 87.\nNguyen, Tom. \"Understanding Accountability in AI Systems.\" Ethics in AI Journal, 2021, p. 56.\n\n\\end{document}"
+        }
     ]
-  }
-  
+}

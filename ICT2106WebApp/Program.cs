@@ -22,6 +22,12 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/pdf"
+});
+
 app.MapRazorPages(); // Keep this if you're using Razor Pages
 
 app.Run();

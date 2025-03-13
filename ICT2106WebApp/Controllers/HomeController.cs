@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 [Route("home")]
 public class HomeController : Controller
@@ -76,11 +77,81 @@ public class HomeController : Controller
         return Content(latexContent);
     }
 
+    [HttpPost("compile-latex")]
+    public async Task<IActionResult> CompileLaTeX([FromBody] LaTeXRequest request)
+    {
+        try
+        {
+            Console.WriteLine("[DEBUG] Received LaTeX content for compilation.");
 
+            string outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pdfs");
+            if (!Directory.Exists(outputDirectory))
+            {
+                Directory.CreateDirectory(outputDirectory);
+            }
+
+            string latexFilePath = Path.Combine(outputDirectory, "document.tex");
+            string pdfFilePath = Path.Combine(outputDirectory, "document.pdf");
+
+            // Step 1: Save LaTeX content to a .tex file
+            await System.IO.File.WriteAllTextAsync(latexFilePath, request.LatexContent);
+            Console.WriteLine("[INFO] LaTeX file saved.");
+
+            // Step 2: Compile LaTeX to PDF using pdflatex
+            bool success = CompileWithPdfLaTeX(latexFilePath, outputDirectory);
+
+            if (!success)
+            {
+                Console.WriteLine("[ERROR] LaTeX compilation failed.");
+                return Json(new { success = false, error = "LaTeX compilation failed." });
+            }
+
+            Console.WriteLine("[INFO] PDF compiled successfully.");
+
+            return Json(new { success = true, pdfUrl = "/pdfs/document.pdf" });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] {ex.Message}");
+            return Json(new { success = false, error = ex.Message });
+        }
+    }
+
+    private bool CompileWithPdfLaTeX(string latexFilePath, string outputDirectory)
+    {
+        try
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "pdflatex",
+                Arguments = $"-interaction=nonstopmode -output-directory {outputDirectory} {latexFilePath}",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using Process process = Process.Start(psi);
+            process.WaitForExit();
+
+            return process.ExitCode == 0; // 0 means success
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] LaTeX compilation error: {ex.Message}");
+            return false;
+        }
+    }
 
     [HttpGet("editor")]
     public IActionResult Editor()
     {
         return RedirectToPage("/Editor");
     }
+}
+
+// Request model to handle LaTeX content sent from JavaScript
+public class LaTeXRequest
+{
+    public string LatexContent { get; set; }
 }

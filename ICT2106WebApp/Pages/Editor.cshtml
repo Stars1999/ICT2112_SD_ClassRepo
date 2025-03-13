@@ -153,14 +153,47 @@ This is a sample LaTeX document.
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const compileBtn = document.getElementById('compile-btn');
+            const latexEditor = document.getElementById('latex-editor');
+            const pdfPreview = document.getElementById('pdf-preview');
+            const compilationStatus = document.getElementById('compilation-status');
+
+            // ✅ Load LaTeX content into editor when the page loads
             fetch('/home/load-latex')
                 .then(response => response.text())
                 .then(data => {
                     if (data.trim() !== '') {
-                        document.getElementById('latex-editor').value = data;
+                        latexEditor.value = data;
                     }
                 })
                 .catch(error => console.error('Error loading LaTeX:', error));
+
+            // ✅ Compile LaTeX to PDF when the "Compile" button is clicked
+            compileBtn.addEventListener('click', function() {
+                compilationStatus.textContent = 'Compiling...';
+
+                fetch('/home/compile-latex', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ latexContent: latexEditor.value }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        compilationStatus.textContent = 'Compilation successful!';
+                        pdfPreview.innerHTML = `<iframe src="${data.pdfUrl}#${new Date().getTime()}" width="100%" height="500px" style="border: none;"></iframe>`;
+                    } else {
+                        compilationStatus.textContent = 'Compilation failed!';
+                        console.error('Compilation error:', data.error);
+                    }
+                })
+                .catch(error => {
+                    compilationStatus.textContent = 'Compilation failed!';
+                    console.error('Error:', error);
+                });
+            });
         });
     </script>
 }

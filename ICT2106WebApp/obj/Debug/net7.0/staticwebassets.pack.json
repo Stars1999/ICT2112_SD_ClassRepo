@@ -249,6 +249,22 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\pdfs\\document.aux",
+      "PackagePath": "staticwebassets\\pdfs\\document.aux"
+    },
+    {
+      "Id": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\pdfs\\document.log",
+      "PackagePath": "staticwebassets\\pdfs\\document.log"
+    },
+    {
+      "Id": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\pdfs\\document.pdf",
+      "PackagePath": "staticwebassets\\pdfs\\document.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\pdfs\\document.tex",
+      "PackagePath": "staticwebassets\\pdfs\\document.tex"
+    },
+    {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

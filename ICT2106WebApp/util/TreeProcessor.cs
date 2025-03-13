@@ -1,10 +1,10 @@
 namespace Utilities
 {
-        public class TreeProcessor
+    public class TreeProcessor
     {
         private List<string> nodeOrder = new List<string> { "root", "section", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
         
-        public AbstractNode CreateTree(List<AbstractNode> sequentialList)
+        public CompositeNode CreateTree(List<AbstractNode> sequentialList)
         {
             Stack<AbstractNode> nodeStack = new Stack<AbstractNode>();
             AbstractNode rootNode = sequentialList[0];
@@ -44,7 +44,7 @@ namespace Utilities
                     nodeStack.Push(node);
                 }
             }
-            return rootNode;
+            return (CompositeNode)rootNode;
         }
 
         public AbstractNode CreateNode(int id, string nodeType, string content, List<Dictionary<string, object>> styling)

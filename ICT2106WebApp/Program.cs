@@ -5,7 +5,6 @@ using ICT2106WebApp.Interfaces;
 using ICT2106WebApp.DataSource;
 using ICT2106WebApp.Domain;
 using ICT2106WebApp.Interfaces;
-using ICT2106WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

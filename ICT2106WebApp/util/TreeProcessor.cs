@@ -1,3 +1,5 @@
+using System.Reflection.Metadata;
+
 namespace Utilities
 {
     public class TreeProcessor
@@ -47,14 +49,17 @@ namespace Utilities
             return (CompositeNode)rootNode;
         }
 
-        public AbstractNode CreateNode(int id, string nodeType, string content, List<Dictionary<string, object>> styling)
-        {
-            if (nodeOrder.Contains(nodeType))
-            {
-                return new CompositeNode(id, nodeType, content, styling);
-            } else {
-                return new SimpleNode(id, nodeType, content, styling);
-            }
+        public void SaveTreeToDatabase(AbstractNode rootNode) {
+            // TODO: Save tree to database
+        }
+
+        public bool ValidateTree(Document document, AbstractNode rootNode) {
+            // TODO: Validate tree
+            return true; // Dummy return
+        }
+
+        public void NotifyUpdatedTree() {
+            // TODO: Notify updated tree??
         }
 
         // Recursive method to print the tree hierarchy

@@ -21,6 +21,9 @@ public class MathProcessor
             // ✅ Step 4: Replace `\cdot` with `\times` for multiplication
             latexOutput = latexOutput.Replace(@"\cdot", @"\times");
 
+            // ✅ Step 5: Wrap output with `$$ ... $$` for proper LaTeX rendering
+            latexOutput = $"$$ {latexOutput} $$";
+
             return new List<string> { latexOutput };
         }
         catch (Exception ex)

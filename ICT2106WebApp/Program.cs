@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Utilities;
-
+using MongoDB.Bson; // Bson - Binary JSON
 // MongoDB packages
 using MongoDB.Driver;
-using MongoDB.Bson; // Bson - Binary JSON
+using Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,17 +22,16 @@ builder.Services.AddLogging(); // Add logging for testing MongoDB
 // Register MongoDB client as a singleton
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
-	var connectionString = builder.Configuration.GetConnectionString("MongoDbConnection"); // "MongoDbConnection" credentials stored in appsettings.json
-	return new MongoClient(connectionString);
+    var connectionString = builder.Configuration.GetConnectionString("MongoDbConnection"); // "MongoDbConnection" credentials stored in appsettings.json
+    return new MongoClient(connectionString);
 });
 
 // Register the database as a singleton , database transactions will use same instance
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
-	var client = sp.GetRequiredService<IMongoClient>();
-	return client.GetDatabase("inf2112");
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase("inf2112");
 });
-
 
 var app = builder.Build();
 
@@ -42,38 +41,42 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 // MongoDB testing, FYI test pass, able to insert into collection
 app.Lifetime.ApplicationStarted.Register(async () =>
 {
-	using var scope = app.Services.CreateScope();
-	var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
-	var collection = database.GetCollection<BsonDocument>("testCollection");
+    using var scope = app.Services.CreateScope();
+    var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
+    var collection = database.GetCollection<BsonDocument>("testCollection");
 
-	try
-	{
-		// Insert Data
-		var document = new BsonDocument { { "name", "Test User" }, { "email", "test@example.com" } };
-		await collection.InsertOneAsync(document);
-		logger.LogInformation("✅ Test document inserted into MongoDB.");
+    try
+    {
+        // Insert Data
+        var document = new BsonDocument
+        {
+            { "name", "Test User" },
+            { "email", "test@example.com" },
+        };
+        await collection.InsertOneAsync(document);
+        logger.LogInformation("✅ Test document inserted into MongoDB.");
 
-		// Read Data
-		var firstDocument = await collection.Find(new BsonDocument()).FirstOrDefaultAsync();
-		if (firstDocument != null)
-		{
-			logger.LogInformation("📌 Retrieved Document: {Document}", firstDocument.ToJson());
-		}
-		else
-		{
-			logger.LogWarning("⚠️ No data found in MongoDB.");
-		}
-	}
-	catch (Exception ex)
-	{
-		logger.LogError("❌ MongoDB test failed: {ErrorMessage}", ex.Message);
-	}
+        // Read Data
+        var firstDocument = await collection.Find(new BsonDocument()).FirstOrDefaultAsync();
+        if (firstDocument != null)
+        {
+            logger.LogInformation("📌 Retrieved Document: {Document}", firstDocument.ToJson());
+        }
+        else
+        {
+            logger.LogWarning("⚠️ No data found in MongoDB.");
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError("❌ MongoDB test failed: {ErrorMessage}", ex.Message);
+    }
 });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error");
 }
 app.UseStaticFiles();
 
@@ -87,50 +90,48 @@ DocumentProcessor.RunMyProgram();
 
 app.Run();
 
-
 // ✅ Extracts content from Word document
 public static class DocumentProcessor
 {
+    static Dictionary<string, string> GetDocumentMetadata(
+        WordprocessingDocument doc,
+        string filepath
+    )
+    {
+        var metadata = new Dictionary<string, string>();
+        if (doc.PackageProperties.Title != null)
+            metadata["Title"] = doc.PackageProperties.Title;
+        if (doc.PackageProperties.Creator != null)
+            metadata["Author"] = doc.PackageProperties.Creator;
 
-	static Dictionary<string, string> GetDocumentMetadata(WordprocessingDocument doc, string filepath)
-	{
-		var metadata = new Dictionary<string, string>();
-		if (doc.PackageProperties.Title != null)
-			metadata["Title"] = doc.PackageProperties.Title;
-		if (doc.PackageProperties.Creator != null)
-			metadata["Author"] = doc.PackageProperties.Creator;
+        // Created & Modified (from the DOCX metadata, not the OS timestamps)
+        if (doc.PackageProperties.Created != null)
+            metadata["CreatedDate_Internal"] = doc.PackageProperties.Created.Value.ToString("u");
+        if (doc.PackageProperties.Modified != null)
+            metadata["LastModified_Internal"] = doc.PackageProperties.Modified.Value.ToString("u");
 
+        FileInfo fileInfo = new FileInfo(filepath);
 
-		// Created & Modified (from the DOCX metadata, not the OS timestamps)
-		if (doc.PackageProperties.Created != null)
-			metadata["CreatedDate_Internal"] = doc.PackageProperties.Created.Value.ToString("u");
-		if (doc.PackageProperties.Modified != null)
-			metadata["LastModified_Internal"] = doc.PackageProperties.Modified.Value.ToString("u");
+        string fileName = fileInfo.Name; // "Example.docx"
+        long fileSize = fileInfo.Length; // size in bytes
 
+        metadata["filename"] = fileName;
+        metadata["size"] = fileSize.ToString();
 
-		FileInfo fileInfo = new FileInfo(filepath);
+        Console.WriteLine(metadata);
+        return metadata;
+    }
 
-		string fileName = fileInfo.Name;    // "Example.docx"
-		long fileSize = fileInfo.Length;    // size in bytes
+    public static void RunMyProgram()
+    {
+        string filePath = "Datarepository_zx_v2.docx"; // Change this to your actual file path
+        string jsonOutputPath = "output.json"; // File where JSON will be saved
 
-		metadata["filename"] = fileName;
-		metadata["size"] = fileSize.ToString();
+        string currentDir = Directory.GetCurrentDirectory();
+        string filePath_full = Path.Combine(currentDir, filePath);
 
-		Console.WriteLine(metadata);
-		return metadata;
-	}
-
-	public static void RunMyProgram()
-	{
-		string filePath = "Datarepository_zx.docx"; // Change this to your actual file path
-		string jsonOutputPath = "output.json"; // File where JSON will be saved
-
-		string currentDir = Directory.GetCurrentDirectory();
-		string filePath_full = Path.Combine(currentDir, filePath);
-
-
-		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
-		{
+        using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+        {
             // Get layout information
             var layoutInfo = GetDocumentLayout(wordDoc);
 
@@ -142,39 +143,41 @@ public static class DocumentProcessor
             {
                 { "type", "layout" },
                 { "content", "" },
-                { "styling", new List<object> { layoutInfo } }
+                {
+                    "styling",
+                    new List<object> { layoutInfo }
+                },
             };
 
             // Insert layout as the first element in document contents
             documentContents.Insert(0, layoutElement);
 
             var documentData = new
-			{
-				// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-				metadata = GetDocumentMetadata(wordDoc, filePath_full),
+            {
+                // metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
+                metadata = GetDocumentMetadata(wordDoc, filePath_full),
                 // headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
                 // !!footer still exists issues. Commented for now
                 // footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
 
-                document = documentContents
+                document = documentContents,
             };
 
+            // Convert to JSON format with UTF-8 encoding fix (preserves emojis, math, and Chinese)
+            string jsonOutput = JsonSerializer.Serialize(
+                documentData,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                }
+            );
 
-			// Convert to JSON format with UTF-8 encoding fix (preserves emojis, math, and Chinese)
-			string jsonOutput = JsonSerializer.Serialize(
-				documentData,
-				new JsonSerializerOptions
-				{
-					WriteIndented = true,
-					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-				}
-			);
-
-			// ✅ Write JSON to file
-			File.WriteAllText(jsonOutputPath, jsonOutput);
-			Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
-		}
-	}
+            // ✅ Write JSON to file
+            File.WriteAllText(jsonOutputPath, jsonOutput);
+            Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
+        }
+    }
 
     public static Dictionary<string, object> GetDocumentLayout(WordprocessingDocument doc)
     {
@@ -183,18 +186,20 @@ public static class DocumentProcessor
 
         if (mainDocumentPart == null || mainDocumentPart.Document.Body == null)
         {
-            Console.WriteLine("Error: Document body is null.");
+            // Console.WriteLine("Error: Document body is null.");
             return layout;
         }
 
         // Get all section properties in the document
-        var allSectionProps = mainDocumentPart.Document.Body.Descendants<SectionProperties>().ToList();
+        var allSectionProps = mainDocumentPart
+            .Document.Body.Descendants<SectionProperties>()
+            .ToList();
 
         // Console.WriteLine($"Found {allSectionProps.Count} section(s) in the document");
 
         if (allSectionProps.Count == 0)
         {
-            Console.WriteLine("No section properties found in document.");
+            // Console.WriteLine("No section properties found in document.");
             return layout;
         }
 
@@ -205,21 +210,26 @@ public static class DocumentProcessor
         var pageSize = sectionProps?.Elements<PageSize>().FirstOrDefault();
         if (pageSize != null)
         {
-            bool isLandscape = pageSize.Orient != null && pageSize.Orient.Value == PageOrientationValues.Landscape;
+            bool isLandscape =
+                pageSize.Orient != null && pageSize.Orient.Value == PageOrientationValues.Landscape;
 
             layout["orientation"] = isLandscape ? "Landscape" : "Portrait";
-            Console.WriteLine($"Orientation: {(isLandscape ? "Landscape" : "Portrait")}");
+            // Console.WriteLine($"Orientation: {(isLandscape ? "Landscape" : "Portrait")}");
 
             if (pageSize.Width != null)
             {
                 layout["pageWidth"] = ConvertTwipsToCentimeters((int)pageSize.Width.Value);
-                Console.WriteLine($"Page Width: {layout["pageWidth"]} cm (Original: {pageSize.Width.Value} twips)");
+                // Console.WriteLine(
+                //     $"Page Width: {layout["pageWidth"]} cm (Original: {pageSize.Width.Value} twips)"
+                // );
             }
 
             if (pageSize.Height != null)
             {
                 layout["pageHeight"] = ConvertTwipsToCentimeters((int)pageSize.Height.Value);
-                Console.WriteLine($"Page Height: {layout["pageHeight"]} cm (Original: {pageSize.Height.Value} twips)");
+                // Console.WriteLine(
+                //     $"Page Height: {layout["pageHeight"]} cm (Original: {pageSize.Height.Value} twips)"
+                // );
             }
         }
         else
@@ -238,12 +248,14 @@ public static class DocumentProcessor
             {
                 columnCount = columns.ColumnCount.Value;
             }
-            Console.WriteLine($"Column Count: {columnCount}");
+            // Console.WriteLine($"Column Count: {columnCount}");
 
             if (columns.Space != null)
             {
                 columnSpacing = ConvertTwipsToCentimeters(int.Parse(columns.Space.Value ?? ""));
-                Console.WriteLine($"Column Spacing: {columnSpacing} cm (Original: {columns.Space.Value} twips)");
+                // Console.WriteLine(
+                //     $"Column Spacing: {columnSpacing} cm (Original: {columns.Space.Value} twips)"
+                // );
             }
 
             layout["columnNum"] = columnCount;
@@ -251,7 +263,7 @@ public static class DocumentProcessor
         }
         else
         {
-            Console.WriteLine("No explicit column settings found, using defaults (1 column).");
+            // Console.WriteLine("No explicit column settings found, using defaults (1 column).");
             layout["columnNum"] = 1;
             layout["columnSpacing"] = 1.27;
         }
@@ -261,42 +273,54 @@ public static class DocumentProcessor
         if (pageMargins != null)
         {
             var margins = new Dictionary<string, double>();
-            Console.WriteLine("Margins found:");
+            // Console.WriteLine("Margins found:");
 
             if (pageMargins.Top != null)
             {
                 margins["top"] = ConvertTwipsToCentimeters(pageMargins.Top.Value);
-                Console.WriteLine($"   - Top: {margins["top"]} cm (Original: {pageMargins.Top.Value} twips)");
+                // Console.WriteLine(
+                //     $"   - Top: {margins["top"]} cm (Original: {pageMargins.Top.Value} twips)"
+                // );
             }
 
             if (pageMargins.Bottom != null)
             {
                 margins["bottom"] = ConvertTwipsToCentimeters(pageMargins.Bottom.Value);
-                Console.WriteLine($"   - Bottom: {margins["bottom"]} cm (Original: {pageMargins.Bottom.Value} twips)");
+                // Console.WriteLine(
+                //     $"   - Bottom: {margins["bottom"]} cm (Original: {pageMargins.Bottom.Value} twips)"
+                // );
             }
 
             if (pageMargins.Left != null)
             {
                 margins["left"] = ConvertTwipsToCentimeters((int)pageMargins.Left.Value);
-                Console.WriteLine($"   - Left: {margins["left"]} cm (Original: {pageMargins.Left.Value} twips)");
+                // Console.WriteLine(
+                //     $"   - Left: {margins["left"]} cm (Original: {pageMargins.Left.Value} twips)"
+                // );
             }
 
             if (pageMargins.Right != null)
             {
                 margins["right"] = ConvertTwipsToCentimeters((int)pageMargins.Right.Value);
-                Console.WriteLine($"   - Right: {margins["right"]} cm (Original: {pageMargins.Right.Value} twips)");
+                // Console.WriteLine(
+                //     $"   - Right: {margins["right"]} cm (Original: {pageMargins.Right.Value} twips)"
+                // );
             }
 
             if (pageMargins.Header != null)
             {
                 margins["header"] = ConvertTwipsToCentimeters((int)pageMargins.Header.Value);
-                Console.WriteLine($"   - Header: {margins["header"]} cm (Original: {pageMargins.Header.Value} twips)");
+                // Console.WriteLine(
+                //     $"   - Header: {margins["header"]} cm (Original: {pageMargins.Header.Value} twips)"
+                // );
             }
 
             if (pageMargins.Footer != null)
             {
                 margins["footer"] = ConvertTwipsToCentimeters((int)pageMargins.Footer.Value);
-                Console.WriteLine($"   - Footer: {margins["footer"]} cm (Original: {pageMargins.Footer.Value} twips)");
+                // Console.WriteLine(
+                //     $"   - Footer: {margins["footer"]} cm (Original: {pageMargins.Footer.Value} twips)"
+                // );
             }
 
             layout["margins"] = margins;
@@ -317,36 +341,38 @@ public static class DocumentProcessor
     }
 
     public static List<object> ExtractDocumentContents(WordprocessingDocument doc)
-	{
-		var elements = new List<object>();
-		var body = doc.MainDocumentPart?.Document?.Body;
+    {
+        var elements = new List<object>();
+        var body = doc.MainDocumentPart?.Document?.Body;
 
-		if (body == null)
-		{
-			Console.WriteLine("❌ Error: Document body is null.");
-			return elements;
-		}
+        if (body == null)
+        {
+            Console.WriteLine("❌ Error: Document body is null.");
+            return elements;
+        }
 
-		foreach (var element in body.Elements<OpenXmlElement>())
-		{
-			// ✅ Check for a Drawing element inside the run (Extract Images)
-			var drawing = element.Descendants<DocumentFormat.OpenXml.Wordprocessing.Drawing>().FirstOrDefault();
-			if (drawing != null)
-			{
-				var imageObjects = ExtractContent.ExtractImagesFromDrawing(doc, drawing);
-				elements.AddRange(imageObjects);
-			}
-			else if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
-			{
-				// ✅ Extract Paragraphs
-				elements.Add(ExtractContent.ExtractParagraph(paragraph, doc));
-			}
-			else if (element is Table table)
-			{
-				Console.WriteLine("📝 Extracting Table");
-				elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
-			}
-		}
-		return elements;
-	}
+        foreach (var element in body.Elements<OpenXmlElement>())
+        {
+            // ✅ Check for a Drawing element inside the run (Extract Images)
+            var drawing = element
+                .Descendants<DocumentFormat.OpenXml.Wordprocessing.Drawing>()
+                .FirstOrDefault();
+            if (drawing != null)
+            {
+                var imageObjects = ExtractContent.ExtractImagesFromDrawing(doc, drawing);
+                elements.AddRange(imageObjects);
+            }
+            else if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
+            {
+                // ✅ Extract Paragraphs
+                elements.Add(ExtractContent.ExtractParagraph(paragraph, doc));
+            }
+            else if (element is Table table)
+            {
+                Console.WriteLine("📝 Extracting Table");
+                elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
+            }
+        }
+        return elements;
+    }
 }

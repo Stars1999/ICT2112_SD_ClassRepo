@@ -87,3 +87,6 @@ to do: table format like this { "type": "Table", "content": "", "runs": [ {
 
 2. Citation pulling back
 3. Fix math if got time
+
+4. Make use of node
+5. Refactor

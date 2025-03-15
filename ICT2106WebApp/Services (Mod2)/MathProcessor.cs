@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using MathNet.Symbolics;
+using AngouriMath;
 
 public class MathProcessor
 {
@@ -9,14 +9,19 @@ public class MathProcessor
     {
         try
         {
-            // ✅ Preprocess the equation before parsing
+            // ✅ Step 1: Preprocess the equation (replace `√` with `sqrt`)
             equation = PreprocessEquation(equation);
 
-            // ✅ Parse the modified equation
-            var parsedEquation = Infix.ParseOrThrow(equation);
+            // ✅ Step 2: Parse the equation using AngouriMath
+            var parsedEquation = MathS.FromString(equation);
 
-            // ✅ Convert to LaTeX format
-            return new List<string> { LaTeX.Format(parsedEquation) };
+            // ✅ Step 3: Convert to LaTeX format
+            string latexOutput = parsedEquation.Latexise();
+
+            // ✅ Step 4: Replace `\cdot` with `\times` for multiplication
+            latexOutput = latexOutput.Replace(@"\cdot", @"\times");
+
+            return new List<string> { latexOutput };
         }
         catch (Exception ex)
         {
@@ -24,27 +29,10 @@ public class MathProcessor
         }
     }
 
-     private string PreprocessEquation(string equation)
+    private string PreprocessEquation(string equation)
     {
-        // ✅ Convert square root notation `√(x)` → `sqrt(x)`
+        // ✅ Convert square root symbol `√(x)` → `sqrt(x)`
         equation = Regex.Replace(equation, @"√\(([^)]+)\)", @"sqrt($1)");
-
-        // ✅ Convert fractions `(a/b)` → `\frac{a}{b}`
-        equation = Regex.Replace(equation, @"\((\d+)/(\d+)\)", @"\frac{$1}{$2}");
-
-        // ✅ Ensure multiplication between `\frac{}` and functions like `sqrt(x)`
-        equation = Regex.Replace(equation, @"(\\frac{\d+}{\d+})\s*(sqrt|sin|cos|tan|log|ln)", @"$1 * $2");
-
-        // ✅ Ensure explicit multiplication for numbers before `sqrt(x)`
-        equation = Regex.Replace(equation, @"(\d)\s*(sqrt|sin|cos|tan|log|ln)", @"$1 * $2");
-
-        // ✅ Ensure explicit multiplication for variables before `sqrt(x)`
-        equation = Regex.Replace(equation, @"([a-zA-Z])\s*(sqrt|sin|cos|tan|log|ln)", @"$1 * $2");
-
-        // ✅ Convert implicit multiplication (e.g., `5x` → `5*x`)
-        equation = Regex.Replace(equation, @"(\d)([a-zA-Z])", @"$1*$2");
-
-
 
         return equation;
     }

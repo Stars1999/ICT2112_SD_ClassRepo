@@ -343,6 +343,7 @@ public static class DocumentProcessor
     public static List<object> ExtractDocumentContents(WordprocessingDocument doc)
     {
         var elements = new List<object>();
+
         var body = doc.MainDocumentPart?.Document?.Body;
 
         if (body == null)
@@ -350,6 +351,8 @@ public static class DocumentProcessor
             Console.WriteLine("❌ Error: Document body is null.");
             return elements;
         }
+
+		bool haveBibliography = false;
 
         foreach (var element in body.Elements<OpenXmlElement>())
         {
@@ -365,7 +368,7 @@ public static class DocumentProcessor
             else if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
             {
                 // ✅ Extract Paragraphs
-                elements.Add(ExtractContent.ExtractParagraph(paragraph, doc));
+                elements.Add(ExtractContent.ExtractParagraph(paragraph, doc, ref haveBibliography));
             }
             else if (element is Table table)
             {

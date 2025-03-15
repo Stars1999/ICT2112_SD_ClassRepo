@@ -25,5 +25,6 @@ namespace ICT2106WebApp.Pages
             formatManager.StartFormatting(Content);
             Result = formatManager.FormatHeadings();
         }
+
     }
 }

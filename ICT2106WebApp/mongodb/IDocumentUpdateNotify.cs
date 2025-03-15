@@ -1,3 +1,4 @@
-public interface IDocumentUpdateNotify {
-    Task notifyUpdatedDocument(Docx docx);
+public interface IDocumentUpdateNotify
+{
+	Task notifyUpdatedDocument(Docx docx);
 }

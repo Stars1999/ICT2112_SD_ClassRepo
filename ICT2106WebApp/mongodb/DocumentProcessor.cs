@@ -24,7 +24,7 @@
 //         await _docxUpdate.saveDocument(docx); // Save document using injected dependency
 //     }
 
-//     // IDocumentUpdateNotify 
+//     // IDocumentUpdateNotify
 //     public async Task notifyUpdatedDocument(Docx docx)
 //     {
 //         Console.WriteLine($"DocumentProcessor -> Document updated: {docx.Title}");
@@ -69,7 +69,7 @@
 //                 return;
 //             }
 
-//             // Use RDG method to save document 
+//             // Use RDG method to save document
 //             await _docxUpdate.saveDocument(docx);
 
 //             Console.WriteLine($"DocumentProcessor -> Document saved: {docx.Title}");
@@ -86,82 +86,85 @@
 
 public class DocumentParsing : IDocumentUpdateNotify
 {
-    private readonly Lazy<IDocumentUpdate> _docxUpdate;  // Directly inject the dependency instead of using Lazy<T>
-    // private readonly DocxRDG _docxRDG;
+	private readonly Lazy<IDocumentUpdate> _docxUpdate; // Directly inject the dependency instead of using Lazy<T>
 
-    public DocumentParsing(IServiceProvider serviceProvider)
-    {
-           _docxUpdate = new Lazy<IDocumentUpdate>(() => 
-            serviceProvider.GetRequiredService<IDocumentUpdate>());
-        // _docxUpdate = docxUpdate ?? throw new ArgumentNullException(nameof(docxUpdate));  // Ensure valid injection
-    }
+	// private readonly DocxRDG _docxRDG;
 
-    // ✅ Create new document and store in DB
-    public async Task CreateDocxAsync(Docx docx)
-    {
-        if (docx == null)
-        {
-            throw new ArgumentNullException(nameof(docx), "Document cannot be null.");
-        }
+	public DocumentParsing(IServiceProvider serviceProvider)
+	{
+		_docxUpdate = new Lazy<IDocumentUpdate>(
+			() => serviceProvider.GetRequiredService<IDocumentUpdate>()
+		);
+		// _docxUpdate = docxUpdate ?? throw new ArgumentNullException(nameof(docxUpdate));  // Ensure valid injection
+	}
 
-        await _docxUpdate.Value.saveDocument(docx); // Save document using injected dependency
-    }
+	// ✅ Create new document and store in DB
+	public async Task CreateDocxAsync(Docx docx)
+	{
+		if (docx == null)
+		{
+			throw new ArgumentNullException(nameof(docx), "Document cannot be null.");
+		}
 
-    // IDocumentUpdateNotify 
-    public async Task notifyUpdatedDocument(Docx docx)
-    {
-        Console.WriteLine($"DocumentProcessor -> Document updated: {docx.Title}");
-        // Additional async operations if necessary
-        await Task.CompletedTask; // Keeps method async-compatible
-    }
+		await _docxUpdate.Value.saveDocument(docx); // Save document using injected dependency
+	}
 
-    // To save local document
-    public async Task saveDocumentToDatabase(string filePath)
-    {
-        // Validate file exists
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException($"File not found: {filePath}");
-        }
+	// IDocumentUpdateNotify
+	public async Task notifyUpdatedDocument(Docx docx)
+	{
+		Console.WriteLine($"DocumentProcessor -> Document updated: {docx.Title}");
+		// Additional async operations if necessary
+		await Task.CompletedTask; // Keeps method async-compatible
+	}
 
-        // Validate it's a .docx file
-        if (!filePath.EndsWith(".docx", StringComparison.OrdinalIgnoreCase))
-        {
-            throw new ArgumentException("File is not a .docx format");
-        }
+	// To save local document
+	public async Task saveDocumentToDatabase(string filePath)
+	{
+		// Validate file exists
+		if (!File.Exists(filePath))
+		{
+			throw new FileNotFoundException($"File not found: {filePath}");
+		}
 
-        try
-        {
-            // Read file into byte array
-            byte[] fileData = await File.ReadAllBytesAsync(filePath);
+		// Validate it's a .docx file
+		if (!filePath.EndsWith(".docx", StringComparison.OrdinalIgnoreCase))
+		{
+			throw new ArgumentException("File is not a .docx format");
+		}
 
-            // Create Docx object
-            var docx = new Docx
-            {
-                Title = Path.GetFileNameWithoutExtension(filePath),
-                FileName = Path.GetFileName(filePath),
-                ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                UploadDate = DateTime.UtcNow,
-                FileData = fileData
-            };
+		try
+		{
+			// Read file into byte array
+			byte[] fileData = await File.ReadAllBytesAsync(filePath);
 
-            // Check if _docxUpdate is null or not initialized
-            if (_docxUpdate == null)
-            {
-                Console.WriteLine("Error: _docxUpdate is not initialized.");
-                return;
-            }
+			// Create Docx object
+			var docx = new Docx
+			{
+				Title = Path.GetFileNameWithoutExtension(filePath),
+				FileName = Path.GetFileName(filePath),
+				ContentType =
+					"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				UploadDate = DateTime.UtcNow,
+				FileData = fileData,
+			};
 
-            // Use RDG method to save document 
-            await _docxUpdate.Value.saveDocument(docx);
+			// Check if _docxUpdate is null or not initialized
+			if (_docxUpdate == null)
+			{
+				Console.WriteLine("Error: _docxUpdate is not initialized.");
+				return;
+			}
 
-            Console.WriteLine($"DocumentProcessor -> Document saved: {docx.Title}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"DocumentProcessor -> Error saving document: {ex.Message}");
-            Console.WriteLine(ex.StackTrace);  // Log the stack trace to help identify where the issue occurred
-            throw;
-        }
-    }
+			// Use RDG method to save document
+			await _docxUpdate.Value.saveDocument(docx);
+
+			Console.WriteLine($"DocumentProcessor -> Document saved: {docx.Title}");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"DocumentProcessor -> Error saving document: {ex.Message}");
+			Console.WriteLine(ex.StackTrace); // Log the stack trace to help identify where the issue occurred
+			throw;
+		}
+	}
 }

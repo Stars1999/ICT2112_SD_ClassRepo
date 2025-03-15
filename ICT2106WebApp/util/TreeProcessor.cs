@@ -2,80 +2,104 @@ using System.Reflection.Metadata;
 
 namespace Utilities
 {
-    public class TreeProcessor
-    {
-        private List<string> nodeOrder = new List<string> { "root", "h1", "h2", "h3", "h4", "h5", "h6", "table", "row", "runsParagraph" };
-        
-        public CompositeNode CreateTree(List<AbstractNode> sequentialList)
-        {
-            Stack<AbstractNode> nodeStack = new Stack<AbstractNode>();
-            AbstractNode rootNode = sequentialList[0];
-            nodeStack.Push(rootNode);
+	public class TreeProcessor
+	{
+		private List<string> nodeOrder = new List<string>
+		{
+			"root",
+			"h1",
+			"h2",
+			"h3",
+			"h4",
+			"h5",
+			"h6",
+			"table",
+			"row",
+			"runsParagraph",
+		};
 
-            foreach (AbstractNode node in sequentialList)
-            {
-                if (node.GetNodeType() == "root") {
-                    continue;
-                }
+		public CompositeNode CreateTree(List<AbstractNode> sequentialList)
+		{
+			Stack<AbstractNode> nodeStack = new Stack<AbstractNode>();
+			AbstractNode rootNode = sequentialList[0];
+			nodeStack.Push(rootNode);
 
-                int currentNodeLevel = nodeOrder.IndexOf(node.GetNodeType());
-                int currentCompositeNodeLevel = nodeOrder.IndexOf(((CompositeNode)nodeStack.Peek()).GetNodeType());
+			foreach (AbstractNode node in sequentialList)
+			{
+				if (node.GetNodeType() == "root")
+				{
+					continue;
+				}
 
-                // Set level of runs to be +1 of runsParagraph
-                if (node.GetNodeType() == "text_run") {
-                    currentNodeLevel = nodeOrder.IndexOf("runsParagraph") + 1;
-                }
+				int currentNodeLevel = nodeOrder.IndexOf(node.GetNodeType());
+				int currentCompositeNodeLevel = nodeOrder.IndexOf(
+					((CompositeNode)nodeStack.Peek()).GetNodeType()
+				);
 
-                if (node.GetNodeType() == "cell") {
-                    currentNodeLevel = nodeOrder.IndexOf("row") + 1;
-                }
+				// Set level of runs to be +1 of runsParagraph
+				if (node.GetNodeType() == "text_run")
+				{
+					currentNodeLevel = nodeOrder.IndexOf("runsParagraph") + 1;
+				}
 
-                if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)
-                {
-                    ((CompositeNode)nodeStack.Peek()).AddChild(node);
-                    nodeStack.Push(node);
-                }
-                else
-                {
-                    while (currentNodeLevel <= currentCompositeNodeLevel)
-                    {
-                        nodeStack.Pop();
-                        currentCompositeNodeLevel = nodeOrder.IndexOf(((CompositeNode)nodeStack.Peek()).GetNodeType());
-                    }
-                    ((CompositeNode)nodeStack.Peek()).AddChild(node);
-                    nodeStack.Push(node);
-                }
-            }
-            return (CompositeNode)rootNode;
-        }
+				if (node.GetNodeType() == "cell")
+				{
+					currentNodeLevel = nodeOrder.IndexOf("row") + 1;
+				}
 
-        public void SaveTreeToDatabase(AbstractNode rootNode) {
-            // TODO: Save tree to database
-        }
+				if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)
+				{
+					((CompositeNode)nodeStack.Peek()).AddChild(node);
+					nodeStack.Push(node);
+				}
+				else
+				{
+					while (currentNodeLevel <= currentCompositeNodeLevel)
+					{
+						nodeStack.Pop();
+						currentCompositeNodeLevel = nodeOrder.IndexOf(
+							((CompositeNode)nodeStack.Peek()).GetNodeType()
+						);
+					}
+					((CompositeNode)nodeStack.Peek()).AddChild(node);
+					nodeStack.Push(node);
+				}
+			}
+			return (CompositeNode)rootNode;
+		}
 
-        public bool ValidateTree(Document document, AbstractNode rootNode) {
-            // TODO: Validate tree
-            return true; // Dummy return
-        }
+		public void SaveTreeToDatabase(AbstractNode rootNode)
+		{
+			// TODO: Save tree to database
+		}
 
-        public void NotifyUpdatedTree() {
-            // TODO: Notify updated tree??
-        }
+		public bool ValidateTree(Document document, AbstractNode rootNode)
+		{
+			// TODO: Validate tree
+			return true; // Dummy return
+		}
 
-        // Recursive method to print the tree hierarchy
-        private void PrintTree(AbstractNode node, int level)
-        {
-            // Print the node's content (could be its type or content)
-            Console.WriteLine(new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent());
+		public void NotifyUpdatedTree()
+		{
+			// TODO: Notify updated tree??
+		}
 
-            if (node is CompositeNode compositeNode)
-            {
-                // Recursively print children of composite nodes
-                foreach (var child in compositeNode.GetChildren())
-                {
-                    PrintTree(child, level + 1);
-                }
-            }
-        }
-    }
+		// Recursive method to print the tree hierarchy
+		private void PrintTree(AbstractNode node, int level)
+		{
+			// Print the node's content (could be its type or content)
+			Console.WriteLine(
+				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent()
+			);
+
+			if (node is CompositeNode compositeNode)
+			{
+				// Recursively print children of composite nodes
+				foreach (var child in compositeNode.GetChildren())
+				{
+					PrintTree(child, level + 1);
+				}
+			}
+		}
+	}
 }

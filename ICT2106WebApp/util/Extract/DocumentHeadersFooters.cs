@@ -13,7 +13,6 @@ namespace Utilities
 {
 	public static class DocumentHeadersFooters
 	{
-
 		public static List<string> ExtractHeaders(WordprocessingDocument doc)
 		{
 			var headers = new List<string>();
@@ -60,8 +59,6 @@ namespace Utilities
 			return headers;
 		}
 
-
-
 		/* Footer below. But need to fix the page number not being picked up*/
 		public static List<string> ExtractFooters(WordprocessingDocument doc)
 		{
@@ -104,8 +101,7 @@ namespace Utilities
 
 				if (footer != null)
 				{
-					foreach
-					(
+					foreach (
 						var paragraph in footer.Elements<DocumentFormat.OpenXml.Wordprocessing.Paragraph>()
 					)
 					{

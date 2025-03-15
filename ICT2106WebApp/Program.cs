@@ -12,6 +12,7 @@ using MongoDB.Bson; // Bson - Binary JSON
 					// MongoDB packages
 using MongoDB.Driver;
 using Utilities;
+using Microsoft.Extensions.Options; // Bson - Binary JSON
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 	var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
 	return new MongoClient(settings.ConnectionString);
 });
+
 // Register IMongoDatabase as a singleton, using the DatabaseName from MongoDbSettings
 builder.Services.AddSingleton<IMongoDatabase>(sp =>
 {
@@ -38,7 +40,7 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
 
 // END OF MONGODB SETUP
 
-// Register services for IDocumentRetrieveNotify and IDocumentUpdateNotify 
+// Register services for IDocumentRetrieveNotify and IDocumentUpdateNotify
 builder.Services.AddScoped<IDocumentRetrieveNotify, DocumentFailSafe>(); // DocumentFailSafe Implements IDocumentRetrieveNotify
 builder.Services.AddScoped<IDocumentUpdateNotify, DocumentParsing>(); // DocumentParsing implemenst IDocumentUpdateNotify
 
@@ -145,18 +147,25 @@ if (args.Length > 0 && args[0] == "--test-document")
 				Console.WriteLine("Attempting to resolve via interface instead...");
 				try
 				{
-					var documentUpdateNotify = serviceProvider.GetRequiredService<IDocumentUpdateNotify>();
-					Console.WriteLine($"Interface resolved successfully. Type: {documentUpdateNotify.GetType().FullName}");
+					var documentUpdateNotify =
+						serviceProvider.GetRequiredService<IDocumentUpdateNotify>();
+					Console.WriteLine(
+						$"Interface resolved successfully. Type: {documentUpdateNotify.GetType().FullName}"
+					);
 
 					if (documentUpdateNotify is DocumentParsing parsing)
 					{
-						Console.WriteLine("Successfully cast to DocumentParsing, attempting save...");
+						Console.WriteLine(
+							"Successfully cast to DocumentParsing, attempting save..."
+						);
 						await parsing.saveDocumentToDatabase(localDocxPath);
 						Console.WriteLine("Document saved to database successfully via interface");
 					}
 					else
 					{
-						Console.WriteLine($"ERROR: IDocumentUpdateNotify is not DocumentParsing, it's {documentUpdateNotify.GetType().FullName}");
+						Console.WriteLine(
+							$"ERROR: IDocumentUpdateNotify is not DocumentParsing, it's {documentUpdateNotify.GetType().FullName}"
+						);
 					}
 				}
 				catch (Exception innerEx)
@@ -171,7 +180,9 @@ if (args.Length > 0 && args[0] == "--test-document")
 			try
 			{
 				var documentRetrieve = serviceProvider.GetRequiredService<IDocumentRetrieve>();
-				Console.WriteLine($"IDocumentRetrieve resolved. Type: {documentRetrieve.GetType().FullName}");
+				Console.WriteLine(
+					$"IDocumentRetrieve resolved. Type: {documentRetrieve.GetType().FullName}"
+				);
 
 				if (documentRetrieve is DocxRDG docxRdg)
 				{
@@ -190,8 +201,11 @@ if (args.Length > 0 && args[0] == "--test-document")
 
 					// Step 4: Try document retrieval
 					Console.WriteLine("Attempting to resolve DocumentFailSafe...");
-					var documentFailSafe = serviceProvider.GetRequiredService<IDocumentRetrieveNotify>();
-					Console.WriteLine($"IDocumentRetrieveNotify resolved. Type: {documentFailSafe.GetType().FullName}");
+					var documentFailSafe =
+						serviceProvider.GetRequiredService<IDocumentRetrieveNotify>();
+					Console.WriteLine(
+						$"IDocumentRetrieveNotify resolved. Type: {documentFailSafe.GetType().FullName}"
+					);
 
 					if (documentFailSafe is DocumentFailSafe failSafe)
 					{
@@ -202,12 +216,16 @@ if (args.Length > 0 && args[0] == "--test-document")
 					}
 					else
 					{
-						Console.WriteLine($"ERROR: IDocumentRetrieveNotify is not DocumentFailSafe, it's {documentFailSafe.GetType().FullName}");
+						Console.WriteLine(
+							$"ERROR: IDocumentRetrieveNotify is not DocumentFailSafe, it's {documentFailSafe.GetType().FullName}"
+						);
 					}
 				}
 				else
 				{
-					Console.WriteLine($"ERROR: IDocumentRetrieve is not DocxRDG, it's {documentRetrieve.GetType().FullName}");
+					Console.WriteLine(
+						$"ERROR: IDocumentRetrieve is not DocxRDG, it's {documentRetrieve.GetType().FullName}"
+					);
 				}
 			}
 			catch (Exception ex)
@@ -234,11 +252,7 @@ if (args.Length > 0 && args[0] == "--test-document")
 	return; // Exit application after test
 } // End of MongoDB + DocumentParsing , DocumentFailSafe, DocxRDG testing
 
-
 app.Run();
-
-
-
 
 // ✅ Extracts content from Word document
 public static class DocumentProcessor
@@ -529,4 +543,3 @@ public static class DocumentProcessor
 		return elements;
 	}
 }
-

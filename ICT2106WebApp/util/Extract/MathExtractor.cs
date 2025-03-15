@@ -171,23 +171,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Math;
-
-// Alias to resolve ambiguity
-using WordParagraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using DocumentFormat.OpenXml.Wordprocessing;
 using MathOfficeMath = DocumentFormat.OpenXml.Math.OfficeMath;
-
-using WordText = DocumentFormat.OpenXml.Wordprocessing.Text;
-
 using MathRun = DocumentFormat.OpenXml.Math.Run;
 using MathText = DocumentFormat.OpenXml.Math.Text;
+// Alias to resolve ambiguity
+using WordParagraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using WordText = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace Utilities
 {
 	public static class MathExtractor
 	{
-		public static List<Dictionary<string, object>> ExtractParagraphsWithMath(WordParagraph paragraph)
+		public static List<Dictionary<string, object>> ExtractParagraphsWithMath(
+			WordParagraph paragraph
+		)
 		{
 			var results = new List<Dictionary<string, object>>();
 
@@ -196,14 +195,18 @@ namespace Utilities
 			string text = string.Join("", paragraph.Descendants<WordText>().Select(t => t.Text));
 			if (!string.IsNullOrWhiteSpace(text))
 			{
-				results.Add(new Dictionary<string, object> { { "type", "paragraph" }, { "content", text } });
+				results.Add(
+					new Dictionary<string, object> { { "type", "paragraph" }, { "content", text } }
+				);
 			}
 
 			// ✅ Extract math equations inside the paragraph
 			foreach (var mathElement in paragraph.Descendants<MathOfficeMath>())
 			{
 				string mathText = ExtractReadableMath(mathElement);
-				results.Add(new Dictionary<string, object> { { "type", "math" }, { "content", mathText } });
+				results.Add(
+					new Dictionary<string, object> { { "type", "math" }, { "content", mathText } }
+				);
 			}
 
 			return results;
@@ -354,5 +357,4 @@ namespace Utilities
 	//             }
 	//     }
 	// }
-
 }

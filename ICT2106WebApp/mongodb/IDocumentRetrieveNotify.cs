@@ -1,3 +1,4 @@
-public interface IDocumentRetrieveNotify{
-    Task notifyRetrievedDocument(Docx docx);
+public interface IDocumentRetrieveNotify
+{
+	Task notifyRetrievedDocument(Docx docx);
 }

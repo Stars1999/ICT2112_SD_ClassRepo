@@ -1,6 +1,6 @@
 public interface IDocumentUpdate
 {
-    Task<List<Docx>> GetAllAsync();
+	Task<List<Docx>> GetAllAsync();
 
-    Task saveDocument(Docx docx);
+	Task saveDocument(Docx docx);
 }

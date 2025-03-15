@@ -13,23 +13,34 @@ namespace Utilities
 {
 	public static class FormatExtractor
 	{
-		public static string GetParagraphFont(DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
+		public static string GetParagraphFont(
+			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph
+		)
 		{
-			if (paragraph.ParagraphProperties != null && paragraph.ParagraphProperties.ParagraphStyleId != null)
+			if (
+				paragraph.ParagraphProperties != null
+				&& paragraph.ParagraphProperties.ParagraphStyleId != null
+			)
 			{
-				Console.WriteLine("paragraph font type" + paragraph.ParagraphProperties.ParagraphStyleId.Val?.Value + "\n");
+				Console.WriteLine(
+					"paragraph font type"
+						+ paragraph.ParagraphProperties.ParagraphStyleId.Val?.Value
+						+ "\n"
+				);
 				return paragraph.ParagraphProperties.ParagraphStyleId.Val?.Value ?? "Default Font";
 			}
 			Console.WriteLine(paragraph.ParagraphProperties);
 			return "Default Font";
 		}
 
-		public static int GetParagraphFontSize(DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
+		public static int GetParagraphFontSize(
+			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph
+		)
 		{
-			string? fontSizeRaw = paragraph.ParagraphProperties?
-				.ParagraphMarkRunProperties?
-				.Elements<FontSize>()
-				.FirstOrDefault()?.Val?.Value;
+			string? fontSizeRaw = paragraph
+				.ParagraphProperties?.ParagraphMarkRunProperties?.Elements<FontSize>()
+				.FirstOrDefault()
+				?.Val?.Value;
 
 			return fontSizeRaw != null ? int.Parse(fontSizeRaw) / 2 : 12; // Default 12pt
 		}

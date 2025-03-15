@@ -4,26 +4,29 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 using Utilities;
+using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 namespace Utilities
 {
-
 	public static partial class ExtractContent
 	{
-		public static Dictionary<string, object> ExtractParagraph
-		(
+		public static Dictionary<string, object> ExtractParagraph(
 			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph,
-			WordprocessingDocument doc
+			WordprocessingDocument doc,
+			ref bool haveBibliography
 		)
 		{
 			string text = string.Join(
 				"",
-				paragraph.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>().Select(t => t.Text)
+				paragraph
+					.Descendants<DocumentFormat.OpenXml.Wordprocessing.Text>()
+					.Select(t => t.Text)
 			);
 			string style = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value ?? "Normal";
 			bool isBold = paragraph.Descendants<Bold>().Any();
@@ -36,18 +39,21 @@ namespace Utilities
 			string fontColor = "000000"; // Default to black color
 			string highlightColor = "none"; // Default to no highlight
 
-			string styleId = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value ?? "Normal";
+			string styleId =
+				paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value ?? "Normal";
 			var stylesPart = doc.MainDocumentPart?.StyleDefinitionsPart;
 
 			// ✅ Check if StyleDefinitionsPart exists
 			if (stylesPart != null && stylesPart.Styles != null)
 			{
-				var paragraphStyle = stylesPart.Styles.Elements<Style>()
+				var paragraphStyle = stylesPart
+					.Styles.Elements<Style>()
 					.FirstOrDefault(s => s.StyleId == styleId);
 
 				if (paragraphStyle != null)
 				{
-					fontType = paragraphStyle.StyleRunProperties?.RunFonts?.Ascii?.Value ?? "Default Font";
+					fontType =
+						paragraphStyle.StyleRunProperties?.RunFonts?.Ascii?.Value ?? "Default Font";
 					fontSizeRaw = paragraphStyle.StyleRunProperties?.FontSize?.Val?.Value;
 
 					// Extract color from style definition
@@ -67,6 +73,7 @@ namespace Utilities
 			// paragraphData["fontSize"] = fontSize;
 
 			var havemath = false;
+			// var haveBibliography = false;
 			// List<Dictionary<string, object>> mathContent = null;
 			List<Dictionary<string, object>> mathContent = new List<Dictionary<string, object>>();
 
@@ -79,16 +86,27 @@ namespace Utilities
 				new Dictionary<string, object>
 				{
 					{ "bold", isBold },
-					{ "italic", isItalic } ,
+					{ "italic", isItalic },
 					{ "alignment", alignment },
-					{"fontsize", fontSize},
-					{"fonttype", paraFontType},
-					{"fontcolor", fontColor},
-					{"highlight", highlightColor},
+					{ "fontsize", fontSize },
+					{ "fonttype", paraFontType },
+					{ "fontcolor", fontColor },
+					{ "highlight", highlightColor },
 				},
 			};
 			// Console.WriteLine(paraFontSize);
 			// Console.WriteLine(paraFontType);
+
+			// the one below can grab as text
+			// // check for internal using word. This works
+			// string paraText = paragraph.InnerText.Trim();
+
+			// // Check if it starts with "References"
+			// if (paraText.StartsWith("References", StringComparison.OrdinalIgnoreCase))
+			// {
+			// 	Console.WriteLine("Found a references paragraph:");
+			// 	Console.WriteLine(paraText);
+			// }
 
 			// Detect type of lists (will probably add more in the future)
 			if (paragraph.ParagraphProperties?.NumberingProperties != null)
@@ -141,7 +159,9 @@ namespace Utilities
 
 						case 9:
 							// Lowercase Lettered with parenthesis list a), b), c), ...
-							Console.WriteLine("Lowercase Lettered with parenthesis list item detected.");
+							Console.WriteLine(
+								"Lowercase Lettered with parenthesis list item detected."
+							);
 							paragraphData["type"] = "lowercase_lettered_parenthesis_list";
 							break;
 
@@ -196,10 +216,13 @@ namespace Utilities
 				// return mathContent;
 			}
 			// ✅ Check if paragraph is completely empty
-			if (string.IsNullOrWhiteSpace(text) && !paragraph.Elements<Break>().Any() && havemath == false)
+			if (
+				string.IsNullOrWhiteSpace(text)
+				&& !paragraph.Elements<Break>().Any()
+				&& havemath == false
+			)
 			{
 				Console.WriteLine("Completely empty\n");
-
 				paragraphData["type"] = "empty_paragraph1";
 				paragraphData["content"] = "";
 				paragraphData["styling"] = PropertiesList;
@@ -225,11 +248,9 @@ namespace Utilities
 				return new Dictionary<string, object>
 				{
 					{ "type", "line_break" },
-					{ "content", "[LINE BREAK]" }
+					{ "content", "[LINE BREAK]" },
 				};
 			}
-
-
 
 			// Collect each run's text and formatting
 			var runsList = new List<Dictionary<string, object>>();
@@ -247,32 +268,38 @@ namespace Utilities
 				}
 
 				// Extract Font Type
-				string runfontType = run.RunProperties?.RunFonts?.Ascii?.Value ?? "Default Font";
-
-				string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
-				int runFontSize = runFontSizeRaw != null ? int.Parse(runFontSizeRaw) / 2 : 12; // Default to 12pt
-
-				// Extract font color from run
-				string runFontColor = fontColor; // Default to paragraph color
-				if (run.RunProperties?.Color?.Val?.Value != null)
+				string runfontType = run.RunProperties?.RunFonts?.Ascii?.Value;
+				if (string.IsNullOrEmpty(runfontType))
 				{
-					runFontColor = run.RunProperties.Color.Val.Value;
+					// Fallback: Check paragraph font style if run doesn't specify one
+					runfontType =
+						paragraph
+							.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<RunFonts>()
+							?.Ascii?.Value ?? "Default Font";
 				}
 
+				// string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
+				// int runFontSize = runFontSizeRaw != null ? int.Parse(runFontSizeRaw) / 2 : 12; // Default to 12pt
+
+				string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
+				int runFontSize = 12; // Default to 12pt
+
+				if (int.TryParse(runFontSizeRaw, out int parsedSize))
+					runFontSize = parsedSize / 2; // Convert from half-points
+												  // Extract font color from run
+				string runFontColor = fontColor; // Default to paragraph color
+				if (run.RunProperties?.Color?.Val?.Value != null)
+					runFontColor = run.RunProperties.Color.Val.Value;
 				// Extract highlight color from run
 				var runHighlightColor = highlightColor; // Default to paragraph highlight
 				if (run.RunProperties?.Highlight?.Val?.Value != null)
-				{
 					runHighlightColor = run.RunProperties.Highlight.Val;
-				}
-
 				// for bold
 				var boldElement = run.RunProperties?.Bold;
 				if (boldElement != null)
 					isBold = true;
 				else
 					isBold = false;
-
 				// for italic
 				var italicElement = run.RunProperties?.Italic;
 				if (italicElement != null)
@@ -280,10 +307,18 @@ namespace Utilities
 				else
 					isItalic = false;
 
-				if (PropertiesList.Count > 0 && PropertiesList[0] is Dictionary<string, object> firstDict)
+				if (
+					PropertiesList.Count > 0
+					&& PropertiesList[0] is Dictionary<string, object> firstDict
+				)
 				{
-					string json = JsonSerializer.Serialize(firstDict, new JsonSerializerOptions { WriteIndented = true });
+					string json = JsonSerializer.Serialize(
+						firstDict,
+						new JsonSerializerOptions { WriteIndented = true }
+					);
 					// Console.WriteLine("Serialized JSON:\n" + json);
+					// Console.WriteLine("modifeid dict\n");
+					// Console.WriteLine(runText); // Here is where Reference will apeapr
 
 					// Convert JSON back to a dictionary (deserialize)
 					var modifiedDict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
@@ -295,126 +330,226 @@ namespace Utilities
 						modifiedDict["bold"] = isBold;
 						modifiedDict["italic"] = isItalic;
 						modifiedDict["alignment"] = alignment;
-						modifiedDict["fontsize"] = fontSize;
+						modifiedDict["fontsize"] = runFontSize;
 						modifiedDict["fonttype"] = runfontType;
 						modifiedDict["fontcolor"] = runFontColor;
 						modifiedDict["highlight"] = runHighlightColor;
 						// Assign it back to PropertiesList[0]
 						PropertiesList[0] = modifiedDict;
+
+						Console.WriteLine("check the font type:");
+						Console.WriteLine(runfontType);
 					}
 					// Print modified dictionary
-					Console.WriteLine("Modified JSON:\n" + JsonSerializer.Serialize(PropertiesList[0], new JsonSerializerOptions { WriteIndented = true }));
+					// Console.WriteLine(
+					//     "Modified JSON:\n"
+					//         + JsonSerializer.Serialize(
+					//             PropertiesList[0],
+					//             new JsonSerializerOptions { WriteIndented = true }
+					//         )
+					// );
 				}
-				runsList.Add(new Dictionary<string, object>
-				{
-					{ "type", "text_run" },
-					{ "content", runText },
-					{ "styling", PropertiesList[0]}
-				});
-			}
 
-			Console.WriteLine($"Total runs found: {runsList.Count}");
-			if (!runsList.Any() && havemath == false)
-			{
-				if (runsList.Count == 0)
+				if (PropertiesList[0] is Dictionary<string, object> dict)
 				{
-					return new Dictionary<string, object>
+					// Now you can safely call dict.ContainsKey(...)
+					if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype"))
 					{
-						{ "type", "paragraph_run?" },
-						{ "content", text }
-					};
+						// Retrieve and compare values
+						if (
+							dict["fontsize"] is int size
+							&& size == 10
+							&& dict["fonttype"] is string font
+							&& font == "Times New Roman"
+						)
+						{
+							runsList.Add(
+								new Dictionary<string, object>
+								{
+									{ "type", "citation_run" },
+									{ "content", runText },
+									{ "styling", PropertiesList[0] },
+								}
+							);
+						}
+						else
+						{
+							runsList.Add(
+								new Dictionary<string, object>
+								{
+									{ "type", "text_run" },
+									{ "content", runText },
+									{ "styling", PropertiesList[0] },
+								}
+							);
+						}
+					}
 				}
 				else
 				{
+					runsList.Add(
+						new Dictionary<string, object>
+						{
+							{ "type", "text_run" },
+							{ "content", runText },
+							{ "styling", PropertiesList[0] },
+						}
+					);
+				}
+			}
+
+
+			string pattern = @"\b(Reference|Bibliography)\b";
+			Console.WriteLine($"Total runs found: {runsList.Count}");
+			Console.WriteLine($"bib:{haveBibliography}");
+
+
+			Console.WriteLine("check before citation run");
+			Console.WriteLine(text);
+			if (text.Length > 0 && text[0] == '[')
+			{
+
+				if (runsList.Count == 1)
+				{
 					return new Dictionary<string, object>
 					{
-						{ "type", "paragraph_run" },
-						{ "content", runsList }
+						{ "type", "citation_run" },
+						{ "content", text },
+						{ "styling", PropertiesList },
 					};
 				}
-
-			}
-			else if (runsList.Count > 1)
-			{
-				Console.WriteLine("If there is runs\n");
-				// to see the content.
-				// foreach (var run in runsList) // `run` is a Dictionary<string, object>
-				// {
-				// 	Console.WriteLine("Run Details:");
-				// 	foreach (var kvp in run) // `kvp` is KeyValuePair<string, object>
-				// 	{
-				// 		if (kvp.Value is List<object> styleObjects) // Check if value is List<object>
-				// 		{
-				// 			Console.WriteLine($"{kvp.Key}:");
-				// 			foreach (var styleObject in styleObjects) // Iterate over list items
-				// 			{
-				// 				if (styleObject is Dictionary<string, object> styleDict) // Ensure it's a dictionary
-				// 				{
-				// 					Console.WriteLine("if styling is true:");
-				// 					foreach (var styleKvp in styleDict) // Iterate dictionary key-value pairs
-				// 					{
-				// 						Console.WriteLine($"  - {styleKvp.Key}: {styleKvp.Value}");
-				// 					}
-				// 				}
-				// 				else
-				// 				{
-				// 					Console.WriteLine($"  - Unexpected type: {styleObject.GetType()}");
-				// 				}
-				// 			}
-				// 		}
-				// 		else
-				// 		{
-				// 			Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-				// 		}
-				// 	}
-				// 	Console.WriteLine("------------");
-				// }
-				var finalDictionary = new Dictionary<string, object>
+				// else if 
+				else
+				// (runsList.Count > 1)
+				{
+					return new Dictionary<string, object>
 					{
-						{ "type", FormatExtractor.GetParagraphType(style) },
+						{ "type", "citation_run" },
 						{ "content", text },
-						{ "runs", runsList } // ✅ Store the entire runsList as a key-value pair
+						{ "styling", PropertiesList },
 					};
-				return finalDictionary;
+				}
 			}
 			else
 			{
-				// Console.WriteLine("last test case of ExtractParagraph function\n");
+				haveBibliography = false;
 
-				if (havemath == true)
+				// Check for references and biblography
+				if (
+					 Regex.IsMatch(text, pattern, RegexOptions.IgnoreCase)
+					&& haveBibliography == false
+				)
 				{
-					var mathstring = "";
-					Console.WriteLine("Getting back the result and we see what is inside the for loop\n");
-
-					foreach (var mathEntry in mathContent)
-					{
-						Console.WriteLine(mathEntry["content"]);
-						mathstring = mathEntry["content"] + mathstring;
-					}
-
+					haveBibliography = true;
 					return new Dictionary<string, object>
+				{
+					{ "type", "Bibliography" },
+					{ "content", text },
+					{ "styling", PropertiesList },
+				};
+				}
+				else if (!runsList.Any() && havemath == false)
+				{
+					if (runsList.Count == 0)
 					{
-						// { "type", FormatExtractor.GetParagraphType(style) },
-						{ "type", "math" },
-						{ "content", mathstring },
-						{ "styling", PropertiesList}
+						return new Dictionary<string, object>
+					{
+						{ "type", "paragraph_run?" },
+						{ "content", text },
 					};
+					}
+					else
+					{
+						return new Dictionary<string, object>
+					{
+						{ "type", "paragraph_run" },
+						{ "content", runsList },
+					};
+					}
+				}
+				else if (runsList.Count > 1)
+				{
+					Console.WriteLine("\nRuns > 1:");
+					// to see the content.
+					// foreach (var run in runsList) // `run` is a Dictionary<string, object>
+					// {
+					// 	Console.WriteLine("Run Details:");
+					// 	foreach (var kvp in run) // `kvp` is KeyValuePair<string, object>
+					// 	{
+					// 		if (kvp.Value is List<object> styleObjects) // Check if value is List<object>
+					// 		{
+					// 			Console.WriteLine($"{kvp.Key}:");
+					// 			foreach (var styleObject in styleObjects) // Iterate over list items
+					// 			{
+					// 				if (styleObject is Dictionary<string, object> styleDict) // Ensure it's a dictionary
+					// 				{
+					// 					Console.WriteLine("if styling is true:");
+					// 					foreach (var styleKvp in styleDict) // Iterate dictionary key-value pairs
+					// 					{
+					// 						Console.WriteLine($"  - {styleKvp.Key}: {styleKvp.Value}");
+					// 					}
+					// 				}
+					// 				else
+					// 				{
+					// 					Console.WriteLine($"  - Unexpected type: {styleObject.GetType()}");
+					// 				}
+					// 			}
+					// 		}
+					// 		else
+					// 		{
+					// 			Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+					// 		}
+					// 	}
+					// 	Console.WriteLine("------------");
+					// }
+
+					Console.WriteLine(FormatExtractor.GetParagraphType(style));
+					var finalDictionary = new Dictionary<string, object>
+				{
+					{ "type", FormatExtractor.GetParagraphType(style) },
+					{ "content", text },
+					{ "runs", runsList }, // ✅ Store the entire runsList as a key-value pair
+                };
+					return finalDictionary;
 				}
 				else
 				{
-					Console.WriteLine("else2\n");
-
-					Console.WriteLine("this is my text:");
-					Console.WriteLine(text);
-					Console.WriteLine("\nend of my text");
-
-					return new Dictionary<string, object>
+					Console.WriteLine("HEREEEEE:");
+					if (havemath == true)
 					{
-					{ "type", FormatExtractor.GetParagraphType(style) },
-					{ "content", text },
-					{ "styling", PropertiesList}
+						var mathstring = "";
+						Console.WriteLine(
+							"Getting back the result and we see what is inside the for loop\n"
+						);
 
+						foreach (var mathEntry in mathContent)
+						{
+							Console.WriteLine(mathEntry["content"]);
+							mathstring = mathEntry["content"] + mathstring;
+						}
+
+						return new Dictionary<string, object>
+					{
+                        // { "type", FormatExtractor.GetParagraphType(style) },
+                        { "type", "math" },
+						{ "content", mathstring },
+						{ "styling", PropertiesList },
 					};
+					}
+					else
+					{
+						Console.WriteLine("else, else\n");
+						Console.WriteLine("this is my text:");
+						Console.WriteLine(text);
+						Console.WriteLine("\nend of my text");
+
+						return new Dictionary<string, object>
+					{
+						{ "type", FormatExtractor.GetParagraphType(style) },
+						{ "content", text },
+						{ "styling", PropertiesList },
+					};
+					}
 				}
 			}
 		}
@@ -441,51 +576,53 @@ namespace Utilities
 
 					// Create the cell dictionary in the desired format.
 					var cellDict = new Dictionary<string, object>
-			{
-				{ "type", "Cell" },
-				{ "content", cellText },
-				{ "styling", new Dictionary<string, object>
 					{
-						{ "bold", isBold },
-						{ "italic", isItalic }
-					}
-				}
-			};
+						{ "type", "Cell" },
+						{ "content", cellText },
+						{
+							"styling",
+							new Dictionary<string, object>
+							{
+								{ "bold", isBold },
+								{ "italic", isItalic },
+							}
+						},
+					};
 
 					cellList.Add(cellDict);
 				}
 
 				// You can also adjust the row styling as needed.
 				var rowStyling = new Dictionary<string, object>
-		{
-			{ "bold", false },
-			{ "italic", true },
-			{ "alignment", "right" },
-			{ "fontsize", 12 },
-			{ "fonttype", "Aptos" },
-			{ "fontcolor", "0E2841" },
-			{ "highlight", "none" }
-		};
+				{
+					{ "bold", false },
+					{ "italic", true },
+					{ "alignment", "right" },
+					{ "fontsize", 12 },
+					{ "fonttype", "Aptos" },
+					{ "fontcolor", "0E2841" },
+					{ "highlight", "none" },
+				};
 
 				// Create a row dictionary matching the desired structure.
 				var rowDict = new Dictionary<string, object>
-		{
-			{ "type", "Row" },
-			{ "content", "" },
-			{ "runs", cellList },
-			{ "styling", rowStyling }
-		};
+				{
+					{ "type", "Row" },
+					{ "content", "" },
+					{ "runs", cellList },
+					{ "styling", rowStyling },
+				};
 
 				tableRows.Add(rowDict);
 			}
 
 			// Create the table dictionary with type "Table" and add the row dictionaries as its "runs".
 			var tableDict = new Dictionary<string, object>
-	{
-		{ "type", "Table" },
-		{ "content", "" },
-		{ "runs", tableRows }
-	};
+			{
+				{ "type", "Table" },
+				{ "content", "" },
+				{ "runs", tableRows },
+			};
 
 			return tableDict;
 		}

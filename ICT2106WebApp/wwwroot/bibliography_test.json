@@ -1,25 +1,10 @@
 {
   "documents": [
     {
-      "Title": "Impact of Artificial Intelligence on Society",
-      "Author": "John Smith",
-      "Date": "2024-03-10",
-      "CitationStyle": "apa",
-      "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{Impact of AI}\n\\author{John Smith}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nAI is reshaping industries (Brown 2021). Recent studies (Doe 2021) highlight its impact.\n\n\\section{Conclusion}\nFuture research is needed (Taylor 2018).\n\n\\section{References}\nBrown, K. (2021). AI Revolution. Science Daily.\nDoe, J. (2021). Machine Learning Advances. AI Journal.\nTaylor, M. (2018). Emerging Tech Trends. Tech Monthly.\n\n\\end{document}"
-    },
-    {
-      "Title": "The Future of Quantum Computing",
-      "Author": "Alice Johnson",
-      "Date": "2024-02-20",
-      "CitationStyle": "mla",
-      "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{The Future of Quantum Computing}\n\\author{Alice Johnson}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nQuantum computing has the potential to solve complex problems that are infeasible for classical computers (Shor). This paper examines recent advancements and challenges.\n\n\\section{Challenges in Quantum Computing}\nScalability, error correction, and hardware limitations remain significant obstacles (Grover).\n\n\\section{Works Cited}\nShor, Peter W. \u0022Algorithms for Quantum Computation: Discrete Logarithms and Factoring.\u0022 SIAM Journal on Computing, 1994.\nGrover, Lov K. \u0022A Fast Quantum Mechanical Algorithm for Database Search.\u0022 Proceedings of the 28th Annual ACM Symposium on Theory of Computing, 1996.\n\n\\end{document}"
-    },
-    {
-      "Title": "Ethics in AI Decision-Making",
-      "Author": "Michael Adams",
-      "Date": "2024-05-05",
-      "CitationStyle": "mla",
-      "LatexContent": "\\documentclass{article}\n\\usepackage{graphicx}\n\\title{Ethics in AI Decision-Making}\n\\author{Michael Adams}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\n\\section{Introduction}\nThe ethical implications of AI decision-making have sparked significant debate (Johnson, 45). AI systems often lack transparency (Williams, 112).\n\n\\section{Case Study: Bias in AI}\nAlgorithmic bias has been observed in various real-world applications (Lee, 87). Transparency and accountability are critical factors (Nguyen, 56).\n\n\\section{Works Cited}\nJohnson, Emily. \u0022AI and Ethics: Balancing Innovation and Responsibility.\u0022 AI Ethics Review, 2023, p. 45.\nWilliams, Robert. \u0022Transparency in Machine Learning Systems.\u0022 Journal of Artificial Intelligence, 2022, pp. 112-118.\nLee, Jessica. \u0022Algorithmic Bias in Decision-Making Systems.\u0022 AI \u0026 Society, 2020, p. 87.\nNguyen, Tom. \u0022Understanding Accountability in AI Systems.\u0022 Ethics in AI Journal, 2021, p. 56.\n\n\\end{document}"
+      "Title": "The Role of AI in Modern Healthcare",
+      "Author": "Dr. Emily Johnson",
+      "Date": "2024-03-15",
+      "LatexContent": "\\documentclass{article}\n\\title{The Role of AI in Modern Healthcare}\n\\author{Dr. Emily Johnson}\n\\date{2024-03-15}\n\\begin{document}\n\\maketitle\nAI is transforming medical diagnostics (Smith, 2019). Predictive analytics improves patient outcomes (Brown, 45).\n\n\\section{References}\nSmith, John. \"Artificial Intelligence in Medical Diagnostics.\" AI & Healthcare Journal, 2019.\nBrown, Kevin. \"Predictive Analytics in Medicine.\" Journal of Health Tech, 2021.\n\\end{document}"
     }
   ]
 }

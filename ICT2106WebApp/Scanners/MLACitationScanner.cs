@@ -1,47 +1,30 @@
+using System;
 using System.Text.RegularExpressions;
 
 public class MLACitationScanner : IMLA
 {
-public string FormatCitations(string latexContent)
+    public string FormatCitations(string latexContent)
     {
-    Console.WriteLine("[DEBUG] Formatting MLA citations...");
+        Console.WriteLine("[DEBUG] Formatting MLA citations...");
 
-    return Regex.Replace(latexContent, @"\\cite{(.*?)}", match =>
-    {
-        string citation = match.Groups[1].Value;
-        string[] parts = citation.Split('_');
-
-        string author = parts[0]; // Always extract the author
-        string formattedCitation;
-
-        if (parts.Length == 2) // If there are exactly two parts (Author_X)
+        // ✅ Match inline citations like (Smith, 2019) or (Brown, 45) 
+        latexContent = Regex.Replace(latexContent, @"\((\w+),\s*(\d{4}|\d+)\)", match =>
         {
-            string secondPart = parts[1];
+            string author = match.Groups[1].Value;  // Extract author name
+            string number = match.Groups[2].Value;  // Extract number (could be a year or page)
 
-            // If the second part is a 4-digit number (potential year), assume it's a year
-            if (Regex.IsMatch(secondPart, @"^\d{4}$"))
+            // ✅ Ensure it is a **page number**, not a year
+            if (int.TryParse(number, out int num) && num >= 1000)  
             {
-                formattedCitation = $"({author})"; // MLA format without a page number
+                Console.WriteLine($"[WARNING] Detected a **year** ({number}) instead of a page number for {author}.");
+                return $"({author})"; // MLA should not include years
             }
-            else
-            {
-                formattedCitation = $"({author}, {secondPart})"; // MLA format with page number
-            }
-        }
-        else if (parts.Length > 2 && int.TryParse(parts[^1], out int pageNumber))
-        {
-            formattedCitation = $"({author}, {pageNumber})"; // MLA format with page number
-        }
-        else
-        {
-            formattedCitation = $"({author})"; // Fallback case
-        }
 
-        return formattedCitation;
-    });
+            return $"({author} {number})";  // Correct MLA format: (Author Page)
+        });
+
+        return latexContent;
     }
-
-
 
     public string FormatBibliographies(string latexContent)
     {

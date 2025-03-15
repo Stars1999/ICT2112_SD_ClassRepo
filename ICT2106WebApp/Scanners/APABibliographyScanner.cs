@@ -9,6 +9,8 @@ public class APABibliographyScanner : IAPA
     public string FormatBibliographies(string latexContent)
     {
         Console.WriteLine("[DEBUG] Formatting APA bibliography...");
+        latexContent = latexContent.Replace(" & ", " \\& ");
+        
         return latexContent.Replace(@"\bibliographystyle{plain}", @"\bibliographystyle{apalike}");
     }
 

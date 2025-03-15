@@ -10,7 +10,16 @@ public class MLABibliographyScanner : IMLA
     public string FormatBibliographies(string latexContent)
     {
         Console.WriteLine("[DEBUG] Formatting MLA bibliography...");
-        return latexContent.Replace(@"\bibliographystyle{plain}", @"\bibliographystyle{mla}");
+
+        // ✅ Change "\section{References}" to "\section{Works Cited}"
+        latexContent = latexContent.Replace(@"\section{References}", @"\section{Works Cited}");
+
+        // ✅ Ensure the correct bibliography style is applied
+        latexContent = latexContent.Replace(@"\bibliographystyle{plain}", @"\bibliographystyle{mla}");
+        
+        latexContent = latexContent.Replace(" & ", " \\& ");
+
+        return latexContent;
     }
 
     public void ApplyMLAFormatting()

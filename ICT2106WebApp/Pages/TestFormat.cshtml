@@ -1,0 +1,22 @@
+@page
+@model ICT2106WebApp.Pages.TestFormatModel
+@{
+    ViewData["Title"] = "Test FormatManager";
+}
+
+<h2>Test FormatManager</h2>
+
+<form method="post">
+    <button type="submit">Run Test</button>
+</form>
+
+@if (Model.Result != null)
+{
+    <h3>Test Result: @(Model.Result.Value ? "Success" : "Failure")</h3>
+    <ul>
+        @foreach (var node in Model.Content)
+        {
+            <li>@node.GetContent()</li>
+        }
+    </ul>
+}

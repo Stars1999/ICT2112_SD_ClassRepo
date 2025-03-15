@@ -8,6 +8,6 @@ namespace ICT2106WebApp.mod2grp6.Format
         bool StartFormatting(List<AbstractNode> content);
         bool FormatHeadings();
         bool FormatParagraphs();
-        bool ProcessMetaData()
+        bool ProcessMetaData();
     }
 }

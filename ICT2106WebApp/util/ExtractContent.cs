@@ -19,6 +19,33 @@ namespace Utilities
 		private static string GetListType(Paragraph paragraph)
 		{
 			var numberingProps = paragraph.ParagraphProperties?.NumberingProperties;
+
+			Console.WriteLine("GetListType:");
+			Console.WriteLine(paragraph);
+			Console.WriteLine(numberingProps);
+
+			if (numberingProps != null)
+			{
+				// this is the type of listing
+				var numberingId = numberingProps?.NumberingId?.Val != null
+					? numberingProps.NumberingId.Val.Value.ToString()
+					: "None";
+
+
+				// this means the depth
+				var levelId = numberingProps?.NumberingLevelReference?.Val != null
+					? numberingProps.NumberingLevelReference.Val.Value.ToString()
+					: "None";
+				Console.WriteLine($"Numbering ID: {numberingId ?? "None\n"}");
+				Console.WriteLine($"Level ID: {levelId ?? "None"}\n");
+
+			}
+			else
+			{
+				Console.WriteLine("This paragraph has no numbering properties.");
+			}
+
+
 			if (numberingProps == null) return "Unknown";
 
 			var listType = numberingProps.NumberingId?.Val?.Value switch
@@ -77,9 +104,7 @@ namespace Utilities
 
 					// Extract color from style definition
 					if (paragraphStyle.StyleRunProperties?.Color?.Val?.Value != null)
-					{
 						fontColor = paragraphStyle.StyleRunProperties.Color.Val.Value;
-					}
 				}
 			}
 
@@ -130,7 +155,7 @@ namespace Utilities
 				return paragraphData;
 			}
 
-			// ✅ Detect Page Breaks
+			// Detect Page Breaks
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.Page))
 			{
 				Console.WriteLine("Detect page break\n");
@@ -142,7 +167,7 @@ namespace Utilities
 				return paragraphData;
 			}
 
-			// ✅ Detect Line Breaks
+			// Detect Line Breaks
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.TextWrapping))
 			{
 				Console.WriteLine("Detect line break\n");
@@ -151,20 +176,15 @@ namespace Utilities
 				// paragraphData["fonttype"] = paraFontType;
 				// paragraphData["fontsize"] = paraFontSize;
 				paragraphData["styling"] = PropertiesList;
-
 				return paragraphData;
 			}
+
 			if (paragraph.Descendants<DocumentFormat.OpenXml.Math.OfficeMath>().Any())
 			{
 				Console.WriteLine("Goes to math extractor\n");
-
 				mathContent = MathExtractor.ExtractParagraphsWithMath(paragraph);
 				havemath = true;
 				paragraphData["type"] = "math";
-
-				// var mathContent = MathExtractor.ExtractParagraphsWithMath(paragraph);
-				// elements.AddRange(MathExtractor.ExtractParagraphsWithMath(paragraph)); // ✅ Extract paragraphs & Unicode math
-				// return mathContent;
 			}
 			// ✅ Check if paragraph is completely empty
 			if (
@@ -196,6 +216,7 @@ namespace Utilities
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.TextWrapping))
 			{
 				Console.WriteLine("line break\n");
+
 				return new Dictionary<string, object>
 				{
 					{ "type", "line_break" },
@@ -237,19 +258,23 @@ namespace Utilities
 
 				if (int.TryParse(runFontSizeRaw, out int parsedSize))
 					runFontSize = parsedSize / 2; // Convert from half-points
+
 				string runFontColor = fontColor;
 				if (run.RunProperties?.Color?.Val?.Value != null)
 					runFontColor = run.RunProperties.Color.Val.Value;
+
 				// Extract highlight color from run
 				var runHighlightColor = highlightColor; // Default to paragraph highlight
 				if (run.RunProperties?.Highlight?.Val?.Value != null)
 					runHighlightColor = run.RunProperties.Highlight.Val;
+
 				// for bold
 				var boldElement = run.RunProperties?.Bold;
 				if (boldElement != null)
 					isBold = true;
 				else
 					isBold = false;
+
 				// for italic
 				var italicElement = run.RunProperties?.Italic;
 				if (italicElement != null)
@@ -267,7 +292,6 @@ namespace Utilities
 						new JsonSerializerOptions { WriteIndented = true }
 					);
 					// Console.WriteLine("Serialized JSON:\n" + json);
-					// Console.WriteLine("modifeid dict\n");
 
 					// Convert JSON back to a dictionary (deserialize)
 					var modifiedDict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
@@ -304,7 +328,7 @@ namespace Utilities
 					// Now you can safely call dict.ContainsKey(...)
 					if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype"))
 					{
-						// Retrieve and compare values
+						// Retrieve and compare values | Check if citation
 						if (
 							dict["fontsize"] is int size
 							&& size == 10
@@ -352,6 +376,8 @@ namespace Utilities
 			Console.WriteLine($"bib:{haveBibliography}");
 			Console.WriteLine("check the text:");
 			Console.WriteLine(text);
+
+			// check if it is still references / citation at the bottom
 			if (text.Length > 0 && text[0] == '[')
 			{
 				return new Dictionary<string, object>

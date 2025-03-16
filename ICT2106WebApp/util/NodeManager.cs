@@ -2,7 +2,7 @@ namespace Utilities
 {
 	public class NodeManager
 	{
-		private List<string> nodeOrder = new List<string>
+		private List<string> compositeNodeList = new List<string>
 		{
 			"root",
 			"h1",
@@ -14,22 +14,24 @@ namespace Utilities
 			"table",
 			"row",
 			"runsParagraph",
+			"bibliography"
 		};
 
 		public AbstractNode CreateNode(
 			int id,
+			int nodeLevel,
 			string nodeType,
 			string content,
 			List<Dictionary<string, object>> styling
 		)
 		{
-			if (nodeOrder.Contains(nodeType))
+			if (compositeNodeList.Contains(nodeType))
 			{
-				return new CompositeNode(id, nodeType, content, styling);
+				return new CompositeNode(id, nodeLevel, nodeType, content, styling);
 			}
 			else
 			{
-				return new SimpleNode(id, nodeType, content, styling);
+				return new SimpleNode(id, nodeLevel, nodeType, content, styling);
 			}
 		}
 
@@ -41,7 +43,7 @@ namespace Utilities
 		public AbstractNode GetLastSavedNode()
 		{
 			// TODO: Retrieve last saved node from database
-			return new CompositeNode(0, "root", "root", new List<Dictionary<string, object>>()); // Dummy return
+			return new CompositeNode(0, 0, "root", "root", new List<Dictionary<string, object>>()); // Dummy return
 		}
 
 		public void NotifyUpdatedNode()

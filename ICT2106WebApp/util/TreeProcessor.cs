@@ -4,19 +4,19 @@ namespace Utilities
 {
 	public class TreeProcessor
 	{
-		private List<string> nodeOrder = new List<string>
-		{
-			"root",
-			"h1",
-			"h2",
-			"h3",
-			"h4",
-			"h5",
-			"h6",
-			"table",
-			"row",
-			"runsParagraph",
-		};
+		// private List<string> nodeOrder = new List<string>
+		// {
+		// 	"root",
+		// 	"h1",
+		// 	"h2",
+		// 	"h3",
+		// 	"h4",
+		// 	"h5",
+		// 	"h6",
+		// 	"table",
+		// 	"row",
+		// 	"runsParagraph",
+		// };
 
 		public CompositeNode CreateTree(List<AbstractNode> sequentialList)
 		{
@@ -31,23 +31,22 @@ namespace Utilities
 					continue;
 				}
 
-				int currentNodeLevel = nodeOrder.IndexOf(node.GetNodeType());
-				int currentCompositeNodeLevel = nodeOrder.IndexOf(
-					((CompositeNode)nodeStack.Peek()).GetNodeType()
-				);
+				int currentNodeLevel = node.GetNodeLevel();
+				int currentCompositeNodeLevel = ((CompositeNode)nodeStack.Peek()).GetNodeLevel();
 
 				// Set level of runs to be +1 of runsParagraph
-				if (node.GetNodeType() == "text_run")
-				{
-					currentNodeLevel = nodeOrder.IndexOf("runsParagraph") + 1;
-				}
+				// if (node.GetNodeType() == "text_run")
+				// {
+				// 	currentNodeLevel = nodeOrder.IndexOf("runsParagraph") + 1;
+				// }
 
-				if (node.GetNodeType() == "cell")
-				{
-					currentNodeLevel = nodeOrder.IndexOf("row") + 1;
-				}
+				// if (node.GetNodeType() == "cell")
+				// {
+				// 	currentNodeLevel = nodeOrder.IndexOf("row") + 1;
+				// }
 
-				if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)
+				// if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)
+				if (currentNodeLevel > currentCompositeNodeLevel)
 				{
 					((CompositeNode)nodeStack.Peek()).AddChild(node);
 					nodeStack.Push(node);
@@ -57,9 +56,7 @@ namespace Utilities
 					while (currentNodeLevel <= currentCompositeNodeLevel)
 					{
 						nodeStack.Pop();
-						currentCompositeNodeLevel = nodeOrder.IndexOf(
-							((CompositeNode)nodeStack.Peek()).GetNodeType()
-						);
+						currentCompositeNodeLevel = ((CompositeNode)nodeStack.Peek()).GetNodeLevel();
 					}
 					((CompositeNode)nodeStack.Peek()).AddChild(node);
 					nodeStack.Push(node);

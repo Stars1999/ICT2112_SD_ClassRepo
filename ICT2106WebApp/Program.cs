@@ -33,6 +33,15 @@ var testProcessor = new MathProcessor();
 string[] testEquations =
 {
     "(1/2) √(4)",
+    //"(1/2) × √(4)=1",
+    //"s=√(([i=1,N](x^2)/N-1))",    //doesnt work
+    //"(1/2)cos2x+ (3/8)sin4x =3x",
+    //"log_246y ≥ (π/2)",
+    //"∴ ∞ ≠ ±α",
+    //"∃xPersonx∧∀yTimey→Happyx,y", //doesnt work
+    //"F=ma",
+    //"limn→∞1+(1/n)^n=e",    //doesnt work
+
 };
 
 Console.WriteLine("\n==== TESTING MATH CONVERSION ====");

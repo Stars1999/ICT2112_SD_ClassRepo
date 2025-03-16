@@ -1,10 +1,12 @@
+using ICT2106WebApp.Utilities;
+
 namespace ICT2106WebApp.mod2grp6.Text
 {
     public class TextManager : IFormatText
     {
-        private Text content;
+        private List<AbstractNode> content;
 
-        public bool StartTextFormatting(Text content)
+        public bool StartTextFormatting(List<AbstractNode> content)
         {
             return false;
         }
@@ -34,9 +36,9 @@ namespace ICT2106WebApp.mod2grp6.Text
             return false;
         }
 
-        /*public List<AbstractNode> ApplyTextFormatting()
+        public List<AbstractNode> ApplyTextFormatting()
         {
             return null;
-        } */
+        } 
     }
 }

@@ -17,7 +17,9 @@ namespace ICT2106WebApp.mod2grp6
         // Services and components needed for document operations
         private FormatConversionManager formatConversionManager;
         private TemplateManager templateManager;
-        private iNodeTraversal nodeTraversal;
+        
+        //will be the class by mod1 called NodeTraverser
+        //private NodeTraverser nodeTraversal;
 
         
         /// Constructor for DocumentManager
@@ -31,72 +33,71 @@ namespace ICT2106WebApp.mod2grp6
 
         
         /// Converts document to LaTeX format
-        /// Implementation of IProcessDocument interface
-        
-        /// <param name="id">Document identifier</param>
-        /// <returns>LaTeX document</returns>
-        public LatexDocument toLaTeX(string id)
+        public bool toLaTeX(string id)
         {
             try
             {
                 // Retrieve the document data based on id
                 // This would involve fetching format, text, and layout data
-                
+
                 // Convert format
-                Format.Format formatContent = retrieveFormatContent(id);
+                List<AbstractNode> formatContent = retrieveFormatContent(id);
                 bool formatSuccess = formatConversionManager.convertFormat(formatContent);
-                
+                formatContent = formatConversionManager.getContent();
+
                 // Convert text
-                Text.Text textContent = retrieveTextContent(id);
+                List<AbstractNode> textContent = retrieveTextContent(id);
                 bool textSuccess = formatConversionManager.convertText(textContent);
-                
+                textContent = formatConversionManager.getContent();
+
                 // Convert layout
-                Layout.Layout layoutContent = retrieveLayoutContent(id);
+                List<AbstractNode> layoutContent = retrieveLayoutContent(id);
                 bool layoutSuccess = formatConversionManager.convertLayout(layoutContent);
-                
-                if (formatSuccess && textSuccess && layoutSuccess)
-                {
-                    // Get the converted content
-                    List<AbstractNode> convertedContent = formatConversionManager.getContent();
-                    
-                    // Use nodeTraversal to process the content for LaTeX
-                    List<AbstractNode_SDM> processedNodes = nodeTraversal.traverseNode(convertedContent);
-                    
-                    // Create a LaTeX document
-                    LatexDocument latexDocument = new LatexDocument();
-                    
-                    // Update the LaTeX document with processed nodes
-                    bool updateSuccess = nodeTraversal.updateLatexDoument(processedNodes);
-                    
-                    if (updateSuccess)
-                    {
-                        return latexDocument;
-                    }
+                layoutContent = formatConversionManager.getContent();
+
+                if(formatSuccess){
+                    //save the updated content
+                    //nodeTraversal.updateLatexContent(formatContent)
                 }
-                
-                return null;
+
+                if (textSuccess)
+                {
+                    //save the updated content
+                    //nodeTraversal.updateLatexContent(textContent)
+                }
+
+                if (layoutSuccess)
+                {
+                    //save the updated content
+                    //nodeTraversal.updateLatexContent(layoutContent)
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
                 // Log exception if needed
                 Console.WriteLine($"Error in toLaTeX: {ex.Message}");
-                return null;
+                return false;
             }
         }
 
-        
+
+        // actual implementation is below this is temporary 
+        public bool convertToLatexTemplate(string id, string templateid){ 
+            return true;
+        }
+
         /// Converts a document to a LaTeX template
         /// Implementation of IProcessTemplate interface
-        
-        /// <param name="id">Document identifier</param>
-        /// <param name="templateid">Template identifier</param>
         /// <returns>LaTeX document based on the template</returns>
-        public LaTeXDocument convertToLatexTemplate(string id, string templateid)
+        /*
+        public bool convertToLatexTemplate(string id, string templateid)
         {
             try
             {
                 // Get the template
-                Template_RDM template = templateManager.getTemplate(templateid);
+                Template.Template template = templateManager.getTemplate(templateid);
                 
                 if (template == null)
                 {
@@ -119,8 +120,10 @@ namespace ICT2106WebApp.mod2grp6
                 List<AbstractNode> templateContent = template.getContent();
                 // Process template content and apply to document
                 
+                //Commented out for now not implemented yet
+                //Commented out for now not implemented yet
                 // Notify observers about the template usage
-                templateManager.notifyObservers(templateid);
+                //templateManager.notifyObservers(templateid);
                 
                 return templateDocument;
             }
@@ -131,41 +134,36 @@ namespace ICT2106WebApp.mod2grp6
                 return null;
             }
         }
+        */
 
-        
+
         /// Helper method to retrieve format content
-        
+
         /// <param name="id">Document identifier</param>
         /// <returns>Format content</returns>
-        private Format.Format retrieveFormatContent(string id)
+        private List<AbstractNode> retrieveFormatContent(string id)
         {
             // In a real implementation, this would retrieve format content from a data source
             // For now, return a new Format instance
-            return new Format.Format();
+            return null;
         }
 
         
         /// Helper method to retrieve text content
-        
-        /// <param name="id">Document identifier</param>
-        /// <returns>Text content</returns>
-        private Text.Text retrieveTextContent(string id)
+        private List<AbstractNode> retrieveTextContent(string id)
         {
             // In a real implementation, this would retrieve text content from a data source
             // For now, return a new Text instance
-            return new Text.Text();
+            return null;
         }
 
         
         /// Helper method to retrieve layout content
-        
-        /// <param name="id">Document identifier</param>
-        /// <returns>Layout content</returns>
-        private Layout.Layout retrieveLayoutContent(string id)
+        private List<AbstractNode> retrieveLayoutContent(string id)
         {
             // In a real implementation, this would retrieve layout content from a data source
             // For now, return a new Layout instance
-            return new Layout.Layout();
+            return null;
         }
     }
 }

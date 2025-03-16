@@ -26,7 +26,7 @@ namespace ICT2106WebApp.mod2grp6
         
         /// <param name="content">Format content to convert</param>
         /// <returns>True if conversion is successful</returns>
-        public bool convertFormat(Format.Format content)
+        public bool convertFormat(List<AbstractNode> content)
         {
             try
             {
@@ -43,15 +43,9 @@ namespace ICT2106WebApp.mod2grp6
                     formatManager.FormatParagraphs();
                     
                     // Get the formatted content and add it to the content list
-                    List<AbstractNode_SDM> formattedContent = formatManager.ApplyBaseFormatting();
+                    List<AbstractNode> formattedContent = formatManager.ApplyBaseFormatting();
                     
-                    // Convert AbstractNode_SDM to AbstractNode and add to content list
-                    foreach (var node in formattedContent)
-                    {
-                        AbstractNode abstractNode = ConvertToAbstractNode(node);
-                        this.content.Add(abstractNode);
-                    }
-                    
+
                     return true;
                 }
                 
@@ -70,7 +64,7 @@ namespace ICT2106WebApp.mod2grp6
         
         /// <param name="content">Text content to convert</param>
         /// <returns>True if conversion is successful</returns>
-        public bool convertText(Text.Text content)
+        public bool convertText(List<AbstractNode> content)
         {
             try
             {
@@ -90,15 +84,9 @@ namespace ICT2106WebApp.mod2grp6
                     textManager.FormatLineSpacing();
                     
                     // Get the formatted content and add it to the content list
-                    List<AbstractNode_SDM> formattedContent = textManager.ApplyTextFormatting();
+                    List<AbstractNode> formattedContent = textManager.ApplyTextFormatting();
                     
-                    // Convert AbstractNode_SDM to AbstractNode and add to content list
-                    foreach (var node in formattedContent)
-                    {
-                        AbstractNode abstractNode = ConvertToAbstractNode(node);
-                        this.content.Add(abstractNode);
-                    }
-                    
+
                     return true;
                 }
                 
@@ -117,7 +105,7 @@ namespace ICT2106WebApp.mod2grp6
         
         /// <param name="content">Layout content to convert</param>
         /// <returns>True if conversion is successful</returns>
-        public bool convertLayout(Layout.Layout content)
+        public bool convertLayout(List<AbstractNode> content)
         {
             try
             {
@@ -139,14 +127,8 @@ namespace ICT2106WebApp.mod2grp6
                     layoutManager.FormatColumnSpacing();
                     
                     // Get the formatted content and add it to the content list
-                    List<AbstractNode_SDM> formattedContent = layoutManager.ApplyLayoutFormatting();
-                    
-                    // Convert AbstractNode_SDM to AbstractNode and add to content list
-                    foreach (var node in formattedContent)
-                    {
-                        AbstractNode abstractNode = ConvertToAbstractNode(node);
-                        this.content.Add(abstractNode);
-                    }
+                    List<AbstractNode> formattedContent = layoutManager.ApplyLayoutFormatting();
+                
                     
                     return true;
                 }
@@ -171,36 +153,11 @@ namespace ICT2106WebApp.mod2grp6
         }
         
         
-        /// Helper method to convert AbstractNode_SDM to AbstractNode
-        
-        /// <param name="node">AbstractNode_SDM to convert</param>
-        /// <returns>Converted AbstractNode</returns>
-        private AbstractNode ConvertToAbstractNode(AbstractNode_SDM node)
-        {
-            // In a real implementation, this would convert all properties
-            // For this example, we'll create a simple conversion
-            AbstractNode abstractNode = new AbstractNode
-            {
-                NodeId = node.getNodeId(),
-                NodeType = node.getNodeType(),
-                Content = node.getContent(),
-                // Convert styling and other properties as needed
-            };
-            
-            return abstractNode;
-        }
+
     }
 
     
     /// AbstractNode class for use in this example
     /// This would be defined elsewhere in a real implementation
     
-    public class AbstractNode
-    {
-        public int NodeId { get; set; }
-        public string NodeType { get; set; }
-        public string Content { get; set; }
-        public bool Converted { get; set; }
-        // Additional properties as needed
-    }
 }

@@ -1,10 +1,13 @@
+using ICT2106WebApp.Utilities;
+
 namespace ICT2106WebApp.mod2grp6.Layout
 {
+
     public class LayoutManager : IFormatLayout
     {
         private Layout content;
 
-        public bool StartLayoutFormatting(Layout content)
+        public bool StartLayoutFormatting(List<AbstractNode> content)
         {
             return false;
         }
@@ -43,10 +46,11 @@ namespace ICT2106WebApp.mod2grp6.Layout
         {
             return false;
         }
-        /* public List<AbstractNode> ApplyTextFormatting()
+        
+        public List<AbstractNode> ApplyLayoutFormatting()
         {
             return null;
-        } */
+        }
 
     }
 }

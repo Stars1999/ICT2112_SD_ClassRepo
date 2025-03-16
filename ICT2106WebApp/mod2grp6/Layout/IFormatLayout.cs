@@ -1,8 +1,11 @@
+using ICT2106WebApp.Utilities;
+
 namespace ICT2106WebApp.mod2grp6.Layout
 {
+
     public interface IFormatLayout
     {
-        bool StartLayoutFormatting(Layout content);
+        bool StartLayoutFormatting(List<AbstractNode> content);
         bool FormatHeaders();
         bool FormatFooters();
         bool FormatMargins();
@@ -10,6 +13,6 @@ namespace ICT2106WebApp.mod2grp6.Layout
         bool FormatPageSize();
         bool FormatColumnNum();
         bool FormatColumnSpacing();
-        //List<AbstractNode> ApplyLayoutFormatting();
+        List<AbstractNode> ApplyLayoutFormatting();
     }
 }

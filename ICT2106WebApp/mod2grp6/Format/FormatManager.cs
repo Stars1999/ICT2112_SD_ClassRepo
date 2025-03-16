@@ -1,7 +1,8 @@
+using System.Globalization;
+using ICT2106WebApp.Utilities;
+
 namespace ICT2106WebApp.mod2grp6.Format
 {
-    using System.Globalization;
-    using ICT2106WebApp.Utilities;
     public class FormatManager : IFormatDocument
     {
         private List<AbstractNode> content;

@@ -45,8 +45,7 @@ namespace Utilities
 				// 	currentNodeLevel = nodeOrder.IndexOf("row") + 1;
 				// }
 
-				// if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)
-				if (currentNodeLevel > currentCompositeNodeLevel)
+				if (currentNodeLevel > currentCompositeNodeLevel || currentNodeLevel == -1)
 				{
 					((CompositeNode)nodeStack.Peek()).AddChild(node);
 					nodeStack.Push(node);

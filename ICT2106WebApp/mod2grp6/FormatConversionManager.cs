@@ -8,24 +8,21 @@ using ICT2106WebApp.Utilities;
 namespace ICT2106WebApp.mod2grp6
 {
     
-    /// Manager class responsible for converting different types of content
-    /// Implementation based on class diagram
+    // Manager class responsible for converting different types of content
+    // Implementation based on class diagram
     public class FormatConversionManager : IFormatter
     {
         // Private member to store content as defined in the class diagram
         private List<AbstractNode> content;
 
-        /// Constructor for FormatConversionManager
+        // Constructor for FormatConversionManager
         public FormatConversionManager()
         {
             content = new List<AbstractNode>();
         }
 
         
-        /// Converts format-related content
-        
-        /// <param name="content">Format content to convert</param>
-        /// <returns>True if conversion is successful</returns>
+        // Converts format-related content
         public bool convertFormat(List<AbstractNode> content)
         {
             try
@@ -60,10 +57,7 @@ namespace ICT2106WebApp.mod2grp6
         }
 
         
-        /// Converts text-related content
-        
-        /// <param name="content">Text content to convert</param>
-        /// <returns>True if conversion is successful</returns>
+        // Converts text-related content
         public bool convertText(List<AbstractNode> content)
         {
             try
@@ -101,10 +95,7 @@ namespace ICT2106WebApp.mod2grp6
         }
 
         
-        /// Converts layout-related content
-        
-        /// <param name="content">Layout content to convert</param>
-        /// <returns>True if conversion is successful</returns>
+        // Converts layout-related content
         public bool convertLayout(List<AbstractNode> content)
         {
             try
@@ -144,20 +135,11 @@ namespace ICT2106WebApp.mod2grp6
         }
 
         
-        /// Gets the content after conversion
-        
-        /// <returns>List of AbstractNode representing the converted content</returns>
+        // Gets the content after conversion
         public List<AbstractNode> getContent()
         {
             return content;
         }
-        
-        
-
     }
-
-    
-    /// AbstractNode class for use in this example
-    /// This would be defined elsewhere in a real implementation
     
 }

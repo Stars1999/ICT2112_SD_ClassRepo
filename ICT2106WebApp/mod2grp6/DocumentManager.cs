@@ -8,10 +8,7 @@ using ICT2106WebApp.mod2grp6.Text;
 
 namespace ICT2106WebApp.mod2grp6
 {
-    
-    /// Manager class responsible for document processing operations
-    /// Implementation based on class diagram
-    
+
     public class DocumentManager : IProcessDocument, IProcessTemplate
     {
         // Services and components needed for document operations
@@ -22,8 +19,7 @@ namespace ICT2106WebApp.mod2grp6
         //private NodeTraverser nodeTraversal;
 
         
-        /// Constructor for DocumentManager
-        
+        // Constructor for DocumentManager
         public DocumentManager()
         {
             formatConversionManager = new FormatConversionManager();
@@ -89,8 +85,6 @@ namespace ICT2106WebApp.mod2grp6
         }
 
         /// Converts a document to a LaTeX template
-        /// Implementation of IProcessTemplate interface
-        /// <returns>LaTeX document based on the template</returns>
         /*
         public bool convertToLatexTemplate(string id, string templateid)
         {
@@ -138,13 +132,9 @@ namespace ICT2106WebApp.mod2grp6
 
 
         /// Helper method to retrieve format content
-
-        /// <param name="id">Document identifier</param>
-        /// <returns>Format content</returns>
         private List<AbstractNode> retrieveFormatContent(string id)
         {
             // In a real implementation, this would retrieve format content from a data source
-            // For now, return a new Format instance
             return null;
         }
 
@@ -153,7 +143,6 @@ namespace ICT2106WebApp.mod2grp6
         private List<AbstractNode> retrieveTextContent(string id)
         {
             // In a real implementation, this would retrieve text content from a data source
-            // For now, return a new Text instance
             return null;
         }
 
@@ -162,7 +151,6 @@ namespace ICT2106WebApp.mod2grp6
         private List<AbstractNode> retrieveLayoutContent(string id)
         {
             // In a real implementation, this would retrieve layout content from a data source
-            // For now, return a new Layout instance
             return null;
         }
     }

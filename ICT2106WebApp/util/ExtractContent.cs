@@ -20,7 +20,7 @@ namespace Utilities
 		{
 			var numberingProps = paragraph.ParagraphProperties?.NumberingProperties;
 
-			Console.WriteLine("GetListType:");
+			Console.WriteLine("\nGetListType:");
 			Console.WriteLine(paragraph);
 			Console.WriteLine(numberingProps);
 
@@ -37,7 +37,7 @@ namespace Utilities
 					? numberingProps.NumberingLevelReference.Val.Value.ToString()
 					: "None";
 				Console.WriteLine($"Numbering ID: {numberingId ?? "None\n"}");
-				Console.WriteLine($"Level ID: {levelId ?? "None"}\n");
+				Console.WriteLine($"Level ID: {levelId ?? "None"}");
 
 			}
 			else
@@ -51,15 +51,22 @@ namespace Utilities
 			var listType = numberingProps.NumberingId?.Val?.Value switch
 			{
 				1 => "numbered_list",
-				2 => "bulleted_list",
-				3 => "lowercase_lettered_list",
-				5 => "roman_numeral_list",
-				6 => "uppercase_lettered_list",
-				8 => "numbered_parenthesis_list",
-				9 => "lowercase_lettered_parenthesis_list",
+                3 => "lowercase_lettered_list",
+                9 => "lowercase_lettered_parenthesis_list",
+                10 => "dash_bulleted_list",
+                11 => "bulleted_list",
+                12 => "hollow_bulleted_list",
+                13 => "square_bulleted_list",
+                15 => "diamond_bulleted_list",
+				16 => "arrow_bulleted_list",
+                17 => "checkmark_bulleted_list",
+				18 => "numbered_parenthesis_list",
+                19 => "roman_numeral_list",
+                20 => "uppercase_lettered_list",
+                21 => "lowercase_roman_numeral_list",
 				_ => "unknown_list"
 			};
-			Console.WriteLine($"List type: {listType}");
+			Console.WriteLine($"List type: {listType}\n");
 			return listType;
 		}
 

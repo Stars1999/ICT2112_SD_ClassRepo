@@ -1,0 +1,142 @@
+@page
+@{
+    ViewData["Title"] = "Dashboard - Upload Document";
+}
+
+<h2>Upload a Document</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="UploadedFile" required />
+    <button type="submit" id="uploadButton">Upload</button>
+</form>
+
+<h3 id="statusMessage"></h3>
+
+<!-- Modal for Error Message -->
+<div id="errorModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999;">
+    <h4>Error</h4>
+    <p id="errorMessage"></p>
+    <button onclick="closeModal()">Close</button>
+</div>
+
+<!-- Modal for Success Message -->
+<div id="successModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999;">
+    <h4>Success</h4>
+    <p id="successMessage"></p>
+    <button onclick="closeSuccessModal()">Close</button>
+</div>
+
+<script>
+    document.getElementById("uploadButton").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        let formData = new FormData();
+        let fileInput = document.getElementById("fileInput").files[0];
+
+        // Check if no file is selected
+        if (!fileInput) {
+            showErrorModal("No file selected. Please choose a file to upload.");
+            return;
+        }
+
+        // Validate file type (only .docx allowed)
+        let fileExtension = fileInput.name.split('.').pop().toLowerCase();
+        if (fileExtension !== "docx") {
+            showErrorModal("Only .docx files are allowed. Please upload a valid file.");
+            document.getElementById("fileInput").value = "";
+            return;
+        }
+
+        formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
+
+        // Log FormData content for debugging
+        console.log("FormData being sent:", formData);
+
+        fetch("/dashboard/upload", { // POST to controller endpoint
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json()) // Parse JSON response
+        .then(data => {
+            if (data.success) {
+                document.getElementById("statusMessage").innerText = data.message;
+                showSuccessModal("File uploaded successfully!"); // Show success message
+            } else {
+                document.getElementById("statusMessage").innerText = `Error: ${data.message}`;
+                showErrorModal(`Error: ${data.message}`); // Show error message
+            }
+        })
+        .catch(error => {
+            document.getElementById("statusMessage").innerText = `Upload failed. ${error.message}`;
+            showErrorModal(`Upload failed. ${error.message}`);
+            console.error("Upload error:", error);
+        });
+
+        // Clear the file input after the form submission
+        document.getElementById("fileInput").value = "";
+    });
+
+    // Function to display error modal with the provided message
+    function showErrorModal(message) {
+        document.getElementById("errorMessage").innerText = message;
+        document.getElementById("errorModal").style.display = "block"; // Show error modal
+        document.getElementById("successModal").style.display = "none"; // Hide success modal
+    }
+
+    // Function to display success modal with the provided message
+    function showSuccessModal(message) {
+        document.getElementById("successMessage").innerText = message;
+        document.getElementById("successModal").style.display = "block"; // Show success modal
+        document.getElementById("errorModal").style.display = "none"; // Hide error modal
+    }
+
+    // Function to close the error modal
+    function closeModal() {
+        document.getElementById("errorModal").style.display = "none"; // Hide the error modal when user clicks "Close"
+    }
+
+    // Function to close the success modal
+    function closeSuccessModal() {
+        document.getElementById("successModal").style.display = "none"; // Hide the success modal when user clicks "Close"
+    }
+</script>
+
+
+
+
+
+
+@* <h2>Upload a Document</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="UploadedFile" required />
+    <button type="submit" id="uploadButton">Upload</button>
+</form>
+
+<h3 id="statusMessage"></h3>
+
+<script>
+    document.getElementById("uploadButton").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        let formData = new FormData();
+        let fileInput = document.getElementById("fileInput").files[0];
+
+        if (!fileInput) {
+            alert("Please select a file.");
+            return;
+        }
+
+        formData.append("file", fileInput); // Ensure this matches the parameter name in the controller
+
+        fetch("/dashboard/upload", { // Directly POST to controller's upload endpoint
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("statusMessage").innerText = data.message;
+        })
+        .catch(error => console.error("Upload error:", error));
+    });
+</script>  *@

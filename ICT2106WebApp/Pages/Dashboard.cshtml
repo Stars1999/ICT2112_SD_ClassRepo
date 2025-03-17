@@ -5,28 +5,42 @@
 
 <h2>Upload a Document</h2>
 
-<form method="post" enctype="multipart/form-data">
-    <input type="file" id="fileInput" name="UploadedFile" required />
-    <button type="submit" id="uploadButton">Upload</button>
-</form>
+<!-- File upload section -->
+<div style="display: flex; align-items: center; margin-bottom: 15px;">
+    <!-- Input box for file -->
+    <input type="file" id="fileInput" name="UploadedFile" required style="padding: 10px; margin-right: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 300px;" />
+</div>
 
-<h3 id="statusMessage"></h3>
+<!-- Upload Button -->
+<div>
+    <button type="button" id="uploadButton" style="padding: 10px 20px; background-color: #007bff; color: white; 
+    border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Upload</button>
+</div>
 
 <!-- Modal for Error Message -->
-<div id="errorModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999;">
+<div id="errorModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999; max-width: 400px; width: 100%; text-align: center;">
     <h4>Error</h4>
-    <p id="errorMessage"></p>
-    <button onclick="closeModal()">Close</button>
+    <p id="errorMessage" style="font-size: 18px;"></p>
+    <button onclick="closeModal()" style="background-color: #dc3545; color: white; padding: 8px 16px; border:
+     none; border-radius: 4px; font-size: 16px; cursor: pointer;">Close</button>
 </div>
 
 <!-- Modal for Success Message -->
-<div id="successModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999;">
+<div id="successModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999; max-width: 400px; width: 100%; text-align: center;">
     <h4>Success</h4>
-    <p id="successMessage"></p>
-    <button onclick="closeSuccessModal()">Close</button>
+    <p id="successMessage" style="font-size: 18px;"></p>
+    <button onclick="closeSuccessModal()" style="background-color: #28a745; color: white; padding: 8px 16px; border: 
+    none; border-radius: 4px; font-size: 16px; cursor: pointer;">Close</button>
 </div>
 
 <script>
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+        let fileName = event.target.files[0] ? event.target.files[0].name : "No file chosen";
+        // Here, we don't need to display the file name outside the input, so simply handle it as required
+    });
+
     document.getElementById("uploadButton").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent default form submission
 
@@ -49,9 +63,6 @@
 
         formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
 
-        // Log FormData content for debugging
-        console.log("FormData being sent:", formData);
-
         fetch("/dashboard/upload", { // POST to controller endpoint
             method: "POST",
             body: formData
@@ -59,15 +70,12 @@
         .then(response => response.json()) // Parse JSON response
         .then(data => {
             if (data.success) {
-                document.getElementById("statusMessage").innerText = data.message;
                 showSuccessModal("File uploaded successfully!"); // Show success message
             } else {
-                document.getElementById("statusMessage").innerText = `Error: ${data.message}`;
                 showErrorModal(`Error: ${data.message}`); // Show error message
             }
         })
         .catch(error => {
-            document.getElementById("statusMessage").innerText = `Upload failed. ${error.message}`;
             showErrorModal(`Upload failed. ${error.message}`);
             console.error("Upload error:", error);
         });
@@ -101,42 +109,73 @@
     }
 </script>
 
+<!-- Styles for the page -->
+<style>
+    /* File input section styles */
+    input[type="file"] {
+        padding: 10px;
+        margin-right: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 300px;
+    }
 
+    /* Upload button styles */
+    #uploadButton {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
 
+    /* Modal styles */
+    #errorModal, #successModal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        padding: 20px;
+        border-radius: 5px;
+        z-index: 9999;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
 
+    /* Error modal background */
+    #errorModal {
+        background: rgba(0,0,0,0.7);
+    }
 
+    /* Success modal background */
+    #successModal {
+        background: rgba(0,128,0,0.7);
+    }
 
-@* <h2>Upload a Document</h2>
+    /* Modal button styles */
+    button {
+        background-color: #dc3545; /* Error button for error modal */
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-<form method="post" enctype="multipart/form-data">
-    <input type="file" id="fileInput" name="UploadedFile" required />
-    <button type="submit" id="uploadButton">Upload</button>
-</form>
+    #successModal button {
+        background-color: #28a745; /* Success button for success modal */
+    }
 
-<h3 id="statusMessage"></h3>
-
-<script>
-    document.getElementById("uploadButton").addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent default form submission
-
-        let formData = new FormData();
-        let fileInput = document.getElementById("fileInput").files[0];
-
-        if (!fileInput) {
-            alert("Please select a file.");
-            return;
-        }
-
-        formData.append("file", fileInput); // Ensure this matches the parameter name in the controller
-
-        fetch("/dashboard/upload", { // Directly POST to controller's upload endpoint
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("statusMessage").innerText = data.message;
-        })
-        .catch(error => console.error("Upload error:", error));
-    });
-</script>  *@
+    /* Status message styles */
+    #statusMessage {
+        margin-top: 20px;
+        color: #333;
+    }
+</style>

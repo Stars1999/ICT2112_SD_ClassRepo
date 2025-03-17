@@ -16,6 +16,46 @@ namespace Utilities
 {
 	public static partial class ExtractContent
 	{
+		public static string GetRunFontType(Run run, Paragraph paragraph, WordprocessingDocument doc)
+		{
+			// Default font if not found
+			string runFontType = "Default Font";
+
+			// 🔹 Step 1: Check if Run specifies a font directly
+			if (run.RunProperties?.RunFonts?.Ascii?.Value != null)
+			{
+				runFontType = run.RunProperties.RunFonts.Ascii.Value;
+			}
+			else
+			{
+				// 🔹 Step 2: Check Paragraph-Level Font Style
+				runFontType = paragraph.ParagraphProperties?
+					.ParagraphMarkRunProperties?.GetFirstChild<RunFonts>()?.Ascii?.Value ?? "Default Font";
+
+				// 🔹 Step 3: Check the style definition (if paragraph has a style)
+				string styleId = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value;
+				var stylesPart = doc.MainDocumentPart?.StyleDefinitionsPart;
+
+				if (!string.IsNullOrEmpty(styleId) && stylesPart != null && stylesPart.Styles != null)
+				{
+					var paragraphStyle = stylesPart.Styles.Elements<Style>().FirstOrDefault(s => s.StyleId == styleId);
+					if (paragraphStyle?.StyleRunProperties?.RunFonts?.Ascii?.Value != null)
+					{
+						runFontType = paragraphStyle.StyleRunProperties.RunFonts.Ascii.Value;
+					}
+				}
+
+				// 🔹 Step 4: Check Document Default Font
+				var docDefaults = stylesPart?.Styles.Elements<Style>().FirstOrDefault(s => s.Type?.Value == StyleValues.Paragraph && s.Default?.Value == true);
+				if (docDefaults?.StyleRunProperties?.RunFonts?.Ascii?.Value != null)
+				{
+					runFontType = docDefaults.StyleRunProperties.RunFonts.Ascii.Value;
+				}
+			}
+
+			return runFontType;
+		}
+
 		private static string GetListType(Paragraph paragraph)
 		{
 			var numberingProps = paragraph.ParagraphProperties?.NumberingProperties;
@@ -51,19 +91,19 @@ namespace Utilities
 			var listType = numberingProps.NumberingId?.Val?.Value switch
 			{
 				1 => "numbered_list",
-                3 => "lowercase_lettered_list",
-                9 => "lowercase_lettered_parenthesis_list",
-                10 => "dash_bulleted_list",
-                11 => "bulleted_list",
-                12 => "hollow_bulleted_list",
-                13 => "square_bulleted_list",
-                15 => "diamond_bulleted_list",
+				3 => "lowercase_lettered_list",
+				9 => "lowercase_lettered_parenthesis_list",
+				10 => "dash_bulleted_list",
+				11 => "bulleted_list",
+				12 => "hollow_bulleted_list",
+				13 => "square_bulleted_list",
+				15 => "diamond_bulleted_list",
 				16 => "arrow_bulleted_list",
-                17 => "checkmark_bulleted_list",
+				17 => "checkmark_bulleted_list",
 				18 => "numbered_parenthesis_list",
-                19 => "roman_numeral_list",
-                20 => "uppercase_lettered_list",
-                21 => "lowercase_roman_numeral_list",
+				19 => "roman_numeral_list",
+				20 => "uppercase_lettered_list",
+				21 => "lowercase_roman_numeral_list",
 				_ => "unknown_list"
 			};
 			Console.WriteLine($"List type: {listType}\n");
@@ -234,6 +274,7 @@ namespace Utilities
 			// Collect each run's text and formatting
 			var runsList = new List<Dictionary<string, object>>();
 			var runs = paragraph.Elements<Run>().ToList(); // Convert to List to get index
+			bool bracket = false;
 
 			for (int i = 0; i < runs.Count; i++)
 			{
@@ -317,8 +358,8 @@ namespace Utilities
 						// Assign it back to PropertiesList[0]
 						PropertiesList[0] = modifiedDict;
 
-						Console.WriteLine("check the font type:");
-						Console.WriteLine(runfontType);
+						// Console.WriteLine("check the font type:");
+						// Console.WriteLine(runfontType);
 					}
 					// Print modified dictionary
 					// Console.WriteLine(
@@ -332,38 +373,161 @@ namespace Utilities
 
 				if (PropertiesList[0] is Dictionary<string, object> dict)
 				{
+
+
+					// get fonts and size
+					Console.WriteLine("\nS3");
+					//Check font and font size
+					string? runFontSizeRawS1 = run.RunProperties?.FontSize?.Val?.Value;
+					int runFontSizeS1 = 12; // Default to 12pt if not found
+
+					if (int.TryParse(runFontSizeRawS1, out int parsedSizeS1))
+						runFontSizeS1 = parsedSizeS1 / 2; // Convert from half-points to standard points
+					Console.WriteLine($"Run Font Size: {runFontSizeS1}pt");
+
+					string? paraFontSizeRawS1 = paragraph.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<FontSize>()?.Val?.Value;
+					int paraFontSizeS1 = 12;
+
+					if (int.TryParse(paraFontSizeRawS1, out int paraParsedSizeS1))
+						paraFontSizeS1 = paraParsedSizeS1 / 2; // Convert from half-points
+
+					string fontTypexx = GetRunFontType(run, paragraph, doc);
+					Console.WriteLine($"Paragraph Font Size1: {runFontSizeS1}pt {fontTypexx}");
+					Console.WriteLine(runText);
+					//end 
+
 					// Now you can safely call dict.ContainsKey(...)
-					if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype"))
+					if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype") && haveBibliography == true)
 					{
 						// Retrieve and compare values | Check if citation
 						if (
 							dict["fontsize"] is int size
 							&& size == 10
 							&& dict["fonttype"] is string font
-							&& font == "Times New Roman"
+							&& runfontType == "Times New Roman"
 						)
 						{
 							runsList.Add(
 								new Dictionary<string, object>
 								{
-									{ "type", "citation_run" },
-									{ "content", runText },
-									{ "styling", PropertiesList[0] },
-								}
-							);
-						}
-						else
-						{
-							runsList.Add(
-								new Dictionary<string, object>
-								{
-									{ "type", "text_run" },
+									{ "temp", "citation_run" },
 									{ "content", runText },
 									{ "styling", PropertiesList[0] },
 								}
 							);
 						}
 					}
+					else if (
+						dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype")
+					)
+					{
+
+						// if (
+						// 	runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+						// )
+						// {
+
+						string bracketPattern = @"\([^)]*\)";  // Matches entire ( ... )
+						string firstBracketPattern = @"\(";    // Matches first "("
+						string secondBracketPattern = @"\)";   // Matches first ")"
+
+						Match bracketMatch = Regex.Match(runText, bracketPattern);
+						Match firstBracketMatch = Regex.Match(runText, firstBracketPattern);
+						Match secondBracketMatch = Regex.Match(runText, secondBracketPattern);
+
+						// matches whole bracket
+						if (
+
+							bracketMatch.Success &&
+							runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+
+						)
+						{
+							Console.WriteLine("bracket set\n");
+							Console.WriteLine(runFontSizeS1);
+							Console.WriteLine(fontTypexx);
+							runsList.Add(
+								new Dictionary<string, object>
+									{
+											{ "type", "intext-citation" },
+											{ "content", runText },
+											{ "styling", PropertiesList[0] },
+									}
+							);
+						}
+						// found first bracket
+						else if
+						(
+							bracket == false
+							&& firstBracketMatch.Success
+							&& runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+						)
+						{
+
+							runsList.Add(
+								new Dictionary<string, object>
+									{
+											{ "type", "intext-citation" },
+											{ "content", runText },
+											{ "styling", PropertiesList[0] },
+									}
+							);
+							bracket = true;
+						}
+						// second bracket
+						else if
+						(
+							bracket == true
+							&& secondBracketMatch.Success && runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+						)
+						{
+
+							runsList.Add(
+								new Dictionary<string, object>
+									{
+											{ "type", "intext-citation" },
+											{ "content", runText },
+											{ "styling", PropertiesList[0] },
+									}
+							);
+							bracket = false;
+						}
+						// else if got content just add
+						else
+						{
+							if (bracket == true)
+							{
+
+								// runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+								Console.WriteLine("debug\n");
+								Console.WriteLine(runFontSizeS1);
+								Console.WriteLine(fontTypexx);
+								Console.WriteLine(runText);
+
+								runsList.Add(
+									new Dictionary<string, object>
+										{
+											{ "type", "intext-citation" },
+											{ "content", runText },
+											{ "styling", PropertiesList[0] },
+										}
+								);
+							}
+							else
+							{
+								runsList.Add(
+									new Dictionary<string, object>
+										{
+											{ "type", "text_run" },
+											{ "content", runText },
+											{ "styling", PropertiesList[0] },
+										}
+								);
+							}
+
+						}
+					}
+
 				}
 				else
 				{
@@ -371,8 +535,8 @@ namespace Utilities
 						new Dictionary<string, object>
 						{
 							{ "type", "text_run" },
-							{ "content", runText },
-							{ "styling", PropertiesList[0] },
+							{ "content", runText},
+							{ "styling", PropertiesList[0]},
 						}
 					);
 				}
@@ -380,8 +544,8 @@ namespace Utilities
 
 			string pattern = @"\b(Reference|Bibliography)\b";
 			Console.WriteLine($"Total runs found: {runsList.Count}");
-			Console.WriteLine($"bib:{haveBibliography}");
-			Console.WriteLine("check the text:");
+			// Console.WriteLine($"bib:{haveBibliography}");
+			// Console.WriteLine("check the text:");
 			Console.WriteLine(text);
 
 			// check if it is still references / citation at the bottom

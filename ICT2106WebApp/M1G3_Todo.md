@@ -22,7 +22,8 @@ Current Focus for next commit:
 
 1. Footer: not registering page number
 
-2. metadata of paragraph
+2. metadata of paragraph [Asked ryan to handle the rest of the list, since his
+   was not totally right]
    - Font type
    - Font Color
    - Highlighting
@@ -66,7 +67,7 @@ For text
 5. alignment: String
 6. Highlight: ??undefined in their class diagram
 
-for layout
+for layout [asked ryan to handle]
 
 1. -headers: String
 2. -footers: String
@@ -85,8 +86,9 @@ to do: table format like this { "type": "Table", "content": "", "runs": [ {
 "italic": true, "alignment": "right", "fontsize": 12, "fonttype": "Aptos",
 "fontcolor": "0E2841", "highlight": "none" } } ] }
 
-2. Citation pulling back
-3. Fix math if got time
+2. Fix math if got time [the bracket for universal]
 
-4. Make use of node
-5. Refactor
+3. Make use of node
+4. Fix fonts and size
+5. Fix intext citaiton
+6. Create node and Check node

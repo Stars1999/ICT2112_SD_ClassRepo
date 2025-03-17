@@ -1,106 +1,54 @@
+using System;
+
 namespace ICT2106WebApp.mod2grp6.Text
 {
+    /// Text DTO class for transferring text formatting data
     public class Text
     {
+        // Properties
         private string id;
-        private string fontType;
-        private int fontSize;
-        private bool bolded;
-        private bool italic;
-        private bool underline;
+        private string font;
+        private string styles;
         private string color;
-        private string highlight;
+        private float textSpacing;
         private string alignment;
-        private string lineSpacing;
 
-        public string GetFontType()
+        /// Constructor for Text DTO
+        public Text()
         {
-            return fontType;
+            id = Guid.NewGuid().ToString();
+            font = "Times New Roman";
+            styles = "";
+            color = "black";
+            textSpacing = 1.0f;
+            alignment = "left";
         }
 
-        public int GetFontSize()
+        /// Parameterized constructor for Text DTO
+        public Text(string id, string font, string styles, string color, float textSpacing, string alignment)
         {
-            return fontSize;
-        }
-
-        public bool GetBolded()
-        {
-            return bolded;
-        }
-
-        public bool GetItalic()
-        {
-            return italic;
-        }
-
-        public bool GetUnderline()
-        {
-            return underline;
-        }
-
-        public string GetColor()
-        {
-            return color;
-        }
-
-        public string GetHighlight()
-        {
-            return highlight;
-        }
-
-        public string GetAlignment()
-        {
-            return alignment;
-        }
-
-        public string GetLineSpacing()
-        {
-            return lineSpacing;
-        }
-
-        public void SetFontType(string font)
-        {
-            this.fontType = font;
-        }
-
-        public void SetFontSize(int size)
-        {
-            this.fontSize = size;
-        }
-
-        public void SetBolded(bool bolded)
-        {
-            this.bolded = bolded;
-        }
-
-        public void SetItalic(bool italic)
-        {
-            this.italic = italic;
-        }
-
-        public void SetUnderline(bool underline)
-        {
-            this.underline = underline;
-        }
-
-        public void SetColor(string color)
-        {
+            this.id = id;
+            this.font = font;
+            this.styles = styles;
             this.color = color;
-        }
-
-        public void SetHighlight(string color)
-        {
-            this.highlight = color;
-        }
-
-        public void SetAlignment(string alignment)
-        {
+            this.textSpacing = textSpacing;
             this.alignment = alignment;
         }
 
-        public void SetLineSpacing(string space)
-        {
-            this.lineSpacing = space;
-        }
+        // Getters
+        public string GetId() { return id; }
+        public string GetFont() { return font; }
+        public string GetStyles() { return styles; }
+        public string GetColor() { return color; }
+        public float GetTextSpacing() { return textSpacing; }
+        public string GetAlignment() { return alignment; }
+
+        // Setters
+        public void SetId(string id) { this.id = id; }
+        public void SetFont(string font) { this.font = font; }
+        public void SetStyles(string styles) { this.styles = styles; }
+        public void SetColor(string color) { this.color = color; }
+        public void SetTextSpacing(float textSpacing) { this.textSpacing = textSpacing; }
+        public void SetAlignment(string alignment) { this.alignment = alignment; }
     }
 }

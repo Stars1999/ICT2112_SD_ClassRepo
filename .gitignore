@@ -1,3 +1,5 @@
 # Ignore build outputs
 bin/
 obj/
+mod1grp4/obj/
+mod1grp4/bin

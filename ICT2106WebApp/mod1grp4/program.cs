@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Bson;
@@ -32,23 +32,23 @@ namespace ICT2106WebApp.mod1grp4
                 return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
             });
 
-            var app = builder.Build();
+            // var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+            // // Configure the HTTP request pipeline.
+            // if (!app.Environment.IsDevelopment())
+            // {
+            //     app.UseExceptionHandler("/Error");
+            //     app.UseHsts();
+            // }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            // app.UseHttpsRedirection();
+            // app.UseStaticFiles();
 
-            app.UseRouting();
+            // app.UseRouting();
 
-            app.UseAuthorization();
+            // app.UseAuthorization();
 
-            app.MapRazorPages();
+            // app.MapRazorPages();
 
             // Step 1: Organize tables
             // var tableOrganiser = new TableOrganiserManager();
@@ -72,7 +72,7 @@ namespace ICT2106WebApp.mod1grp4
             // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node)
             Console.WriteLine("Post-processing completed. LaTeX output ready for node.");
 
-            app.Run();
+            // app.Run();
         }
 
         // Helper method to generate sample tables

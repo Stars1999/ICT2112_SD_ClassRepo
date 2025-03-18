@@ -1,19 +1,23 @@
 namespace ICT2106WebApp.mod1grp4
 {
-    interface iTableCellCollection<T>
+    interface iTableCellCollection
     {
-        private List<TableCell_SDM> _cells;
+        iTableCellIterator CreateIterator();
+        // private List<TableCell_SDM> _cells;
 
-        public TableCellCollection(List<TableCell_SDM> cells)
-        {
-            _cells = cells;
-        }
+        // public TableCellCollection(List<TableCell_SDM> cells)
+        // {
+        //     _cells = cells;
+        // }
 
-        public iTableCellIterator CreateIterator()
-        {
-            return new TableCellIterator(_cells);
-        }
-        
+        // public iTableCellIterator CreateIterator()
+        // {
+        //     return new TableCellIterator(_cells);
+        // }
+
+
+
+
         // ITableCellIterator CreateIterator(); // Factory method for iterator
         // int Count { get; } // Returns the number of cells
         // TableCell GetCell(int index); // Retrieves a cell at an index

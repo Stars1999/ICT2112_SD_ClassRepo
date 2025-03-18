@@ -6,14 +6,16 @@ namespace ICT2106WebApp.mod1grp4
 {
 
 
-    public class TableLatexConversionManager : iTableLatexConversion
-    {
-        private iTableLatexConversion _latexConverter;
 
-        public TableLatexConversionManager(iTableLatexConversion latexConverter)
-        {
-            _latexConverter = latexConverter;
-        }
+    public class TableLatexConversionManager
+    // public class TableLatexConversionManager : iTableLatexConversion
+    {
+        // private iTableLatexConversion _latexConverter;
+
+        // public TableLatexConversionManager(iTableLatexConversion latexConverter)
+        // {
+        //     _latexConverter = latexConverter;
+        // }
 
 
         public async Task<string> ConvertToLatexAsync(Table table)
@@ -27,8 +29,28 @@ namespace ICT2106WebApp.mod1grp4
 
             while (!iterator.IsDone())
             {
-                TableCell_SDM cell = iterator.Current(); // Get current cell
-                string latexCell = await _latexConverter.ConvertCellToLatexAsync(cell); // Convert cell to LaTeX
+                TableCell cell = iterator.Current(); // Get current cell
+                string cellContent = cell.GetContent();
+                Dictionary<string, string> latexEscapes = new Dictionary<string, string>
+                {
+                    { "&", "\\&" },
+                    { "%", "\\%" },
+                    { "$", "\\$" },
+                    { "#", "\\#" },
+                    { "_", "\\_" },
+                    { "{", "\\{" },
+                    { "}", "\\}" },
+                    { "~", "\\~" },
+                    { "^", "\\^" },
+                    { "\\", "\\\\" }
+                };
+
+                foreach (var pair in latexEscapes)
+                {
+                    cellContent = cellContent.Replace(pair.Key, pair.Value); // Escape special characters
+                }
+                string latexCell = cellContent; // Convert cell to LaTeX
+                // string latexCell = await _latexConverter.ConvertCellToLatexAsync(cell); // Convert cell to LaTeX
                 latexTable += latexCell + " \\\\\n"; // Add the LaTeX cell to the table with a line break
                 iterator.Next(); // Advance the iterator
             }

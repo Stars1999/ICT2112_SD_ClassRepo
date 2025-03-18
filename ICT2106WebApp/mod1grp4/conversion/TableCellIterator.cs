@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+
 namespace ICT2106WebApp.mod1grp4
 {
     class TableCellIterator : iTableCellIterator
     {
+        private List<TableCell> _cells;
+        private int _currentIndex = 0;
+        
         public TableCellIterator(List<TableCell> cells)
         {
             _cells = cells;

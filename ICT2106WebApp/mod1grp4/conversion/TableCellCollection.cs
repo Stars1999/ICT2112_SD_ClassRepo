@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+
 namespace ICT2106WebApp.mod1grp4
 {
     // class TableCellCollection<T> : ITableCellCollection<T>
-    class TableCellCollection : ITableCellCollection
+    class TableCellCollection : iTableCellCollection
     {
 
         private List<TableCell> _cells;

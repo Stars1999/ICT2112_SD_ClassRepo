@@ -157,7 +157,66 @@ namespace Utilities
 
 			// ✅ Convert font size from half-points
 			int fontSize = fontSizeRaw != null ? int.Parse(fontSizeRaw) / 2 : 12; // Default 12pt
-			var paragraphData = new Dictionary<string, object>();
+
+            // Extract line spacing
+            // Default is Multiple, 1.15x, 276 twips
+            string lineSpacingType = "Multiple (1.15x)";
+            double lineSpacingValue = 13.8; // 276 twips / 20 = 13.8pt
+
+            if (paragraph.ParagraphProperties != null)
+            {
+                var spacingElement = paragraph.ParagraphProperties.SpacingBetweenLines;
+
+				if (spacingElement != null)
+				{
+					if (spacingElement.LineRule != null)
+					{
+						// Retrieve initial line spacing type, "auto" for some cases
+						lineSpacingType = spacingElement.LineRule.ToString() ?? "";
+					}
+
+					if (spacingElement.Line != null)
+					{
+						try
+						{
+                            // Provided value is in twips, so need to convert to what is shown in Word
+                            int twipValue = int.Parse(spacingElement.Line.Value ?? "");
+							lineSpacingValue = twipValue / 20.0;
+
+							// Convert "auto" into actual line spacing type names
+							if (spacingElement.LineRule == null || lineSpacingType == "auto")
+							{
+								switch (twipValue)
+								{
+									case 240:
+										lineSpacingType = "Single";
+										break;
+									case 360:
+										lineSpacingType = "1.5 lines";
+										break;
+									case 480:
+										lineSpacingType = "Double";
+										break;
+									default:
+										if (twipValue > 240)
+										{
+											lineSpacingType = $"Multiple ({lineSpacingValue / 12:0.0}x)";
+										}
+										break;
+								}
+							}
+							//Console.WriteLine($"Extracted line spacing: {lineSpacingType}, {lineSpacingValue}");
+						}
+						catch (FormatException ex)
+						{
+							Console.WriteLine($"Error parsing Line value: {ex.Message}");
+							lineSpacingValue = 1.15;
+						}
+					}
+				}
+            }
+
+            var paragraphData = new Dictionary<string, object>();
 			paragraphData["alignment"] = alignment;
 			// paragraphData["fontType"] = fontType;
 			// paragraphData["fontSize"] = fontSize;
@@ -180,7 +239,9 @@ namespace Utilities
 					{ "fonttype", paraFontType },
 					{ "fontcolor", fontColor },
 					{ "highlight", highlightColor },
-				},
+                    { "lineSpacingType", lineSpacingType },
+					{ "lineSpacingValue", lineSpacingValue },
+                },
 			};
 			// the one below can grab as text
 			// // check for internal using word. This works
@@ -193,7 +254,7 @@ namespace Utilities
 			// 	Console.WriteLine(paraText);
 			// }
 
-			// Detect type of lists (will probably add more in the future)
+			// Detect type of lists
 			if (paragraph.ParagraphProperties?.NumberingProperties != null)
 			{
 				paragraphData["type"] = GetListType(paragraph);

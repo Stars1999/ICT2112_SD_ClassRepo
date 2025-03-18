@@ -343,62 +343,48 @@ We can cite this reference \cite{unknown} here.
              * Detects errors in the current LaTeX content
              */
             function detectErrors() {
-                console.log("Detecting errors...");
-                
-                // Get the content from the appropriate editor
-                let latexContent;
-                if (editor) {
-                    latexContent = editor.getValue();
-                } else {
-                    latexContent = latexEditor.value;
-                }
-                
-                // Don't process if content is empty
-                if (!latexContent || !latexContent.trim()) {
-                    console.log("Empty content, clearing errors");
+                console.log("[DEBUG] Detecting errors...");
+
+                let latexContent = editor ? editor.getValue() : latexEditor.value;
+
+                if (!latexContent.trim()) {
+                    console.log("[INFO] Empty content, clearing errors.");
                     clearErrors();
                     return;
                 }
-                
-                // Perform local error checks first to ensure something works
+
                 performLocalErrorChecks(latexContent);
-                
-                // Call the error detection API
-                console.log("Calling error detection API");
+
                 fetch('/error/detect', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ latexContent: latexContent })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ latexContent })
                 })
-                .then(response => {
-                    console.log("API response status:", response.status);
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log("API response data:", data);
+                    console.log("[DEBUG] API response:", data);
+
                     if (data.success) {
-                        // Update the current errors
-                        currentErrors = data.errors;
-                        
-                        // Display the errors
-                        displayErrors(currentErrors);
-                        
-                        // Highlight errors in the editor
-                        highlightErrors(currentErrors);
+                        if (data.errors.length === 0) {
+                            console.log("[INFO] No errors found, keeping previous highlights.");
+                            clearErrors();
+                        } else {
+                            console.log(`[INFO] ${data.errors.length} errors found.`);
+                            currentErrors = data.errors;
+                            displayErrors(currentErrors);
+                            highlightErrors(currentErrors);
+                        }
                     } else {
-                        console.error('Error detection failed:', data.error);
+                        console.error("[ERROR] Error detection failed:", data.error);
                         compilationStatus.textContent = "Error detection failed: " + data.error;
                     }
-                    checkForErrorsAndDisableDropdown();
                 })
                 .catch(error => {
-                    console.error('Error calling error detection API:', error);
+                    console.error("[ERROR] API call failed:", error);
                     compilationStatus.textContent = "Error detection service unavailable";
-                    // We already showed basic errors from performLocalErrorChecks
                 });
             }
+
             
             /**
              * Performs basic error checking locally in JavaScript
@@ -555,62 +541,56 @@ We can cite this reference \cite{unknown} here.
             /**
              * Highlights errors in the editor
              */
+            /**
+            * Highlights errors in the editor
+            */
             function highlightErrors(errors) {
                 console.log("Highlighting errors in editor");
-                
-                // Clear existing markers
-                clearErrorHighlights();
-                
-                // Skip if we're not using CodeMirror
+
+                // Clear previous highlights
+                //clearErrorHighlights();
+
+                // Skip if CodeMirror editor is not initialized
                 if (!editor) {
-                    console.log("No CodeMirror editor, skipping highlighting");
+                    console.warn("No CodeMirror editor found, skipping highlighting.");
                     return;
                 }
-                
-                // Add markers for each error
+
                 errors.forEach(error => {
                     try {
                         // Convert to zero-based line number
                         const line = error.line - 1;
-                        
-                        // Calculate the start and end positions
-                        let from, to;
-                        if (error.column && error.length) {
-                            // If column and length are provided
-                            from = { line: line, ch: error.column - 1 };
-                            to = { line: line, ch: error.column - 1 + error.length };
-                        } else {
-                            // Otherwise highlight the whole line
-                            const lineContent = editor.getLine(line);
-                            if (lineContent) {
-                                // Check if we can find specific patterns to highlight
-                                let startCh = 0, endCh = lineContent.length;
-                                
-                                if (error.type === "Missing $ inserted" && lineContent.includes("\\alpha")) {
-                                    startCh = lineContent.indexOf("\\alpha");
-                                    endCh = startCh + 6; // length of \alpha
-                                } else if (error.type.includes("Citation") && lineContent.includes("\\cite{")) {
-                                    startCh = lineContent.indexOf("\\cite{");
-                                    endCh = lineContent.indexOf("}", startCh) + 1;
-                                } else if (lineContent.includes("\\end{document") && !lineContent.includes("\\end{document}")) {
-                                    startCh = lineContent.indexOf("\\end{document");
-                                    endCh = startCh + 13; // length of \end{document
-                                }
-                                
-                                from = { line: line, ch: startCh };
-                                to = { line: line, ch: endCh };
-                            } else {
-                                console.warn(`Line ${line} not found in editor`);
-                                return; // Skip this error
-                            }
+
+                        // Get line content
+                        const lineContent = editor.getLine(line);
+                        if (!lineContent) {
+                            console.warn(`Line ${line} not found in editor`);
+                            return;
                         }
-                        
-                        // Create the marker
+
+                        // Find the start and end positions for highlighting
+                        let startCh = 0, endCh = lineContent.length;
+
+                        if (error.type === "Missing $ inserted" && lineContent.includes("\\alpha")) {
+                            startCh = lineContent.indexOf("\\alpha");
+                            endCh = startCh + 6;
+                        } else if (error.type.includes("Citation") && lineContent.includes("\\cite{")) {
+                            startCh = lineContent.indexOf("\\cite{");
+                            endCh = lineContent.indexOf("}", startCh) + 1;
+                        } else if (lineContent.includes("\\end{document") && !lineContent.includes("\\end{document}")) {
+                            startCh = lineContent.indexOf("\\end{document");
+                            endCh = startCh + 13;
+                        }
+
+                        const from = { line: line, ch: startCh };
+                        const to = { line: line, ch: endCh };
+
+                        // Apply marker with correct class
                         const marker = editor.markText(from, to, {
-                            className: error.severity === 'high' ? 'latex-error-high' : 'latex-error-medium',
+                            className: error.severity === "high" ? "latex-error-high" : "latex-error-medium",
                             title: error.message
                         });
-                        
+
                         // Store the marker for later removal
                         errorMarkers.push(marker);
                     } catch (e) {
@@ -618,7 +598,7 @@ We can cite this reference \cite{unknown} here.
                     }
                 });
             }
-            
+                        
             /**
              * Clears all error highlights
              */
@@ -798,62 +778,44 @@ We can cite this reference \cite{unknown} here.
             
             // Set up the compile button
             compileBtn.addEventListener('click', function() {
-                console.log("Compile button clicked");
-                
-                // First check for errors
-                if (currentErrors.filter(e => e.severity === 'high').length > 0) {
-                    // Show a confirmation dialog if there are high-severity errors
-                    if (!confirm('There are still high-severity errors in your LaTeX. Do you want to attempt compilation anyway?')) {
-                        return;
-                    }
-                }
-                
-                // Get the content
-                let latexContent;
-                if (editor) {
-                    latexContent = editor.getValue();
+            console.log("Compile button clicked");
+
+            if (currentErrors.length > 0) {
+                alert("⚠️ Your document has errors! Please fix them before compiling.");
+                return;
+            }
+
+            let latexContent = editor ? editor.getValue() : latexEditor.value;
+            compilationStatus.textContent = "Compiling...";
+
+            fetch('/home/compile-latex', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ latexContent })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    compilationStatus.textContent = "Compilation successful!";
+                    document.getElementById('pdf-preview').innerHTML = `
+                        <iframe src="${data.pdfUrl}#${new Date().getTime()}" width="100%" height="500px" style="border: none;"></iframe>
+                    `;
+                    downloadPdfBtn.setAttribute("data-pdf-url", data.pdfUrl);
+                    downloadPdfBtn.disabled = false;
                 } else {
-                    latexContent = latexEditor.value;
-                }
-                
-                // Update the status
-                compilationStatus.textContent = "Compiling...";
-                
-                // Call the existing compile endpoint
-                fetch('/home/compile-latex', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ latexContent: latexContent })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Compilation response:", data);
-                    if (data.success) {
-                        compilationStatus.textContent = "Compilation successful!";
-                        document.getElementById('pdf-preview').innerHTML = `
-                            <iframe src="${data.pdfUrl}#${new Date().getTime()}" width="100%" height="500px" style="border: none;"></iframe>
-                        `;
-                        
-                        // Enable download button
-                        downloadPdfBtn.setAttribute("data-pdf-url", data.pdfUrl);
-                        downloadPdfBtn.disabled = false;
-                    } else {
-                        compilationStatus.textContent = "Compilation failed!";
-                        console.error("Compilation error:", data.error);
-                        alert("Error compiling LaTeX: " + data.error);
-                    }
-                    
-                    // Re-check for errors (might have new ones from MiKTeX)
-                    setTimeout(detectErrors, 1000);
-                })
-                .catch(error => {
                     compilationStatus.textContent = "Compilation failed!";
-                    console.error("Network or server error:", error);
-                    alert("Error: Could not reach the server. Check your internet connection.");
-                });
+                    console.error("Compilation error:", data.error);
+                    alert("Error compiling LaTeX: " + data.error);
+                }
+                setTimeout(detectErrors, 1000);
+            })
+            .catch(error => {
+                compilationStatus.textContent = "Compilation failed!";
+                console.error("Network or server error:", error);
+                alert("Error: Could not reach the server. Check your internet connection.");
             });
+        });
+
             
             // Set up the download button
             downloadPdfBtn.addEventListener('click', function() {

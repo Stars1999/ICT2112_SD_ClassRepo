@@ -7,15 +7,19 @@ using System.Threading.Tasks;
 [Route("home")]
 public class HomeController : Controller
 {
-    private readonly iConversionStatus _conversionStatus; // ✅ Use dependency injection for iConversionStatus
+    private readonly iConversionStatus _conversionStatus;
+    private readonly ErrorCheckingFacade _errorCheckingFacade;
+    private readonly PDFGenerator _pdfGenerator;
 
-    public HomeController(iConversionStatus conversionStatus)
+    public HomeController(iConversionStatus conversionStatus, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator)
     {
-        _conversionStatus = conversionStatus; // ✅ Assign injected dependency
+        _conversionStatus = conversionStatus ?? throw new ArgumentNullException(nameof(conversionStatus));
+        _errorCheckingFacade = errorCheckingFacade ?? throw new ArgumentNullException(nameof(errorCheckingFacade));
+        _pdfGenerator = pdfGenerator ?? throw new ArgumentNullException(nameof(pdfGenerator));
     }
 
     [HttpGet("convert")]
-    public IActionResult Convert([FromQuery] string style = "apa") // Default to APA
+    public IActionResult Convert([FromQuery] string style = "apa") 
     {
         try
         {
@@ -29,36 +33,32 @@ public class HomeController : Controller
                 return Content("Error: JSON file not found!");
             }
 
-            // Read the JSON data
             string jsonData = System.IO.File.ReadAllText(jsonFilePath);
-
-            // Create citation factories
             var citationFactory = new CitationScannerFactory();
             var bibliographyFactory = new BibliographyScannerFactory();
-
-            // Initialize BibTeXConverter with the selected style
-            var converter = new BibTeXConverter(citationFactory, bibliographyFactory,_conversionStatus, style);
-
-            // Convert citations and bibliography
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, style);
             string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
 
-
-            // Generate LaTeX
             var latexGenerator = new LatexGenerator();
             latexGenerator.GenerateLatex(_conversionStatus.GetUpdatedJson());
-
             string generatedLatex = latexGenerator.GetLatexContent();
+
             if (string.IsNullOrEmpty(generatedLatex))
             {
                 ErrorPresenter.LogError("LatexGenerator did not generate any content.");
+                return Content("Error: LaTeX generation failed.");
             }
 
-            // Store LaTeX for editor
+            var errors = _errorCheckingFacade.ProcessError(generatedLatex);
+            if (errors.Count > 0)
+            {
+                return Json(new { success = false, error = "Fix LaTeX errors before conversion!", errors });
+            }
+
             var editorDoc = new EditorDoc();
             editorDoc.SetLatexContent(generatedLatex);
 
             Console.WriteLine("[INFO] LaTeX content successfully stored in EditorDoc.");
-
             return RedirectToAction("Editor");
         }
         catch (Exception ex)
@@ -92,8 +92,18 @@ public class HomeController : Controller
         {
             Console.WriteLine("[DEBUG] Received LaTeX content for compilation.");
 
-            PDFGenerator pdfGenerator = new PDFGenerator();
-            bool success = await pdfGenerator.GeneratePDF(request.LatexContent);
+            if (string.IsNullOrEmpty(request.LatexContent))
+            {
+                return BadRequest("No LaTeX content provided.");
+            }
+
+            var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
+            if (errors.Count > 0)
+            {
+                return Json(new { success = false, error = "Fix LaTeX errors before compilation!", errors });
+            }
+
+            bool success = await _pdfGenerator.GeneratePDF(request.LatexContent);
 
             if (!success)
             {
@@ -101,7 +111,7 @@ public class HomeController : Controller
                 return Json(new { success = false, error = "LaTeX compilation failed. Check logs for details." });
             }
 
-            return Json(new { success = true, pdfUrl = pdfGenerator.GetGeneratedPDFUrl() });
+            return Json(new { success = true, pdfUrl = _pdfGenerator.GetGeneratedPDFUrl() });
         }
         catch (Exception ex)
         {
@@ -109,6 +119,7 @@ public class HomeController : Controller
             return Json(new { success = false, error = ex.Message });
         }
     }
+
 
     [HttpGet("errors")]
     public IActionResult GetErrors()

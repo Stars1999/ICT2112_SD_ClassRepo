@@ -4,6 +4,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
+builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
+builder.Services.AddSingleton<iErrorPresenter, ErrorPresenter>();
+builder.Services.AddSingleton<ErrorCheckingFacade>();
+builder.Services.AddScoped<PDFGenerator>();
+
 
 // Register LaTeX error detection services
 builder.Services.AddLaTeXErrorDetection();

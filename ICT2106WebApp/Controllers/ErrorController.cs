@@ -9,20 +9,18 @@ using System.Threading.Tasks;
 [Route("error")]
 public class ErrorController : Controller
 {
-    private readonly iErrorCheckingFacade _errorCheckingFacade;
-    private readonly iErrorPresenter _errorPresenter;
+    private readonly ErrorCheckingFacade _errorCheckingFacade;
     
     /// <summary>
     /// Constructor for ErrorController
     /// </summary>
-    public ErrorController(iErrorCheckingFacade errorCheckingFacade, iErrorPresenter errorPresenter)
+    public ErrorController(ErrorCheckingFacade errorCheckingFacade)
     {
         _errorCheckingFacade = errorCheckingFacade ?? throw new ArgumentNullException(nameof(errorCheckingFacade));
-        _errorPresenter = errorPresenter ?? throw new ArgumentNullException(nameof(errorPresenter));
     }
     
     /// <summary>
-    /// Detects errors in LaTeX content
+    /// Detects errors in LaTeX content.
     /// </summary>
     [HttpPost("detect")]
     public IActionResult DetectErrors([FromBody] LaTeXRequest request)
@@ -31,20 +29,17 @@ public class ErrorController : Controller
         {
             if (request == null || string.IsNullOrEmpty(request.LatexContent))
             {
-                return BadRequest("LaTeX content is required");
+                return BadRequest("LaTeX content is required.");
             }
             
-            // Process the errors using the facade
-            var errors = _errorCheckingFacade.ProcessError("current-document", request.LatexContent);
+            // ✅ Use the Facade to process errors
+            var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
             
-            // Format errors for UI display
-            var formattedErrors = ((ErrorPresenter)_errorPresenter).FormatErrorsForUI(errors);
-            
-            return Json(new { success = true, errors = formattedErrors });
+            return Json(new { success = true, errors });
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] Error detecting LaTeX errors: {ex.Message}");
+            Console.WriteLine($"[ERROR] {ex.Message}");
             return Json(new { success = false, error = ex.Message });
         }
     }
@@ -57,60 +52,63 @@ public class ErrorController : Controller
     {
         try
         {
-            if (request == null || string.IsNullOrEmpty(request.LatexContent))
+            if (request == null || string.IsNullOrEmpty(request.LatexContent) || request.Error == null)
             {
-                return BadRequest("LaTeX content is required");
+                return BadRequest("Invalid request data.");
             }
             
-            if (request.Error == null)
-            {
-                // Create an error object manually if one wasn't provided correctly
-                Console.WriteLine($"[DEBUG] Creating error object from line: {request.LineNumber}");
-                var error = new ErrorStyle
-                {
-                    LineNumber = request.LineNumber,
-                    ErrorType = request.ErrorType ?? "Unknown Error",
-                    Message = request.ErrorMessage ?? "Error to fix",
-                    Severity = "high",
-                    CanFix = true
-                };
-                
-                // Fix the error using the facade
-                string fixedContent = _errorCheckingFacade.FixError(request.LatexContent, error);
-                
-                return Json(new { success = true, fixedContent = fixedContent });
-            }
-            else
-            {
-                // Normal flow
-                string fixedContent = _errorCheckingFacade.FixError(request.LatexContent, request.Error);
-                return Json(new { success = true, fixedContent = fixedContent });
-            }
+            // ✅ Use the Facade to fix the error
+            string fixedContent = _errorCheckingFacade.FixError(request.LatexContent, request.Error);
+            
+            return Json(new { success = true, fixedContent });
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] Error fixing LaTeX error: {ex.Message}");
+            Console.WriteLine($"[ERROR] {ex.Message}");
             return Json(new { success = false, error = ex.Message });
         }
     }
 
-    // Updated request model
-    public class FixErrorRequest
-    {
-        public string LatexContent { get; set; }
-        public ErrorStyle Error { get; set; }
-        public int LineNumber { get; set; }
-        public string ErrorType { get; set; }
-        public string ErrorMessage { get; set; }
-    }
-    
     /// <summary>
-    /// Gets all errors for the current document
+    /// Processes errors without fixing them.
+    /// </summary>
+    [HttpPost("process")]
+    public IActionResult ProcessError([FromBody] LaTeXRequest request)
+    {
+        try
+        {
+            if (request == null || string.IsNullOrEmpty(request.LatexContent))
+            {
+                return BadRequest("LaTeX content is required.");
+            }
+
+            // ✅ Use the Facade to process errors
+            var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
+            
+            return Json(new { success = true, errors });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] {ex.Message}");
+            return Json(new { success = false, error = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Retrieves and processes errors for the current document.
     /// </summary>
     [HttpGet("all")]
-    public IActionResult GetAllErrors()
+    public IActionResult GetAllErrors([FromQuery] string latexContent)
     {
-        return Json(new { errors = ErrorPresenter.GetErrors() });
+        if (string.IsNullOrEmpty(latexContent))
+        {
+            return Json(new { errors = ErrorPresenter.GetErrors() });
+        }
+
+        // ✅ Process errors before retrieving them
+        var errors = _errorCheckingFacade.ProcessError(latexContent);
+
+        return Json(new { success = true, errors });
     }
 }
 
@@ -121,4 +119,7 @@ public class FixErrorRequest
 {
     public string LatexContent { get; set; }
     public ErrorStyle Error { get; set; }
+    public int LineNumber { get; set; }
+    public string ErrorType { get; set; }
+    public string ErrorMessage { get; set; }
 }

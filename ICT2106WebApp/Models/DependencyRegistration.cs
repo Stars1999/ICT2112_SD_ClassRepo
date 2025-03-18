@@ -20,11 +20,11 @@ public static class ServiceCollectionExtensions
         });
         
         // Register the error checking facade
-        services.AddSingleton<iErrorCheckingFacade>(provider => {
-            var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();
-            var errorPresenter = provider.GetRequiredService<iErrorPresenter>();
-            return new ErrorCheckingFacade(errorAnalyser, errorPresenter);
-        });
+        // services.AddSingleton<iErrorCheckingFacade>(provider => {
+        //     var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();
+        //     var errorPresenter = provider.GetRequiredService<iErrorPresenter>();
+        //     return new ErrorCheckingFacade(errorAnalyser, errorPresenter);
+        // });
         
         return services;
     }

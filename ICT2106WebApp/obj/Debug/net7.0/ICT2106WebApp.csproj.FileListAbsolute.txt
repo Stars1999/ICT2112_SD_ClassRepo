@@ -67,3 +67,14 @@ C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_
 C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb
 C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
 C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.AssemblyReference.cache
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.AssemblyInfoInputs.cache
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.AssemblyInfo.cs
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.CoreCompileInputs.cache
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.RazorAssemblyInfo.cache
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.RazorAssemblyInfo.cs
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\refint\ICT2106WebApp.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb

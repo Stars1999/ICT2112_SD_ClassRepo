@@ -1,17 +1,21 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.13)  16 MAR 2025 01:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.16)  18 MAR 2025 14:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**C:/Users/Leon/Documents/GitHub/ICT2112_SD_ClassRepo/ICT2106WebApp/wwwroot/pdf
-s/document.tex
+**"C:/Users/Chee Xuan Yang/SIT/y2_tri2/software_design/groupProject/ICT2112_SD_
+ClassRepo/ICT2106WebApp/wwwroot/pdfs/document.tex"
 
-(C:/Users/Leon/Documents/GitHub/ICT2112_SD_ClassRepo/ICT2106WebApp/wwwroot/pdfs
-/document.tex
+(C:/Users/Chee Xuan Yang/SIT/y2_tri2/software_design/groupProject/ICT2112_SD_Cl
+assRepo/ICT2106WebApp/wwwroot/pdfs/document.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
-(C:\Users\Leon\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+
+(C:\Users\Chee Xuan Yang\AppData\Local\Programs\MiKTeX\tex/latex/base\article.c
+ls
 Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
-(C:\Users\Leon\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+
+(C:\Users\Chee Xuan Yang\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.cl
+o
 File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count187
@@ -26,36 +30,14 @@ File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
 )
-! Undefined control sequence.
-l.3 \autdhor
-            {Dr. Emily Johnson}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-! LaTeX Error: Missing \begin{document}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.3 \autdhor{D
-              r. Emily Johnson}
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-(C:\Users\Leon\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdft
-ex.def
+(C:\Users\Chee Xuan Yang\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3ba
+ckend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count195
 \l__pdf_internal_box=\box51
 )
-(C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\wwwroot\pdfs
-\document.aux)
+(C:\Users\Chee Xuan Yang\SIT\y2_tri2\software_design\groupProject\ICT2112_SD_Cl
+assRepo\ICT2106WebApp\wwwroot\pdfs\document.aux)
 \openout1 = `document.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
@@ -72,22 +54,17 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 5.
 LaTeX Font Info:    ... okay on input line 5.
- [1
-
-{C:/Users/Leon/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <12> on input line 6.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 6.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 6.
+ [1
 
-
-LaTeX Warning: No \author given.
-
-[2]
-(C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\wwwroot\pdfs
-\document.aux)
+{C:/Users/Chee Xuan Yang/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+(C:\Users\Chee Xuan Yang\SIT\y2_tri2\software_design\groupProject\ICT2112_SD_Cl
+assRepo\ICT2106WebApp\wwwroot\pdfs\document.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -95,21 +72,22 @@ L3 programming layer <2024-01-04>
  ) 
 Here is how much of TeX's memory you used:
  458 strings out of 474486
- 9506 string characters out of 5744227
+ 9958 string characters out of 5739471
  1926542 words of memory out of 5000000
  22815 multiletter control sequences out of 15000+600000
  561709 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 35i,6n,50p,249b,200s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mbx12.pfb><C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
-nts/cm/cmr10.pfb><C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmr12.pfb><C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmr17.pfb>
-Output written on C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106We
-bApp\wwwroot\pdfs\document.pdf (2 pages, 53040 bytes).
+ 35i,6n,50p,285b,197s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/Chee Xuan Yang/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
+fonts/cm/cmbx12.pfb><C:/Users/Chee Xuan Yang/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Chee Xuan Yang/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Chee Xuan Yang/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb>
+Output written on "C:\Users\Chee Xuan Yang\SIT\y2_tri2\software_design\groupPro
+ject\ICT2112_SD_ClassRepo\ICT2106WebApp\wwwroot\pdfs\document.pdf" (1 page, 551
+98 bytes).
 PDF statistics:
- 29 PDF objects out of 1000 (max. 8388607)
+ 26 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

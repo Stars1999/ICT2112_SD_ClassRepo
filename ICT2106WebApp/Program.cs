@@ -4,6 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
 
+// Register LaTeX error detection services
+builder.Services.AddLaTeXErrorDetection();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

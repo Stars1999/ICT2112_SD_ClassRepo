@@ -5,6 +5,8 @@
 }
 
 @section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/idea.min.css" />
     <style>
         /* Custom header with dark background */
         .editor-header {
@@ -78,6 +80,40 @@
             display: flex;
             justify-content: space-between;
         }
+
+        /* CodeMirror custom styles */
+        .CodeMirror {
+            height: 100%;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+
+        /* Error highlighting */
+        .latex-error-high {
+            background-color: rgba(254, 202, 202, 0.5);
+            text-decoration: wavy underline #ef4444;
+            text-decoration-thickness: 2px;
+        }
+            
+        .latex-error-medium {
+            background-color: rgba(254, 240, 138, 0.5);
+            text-decoration: wavy underline #eab308;
+            text-decoration-thickness: 2px;
+        }
+
+        /* Tooltip */
+        .CodeMirror-tooltip {
+            position: absolute;
+            background-color: #2d3748;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
     </style>
 }
 
@@ -85,7 +121,8 @@
 <div class="editor-header">
     <h1>LaTeX Editor</h1>
     <div>
-        <button id="download-pdf-btn" class="btn btn-primary">Download PDF</button>
+        <button id="test-error-btn" class="btn btn-info me-2">Test Error Detection</button>
+        <button id="download-pdf-btn" class="btn btn-primary" disabled>Download PDF</button>
     </div>
 </div>
 
@@ -115,9 +152,11 @@
 \maketitle
 
 \section{Introduction}
-This is a sample LaTeX document.
+This is a sample LaTeX document with \alpha outside math mode.
 
-\end{document}</textarea>
+We can cite this reference \cite{unknown} here.
+
+\end{document</textarea>
         </div>
     </div>
     
@@ -134,12 +173,9 @@ This is a sample LaTeX document.
 <!-- Error Panel -->
 <div class="mt-3">
     <div class="section-header">Errors and Warnings</div>
-    <div id="error-list" class="p-2" style="max-height: 150px; overflow-y: auto;">
-        <div class="error-high">
-            <strong>Line 10:</strong> Missing closing bracket for \begin{document} command
-        </div>
-        <div class="error-medium">
-            <strong>Line 15:</strong> Undefined reference to 'fig:sample'
+    <div id="error-list" class="p-2" style="max-height: 150px; overflow-y-auto;">
+        <div class="alert alert-info">
+            Start typing in the editor to see real-time error detection.
         </div>
     </div>
 </div>
@@ -151,109 +187,595 @@ This is a sample LaTeX document.
 </div>
 
 @section Scripts {
+    <!-- CodeMirror for better editing experience -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/stex/stex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    
     <script>
+        /**
+         * LaTeX Editor with Real-time Error Detection
+         */
         document.addEventListener('DOMContentLoaded', function() {
+            // Editor elements
+            const latexEditor = document.getElementById('latex-editor');
             const compileBtn = document.getElementById('compile-btn');
             const downloadPdfBtn = document.getElementById('download-pdf-btn');
-            const latexEditor = document.getElementById('latex-editor');
-            const pdfPreview = document.getElementById('pdf-preview');
-            const compilationStatus = document.getElementById('compilation-status');
+            const testErrorBtn = document.getElementById('test-error-btn');
             const bibliographyDropdown = document.getElementById('bibliography-style');
             const errorList = document.getElementById('error-list');
-
-            // ✅ Load citation style from a session cookie (default to APA)
-            function getCookie(name) {
-                let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                return match ? decodeURIComponent(match[2]) : 'apa'; // Default to APA
-            }
-
-            function setCookie(name, value, days) {
-                let expires = "";
-                if (days) {
-                    let date = new Date();
-                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                    expires = "; expires=" + date.toUTCString();
-                }
-                document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
-            }
-
-            let savedStyle = getCookie("selectedCitationStyle");
-            bibliographyDropdown.value = savedStyle; // Ensure correct option is selected
-
-            console.log(`[INFO] Loaded citation style: ${savedStyle}`);
-
-            // ✅ Load LaTeX content into editor AFTER applying the selected style
-            fetch(`/home/load-latex?style=${savedStyle}`)
-                .then(response => response.text())
-                .then(data => {
-                    if (data.trim() !== '') {
-                        latexEditor.value = data;
-                    }
-                })
-                .catch(error => console.error('Error loading LaTeX:', error));
-
-            // ✅ Handle citation style change and persist selection in cookies
-            bibliographyDropdown.addEventListener('change', function() {
-                const selectedStyle = bibliographyDropdown.value;
-                setCookie("selectedCitationStyle", selectedStyle, 30); // Save selection for 30 days
-
-                console.log(`[DEBUG] User selected: ${selectedStyle}`);
-
-                fetch(`/home/convert?style=${selectedStyle}`, { method: 'GET' })
-                .then(response => {
-                    console.log(`[INFO] Style updated to ${selectedStyle}, reloading editor.`);
-                    window.location.href = '/home/editor'; // ✅ Reload editor with new citation style
-                })
-                .catch(error => console.error('Error changing citation style:', error));
-            });
-
-            // ✅ Function to Fetch and Display Errors
-            function fetchErrors() {
-                fetch("/home/errors")
-                .then(response => response.json())
-                .then(data => {
-                    errorList.innerHTML = ""; // ✅ Clear existing errors
-
-                    if (data.errors.length === 0) {
-                        errorList.innerHTML = "<p class='text-secondary'>No errors yet.</p>";
-                        return;
-                    }
-
-                    data.errors.forEach(error => {
-                        let errorDiv = document.createElement("div");
-                        errorDiv.className = "error-high"; // Highlight errors
-                        errorDiv.innerHTML = `<strong>Error:</strong> ${error}`;
-                        errorList.appendChild(errorDiv);
+            const compilationStatus = document.getElementById('compilation-status');
+            
+            // Error detection state
+            let currentErrors = [];
+            let errorMarkers = [];
+            let typingTimer;
+            const doneTypingInterval = 1000; // Wait for 1 second after typing stops
+            
+            // CodeMirror editor setup
+            let editor;
+            
+            // Initialize the editor 
+            function initializeEditor() {
+                console.log("Initializing editor...");
+                
+                // Try to use CodeMirror if available
+                if (window.CodeMirror) {
+                    console.log("Using CodeMirror editor");
+                    
+                    // Initialize CodeMirror
+                    editor = CodeMirror.fromTextArea(latexEditor, {
+                        mode: "stex",
+                        lineNumbers: true,
+                        theme: "default",
+                        indentUnit: 4,
+                        matchBrackets: true,
+                        lineWrapping: true
                     });
-                })
-                .catch(error => console.error("Error fetching errors:", error));
+                    
+                    // Set up event listener for changes
+                    editor.on('change', function() {
+                        console.log("CodeMirror content changed");
+                        // Clear the timeout if it's already set
+                        clearTimeout(typingTimer);
+                        
+                        // Set a new timeout for error detection
+                        typingTimer = setTimeout(detectErrors, doneTypingInterval);
+                    });
+                } else {
+                    console.log("Using plain textarea editor");
+                    
+                    // Set up the basic editor
+                    latexEditor.addEventListener('input', function() {
+                        console.log("Textarea content changed");
+                        // Clear the timeout if it's already set
+                        clearTimeout(typingTimer);
+                        
+                        // Set a new timeout for error detection
+                        typingTimer = setTimeout(detectErrors, doneTypingInterval);
+                    });
+                }
+                
+                // Set up event handlers for loading content
+                fetch('/home/load-latex')
+                    .then(response => response.text())
+                    .then(content => {
+                        console.log("Loaded LaTeX content from server");
+                        if (content && !content.startsWith("Error:")) {
+                            if (editor) {
+                                editor.setValue(content);
+                            } else {
+                                latexEditor.value = content;
+                            }
+                            
+                            // Initial error detection
+                            detectErrors();
+                        } else {
+                            console.warn("No valid LaTeX content loaded:", content);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error loading LaTeX content:", error);
+                    });
             }
-
-            // ✅ Compile LaTeX to PDF when the "Compile" button is clicked
-            compileBtn.addEventListener('click', function() {
-                let latexContent = latexEditor.value.trim();
-
-                // ✅ Prevent sending empty LaTeX content
-                if (!latexContent || !latexContent.includes("\\begin{document}")) {
-                    compilationStatus.textContent = "Error: LaTeX content is empty or invalid.";
-                    console.error("Error: LaTeX content is empty or missing \\begin{document}");
+            
+            /**
+             * Detects errors in the current LaTeX content
+             */
+            function detectErrors() {
+                console.log("Detecting errors...");
+                
+                // Get the content from the appropriate editor
+                let latexContent;
+                if (editor) {
+                    latexContent = editor.getValue();
+                } else {
+                    latexContent = latexEditor.value;
+                }
+                
+                // Don't process if content is empty
+                if (!latexContent || !latexContent.trim()) {
+                    console.log("Empty content, clearing errors");
+                    clearErrors();
                     return;
                 }
-
+                
+                // Perform local error checks first to ensure something works
+                performLocalErrorChecks(latexContent);
+                
+                // Call the error detection API
+                console.log("Calling error detection API");
+                fetch('/error/detect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ latexContent: latexContent })
+                })
+                .then(response => {
+                    console.log("API response status:", response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("API response data:", data);
+                    if (data.success) {
+                        // Update the current errors
+                        currentErrors = data.errors;
+                        
+                        // Display the errors
+                        displayErrors(currentErrors);
+                        
+                        // Highlight errors in the editor
+                        highlightErrors(currentErrors);
+                    } else {
+                        console.error('Error detection failed:', data.error);
+                        compilationStatus.textContent = "Error detection failed: " + data.error;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error calling error detection API:', error);
+                    compilationStatus.textContent = "Error detection service unavailable";
+                    // We already showed basic errors from performLocalErrorChecks
+                });
+            }
+            
+            /**
+             * Performs basic error checking locally in JavaScript
+             */
+            function performLocalErrorChecks(content) {
+                console.log("Performing local error checks");
+                const lines = content.split('\n');
+                const localErrors = [];
+                
+                // Check for common issues
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // Check for unclosed document ending
+                    if (line.includes("\\end{document") && !line.includes("\\end{document}")) {
+                        localErrors.push({
+                            line: i + 1,
+                            type: "Missing } inserted",
+                            message: "Missing } in \\end{document command",
+                            suggestion: "Add } to close the command",
+                            severity: "high",
+                            canFix: true
+                        });
+                    }
+                    
+                    // Check for math symbols outside math mode
+                    if (line.includes("\\alpha") && !line.includes("$\\alpha") && !line.includes("\\alpha$")) {
+                        localErrors.push({
+                            line: i + 1,
+                            type: "Missing $ inserted",
+                            message: "Symbol \\alpha requires math mode",
+                            suggestion: "Enclose \\alpha with $ symbols",
+                            severity: "high",
+                            canFix: true
+                        });
+                    }
+                    
+                    // Check for undefined citations
+                    const citeMatch = line.match(/\\cite{([^}]*)}/);
+                    if (citeMatch) {
+                        localErrors.push({
+                            line: i + 1,
+                            type: "Citation undefined",
+                            message: `Citation '${citeMatch[1]}' undefined`,
+                            suggestion: "Check that this citation key exists in your bibliography",
+                            severity: "medium",
+                            canFix: false
+                        });
+                    }
+                }
+                
+                // Display local errors if any were found
+                if (localErrors.length > 0) {
+                    console.log("Found local errors:", localErrors);
+                    displayErrors(localErrors);
+                    highlightErrors(localErrors);
+                }
+            }
+            
+            /**
+             * Test function to display sample errors
+             */
+            function testErrorDetection() {
+                console.log("Running error detection test");
+                const testErrors = [
+                    {
+                        line: 9,
+                        type: "Missing $ inserted",
+                        message: "Symbol \\alpha requires math mode",
+                        suggestion: "Enclose the expression with $...$ or $$...$$",
+                        severity: "high",
+                        canFix: true
+                    },
+                    {
+                        line: 11,
+                        type: "Citation undefined",
+                        message: "Citation 'unknown' undefined",
+                        suggestion: "Check that this citation key exists in your bibliography",
+                        severity: "medium",
+                        canFix: false
+                    },
+                    {
+                        line: 13,
+                        type: "Missing } inserted",
+                        message: "There is an unclosed curly brace",
+                        suggestion: "Add } to close the \\end{document command",
+                        severity: "high",
+                        canFix: true
+                    }
+                ];
+                
+                // Display test errors
+                displayErrors(testErrors);
+                highlightErrors(testErrors);
+                
+                // Update status
+                compilationStatus.textContent = "Test error detection completed";
+            }
+            
+            /**
+             * Displays errors in the error list panel
+             */
+            function displayErrors(errors) {
+                console.log("Displaying errors:", errors);
+                
+                // Clear the error list
+                errorList.innerHTML = '';
+                
+                // If no errors, show a success message
+                if (!errors || errors.length === 0) {
+                    errorList.innerHTML = `
+                        <div class="alert alert-success">
+                            No errors detected! Your LaTeX looks good.
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Add each error to the list
+                errors.forEach((error, index) => {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = `mb-2 p-3 rounded ${error.severity === 'high' ? 'error-high' : 'error-medium'}`;
+                    
+                    const errorContent = `
+                        <div class="d-flex justify-content-between">
+                            <span>
+                                <strong>Line ${error.line}:</strong> ${error.message}
+                            </span>
+                            ${error.canFix ? `
+                                <button 
+                                    class="btn btn-success btn-sm fix-error-btn" 
+                                    data-error-index="${index}"
+                                >
+                                    Fix
+                                </button>
+                            ` : ''}
+                        </div>
+                        <div class="text-muted fst-italic small mt-1">Suggestion: ${error.suggestion}</div>
+                    `;
+                    
+                    errorDiv.innerHTML = errorContent;
+                    errorList.appendChild(errorDiv);
+                });
+                
+                // Add event listeners to fix buttons
+                document.querySelectorAll('.fix-error-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const errorIndex = parseInt(this.getAttribute('data-error-index'));
+                        fixError(errorIndex);
+                    });
+                });
+            }
+            
+            /**
+             * Highlights errors in the editor
+             */
+            function highlightErrors(errors) {
+                console.log("Highlighting errors in editor");
+                
+                // Clear existing markers
+                clearErrorHighlights();
+                
+                // Skip if we're not using CodeMirror
+                if (!editor) {
+                    console.log("No CodeMirror editor, skipping highlighting");
+                    return;
+                }
+                
+                // Add markers for each error
+                errors.forEach(error => {
+                    try {
+                        // Convert to zero-based line number
+                        const line = error.line - 1;
+                        
+                        // Calculate the start and end positions
+                        let from, to;
+                        if (error.column && error.length) {
+                            // If column and length are provided
+                            from = { line: line, ch: error.column - 1 };
+                            to = { line: line, ch: error.column - 1 + error.length };
+                        } else {
+                            // Otherwise highlight the whole line
+                            const lineContent = editor.getLine(line);
+                            if (lineContent) {
+                                // Check if we can find specific patterns to highlight
+                                let startCh = 0, endCh = lineContent.length;
+                                
+                                if (error.type === "Missing $ inserted" && lineContent.includes("\\alpha")) {
+                                    startCh = lineContent.indexOf("\\alpha");
+                                    endCh = startCh + 6; // length of \alpha
+                                } else if (error.type.includes("Citation") && lineContent.includes("\\cite{")) {
+                                    startCh = lineContent.indexOf("\\cite{");
+                                    endCh = lineContent.indexOf("}", startCh) + 1;
+                                } else if (lineContent.includes("\\end{document") && !lineContent.includes("\\end{document}")) {
+                                    startCh = lineContent.indexOf("\\end{document");
+                                    endCh = startCh + 13; // length of \end{document
+                                }
+                                
+                                from = { line: line, ch: startCh };
+                                to = { line: line, ch: endCh };
+                            } else {
+                                console.warn(`Line ${line} not found in editor`);
+                                return; // Skip this error
+                            }
+                        }
+                        
+                        // Create the marker
+                        const marker = editor.markText(from, to, {
+                            className: error.severity === 'high' ? 'latex-error-high' : 'latex-error-medium',
+                            title: error.message
+                        });
+                        
+                        // Store the marker for later removal
+                        errorMarkers.push(marker);
+                    } catch (e) {
+                        console.error("Error highlighting line:", e);
+                    }
+                });
+            }
+            
+            /**
+             * Clears all error highlights
+             */
+            function clearErrorHighlights() {
+                console.log("Clearing error highlights");
+                // Clear all error markers
+                errorMarkers.forEach(marker => {
+                    try {
+                        marker.clear();
+                    } catch (e) {
+                        console.error("Error clearing marker:", e);
+                    }
+                });
+                errorMarkers = [];
+            }
+            
+            /**
+             * Clears all errors
+             */
+            function clearErrors() {
+                console.log("Clearing all errors");
+                // Clear the error list
+                errorList.innerHTML = `
+                    <div class="alert alert-info">
+                        No errors detected yet. Start typing to see real-time error detection.
+                    </div>
+                `;
+                
+                // Clear error highlights
+                clearErrorHighlights();
+                
+                // Reset current errors
+                currentErrors = [];
+            }
+            
+            /**
+             * Fixes a specific error
+             */
+            function fixError(errorIndex) {
+                console.log("Fixing error at index:", errorIndex);
+                // Get the error
+                const error = currentErrors[errorIndex];
+                if (!error) {
+                    console.error("Error not found at index:", errorIndex);
+                    return;
+                }
+                
+                // Get the current content
+                let latexContent;
+                if (editor) {
+                    latexContent = editor.getValue();
+                } else {
+                    latexContent = latexEditor.value;
+                }
+                
+                // Try to fix locally first for better responsiveness
+                let fixedLocally = false;
+                if (error.type === "Missing $ inserted" && error.message.includes("\\alpha")) {
+                    // Try to fix alpha math mode error locally
+                    const lines = latexContent.split('\n');
+                    if (error.line <= lines.length) {
+                        const line = lines[error.line - 1];
+                        if (line.includes("\\alpha")) {
+                            lines[error.line - 1] = line.replace("\\alpha", "$\\alpha$");
+                            const fixedContent = lines.join('\n');
+                            
+                            if (editor) {
+                                editor.setValue(fixedContent);
+                            } else {
+                                latexEditor.value = fixedContent;
+                            }
+                            
+                            compilationStatus.textContent = "Fixed: Added math mode around \\alpha";
+                            setTimeout(detectErrors, 500);
+                            fixedLocally = true;
+                        }
+                    }
+                } else if (error.type === "Missing } inserted" && error.message.includes("\\end{document")) {
+                    // Try to fix missing bracket in \end{document} locally
+                    const lines = latexContent.split('\n');
+                    if (error.line <= lines.length) {
+                        const line = lines[error.line - 1];
+                        if (line.includes("\\end{document") && !line.includes("\\end{document}")) {
+                            lines[error.line - 1] = "\\end{document}";
+                            const fixedContent = lines.join('\n');
+                            
+                            if (editor) {
+                                editor.setValue(fixedContent);
+                            } else {
+                                latexEditor.value = fixedContent;
+                            }
+                            
+                            compilationStatus.textContent = "Fixed: Added missing } to \\end{document}";
+                            setTimeout(detectErrors, 500);
+                            fixedLocally = true;
+                        }
+                    }
+                }
+                
+                // If we couldn't fix locally, try the API
+                if (!fixedLocally) {
+                    console.log("Attempting server-side fix for:", error);
+                    
+                    // Call the fix error API
+                    fetch('/error/fix', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            latexContent: latexContent,
+                            error: error
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Fix API response:", data);
+                        if (data.success) {
+                            // Update the editor with the fixed content
+                            if (editor) {
+                                editor.setValue(data.fixedContent);
+                            } else {
+                                latexEditor.value = data.fixedContent;
+                            }
+                            
+                            // Re-detect errors
+                            setTimeout(detectErrors, 500);
+                            
+                            // Show success message
+                            compilationStatus.textContent = `Fixed error: ${error.message}`;
+                        } else {
+                            console.error('Error fixing failed:', data.error);
+                            compilationStatus.textContent = `Error fixing: ${data.error}`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error calling fix API:', error);
+                        compilationStatus.textContent = `Error: Could not fix the issue`;
+                    });
+                }
+            }
+            
+            /**
+             * Initializes styles for error highlighting
+             */
+            function initializeStyles() {
+                console.log("Initializing styles");
+                // Add CSS for error highlighting
+                const style = document.createElement('style');
+                style.textContent = `
+                    .latex-error-high {
+                        background-color: rgba(254, 202, 202, 0.5);
+                        text-decoration: wavy underline rgba(239, 68, 68, 0.7);
+                        text-decoration-thickness: 2px;
+                    }
+                    
+                    .latex-error-medium {
+                        background-color: rgba(254, 240, 138, 0.5);
+                        text-decoration: wavy underline rgba(234, 179, 8, 0.7);
+                        text-decoration-thickness: 2px;
+                    }
+                    
+                    .CodeMirror-tooltip {
+                        position: absolute;
+                        background-color: #2d3748;
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        max-width: 300px;
+                        z-index: 100;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Set up the compile button
+            compileBtn.addEventListener('click', function() {
+                console.log("Compile button clicked");
+                
+                // First check for errors
+                if (currentErrors.filter(e => e.severity === 'high').length > 0) {
+                    // Show a confirmation dialog if there are high-severity errors
+                    if (!confirm('There are still high-severity errors in your LaTeX. Do you want to attempt compilation anyway?')) {
+                        return;
+                    }
+                }
+                
+                // Get the content
+                let latexContent;
+                if (editor) {
+                    latexContent = editor.getValue();
+                } else {
+                    latexContent = latexEditor.value;
+                }
+                
+                // Update the status
                 compilationStatus.textContent = "Compiling...";
-
-                fetch("/home/compile-latex", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ latexContent }),
+                
+                // Call the existing compile endpoint
+                fetch('/home/compile-latex', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ latexContent: latexContent })
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Compilation response:", data);
                     if (data.success) {
                         compilationStatus.textContent = "Compilation successful!";
-                        pdfPreview.innerHTML = `<iframe src="${data.pdfUrl}#${new Date().getTime()}" width="100%" height="500px" style="border: none;"></iframe>`;
+                        document.getElementById('pdf-preview').innerHTML = `
+                            <iframe src="${data.pdfUrl}#${new Date().getTime()}" width="100%" height="500px" style="border: none;"></iframe>
+                        `;
                         
-                        // ✅ Enable download button after successful compilation
+                        // Enable download button
                         downloadPdfBtn.setAttribute("data-pdf-url", data.pdfUrl);
                         downloadPdfBtn.disabled = false;
                     } else {
@@ -261,37 +783,36 @@ This is a sample LaTeX document.
                         console.error("Compilation error:", data.error);
                         alert("Error compiling LaTeX: " + data.error);
                     }
-                    fetchErrors(); // ✅ Fetch and display errors
+                    
+                    // Re-check for errors (might have new ones from MiKTeX)
+                    setTimeout(detectErrors, 1000);
                 })
                 .catch(error => {
                     compilationStatus.textContent = "Compilation failed!";
                     console.error("Network or server error:", error);
                     alert("Error: Could not reach the server. Check your internet connection.");
-                    fetchErrors(); // ✅ Fetch and display errors
                 });
             });
-
-            // ✅ Download PDF when the "Download PDF" button is clicked
+            
+            // Set up the download button
             downloadPdfBtn.addEventListener('click', function() {
-                let pdfUrl = downloadPdfBtn.getAttribute("data-pdf-url");
-
-                if (!pdfUrl) {
+                console.log("Download button clicked");
+                const pdfUrl = this.getAttribute("data-pdf-url");
+                if (pdfUrl) {
+                    window.open(pdfUrl, '_blank');
+                } else {
                     alert("No PDF available. Please compile the document first.");
-                    return;
                 }
-
-                console.log("[INFO] Downloading PDF: " + pdfUrl);
-                let link = document.createElement("a");
-                link.href = pdfUrl;
-                link.download = "Compiled_Document.pdf";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
             });
-
-            // ✅ Load errors on page load
-            fetchErrors();
+            
+            // Set up the test error detection button
+            testErrorBtn.addEventListener('click', function() {
+                testErrorDetection();
+            });
+            
+            // Initialize the editor
+            initializeStyles();
+            initializeEditor();
         });
     </script>
 }
-

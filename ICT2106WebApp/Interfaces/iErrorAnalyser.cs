@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// Interface for the ErrorAnalyser class
 /// Responsible for analyzing LaTeX errors and suggesting solutions.
 /// </summary>
-public interface IErrorAnalyser
+public interface iErrorAnalyser
 {
     /// <summary>
     /// Suggests solutions for detected errors in LaTeX content.

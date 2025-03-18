@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// Interface for the ErrorPresenter class
 /// Responsible for displaying/logging errors in LaTeX processing.
 /// </summary>
-public interface IErrorPresenter
+public interface iErrorPresenter
 {
     /// <summary>
     /// Shows PDF generation error messages.

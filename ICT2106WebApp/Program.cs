@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
 
 // Register LaTeX error detection services
 builder.Services.AddLaTeXErrorDetection();

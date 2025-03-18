@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 [Route("home")]
 public class HomeController : Controller
 {
+    private readonly iConversionStatus _conversionStatus; // ✅ Use dependency injection for iConversionStatus
+
+    public HomeController(iConversionStatus conversionStatus)
+    {
+        _conversionStatus = conversionStatus; // ✅ Assign injected dependency
+    }
+
     [HttpGet("convert")]
     public IActionResult Convert([FromQuery] string style = "apa") // Default to APA
     {
@@ -30,18 +37,15 @@ public class HomeController : Controller
             var bibliographyFactory = new BibliographyScannerFactory();
 
             // Initialize BibTeXConverter with the selected style
-            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, style);
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory,_conversionStatus, style);
 
             // Convert citations and bibliography
             string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
 
-            // Store updated JSON in-memory
-            var latexCompiler = new LatexCompiler();
-            latexCompiler.UpdateJson(updatedJson);
 
             // Generate LaTeX
             var latexGenerator = new LatexGenerator();
-            latexGenerator.GenerateLatex(latexCompiler.GetUpdatedJson());
+            latexGenerator.GenerateLatex(_conversionStatus.GetUpdatedJson());
 
             string generatedLatex = latexGenerator.GetLatexContent();
             if (string.IsNullOrEmpty(generatedLatex))

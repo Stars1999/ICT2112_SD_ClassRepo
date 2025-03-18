@@ -13,12 +13,12 @@ namespace ICT2106WebApp.mod1grp4
             var tableOrganiser = new TableOrganiserManager();
             List<Table> tables = tableOrganiser.OrganiseTables(GetSampleTables());
 
-            // Step 2: Extract table structure
-            var tableStructureManager = new TableStructureManager();
-            foreach (var table in tables)
-            {
-                tableStructureManager.ExtractTableStructure(table);
-            }
+            // JONS PART WONT BE INSIDE OUT PROGRAM.CS
+            // var tableStructureManager = new TableStructureManager();
+            // foreach (var table in tables)
+            // {
+            //     tableStructureManager.ExtractTableStructure(table);
+            // }
 
             // Step 3: Convert tables to LaTeX
             var latexConverter = new MockLatexConverter();

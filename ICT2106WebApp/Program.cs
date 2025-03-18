@@ -7,11 +7,20 @@ builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter, ErrorPresenter>();
 builder.Services.AddSingleton<ErrorCheckingFacade>();
-builder.Services.AddScoped<PDFGenerator>();
+builder.Services.AddSingleton<PDFGenerator>();
 
-
-// Register LaTeX error detection services
-builder.Services.AddLaTeXErrorDetection();
+builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
+builder.Services.AddSingleton<iErrorPresenter>(provider =>
+{
+    var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();
+    return new ErrorPresenter(errorAnalyser);
+});
+builder.Services.AddSingleton<ErrorCheckingFacade>(provider =>
+{
+    var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();
+    var errorPresenter = provider.GetRequiredService<iErrorPresenter>();
+    return new ErrorCheckingFacade(errorAnalyser, errorPresenter);
+});
 
 var app = builder.Build();
 

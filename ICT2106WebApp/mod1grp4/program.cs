@@ -11,7 +11,7 @@ namespace ICT2106WebApp.mod1grp4
         {
             // Step 1: Organize tables
             var tableOrganiser = new TableOrganiserManager();
-            List<Table_SDM> tables = tableOrganiser.OrganiseTables(GetSampleTables());
+            List<Table> tables = tableOrganiser.OrganiseTables(GetSampleTables());
 
             // Step 2: Extract table structure
             var tableStructureManager = new TableStructureManager();

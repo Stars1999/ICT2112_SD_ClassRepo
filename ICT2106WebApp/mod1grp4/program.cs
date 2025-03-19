@@ -32,6 +32,35 @@ namespace ICT2106WebApp.mod1grp4
                 return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
             });
 
+            // public TableCell(string content, List<string> contentStyle, int rowSpan, int colSpan, List<string> cellStyle)
+            // public Table(int tableId, int rows, int columns, List<TableCell> cells, List<string> style, int lastProcessedNode, bool tableCompletionState, Table table, string latexOutput)
+            // mockTable DATA
+            var cells = new List<TableCell>
+            {
+                new TableCell("Cell1 - Bold", new List<string> { "bold", "fontsize:17" }, 1, 1, new List<string> { "border" }),
+                new TableCell("Cell2 - italic", new List<string> { "italic" }, 1, 2, new List<string> { "border" }),
+                new TableCell("Cell3 - underline", new List<string> { "underline" }, 1, 3, new List<string> { "border" }),
+                new TableCell("Cell4 - Bold", new List<string> { "bold","underline","alignment:left" }, 2, 1, new List<string> { "border" }),
+                new TableCell("Cell5 - italic", new List<string> { "italic","bold" }, 2, 2, new List<string> { "border" }),
+                new TableCell("Cell6 - underline", new List<string> { "underline","italic" }, 2, 3, new List<string> { "border" }),
+                new TableCell("Cell7 - Bold", new List<string> { "bold", "italic","alignment:right" }, 3, 1, new List<string> { "border" }),
+                new TableCell("Cell8 - italic", new List<string> { "italic","underline" }, 3, 2, new List<string> { "border" }),
+                new TableCell("Cell9 - underline", new List<string> { "underline","bold" }, 3, 3, new List<string> { "border" })
+            };
+
+            var mockTable = new Table(
+                tableId: 1,
+                rows: 2,
+                columns: 3,
+                cells: cells,
+                style: new List<string> { "tableStyle" },
+                lastProcessedNode: 0,
+                tableCompletionState: true,
+                table: null,
+                latexOutput: ""
+            );
+
+
             // var app = builder.Build();
 
             // // Configure the HTTP request pipeline.
@@ -69,48 +98,170 @@ namespace ICT2106WebApp.mod1grp4
             //     Console.WriteLine($"LaTeX output for Table {table.TableId}:\n{latexOutput}\n");
             // }
 
+
+
+            var latexConversionManager = new TableLatexConversionManager();
+            string latexOutput = await latexConversionManager.ConvertToLatexAsync(mockTable);
+            Console.WriteLine("LaTeX Output:");
+            Console.WriteLine(latexOutput);
             // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node)
             Console.WriteLine("Post-processing completed. LaTeX output ready for node.");
+            // Console.WriteLine(GetMockJSONTables());
 
             // app.Run();
         }
 
         // Helper method to generate sample tables
-        private static string GetSampleTables()
+        private static string GetMockJSONTables()
         {
             return @"
     {
         ""document"": [
+         {
+      ""type"": ""Table"",
+      ""content"": """",
+      ""runs"": [
+        {
+                ""type"": ""Row"",
+          ""content"": """",
+          ""runs"": [
             {
-                ""type"": ""table"",
-                ""content"": [
-                    [""Table1"", ""i"", ""Am""],
-                    [""Going"", ""To"", ""Remod""]
-                ]
+                    ""type"": ""Cell"",
+              ""content"": ""Hi"",
+              ""styling"": {
+                        ""bold"": false,
+                ""italic"": false
+              }
+                },
+            {
+                    ""type"": ""Cell"",
+              ""content"": ""i"",
+              ""styling"": {
+                        ""bold"": false,
+                ""italic"": false
+              }
+                },
+            {
+                    ""type"": ""Cell"",
+              ""content"": ""Am"",
+              ""styling"": {
+                        ""bold"": false,
+                ""italic"": false
+              }
+                }
+          ],
+          ""styling"": {
+                    ""bold"": false,
+            ""italic"": true,
+            ""alignment"": ""right"",
+            ""fontsize"": 12,
+            ""fonttype"": ""Aptos"",
+            ""fontcolor"": ""0E2841"",
+            ""highlight"": ""none""
+          }
             },
+        {
+                ""type"": ""Row"",
+          ""content"": "",
+          ""runs"": [
             {
-                ""type"": ""table"",
-                ""content"": [
-                    [""Table2"", ""i"", ""Am""],
-                    [""Going"", ""To"", ""Remod""]
-                ]
-            },
+                    ""type"": ""Cell"",
+              ""content"": ""Going"",
+              ""styling"": {
+                        ""bold"": false,
+                ""italic"": false
+              }
+                },
             {
-                ""type"": ""table"",
-                ""content"": [
-                    [""Table3"", ""i"", ""Am""],
-                    [""Going"", ""To"", ""Remod""]
-                ]
-            },
+                    ""type"": ""Cell"",
+              ""content"": ""To"",
+              ""styling"": {
+                        ""bold"": false,
+                ""italic"": false
+              }
+                },
             {
-                ""type"": ""table"",
-                ""content"": [
-                    [""Table4"", ""i"", ""Am""],
-                    [""Going"", ""To"", ""Remod""]
-                ]
+                    ""type"": ""Cell"",
+              ""content"": ""Remod"",
+              ""styling"": {
+                        ""bold"": false,
+                ""italic"": false
+              }
+                }
+          ],
+          ""styling"": {
+                    ""bold"": false,
+            ""italic"": true,
+            ""alignment"": ""right"",
+            ""fontsize"": 12,
+            ""fonttype"": ""Aptos"",
+            ""fontcolor"": ""0E2841"",
+            ""highlight"": ""none""
+          }
             }
+      ]
+    }
+        
+
+
         ]
     }";
         }
+
+        // Method to create a 2x3 table with mock data
+        private static Table CreateMockTable()
+        {
+            var cells = new List<TableCell>
+            {
+                new TableCell("Cell1", new List<string> { "bold" }, 1, 1, new List<string> { "border" }),
+                new TableCell("Cell2", new List<string> { "italic" }, 1, 1, new List<string> { "border" }),
+                new TableCell("Cell3", new List<string> { "underline" }, 1, 1, new List<string> { "border" }),
+                new TableCell("Cell4", new List<string> { "bold" }, 1, 1, new List<string> { "border" }),
+                new TableCell("Cell5", new List<string> { "italic" }, 1, 1, new List<string> { "border" }),
+                new TableCell("Cell6", new List<string> { "underline" }, 1, 1, new List<string> { "border" })
+            };
+
+            return new Table(
+                tableId: 1,
+                rows: 2,
+                columns: 3,
+                cells: cells,
+                style: new List<string> { "tableStyle" },
+                lastProcessedNode: 0,
+                tableCompletionState: true,
+                table: null,
+                latexOutput: string.Empty
+            );
+        }
     }
 }
+
+
+// {
+//     ""type"": ""table"",
+//     ""content"": [
+//         [""Table1"", ""i"", ""Am""],
+//         [""Going"", ""To"", ""Remod""]
+//     ]
+// },
+// {
+//     ""type"": ""table"",
+//     ""content"": [
+//         [""Table2"", ""i"", ""Am""],
+//         [""Going"", ""To"", ""Remod""]
+//     ]
+// },
+// {
+//     ""type"": ""table"",
+//     ""content"": [
+//         [""Table3"", ""i"", ""Am""],
+//         [""Going"", ""To"", ""Remod""]
+//     ]
+// },
+// {
+//     ""type"": ""table"",
+//     ""content"": [
+//         [""Table4"", ""i"", ""Am""],
+//         [""Going"", ""To"", ""Remod""]
+//     ]
+// }

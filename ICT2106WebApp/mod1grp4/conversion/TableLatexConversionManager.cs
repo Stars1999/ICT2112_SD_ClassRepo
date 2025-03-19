@@ -25,11 +25,22 @@ namespace ICT2106WebApp.mod1grp4
             iTableCellIterator iterator = cellCollection.CreateIterator();
 
             // Start building the LaTeX table
-            string latexTable = "\\begin{tabular}{|c|c|}\n"; // Adjust columns as needed
+            string latexTable = "\\begin{tabular}{|" + new string('c', table.GetColumns()).Replace("c", "c|") + "}";
+
+
+            int currentRow = -1; // Variable to track the current row
 
             while (!iterator.IsDone())
             {
                 TableCell cell = iterator.Current(); // Get current cell
+                if (cell.GetRowSpan() != currentRow) // Check if it's a new row
+                {
+                    // latexTable += " \\\\\n";
+                    if (currentRow != -1) latexTable = latexTable.TrimEnd(' ', '&') + " \\\\"; // End the previous row
+                    latexTable += "\n\\hline\n"; // Add a horizontal line
+                    currentRow = cell.GetRowSpan(); // Update the current row
+                }
+
                 string cellContent = cell.GetContent();
                 Dictionary<string, string> latexEscapes = new Dictionary<string, string>
                 {
@@ -50,40 +61,44 @@ namespace ICT2106WebApp.mod1grp4
                     cellContent = cellContent.Replace(pair.Key, pair.Value); // Escape special characters
                 }
                 string latexCell = cellContent; // Convert cell to LaTeX
-                // string latexCell = await _latexConverter.ConvertCellToLatexAsync(cell); // Convert cell to LaTeX
-                latexTable += latexCell + " \\\\\n"; // Add the LaTeX cell to the table with a line break
+
+                // Apply styles based on content style
+                List<string> contentStyles = cell.GetContentStyle();
+                if (contentStyles.Contains("bold"))
+                {
+                    latexCell = $"\\textbf{{{latexCell}}}";
+                }
+                if (contentStyles.Contains("italic"))
+                {
+                    latexCell = $"\\textit{{{latexCell}}}";
+                }
+                if (contentStyles.Contains("underline"))
+                {
+                    latexCell = $"\\underline{{{latexCell}}}";
+                }
+                if (contentStyles.Exists(style => style.StartsWith("fontsize:")))
+                {
+                    string fontSizeStyle = contentStyles.Find(style => style.StartsWith("fontsize:"));
+                    string fontSize = fontSizeStyle.Split(':')[1];
+                    latexCell = $"{{\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+                }
+                if (contentStyles.Exists(style => style.StartsWith("alignment:")))
+                {
+                    string alignmentStyle = contentStyles.Find(style => style.StartsWith("alignment:"));
+                    string alignment = alignmentStyle.Split(':')[1];
+                    string alignmentChar = alignment == "right" ? "r" : alignment == "center" ? "c" : "l";
+                    latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
+                }
+
+                // Add the LaTeX cell to the table
+                latexTable += latexCell + " & ";
                 iterator.Next(); // Advance the iterator
             }
 
-            // Close the LaTeX table
-            latexTable += "\\end{tabular}";
+            latexTable = latexTable.TrimEnd(' ', '&') + " \\\\\n"; // Finalize the last row
+            latexTable += "\\hline\n"; // Add a horizontal line
+            latexTable += "\\end{tabular}"; // Close the LaTeX table
             return latexTable;
-
-            // // Simulate the conversion process - MOCK DATA
-            // var latex = new List<string>();
-            // var table = new Table(new List<List<string>>
-            // {
-            //     new() { "Hi", "I", "Am" },
-            //     new() { "Going", "To", "Remod" }
-            // });
-
-            // // Start the LaTeX table syntax
-            // latex.Add("\\begin{tabular}{|" + new string('c', table.Data[0].Length) + "|}");
-
-            // // Convert each row into LaTeX syntax
-            // foreach (var row in table.Data)
-            // {
-            //     string rowLatex = "\n\\hline ";
-            //     foreach (var cell in row)
-            //     {
-            //         rowLatex += cell + " & ";
-            //     }
-            //     rowLatex = rowLatex.TrimEnd(new char[] { '&', ' ' }) + "\\\\ \\hline"; // Clean up row end
-            //     latex.Add(rowLatex);
-            // }
-
-            // latex.Add("\\end{tabular}");
-            // return latex;
         }
 
         public async Task<bool> UpdateLatexCheckpointAsync(int nodeId, string latexOutput)

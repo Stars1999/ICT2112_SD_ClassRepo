@@ -28,6 +28,7 @@ app.MapRazorPages();
 
 // ✅ Manually Test the Function Before Running API Server
 var testProcessor = new MathProcessor();
+var listProcessor = new ListProcessor();
 
 // Test Math Conversion with Different Inputs
 string[] testEquations =
@@ -55,8 +56,8 @@ Console.WriteLine("================================\n");
 // ✅ Manually Test JSON to LaTeX Conversion Before Running API Server
 string jsonInput = @"{
     ""alignment"": ""left"",
-    ""type"": ""lowercase_lettered_parenthesis_list"",
-    ""content"": ""lowercase lettered with bracket list"",
+    ""type"": ""dash_bulleted_list"",
+    ""content"": ""bulleted type 7"",
     ""styling"": [
         {
             ""bold"": false,
@@ -80,7 +81,7 @@ try
     }
     else
     {
-        string latex = ConvertToLatex(jsonObject);
+        string latex = listProcessor.ConvertToLatex(jsonObject);
         Console.WriteLine("\n==== TESTING JSON TO LaTeX CONVERSION ====");
         Console.WriteLine("Generated LaTeX:\n" + latex);
         Console.WriteLine("================================\n");
@@ -92,50 +93,3 @@ catch (Exception ex)
 }
 
 app.Run();
-
-
-static string ConvertToLatex(Dictionary<string, object> json)
-{
-    if (!json.ContainsKey("type") || !json.ContainsKey("content"))
-    {
-        return "Invalid JSON structure.";
-    }
-
-    string type = json["type"]?.ToString();
-    string content = json["content"]?.ToString();
-
-    string latexListType = type switch
-    {
-        "bulleted_list" => "itemize",
-        "hollow_bulleted_list" => "itemize",
-        "square_bulleted_list" => "itemize",
-        "diamond_bulleted_list" => "itemize",
-        "arrow_bulleted_list" => "itemize",
-        "checkmark_bulleted_list" => "itemize",
-        "dash_bulleted_list" => "itemize",
-        "numbered_list" => "enumerate",
-        "numbered_parenthesis_list" => "enumerate",
-        "roman_numeral_list" => "enumerate",
-        "lowercase_roman_numeral_list" => "enumerate",
-        "uppercase_lettered_list" => "enumerate",
-        "lowercase_lettered_list" => "enumerate",
-        "lowercase_lettered_parenthesis_list" => "enumerate",
-        _ => "unknown"
-    };
-
-    if (latexListType == "unknown")
-    {
-        return "Unsupported list type.";
-    }
-
-    if (type == "lowercase_lettered_parenthesis_list")
-    {
-        // Special case for lowercase lettered list with parentheses (a), b), c), ...)
-        return $@"\begin{{enumerate}}
-    \renewcommand{{\labelenumi}}{{\alph{{enumi}})}}
-    \item {content}
-\end{{enumerate}}";
-    }
-
-    return $"\\begin{{{latexListType}}}\n    \\item {content}\n\\end{{{latexListType}}}";
-}

@@ -6,41 +6,39 @@
 <h2>Upload a Document</h2>
 
 <!-- File upload section -->
-<div style="display: flex; align-items: center; margin-bottom: 15px;">
-    <!-- Input box for file -->
-    <input type="file" id="fileInput" name="UploadedFile" required style="padding: 10px; margin-right: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; width: 300px;" />
+<div class="file-upload-container">
+    <input type="file" id="fileInput" name="UploadedFile" required class="file-input" />
+    @* <span id="fileName" class="file-name">No file chosen</span> <!-- Display selected file name --> *@
 </div>
 
 <!-- Upload Button -->
 <div>
-    <button type="button" id="uploadButton" style="padding: 10px 20px; background-color: #007bff; color: white; 
-    border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Upload</button>
+    <button type="button" id="uploadButton" class="upload-button">Upload</button>
+</div>
+
+<!-- Conversion Status Tracker -->
+<div id="statusTracker" class="status-tracker">
+    <p id="statusMessage">Status: Waiting for file...</p>
+    <div id="statusBar" class="status-bar">
+        <div id="statusProgress" class="status-progress"></div>
+    </div>
 </div>
 
 <!-- Modal for Error Message -->
-<div id="errorModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999; max-width: 400px; width: 100%; text-align: center;">
+<div id="errorModal" class="modal error-modal">
     <h4>Error</h4>
-    <p id="errorMessage" style="font-size: 18px;"></p>
-    <button onclick="closeModal()" style="background-color: #dc3545; color: white; padding: 8px 16px; border:
-     none; border-radius: 4px; font-size: 16px; cursor: pointer;">Close</button>
+    <p id="errorMessage" class="error-message"></p>
+    <button onclick="closeModal()" class="modal-button close-error-modal">Close</button>
 </div>
 
 <!-- Modal for Success Message -->
-<div id="successModal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; z-index: 9999; max-width: 400px; width: 100%; text-align: center;">
+<div id="successModal" class="modal success-modal">
     <h4>Success</h4>
-    <p id="successMessage" style="font-size: 18px;"></p>
-    <button onclick="closeSuccessModal()" style="background-color: #28a745; color: white; padding: 8px 16px; border: 
-    none; border-radius: 4px; font-size: 16px; cursor: pointer;">Close</button>
+    <p id="successMessage" class="success-message"></p>
+    <button onclick="closeSuccessModal()" class="modal-button close-success-modal">Close</button>
 </div>
 
 <script>
-    document.getElementById("fileInput").addEventListener("change", function (event) {
-        let fileName = event.target.files[0] ? event.target.files[0].name : "No file chosen";
-        // Here, we don't need to display the file name outside the input, so simply handle it as required
-    });
-
     document.getElementById("uploadButton").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent default form submission
 
@@ -49,70 +47,63 @@ background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; 
 
         // Check if no file is selected
         if (!fileInput) {
-            showErrorModal("No file selected. Please choose a file to upload.");
+            alert("Please select a file to upload.");
             return;
         }
 
-        // Validate file type (only .docx allowed)
+        // Check if the file is a .docx
         let fileExtension = fileInput.name.split('.').pop().toLowerCase();
         if (fileExtension !== "docx") {
-            showErrorModal("Only .docx files are allowed. Please upload a valid file.");
-            document.getElementById("fileInput").value = "";
+            alert("Only .docx files are allowed. Please upload a valid .docx file.");
+            document.getElementById("fileInput").value = ""; // Clear the file input
             return;
         }
 
         formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
 
-        fetch("/dashboard/upload", { // POST to controller endpoint
+        fetch("/dashboard/upload", { // POST to /dashboard/upload endpoint
             method: "POST",
             body: formData
         })
-        .then(response => response.json()) // Parse JSON response
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showSuccessModal("File uploaded successfully!"); // Show success message
+                document.getElementById("statusMessage").innerText = "Status: Converting...";
+
+                // Simulate conversion progress update
+                let progress = 0;
+                let progressInterval = setInterval(function () {
+                    progress += 10;
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                    if (progress === 100) {
+                        clearInterval(progressInterval);
+                        document.getElementById("statusMessage").innerText = "Status: Conversion completed!";
+                    }
+                }, 1000);
             } else {
-                showErrorModal(`Error: ${data.message}`); // Show error message
+                alert("Error: " + data.message);
             }
         })
         .catch(error => {
-            showErrorModal(`Upload failed. ${error.message}`);
+            alert("Upload failed. " + error.message);
             console.error("Upload error:", error);
         });
 
         // Clear the file input after the form submission
         document.getElementById("fileInput").value = "";
     });
-
-    // Function to display error modal with the provided message
-    function showErrorModal(message) {
-        document.getElementById("errorMessage").innerText = message;
-        document.getElementById("errorModal").style.display = "block"; // Show error modal
-        document.getElementById("successModal").style.display = "none"; // Hide success modal
-    }
-
-    // Function to display success modal with the provided message
-    function showSuccessModal(message) {
-        document.getElementById("successMessage").innerText = message;
-        document.getElementById("successModal").style.display = "block"; // Show success modal
-        document.getElementById("errorModal").style.display = "none"; // Hide error modal
-    }
-
-    // Function to close the error modal
-    function closeModal() {
-        document.getElementById("errorModal").style.display = "none"; // Hide the error modal when user clicks "Close"
-    }
-
-    // Function to close the success modal
-    function closeSuccessModal() {
-        document.getElementById("successModal").style.display = "none"; // Hide the success modal when user clicks "Close"
-    }
 </script>
 
 <!-- Styles for the page -->
 <style>
-    /* File input section styles */
-    input[type="file"] {
+    /* File upload section styles */
+    .file-upload-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .file-input {
         padding: 10px;
         margin-right: 15px;
         border: 1px solid #ccc;
@@ -121,8 +112,13 @@ background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; 
         width: 300px;
     }
 
+    .file-name {
+        font-size: 16px;
+        color: #555;
+    }
+
     /* Upload button styles */
-    #uploadButton {
+    .upload-button {
         padding: 10px 20px;
         background-color: #007bff;
         color: white;
@@ -132,8 +128,25 @@ background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; 
         font-size: 16px;
     }
 
+    /* Conversion Status Tracker */
+    .status-tracker {
+        margin-top: 20px;
+    }
+
+    .status-bar {
+        width: 100%;
+        height: 20px;
+        background-color: #f3f3f3;
+    }
+
+    .status-progress {
+        width: 0%;
+        height: 100%;
+        background-color: green;
+    }
+
     /* Modal styles */
-    #errorModal, #successModal {
+    .modal {
         display: none;
         position: fixed;
         top: 50%;
@@ -148,20 +161,16 @@ background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; 
         text-align: center;
     }
 
-    /* Error modal background */
-    #errorModal {
-        background: rgba(0,0,0,0.7);
+    .error-modal {
+        background: rgba(0, 0, 0, 0.7);
     }
 
-    /* Success modal background */
-    #successModal {
-        background: rgba(0,128,0,0.7);
+    .success-modal {
+        background: rgba(0, 128, 0, 0.7);
     }
 
     /* Modal button styles */
-    button {
-        background-color: #dc3545; /* Error button for error modal */
-        color: white;
+    .modal-button {
         padding: 8px 16px;
         border: none;
         border-radius: 4px;
@@ -169,8 +178,14 @@ background: rgba(0,128,0,0.7); color: white; padding: 20px; border-radius: 5px; 
         cursor: pointer;
     }
 
-    #successModal button {
-        background-color: #28a745; /* Success button for success modal */
+    .close-error-modal {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .close-success-modal {
+        background-color: #28a745;
+        color: white;
     }
 
     /* Status message styles */

@@ -11,27 +11,12 @@ namespace ICT2106WebApp.Control
         private readonly IRetrieveLog _logRetriever;
         private readonly Interfaces.ILogger _logger;  // Renamed for clarity and best practices
         private List<ILogFilter_Strategy> _logFilters; // Renamed for consistency
-        private readonly NotifyLogUpdate _notifyLogUpdate; // Renamed for clarity
         public LoggerControl(IRetrieveLog logRetriever, Interfaces.ILogger logger)
         {
             _logRetriever = logRetriever ?? throw new ArgumentNullException(nameof(logRetriever), "Log retriever cannot be null.");
             _logger = logger ?? throw new ArgumentNullException(nameof(logger), "Logger cannot be null.");
             _logFilters = new List<ILogFilter_Strategy>();
-            _notifyLogUpdate = new NotifyLogUpdate();
         }
-        public void RegisterObserver(ILogObserver observer)
-        {
-            _notifyLogUpdate.RegisterObserver(observer);
-        }
-        public void DeregisterObserver(ILogObserver observer)
-        {
-            _notifyLogUpdate.DeregisterObserver(observer);
-        }
-        public void NotifyLogsUpdate(string updateMessage)
-        {
-            _notifyLogUpdate.NotifyObservers(updateMessage);
-        }
-
         public void AddLogFilter(ILogFilter_Strategy filter)
         {
             _logFilters.Add(filter);
@@ -54,12 +39,10 @@ namespace ICT2106WebApp.Control
             try
             {
                 _logger.InsertLog(errorTimeStamp, errorDescription, errorLocation);
-                NotifyLogsUpdate("LogAdded");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error inserting log: {ex.Message}");
-                NotifyLogsUpdate("Error: " + ex.Message);
             }
         }
         public List<Logger_SDM> FilterLogs(DateTime? timestamp, string errorLocation)

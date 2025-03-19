@@ -1,4 +1,6 @@
-﻿using ICT2106WebApp.Models;
+﻿using ICT2106WebApp.Abstract;
+using ICT2106WebApp.Interfaces;
+using ICT2106WebApp.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -10,6 +12,7 @@ namespace ICT2106WebApp.Data
     public class LoggerGateway_TDG : Interfaces.ILogger, Interfaces.IRetrieveLog
     {
         private readonly IMongoCollection<BsonDocument> _logsCollection;  // Ensure it's BsonDocument for flexible handling
+        private NotifyLogUpdate _notifier = new NotifyLogUpdate();
 
         public LoggerGateway_TDG()
         {
@@ -84,6 +87,18 @@ namespace ICT2106WebApp.Data
             }
 
             return locations.ToList();
+        }
+        public void RegisterObserver(ILogObserver observer)
+        {
+            _notifier.RegisterObserver(observer);
+        }
+        public void DeregisterObserver(ILogObserver observer)
+        {
+            _notifier.DeregisterObserver(observer);
+        }
+        public void NotifyObservers(string message)
+        {
+            _notifier.NotifyObservers(message);
         }
     }
 }

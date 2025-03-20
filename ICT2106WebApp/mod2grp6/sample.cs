@@ -2,22 +2,22 @@ using ICT2106WebApp.mod2grp6.Text;
 using ICT2106WebApp.mod2grp6.Layout;
 using ICT2106WebApp.Utilities;
 
-namespace ICT2106WebApp.mod2grp6
+namespace ICT2106WebApp.mod2grp6.TestCase
 {
     class Testing
     {
-        List<AbstractNode> HeadingsAndParagraphs = new List<AbstractNode> { 
+        public List<AbstractNode> HeadingsAndParagraphs = new List<AbstractNode> { 
             new SimpleNode(1, "h1", "Header 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
             new SimpleNode(2, "h2", "Header 2", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
             new SimpleNode(3, "h3", "Header 3", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "434343" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
         };
-        
-        List<AbstractNode> LayoutContent = new List<AbstractNode> {
+
+        public List<AbstractNode> LayoutContent = new List<AbstractNode> {
             new SimpleNode(1, "layout", "", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Orientation", "Portrait" }, { "PageWidth", 21 }, { "PageHeight", 29.7 }, { "ColumnNum", 1 }, { "ColumnSpacing", 1.25 }, { "Margins", new Dictionary<string, object> { { "Top", 2.54 }, { "Bottom", 2.54 }, { "Left", 2.54 }, { "Right", 2.54 }, { "Header", 1.25 }, { "Footer", 1.25 } } } } }),
             new SimpleNode(2, "page_break", "[PAGE BREAK]", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
         };
 
-        List<AbstractNode> TextContent = new List<AbstractNode>{
+        public List<AbstractNode> TextContent = new List<AbstractNode>{
             new SimpleNode(1, "paragraph", "test text", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
             new SimpleNode(2, "paragraph_run?", "https://puginarug.com/", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" } } }),
             new SimpleNode(3, "paragraph", "Colored text", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "FF0000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
@@ -51,7 +51,7 @@ namespace ICT2106WebApp.mod2grp6
                 new SimpleNode(4, "metadata", "size: 2148554", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "size", "2148554" } } })
             };
 
-        List<AbstractNode> MathContent = new List<AbstractNode>
+        public List<AbstractNode> MathContent = new List<AbstractNode>
             {
                 new SimpleNode(1, "math", "(1/2) × √(4)  <- math", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
                 new SimpleNode(2, "math", "∫", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
@@ -65,7 +65,7 @@ namespace ICT2106WebApp.mod2grp6
                 new SimpleNode(10, "math", "limn→∞1+(1/n)^n=e", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
             };
 
-        List<AbstractNode> Lists = new List<AbstractNode>
+        public List<AbstractNode> Lists = new List<AbstractNode>
             {
                 new SimpleNode(1, "bulleted_list", "bulleted type 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
                 new SimpleNode(2, "hollow_bulleted_list", "bulleted type 2", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
@@ -83,7 +83,7 @@ namespace ICT2106WebApp.mod2grp6
                 new SimpleNode(14, "lowercase_lettered_parenthesis_list", "lowercase lettered with bracket list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "ListParagraph" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
             };
 
-        List<AbstractNode> Images = new List<AbstractNode>
+        public List<AbstractNode> Images = new List<AbstractNode>
             {
                 new SimpleNode(1, "image", "Image_rId9.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 2500550 }, { "HeightEMU", 2500550 } } }),
                 new SimpleNode(2, "image", "Image_rId10.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Center Align (Ctrl + E)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 2786063 }, { "HeightEMU", 1567160 } } }),
@@ -93,7 +93,7 @@ namespace ICT2106WebApp.mod2grp6
                 new SimpleNode(6, "image", "Image_rId14.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Justify (Ctrl + J)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 0, Vertical Offset: 0" }, { "WidthEMU", 3840480 }, { "HeightEMU", 2560320 } } })
             };
 
-        List<AbstractNode> Bibliography = new List<AbstractNode>
+        public List<AbstractNode> Bibliography = new List<AbstractNode>
             {
                 new SimpleNode(1, "bibliography", "Reference (IEE)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
             };

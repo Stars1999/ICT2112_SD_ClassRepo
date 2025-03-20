@@ -30,19 +30,19 @@ namespace ICT2106WebApp.mod2grp6.Format
                     switch (child.GetNodeType())
                     {
                         case "h1":
-                            command = @"\section*";
+                            command = @"\section";
                             break;
                         case "h2":
-                            command = @"\subsection*";
+                            command = @"\subsection";
                             break;
                         case "h3":
-                            command = @"\subsubsection*";
+                            command = @"\subsubsection";
                             break;
                         case "h4":
-                            command = @"\paragraph*";
+                            command = @"\paragraph";
                             break;
                         case "h5":
-                            command = @"\subparagraph*";
+                            command = @"\subparagraph";
                             break;
                         default:
                             continue; // Skip non-heading nodes
@@ -87,9 +87,9 @@ namespace ICT2106WebApp.mod2grp6.Format
             {
                 foreach (AbstractNode child in content)
                 {
-                    if (!string.Equals(child.GetNodeType(), "paragraph", StringComparison.Ordinal))return false;
+                    if (!child.GetNodeType().Contains("paragraph"))return false;
                     
-                    String command = @"\paragraph*";
+                    String command = @"\paragraph";
 
                     // Get the text content
                     string formattedText = child.GetContent();

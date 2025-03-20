@@ -13,6 +13,7 @@ namespace ICT2106WebApp.Pages
         public bool IsDocumentLoaded { get; private set; }
         public List<AbstractNode> FormatContent { get; private set; }
         public List<AbstractNode> TextContent { get; private set; }
+        public List<AbstractNode> ParagraphContent { get; private set; }
         public List<AbstractNode> LayoutContent { get; private set; }
         public List<AbstractNode> MetadataContent { get; private set; }
         public List<AbstractNode> MathContent { get; private set; }
@@ -30,6 +31,7 @@ namespace ICT2106WebApp.Pages
             // Initialize all content lists
             FormatContent = new List<AbstractNode>();
             TextContent = new List<AbstractNode>();
+            ParagraphContent = new List<AbstractNode>();
             LayoutContent = new List<AbstractNode>();
             MetadataContent = new List<AbstractNode>();
             MathContent = new List<AbstractNode>();
@@ -51,6 +53,7 @@ namespace ICT2106WebApp.Pages
             MetadataContent = _documentManager.GetContentByType("metadata");
             FormatContent = _documentManager.GetContentByType("format");
             TextContent = _documentManager.GetContentByType("text");
+            ParagraphContent = _documentManager.GetContentByType("paragraph");
             LayoutContent = _documentManager.GetContentByType("layout");
             MathContent = _documentManager.GetContentByType("math");
             ListContent = _documentManager.GetContentByType("lists");

@@ -44,12 +44,16 @@ namespace ICT2106WebApp.mod2grp6
                 new SimpleNode(2, "page_break", "[PAGE BREAK]", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
             };
             
-            documentContent["text"] = new List<AbstractNode>{
+            documentContent["paragraph"] = new List<AbstractNode>{
                 new SimpleNode(1, "paragraph", "test text", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
                 new SimpleNode(2, "paragraph_run", "https://puginarug.com/", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" } } }),
                 new SimpleNode(3, "paragraph", "Colored text", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "FF0000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
                 new SimpleNode(4, "paragraph", "diff color and highlighted", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "0000FF" }, { "Highlight", "cyan" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
                 new SimpleNode(5, "paragraph", "this is a bolded text", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
+            };
+            
+            documentContent["text"] = new List<AbstractNode>{
+                new SimpleNode(10, "text_run", "Lorem Ipsum", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "both" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "white" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
             };
             
             documentContent["metadata"] = new List<AbstractNode>
@@ -94,7 +98,7 @@ namespace ICT2106WebApp.mod2grp6
         /// <summary>
         /// Retrieve content by content type
         /// </summary>
-        /// <param name="contentType">Type of content (format, layout, text, metadata, math, lists, images, bibliography)</param>
+        /// <param name="contentType">Type of content (format, layout, text, paragraph, metadata, math, lists, images, bibliography)</param>
         /// <returns>List of AbstractNode objects for the specified content type</returns>
         public List<AbstractNode> GetContentByType(string contentType)
         {
@@ -123,13 +127,17 @@ namespace ICT2106WebApp.mod2grp6
                 List<AbstractNode> textContent = GetContentByType("text");
                 bool textSuccess = formatConversionManager.convertText(textContent);
                 
+                // Convert paragraph content
+                List<AbstractNode> paragraphContent = GetContentByType("paragraph");
+                bool paragraphSuccess = formatConversionManager.convertText(paragraphContent);
+                
                 // Convert layout content
                 List<AbstractNode> layoutContent = GetContentByType("layout");
                 bool layoutSuccess = formatConversionManager.convertLayout(layoutContent);
                 
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
                 
-                return formatSuccess && textSuccess && layoutSuccess;
+                return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }
             catch (Exception ex)
             {
@@ -152,6 +160,7 @@ namespace ICT2106WebApp.mod2grp6
                 List<AbstractNode> allContent = new List<AbstractNode>();
                 allContent.AddRange(GetContentByType("format"));
                 allContent.AddRange(GetContentByType("text"));
+                allContent.AddRange(GetContentByType("paragraph"));
                 allContent.AddRange(GetContentByType("layout"));
                 allContent.AddRange(GetContentByType("math"));
                 allContent.AddRange(GetContentByType("lists"));
@@ -191,6 +200,11 @@ namespace ICT2106WebApp.mod2grp6
         private List<AbstractNode> retrieveTextContent(string id)
         {
             return GetContentByType("text");
+        }
+        
+        private List<AbstractNode> retrieveParagraphContent(string id)
+        {
+            return GetContentByType("paragraph");
         }
         
         private List<AbstractNode> retrieveLayoutContent(string id)

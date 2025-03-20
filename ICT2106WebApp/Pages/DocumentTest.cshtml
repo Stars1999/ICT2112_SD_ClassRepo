@@ -31,6 +31,9 @@
                                 <button class="nav-link" id="text-tab" data-bs-toggle="tab" data-bs-target="#text" type="button" role="tab" aria-controls="text" aria-selected="false">Text</button>
                             </li>
                             <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="paragraph-tab" data-bs-toggle="tab" data-bs-target="#paragraph" type="button" role="tab" aria-controls="paragraph" aria-selected="false">Paragraph</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout" type="button" role="tab" aria-controls="layout" aria-selected="false">Layout</button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -131,6 +134,41 @@
                                     </thead>
                                     <tbody>
                                         @foreach (var node in Model.TextContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="paragraph" role="tabpanel" aria-labelledby="paragraph-tab">
+                                <h3>Paragraph Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.ParagraphContent)
                                         {
                                             <tr>
                                                 <td>@node.GetNodeId()</td>

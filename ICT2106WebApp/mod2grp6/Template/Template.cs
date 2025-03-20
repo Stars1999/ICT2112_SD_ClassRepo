@@ -1,8 +1,9 @@
 using ICT2106WebApp.Utilities;
 
-namespace ICT2106WebApp.mod2grp6.Template{
-
-    public class Template{
+namespace ICT2106WebApp.mod2grp6.Template
+{
+    public class Template
+    {
         private string id;
         private string templateName;
         private List<AbstractNode> content;
@@ -13,6 +14,7 @@ namespace ICT2106WebApp.mod2grp6.Template{
             this.templateName = templateName;
             this.content = content;
         }
+
         public string GetId()
         {
             return id;

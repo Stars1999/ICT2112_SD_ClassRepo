@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Text.IFormatText, ICT2106WebApp.mod2grp6.Text.TextManager>();
+builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Template.TemplateManager>();
 
 var app = builder.Build();
 

@@ -1,0 +1,69 @@
+@page
+@model ICT2106WebApp.Pages.TemplateTestModel
+@{
+    ViewData["Title"] = "Template Test";
+}
+
+<div class="container">
+    <h2 class="mb-4">Template Preview</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Original Document Content
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group mb-3">
+                            <label for="content">Text Content:</label>
+                            <textarea id="content" name="content" class="form-control" rows="3" required>@Model.Content</textarea>
+                        </div>
+
+                        <!-- Add other fields for text formatting like font, bold, etc. -->
+
+                        <button type="submit" class="btn btn-primary">Apply Template</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Template Preview (Before Confirmation)
+                </div>
+                <div class="card-body">
+                    @if (Model.ConversionSuccess)
+                    {
+                        <div class="alert alert-success">Template Applied Successfully!</div>
+                    }
+
+                    <h5>LaTeX Preview:</h5>
+                    <div class="bg-light p-3 mb-3" style="font-family: monospace; white-space: pre-wrap;">
+                        @foreach (var node in Model.ConvertedNodes)
+                        {
+                            @node.GetContent()<br/>
+                        }
+                    </div>
+
+                    <h5>Preview (Simplified):</h5>
+                    <div class="border p-3">
+                        <div style="
+                            @(Model.Font == "Times New Roman" ? "font-family: 'Times New Roman', Times, serif;" : 
+                             Model.Font == "Arial" ? "font-family: Arial, sans-serif;" :
+                             Model.Font == "Calibri" ? "font-family: 'Calibri', monospace;" : "")
+                            @(Model.BoldStyle ? "font-weight: bold;" : "")
+                            @(Model.ItalicStyle ? "font-style: italic;" : "")
+                            @(Model.UnderlineStyle ? "text-decoration: underline;" : "")
+                            color: @Model.Color;
+                            line-height: @Model.LineSpacing;
+                            text-align: @Model.Alignment;">
+                            @Model.Content
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

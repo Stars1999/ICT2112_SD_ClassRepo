@@ -79,56 +79,42 @@ namespace ICT2106WebApp.mod2grp6
         }
 
 
-        // actual implementation is below this is temporary 
-        public bool convertToLatexTemplate(string id, string templateid){ 
-            return true;
-        }
-
-        /// Converts a document to a LaTeX template
-        /*
-        public bool convertToLatexTemplate(string id, string templateid)
+         /// Converts a document to a LaTeX template (applying a specific template, e.g., two-column layout)
+        public bool convertToLatexTemplate(string id, string templateId)
         {
             try
             {
-                // Get the template
-                Template.Template template = templateManager.getTemplate(templateid);
-                
-                if (template == null)
+                // Retrieve the document content (format, text, and layout)
+                List<AbstractNode> documentContent = retrieveFormatContent(id);
+                documentContent.AddRange(retrieveTextContent(id));
+                documentContent.AddRange(retrieveLayoutContent(id));
+
+                // Get the template by its ID using TemplateManager
+                Template.Template template = templateManager.ConvertToTemplate(templateId);  // This applies the template, including two-column layout
+                if (template != null)
                 {
-                    return null;
+                    // Merge the template content with the document content
+                    List<AbstractNode> templateContent = template.GetContent();
+                    documentContent.AddRange(templateContent); // Combine document content with template content
+
+                    // Process the LaTeX content (applying format, text, and layout)
+                    bool formatSuccess = formatConversionManager.convertFormat(documentContent);
+                    bool textSuccess = formatConversionManager.convertText(documentContent);
+                    bool layoutSuccess = formatConversionManager.convertLayout(documentContent);
+
+                    // Return success if all steps succeed
+                    return formatSuccess && textSuccess && layoutSuccess;
                 }
-                
-                // Convert the document to LaTeX
-                LatexDocument baseDocument = toLaTeX(id);
-                
-                if (baseDocument == null)
-                {
-                    return null;
-                }
-                
-                // Apply template to the LaTeX document
-                // In a real implementation, this would involve merging the document with template
-                LaTeXDocument templateDocument = new LaTeXDocument();
-                
-                // Apply template content from Template_RDM to templateDocument
-                List<AbstractNode> templateContent = template.getContent();
-                // Process template content and apply to document
-                
-                //Commented out for now not implemented yet
-                //Commented out for now not implemented yet
-                // Notify observers about the template usage
-                //templateManager.notifyObservers(templateid);
-                
-                return templateDocument;
+
+                return false;  // If the template was not found
             }
             catch (Exception ex)
             {
                 // Log exception if needed
                 Console.WriteLine($"Error in convertToLatexTemplate: {ex.Message}");
-                return null;
+                return false;
             }
         }
-        */
 
 
         /// Helper method to retrieve format content

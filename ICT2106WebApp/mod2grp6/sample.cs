@@ -11,7 +11,6 @@ namespace ICT2106WebApp.mod2grp6
                 new SimpleNode(1, "h1", "Header 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true } } }),
                 new SimpleNode(2, "h2", "Header 2", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true } } }),
                 new SimpleNode(3, "h3", "Heading 3",new List<Dictionary<string, object>> {new Dictionary<string, object> {{ "Bold", true },{ "FontColor", "434343" }}}),
-                new SimpleNode(3, "paragraph", "This is a sample paragraph.", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "FontSize", 12 } } })
             };
         List<AbstractNode> LayoutContent = new List<AbstractNode>
             {

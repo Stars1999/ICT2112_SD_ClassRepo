@@ -11,14 +11,19 @@ namespace Utilities
 		)
 		{
 			int nodeLevel = FindNodeLevel(nodeType);
+			AbstractNode newNode;
 
 			if (nodeLevel >= 0)
 			{
-				return new CompositeNode(id, nodeLevel, nodeType, content, styling);
+				newNode = new CompositeNode(id, nodeLevel, nodeType, content, styling);
+				InsertNodeToDatabase(newNode);
+				return newNode;
 			}
 			else
 			{
-				return new SimpleNode(id, nodeLevel, nodeType, content, styling);
+				newNode = new SimpleNode(id, nodeLevel, nodeType, content, styling);
+				InsertNodeToDatabase(newNode);
+				return newNode;
 			}
 		}
 

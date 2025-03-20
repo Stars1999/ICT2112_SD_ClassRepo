@@ -39,6 +39,9 @@ public class HomeController : Controller
             var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, style);
             string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
 
+            var latexCompiler = new LatexCompiler();
+            latexCompiler.SetUpdatedJson(updatedJson);
+
             var latexGenerator = new LatexGenerator();
             latexGenerator.GenerateLatex(_conversionStatus.GetUpdatedJson());
             string generatedLatex = latexGenerator.GetLatexContent();
@@ -96,7 +99,6 @@ public class HomeController : Controller
             {
                 return BadRequest("No LaTeX content provided.");
             }
-
             var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
             if (errors.Count > 0)
             {

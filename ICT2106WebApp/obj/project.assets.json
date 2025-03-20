@@ -249,19 +249,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Chee Xuan Yang\\.nuget\\packages\\": {}
+    "C:\\Users\\chris\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Chee Xuan Yang\\SIT\\y2_tri2\\software_design\\groupProject\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
+      "projectUniqueName": "C:\\Users\\chris\\OneDrive - Singapore Institute Of Technology\\y2 tri 2\\software design\\project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
       "projectName": "ICT2106WebApp",
-      "projectPath": "C:\\Users\\Chee Xuan Yang\\SIT\\y2_tri2\\software_design\\groupProject\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
-      "packagesPath": "C:\\Users\\Chee Xuan Yang\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Chee Xuan Yang\\SIT\\y2_tri2\\software_design\\groupProject\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\",
+      "projectPath": "C:\\Users\\chris\\OneDrive - Singapore Institute Of Technology\\y2 tri 2\\software design\\project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
+      "packagesPath": "C:\\Users\\chris\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\chris\\OneDrive - Singapore Institute Of Technology\\y2 tri 2\\software design\\project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Chee Xuan Yang\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\chris\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

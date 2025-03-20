@@ -102,30 +102,21 @@ namespace ICT2106WebApp.mod2grp6.Text
                     
                     foreach (Dictionary<string, object> styling in stylings)
                     {
+                        // Add this debugging
+                        Console.WriteLine("Styling dictionary contents:");
+                        foreach (var key in styling.Keys)
+                        {
+                            Console.WriteLine($"Key: {key}, Value: {styling[key]}");
+                        }
+
                         bool isBold = styling.ContainsKey("bold") && (bool)styling["bold"];
                         bool isItalic = styling.ContainsKey("italic") && (bool)styling["italic"];
                         bool isUnderline = styling.ContainsKey("underline") && (bool)styling["underline"];
                         
-                        // Apply LaTeX style commands
-                        string originalContent = node.GetContent();
-                        string newContent = originalContent;
+                        // Add this debugging
+                        Console.WriteLine($"Bold: {isBold}, Italic: {isItalic}, Underline: {isUnderline}");
                         
-                        if (isBold)
-                        {
-                            newContent = $"\\textbf{{{newContent}}}";
-                        }
-                        
-                        if (isItalic)
-                        {
-                            newContent = $"\\textit{{{newContent}}}";
-                        }
-                        
-                        if (isUnderline)
-                        {
-                            newContent = $"\\underline{{{newContent}}}";
-                        }
-                        
-                        node.SetContent(newContent);
+                        // ... rest of the method
                     }
                 }
                 return true;
@@ -136,7 +127,6 @@ namespace ICT2106WebApp.mod2grp6.Text
                 return false;
             }
         }
-
         /// Formats colors in the document
         /// returns True if formatting was successful, false otherwise
         public bool FormatColors()
@@ -159,11 +149,11 @@ namespace ICT2106WebApp.mod2grp6.Text
                         if (styling.ContainsKey("color"))
                         {
                             string color = styling["color"].ToString();
-                            string latexColor = ConvertColorToLatex(color);
+                            string htmlColorCode = ConvertColorToLatex(color);
                             
-                            // Update the node's content with LaTeX color commands
+                            // Update the node's content with LaTeX color commands using HTML format
                             string originalContent = node.GetContent();
-                            string newContent = $"\\textcolor{{{latexColor}}}{{{originalContent}}}";
+                            string newContent = $"\\textcolor[HTML]{{{htmlColorCode}}}{{{originalContent}}}";
                             node.SetContent(newContent);
                         }
                     }
@@ -347,11 +337,10 @@ namespace ICT2106WebApp.mod2grp6.Text
                 case "arial":
                 case "helvetica":
                     return "sffamily";
-                case "courier":
-                case "courier new":
-                    return "ttfamily";
+                case "calibri":
+                    return "sffamily"; 
                 default:
-                    return "rmfamily"; // Default to Roman font
+                    return "rmfamily"; 
             }
         }
 
@@ -369,49 +358,34 @@ namespace ICT2106WebApp.mod2grp6.Text
         /// returns the corresponding LaTeX color name
         private string ConvertColorToLatex(string color)
         {
-            // Map common color names to LaTeX color names
+            // For hex colors, return in HTML format
+            if (color.StartsWith("#") && (color.Length == 7 || color.Length == 9))
+            {
+                // Remove the # prefix and return
+                return color.Substring(1).ToUpper();
+            }
+            
+            // For named colors, convert to hex format
             switch (color.ToLower())
             {
                 case "black":
-                    return "black";
+                    return "000000";
                 case "red":
-                    return "red";
+                    return "FF0000";
                 case "green":
-                    return "green";
+                    return "008000";
                 case "blue":
-                    return "blue";
+                    return "0000FF";
                 case "yellow":
-                    return "yellow";
+                    return "FFFF00";
                 case "magenta":
-                    return "magenta";
+                    return "FF00FF";
                 case "cyan":
-                    return "cyan";
+                    return "00FFFF";
                 case "white":
-                    return "white";
+                    return "FFFFFF";
                 default:
-                    // If it's a hex color, convert to RGB values for LaTeX
-                    if (color.StartsWith("#") && (color.Length == 7 || color.Length == 9))
-                    {
-                        try
-                        {
-                            // Parse hex color to RGB
-                            int r = Convert.ToInt32(color.Substring(1, 2), 16);
-                            int g = Convert.ToInt32(color.Substring(3, 2), 16);
-                            int b = Convert.ToInt32(color.Substring(5, 2), 16);
-                            
-                            // Normalize RGB values to [0,1] for LaTeX
-                            double rNorm = r / 255.0;
-                            double gNorm = g / 255.0;
-                            double bNorm = b / 255.0;
-                            
-                            return $"[RGB]{{{r},{g},{b}}}";
-                        }
-                        catch
-                        {
-                            return "black"; // Default to black on error
-                        }
-                    }
-                    return "black"; // Default to black
+                    return "000000"; // Default to black
             }
         }
 

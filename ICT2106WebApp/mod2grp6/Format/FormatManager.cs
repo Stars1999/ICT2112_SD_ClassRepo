@@ -87,6 +87,8 @@ namespace ICT2106WebApp.mod2grp6.Format
             {
                 foreach (AbstractNode child in content)
                 {
+                    if (!string.Equals(child.GetNodeType(), "paragraph", StringComparison.Ordinal))return false;
+                    
                     String command = @"\paragraph*";
 
                     // Get the text content

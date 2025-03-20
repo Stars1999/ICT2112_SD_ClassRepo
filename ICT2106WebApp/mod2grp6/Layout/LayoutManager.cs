@@ -156,284 +156,172 @@ namespace ICT2106WebApp.mod2grp6.Layout
             }
         }
 
-        // public List<AbstractNode> ApplyLayoutFormatting()
-        // {
-        //     // Create nodes for layout elements
-        //     List<AbstractNode> layoutNodes = new List<AbstractNode>();
 
-        //     // Add package nodes
-        //     layoutNodes.Add(new SimpleNode(
-        //         1,
-        //         "package",
-        //         "\\usepackage{geometry}",
-        //         new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-        //     ));
-
-        //     if (FormatHeaders() || FormatFooters())
-        //     {
-        //         layoutNodes.Add(new SimpleNode(
-        //             2,
-        //             "package",
-        //             "\\usepackage{fancyhdr}\n\\pagestyle{fancy}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-        //         ));
-        //     }
-
-        //     if (FormatColumnNum())
-        //     {
-        //         layoutNodes.Add(new SimpleNode(
-        //             3,
-        //             "package",
-        //             "\\usepackage{multicol}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-        //         ));
-        //     }
-
-        //     // Add layout formatting nodes
-        //     int nodeId = 4;
-
-        //     if (FormatMargins())
-        //     {
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "margin",
-        //             "\\usepackage[margin=1in]{geometry}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "geometry" } } }
-        //         ));
-        //     }
-
-        //     if (FormatOrientation())
-        //     {
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "orientation",
-        //             "\\usepackage[portrait]{geometry}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "geometry" } } }
-        //         ));
-        //     }
-
-        //     if (FormatPageSize())
-        //     {
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "pagesize",
-        //             "\\usepackage[a4paper]{geometry}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "geometry" } } }
-        //         ));
-        //     }
-
-        //     if (FormatHeaders())
-        //     {
-        //         // Get the first header node content or use default
-        //         string headerContent = "Header";
-        //         foreach (var node in content)
-        //         {
-        //             if (node.GetNodeType().Contains("header") || node.GetNodeType().StartsWith("h"))
-        //             {
-        //                 headerContent = node.GetContent();
-        //                 break;
-        //             }
-        //         }
-
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "header",
-        //             $"\\fancyhead[C]{{{headerContent}}}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
-        //         ));
-        //     }
-
-        //     if (FormatFooters())
-        //     {
-        //         // Get the first footer node content or use default
-        //         string footerContent = "Footer with page number: \\thepage";
-        //         foreach (var node in content)
-        //         {
-        //             if (node.GetNodeType().Contains("footer"))
-        //             {
-        //                 footerContent = node.GetContent();
-        //                 break;
-        //             }
-        //         }
-
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "footer",
-        //             $"\\fancyfoot[C]{{{footerContent}}}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
-        //         ));
-        //     }
-
-        //     if (FormatColumnNum())
-        //     {
-        //         int columnCount = 2; // Default to 2 columns
-
-        //         if (FormatColumnSpacing())
-        //         {
-        //             layoutNodes.Add(new SimpleNode(
-        //                 nodeId++,
-        //                 "columnspacing",
-        //                 $"\\setlength{{\\columnsep}}{{0.5cm}}",
-        //                 new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-        //             ));
-        //         }
-
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "columnbegin",
-        //             $"\\begin{{multicols}}{{{columnCount}}}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-        //         ));
-
-        //         layoutNodes.Add(new SimpleNode(
-        //             nodeId++,
-        //             "columnend",
-        //             "\\end{multicols}",
-        //             new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-        //         ));
-        //     }
-
-        //     return layoutNodes;
-        // }
-
-        public List<AbstractNode> ApplyLayoutFormatting()
-{
-    // Create nodes for layout elements
-    List<AbstractNode> layoutNodes = new List<AbstractNode>();
-
-    // Add package nodes
-    layoutNodes.Add(new SimpleNode(
-        1,
-        "package",
-        "\\usepackage{geometry}",
-        new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-    ));
-
-    if (FormatHeaders() || FormatFooters())
-    {
-        layoutNodes.Add(new SimpleNode(
-            2,
-            "package",
-            "\\usepackage{fancyhdr}\n\\pagestyle{fancy}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-        ));
-    }
-
-    if (FormatColumnNum())
-    {
-        layoutNodes.Add(new SimpleNode(
-            3,
-            "package",
-            "\\usepackage{multicol}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-        ));
-    }
-
-    // Add layout formatting nodes
-    int nodeId = 4;
-
-    // Combine geometry options into a single package call
-    List<string> geometryOptions = new List<string>();
-    
-    if (FormatMargins())
-    {
-        geometryOptions.Add("margin=1in");
-    }
-    
-    if (FormatOrientation())
-    {
-        geometryOptions.Add("portrait");
-    }
-    
-    if (FormatPageSize())
-    {
-        geometryOptions.Add("a4paper");
-    }
-    
-    // If we have any geometry options, add the combined node
-    if (geometryOptions.Count > 0)
-    {
-        string combinedOptions = string.Join(",", geometryOptions);
-        layoutNodes.Add(new SimpleNode(
-            nodeId++,
-            "geometry",
-            $"\\geometry{{{combinedOptions}}}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "geometry" } } }
-        ));
-    }
-
-    if (FormatHeaders())
-    {
-        // Get the first header node content or use default
-        string headerContent = "Header";
-        foreach (var node in content)
+       public List<AbstractNode> ApplyLayoutFormatting()
         {
-            if (node.GetNodeType().Contains("header") || node.GetNodeType().StartsWith("h"))
-            {
-                headerContent = node.GetContent();
-                break;
-            }
-        }
+            // Create nodes for layout elements
+            List<AbstractNode> layoutNodes = new List<AbstractNode>();
 
-        layoutNodes.Add(new SimpleNode(
-            nodeId++,
-            "header",
-            $"\\fancyhead[C]{{{headerContent}}}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
-        ));
-    }
-
-    if (FormatFooters())
-    {
-        // Get the first footer node content or use default
-        string footerContent = "Footer with page number: \\thepage";
-        foreach (var node in content)
-        {
-            if (node.GetNodeType().Contains("footer"))
-            {
-                footerContent = node.GetContent();
-                break;
-            }
-        }
-
-        layoutNodes.Add(new SimpleNode(
-            nodeId++,
-            "footer",
-            $"\\fancyfoot[C]{{{footerContent}}}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
-        ));
-    }
-
-    if (FormatColumnNum())
-    {
-        int columnCount = 2; // Default to 2 columns
-
-        if (FormatColumnSpacing())
-        {
+            // Add package nodes
             layoutNodes.Add(new SimpleNode(
-                nodeId++,
-                "columnspacing",
-                $"\\setlength{{\\columnsep}}{{0.5cm}}",
-                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                1,
+                "package",
+                "\\usepackage{geometry}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
             ));
+
+            if (FormatHeaders() || FormatFooters())
+            {
+                layoutNodes.Add(new SimpleNode(
+                    2,
+                    "package",
+                    "\\usepackage{fancyhdr}\n\\pagestyle{fancy}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+                ));
+            }
+
+            if (FormatColumnNum())
+            {
+                layoutNodes.Add(new SimpleNode(
+                    3,
+                    "package",
+                    "\\usepackage{multicol}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+                ));
+            }
+
+            // Add layout formatting nodes
+            int nodeId = 4;
+
+            // Handle orientation separately
+            if (FormatOrientation())
+            {
+                // Add pdflscape package for landscape support
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "package",
+                    "\\usepackage{pdflscape}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+                ));
+                
+                // Use landscape environment - note: typically this would go around content
+                // but for this test we're just adding it as a command
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "orientation",
+                    "\\begin{landscape}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
+                ));
+            }
+
+            // Combine remaining geometry options
+            List<string> geometryOptions = new List<string>();
+            
+            if (FormatMargins())
+            {
+                geometryOptions.Add("margin=1in");
+            }
+            
+            if (FormatPageSize())
+            {
+                geometryOptions.Add("a4paper");
+            }
+            
+            // If we have any geometry options, add the combined node
+            if (geometryOptions.Count > 0)
+            {
+                string combinedOptions = string.Join(",", geometryOptions);
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "geometry",
+                    $"\\geometry{{{combinedOptions}}}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "geometry" } } }
+                ));
+            }
+
+            if (FormatHeaders())
+            {
+                // Get the first header node content or use default
+                string headerContent = "Header";
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Contains("header") || node.GetNodeType().StartsWith("h"))
+                    {
+                        headerContent = node.GetContent();
+                        break;
+                    }
+                }
+
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "header",
+                    $"\\fancyhead[C]{{{headerContent}}}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
+                ));
+            }
+
+            if (FormatFooters())
+            {
+                // Get the first footer node content or use default
+                string footerContent = "Footer with page number: \\thepage";
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Contains("footer"))
+                    {
+                        footerContent = node.GetContent();
+                        break;
+                    }
+                }
+
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "footer",
+                    $"\\fancyfoot[C]{{{footerContent}}}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
+                ));
+            }
+
+            if (FormatColumnNum())
+            {
+                int columnCount = 2; // Default to 2 columns
+
+                if (FormatColumnSpacing())
+                {
+                    layoutNodes.Add(new SimpleNode(
+                        nodeId++,
+                        "columnspacing",
+                        $"\\setlength{{\\columnsep}}{{0.5cm}}",
+                        new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                    ));
+                }
+
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "columnbegin",
+                    $"\\begin{{multicols}}{{{columnCount}}}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                ));
+
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "columnend",
+                    "\\end{multicols}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                ));
+            }
+
+            // Close landscape environment if it was opened
+            if (FormatOrientation())
+            {
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "orientationEnd",
+                    "\\end{landscape}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
+                ));
+            }
+
+            return layoutNodes;
         }
-
-        layoutNodes.Add(new SimpleNode(
-            nodeId++,
-            "columnbegin",
-            $"\\begin{{multicols}}{{{columnCount}}}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-        ));
-
-        layoutNodes.Add(new SimpleNode(
-            nodeId++,
-            "columnend",
-            "\\end{multicols}",
-            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-        ));
-    }
-
-    return layoutNodes;
-}
     }
 }

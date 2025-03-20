@@ -32,6 +32,9 @@ namespace ICT2106WebApp.mod1grp4
                 return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
             });
 
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            var database = serviceProvider.GetRequiredService<IMongoDatabase>();
+
             // public TableCell(string content, List<string> contentStyle, int rowSpan, int colSpan, List<string> cellStyle)
             // public Table(int tableId, int rows, int columns, List<TableCell> cells, List<string> style, int lastProcessedNode, bool tableCompletionState, Table table, string latexOutput)
             // mockTable DATA
@@ -82,6 +85,64 @@ namespace ICT2106WebApp.mod1grp4
             // Step 1: Organize tables
             // var tableOrganiser = new TableOrganiserManager();
             // List<Table> tables = tableOrganiser.OrganiseTables(GetSampleTables());
+
+            // // Step 2: Preprocess tables
+            // mocktable
+            // var tablePreprocessingManager = new TablePreprocessingManager();
+            // var mockTables = new List<Table>
+            // {
+            //   new Table(
+            //     tableId: 1,
+            //     rows: 2,
+            //     columns: 3,
+            //     cells: cells,
+            //     style: new List<string> { "tableStyle" },
+            //     lastProcessedNode: 0,
+            //     tableCompletionState: true,
+            //     table: null,
+            //     latexOutput: ""
+            //   ),
+            //   new Table(
+            //     tableId: 2,
+            //     rows: 2,
+            //     columns: 3,
+            //     cells: cells,
+            //     style: new List<string> { "tableStyle" },
+            //     lastProcessedNode: 0,
+            //     tableCompletionState: true,
+            //     table: null,
+            //     latexOutput: ""
+            //   ),
+            //   new Table(
+            //     tableId: 3,
+            //     rows: 2,
+            //     columns: 3,
+            //     cells: cells,
+            //     style: new List<string> { "tableStyle" },
+            //     lastProcessedNode: 0,
+            //     tableCompletionState: true,
+            //     table: null,
+            //     latexOutput: ""
+            //   ),
+            //   new Table(
+            //     tableId: 4,
+            //     rows: 2,
+            //     columns: 3,
+            //     cells: cells,
+            //     style: new List<string> { "tableStyle" },
+            //     lastProcessedNode: 0,
+            //     tableCompletionState: true,
+            //     table: null,
+            //     latexOutput: ""
+            //   )
+            // };
+
+            // CRASH RECOVERY
+            // RowTabularGateway_RDG rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+            // TablePreprocessingManager tablePreprocessingManager = new TablePreprocessingManager();
+            // tablePreprocessingManager.attach(rowTabularGateway_RDG);
+            // tables = await tablePreprocessingManager.recoverBackupTablesIfExist(mockTables);
+            // List<Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
 
             // // Step 3: Convert tables to LaTeX
             // var latexConverter = new MockLatexConverter();

@@ -4,48 +4,40 @@ using System.Linq;
 
 
 namespace ICT2106WebApp.mod1grp4 {
-    public class TablePreprocessingManager : iBackupTabularSubject, iPreprocessedTable
+    class TablePreprocessingManager : iBackupTabularSubject, iPreprocessedTable
     {
         private iBackupGatewayObserver backupObserver;
 
-        public TablePreprocessingManager(iBackupGatewayObserver observer)
+        public TablePreprocessingManager() 
         {
-            this.backupObserver = observer;
-            this.attach(observer);
+
         }
 
         public async Task<List<Table>> fixTableIntegrity(List<Table> tables)
         {
-            // Logic to fix table integrity using backupObserver
+            // Logic to fix table integrity
             foreach (var table in tables)
             {
-                // Logic to fix table integrity
-
-                await backupObserver.saveTable(table.GetTableId(), table);
+                await notify<bool>(OperationType.SAVE, "Table integrity has been fixed by TablePreprocessingManager and saved as backup", table);
             }
             return tables;
         }
 
-        public async Task<bool> backupTablesExists(List<int> ids)
+        public async Task<List<Table>> recoverBackupTablesIfExist(List<Table> tablesFromNode)
         {
             // Retrieve tables using backupObserver
-            var tables = await backupObserver.retrieveTables(ids);
-            this.notify("Checking if tables exist");
+            var backupTables = await notify<List<Table>>(OperationType.RETRIEVE, "Checking if tables exist: whether ids given to me tallies with what i have in database", tablesFromNode);
 
             // Check if all requested IDs are retrievable
-            if (tables == null || tables.Count != ids.Count)
+            var ids = tablesFromNode.Select(t => t.GetTableId()).ToList();
+            if (backupTables == null || backupTables.Count != ids.Count)
             {
-                return false;
+                Console.WriteLine("Backup Tables do not exist. No crash has occurred previously");
+                return tablesFromNode;
             }
 
-            return true;
-        }
-
-        public async Task<List<Table>> recoverTables(List<int> ids)
-        {
-            // Logic to recover tables using backupObserver then notify all observers
-            this.notify("Tables recovered");  
-            return await backupObserver.retrieveTables(ids);
+            Console.WriteLine("Backup Tables exists. Crash has occurred previously");
+            return backupTables;
         }
     }
 

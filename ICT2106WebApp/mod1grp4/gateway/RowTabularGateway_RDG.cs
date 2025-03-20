@@ -23,7 +23,8 @@ namespace ICT2106WebApp.mod1grp4
         // Save a table
         public async Task<bool> saveTable(Table table)
         {
-            var filter = Builders<Table>.Filter.Eq(t => t.GetTableId(), table.GetTableId());
+            var filter = Builders<Table>.Filter.Eq("tableId", table.GetTableId());
+            // var filter = Builders<Table>.Filter.Eq(t => t.GetTableId(), table.GetTableId());
             var result = await tableCollection.ReplaceOneAsync(filter, table, new ReplaceOptions { IsUpsert = true });
             return result.IsAcknowledged && result.ModifiedCount > 0;
         }

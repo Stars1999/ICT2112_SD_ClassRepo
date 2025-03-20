@@ -1,17 +1,25 @@
 using System.Collections.Generic;
-
+using MongoDB.Bson.Serialization.Attributes;
 namespace ICT2106WebApp.mod1grp4
 {
     public class Table
     {
+        [BsonElement("tableId")]
         private int tableId;
+        [BsonElement("rows")]
         private int rows;
+        [BsonElement("columns")]
         private int columns;
+        [BsonElement("cells")]
         private List<TableCell> cells;
+        [BsonElement("style")]
         private List<string> style;
+        [BsonElement("lastProcessedNode")]
         private int lastProcessedNode;
+        [BsonElement("tableCompletionState")]
         private bool tableCompletionState;
         private Table table;
+        [BsonElement("latexOutput")]
         private string latexOutput;
 
 

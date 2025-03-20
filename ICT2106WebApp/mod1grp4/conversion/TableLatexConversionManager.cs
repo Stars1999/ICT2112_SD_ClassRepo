@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+
 namespace ICT2106WebApp.mod1grp4
 {
 
 
 
-    public class TableLatexConversionManager
+    class TableLatexConversionManager : iBackupTabularSubject
+    // public class TableLatexConversionManager
     // public class TableLatexConversionManager : iTableLatexConversion
     {
         // private iTableLatexConversion _latexConverter;
@@ -17,6 +19,12 @@ namespace ICT2106WebApp.mod1grp4
         //     _latexConverter = latexConverter;
         // }
 
+        private iBackupGatewayObserver backupObserver;
+
+        public TableLatexConversionManager()
+        {
+
+        }
 
         public async Task<string> ConvertToLatexAsync(Table table)
         {
@@ -98,15 +106,27 @@ namespace ICT2106WebApp.mod1grp4
             latexTable = latexTable.TrimEnd(' ', '&') + " \\\\\n"; // Finalize the last row
             latexTable += "\\hline\n"; // Add a horizontal line
             latexTable += "\\end{tabular}"; // Close the LaTeX table
+            table.SetLatexOutput(latexTable);
+            if (await UpdateLatexCheckpointAsync(table))
+            {
+                Console.WriteLine("yay");
+            }
+            
             return latexTable;
         }
 
-        public async Task<bool> UpdateLatexCheckpointAsync(int nodeId, string latexOutput)
+        public async Task<bool> UpdateLatexCheckpointAsync(Table table)
         {
-            await Task.Delay(500);  // Simulating a time-consuming operation (e.g., database or file I/O)
-            Console.WriteLine($"Updated LaTeX checkpoint for Node {nodeId}.");
+            await notify<bool>(OperationType.SAVE, "Updated LaTeX checkpoint for table", table);
             return true;
         }
+
+        // public async Task<bool> UpdateLatexCheckpointAsync(int nodeId, string latexOutput)
+        // {
+        //     await Task.Delay(500);  // Simulating a time-consuming operation (e.g., database or file I/O)
+        //     Console.WriteLine($"Updated LaTeX checkpoint for Node {nodeId}.");
+        //     return true;
+        // }
     }
 
 }

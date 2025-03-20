@@ -1,0 +1,391 @@
+@page
+@model ICT2106WebApp.Pages.DocumentTestModel
+@{
+    ViewData["Title"] = "Document Manager Test";
+}
+
+<div class="container">
+    <h1>Document Manager Test</h1>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Document Content from sample.cs</h2>
+                </div>
+                <div class="card-body">
+                    @if (Model.IsDocumentLoaded)
+                    {
+                        <div class="alert alert-success">
+                            Document content loaded successfully from sample.cs!
+                        </div>
+                        
+                        <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="metadata-tab" data-bs-toggle="tab" data-bs-target="#metadata" type="button" role="tab" aria-controls="metadata" aria-selected="true">Metadata</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="format-tab" data-bs-toggle="tab" data-bs-target="#format" type="button" role="tab" aria-controls="format" aria-selected="false">Format</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="text-tab" data-bs-toggle="tab" data-bs-target="#text" type="button" role="tab" aria-controls="text" aria-selected="false">Text</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="layout-tab" data-bs-toggle="tab" data-bs-target="#layout" type="button" role="tab" aria-controls="layout" aria-selected="false">Layout</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="math-tab" data-bs-toggle="tab" data-bs-target="#math" type="button" role="tab" aria-controls="math" aria-selected="false">Math</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="lists-tab" data-bs-toggle="tab" data-bs-target="#lists" type="button" role="tab" aria-controls="lists" aria-selected="false">Lists</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Images</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="bibliography-tab" data-bs-toggle="tab" data-bs-target="#bibliography" type="button" role="tab" aria-controls="bibliography" aria-selected="false">Bibliography</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content mt-3" id="contentTabsContent">
+                            <div class="tab-pane fade show active" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                                <h3>Metadata</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Properties</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.MetadataContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="format" role="tabpanel" aria-labelledby="format-tab">
+                                <h3>Format Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.FormatContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="text" role="tabpanel" aria-labelledby="text-tab">
+                                <h3>Text Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.TextContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="layout" role="tabpanel" aria-labelledby="layout-tab">
+                                <h3>Layout Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.LayoutContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @(prop.Key == "Margins" ? "[Complex Object]" : prop.Value)</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="math" role="tabpanel" aria-labelledby="math-tab">
+                                <h3>Math Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.MathContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="lists" role="tabpanel" aria-labelledby="lists-tab">
+                                <h3>List Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.ListContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                                <h3>Image Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.ImageContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="bibliography" role="tabpanel" aria-labelledby="bibliography-tab">
+                                <h3>Bibliography Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.BibliographyContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <hr />
+                        <div class="card mt-4">
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="mb-0">LaTeX Conversion Tests</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="alert @(Model.LaTeXResult ? "alert-success" : "alert-danger")">
+                                            <h4 class="alert-heading">toLaTeX() Result</h4>
+                                            <p><strong>Status:</strong> @(Model.LaTeXResult ? "Success" : "Failed")</p>
+                                            <p>This test converts the document content to LaTeX format using the DocumentManager's toLaTeX method.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="alert @(Model.TemplateResult ? "alert-success" : "alert-danger")">
+                                            <h4 class="alert-heading">convertToLatexTemplate() Result</h4>
+                                            <p><strong>Status:</strong> @(Model.TemplateResult ? "Success" : "Failed")</p>
+                                            <p>This test applies a LaTeX template to the document content using the DocumentManager's convertToLatexTemplate method.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">No Document Loaded</h4>
+                            <p>Click the button below to load sample document content from sample.cs and test the DocumentManager functionality.</p>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <form method="post">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-file-earmark-text"></i> Load Sample Document Content
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Activate Bootstrap tabs
+        document.addEventListener('DOMContentLoaded', function () {
+            var triggerTabList = [].slice.call(document.querySelectorAll('#contentTabs a'))
+            triggerTabList.forEach(function (triggerEl) {
+                var tabTrigger = new bootstrap.Tab(triggerEl)
+                triggerEl.addEventListener('click', function (event) {
+                    event.preventDefault()
+                    tabTrigger.show()
+                })
+            })
+        });
+    </script>
+}

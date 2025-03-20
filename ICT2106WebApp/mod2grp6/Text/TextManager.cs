@@ -116,7 +116,27 @@ namespace ICT2106WebApp.mod2grp6.Text
                         // Add this debugging
                         Console.WriteLine($"Bold: {isBold}, Italic: {isItalic}, Underline: {isUnderline}");
                         
-                        // ... rest of the method
+
+                        // Apply LaTeX style commands
+                        string originalContent = node.GetContent();
+                        string newContent = originalContent;
+
+                        if (isBold)
+                        {
+                            newContent = $"\\textbf{{{newContent}}}";
+                        }
+
+                        if (isItalic)
+                        {
+                            newContent = $"\\textit{{{newContent}}}";
+                        }
+
+                        if (isUnderline)
+                        {
+                            newContent = $"\\underline{{{newContent}}}";
+                        }
+
+                        node.SetContent(newContent);
                     }
                 }
                 return true;
@@ -127,6 +147,7 @@ namespace ICT2106WebApp.mod2grp6.Text
                 return false;
             }
         }
+        
         /// Formats colors in the document
         /// returns True if formatting was successful, false otherwise
         public bool FormatColors()

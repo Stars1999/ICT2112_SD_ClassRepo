@@ -134,12 +134,10 @@ namespace ICT2106WebApp.mod2grp6.Format
                     string fileSize = child.getFileSize();
 
                     string latexMetaData = $@"
-                                    \begin{{itemize}}
-                                        \item \textbf{{File Name:}} {filename}
-                                        \item \textbf{{Created Date:}} {createdDate}
-                                        \item \textbf{{Last Modified:}} {lastModified}
-                                        \item \textbf{{Size:}} {fileSize}
-                                    \end{{itemize}}
+                                    \newcommand{\docFileName}{filename}
+                                    \newcommand{\docCreatedDate}{createdDate}
+                                    \newcommand{\docLastModified}{lastModified}
+                                    \newcommand{\docFileSize}{fileSize}
                                     ";
                 }
             }

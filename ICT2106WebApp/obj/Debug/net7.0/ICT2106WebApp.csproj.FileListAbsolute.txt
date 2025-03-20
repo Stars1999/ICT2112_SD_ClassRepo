@@ -116,3 +116,30 @@ C:\Users\andre\vscodes\SITCode\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7
 C:\Users\andre\vscodes\SITCode\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb
 C:\Users\andre\vscodes\SITCode\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
 C:\Users\andre\vscodes\SITCode\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\appsettings.Development.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\appsettings.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.staticwebassets.runtime.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.exe
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.deps.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.runtimeconfig.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.pdb
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\DnsClient.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Bson.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Driver.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\SharpCompress.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\Snappier.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\bin\Debug\net7.0\ZstdSharp.dll
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.build.ICT2106WebApp.props
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.ICT2106WebApp.props
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.ICT2106WebApp.props
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.pack.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.build.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.development.json
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\scopedcss\bundle\ICT2106WebApp.styles.css
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\scopedcss\projectbundle\ICT2106WebApp.bundle.scp.css
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.CopyComplete
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
+C:\Users\Joel\OneDrive\Documents\SIT ICT\y2\y2 tri 2\Software Design\latex project\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll

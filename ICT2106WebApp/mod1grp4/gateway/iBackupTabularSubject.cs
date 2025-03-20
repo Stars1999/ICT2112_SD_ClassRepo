@@ -12,10 +12,11 @@ namespace ICT2106WebApp.mod1grp4 {
             observers.Remove(observer);
         }
 
-        public void notify() {
+        public void notify(string message) {
             foreach (var observer in observers)
             {
                 // Notify each observer
+                Console.WriteLine(message);
             }
         }
     }

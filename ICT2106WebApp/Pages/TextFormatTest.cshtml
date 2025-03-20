@@ -28,7 +28,18 @@
                                  <option value="Calibri" selected="@(Model.Font == "Calibri")">Calibri</option>
                             </select>
                         </div>
-                        
+
+                        <div class="form-group mb-3">
+                            <label for="fontSize">Font Size:</label>
+                            <select id="fontSize" name="fontSize" class="form-control">
+                                <option value="10" selected="@(Model.FontSize == 10)">Small (10pt)</option>
+                                <option value="12" selected="@(Model.FontSize == 12)">Normal (12pt)</option>
+                                <option value="14" selected="@(Model.FontSize == 14)">Large (14pt)</option>
+                                <option value="18" selected="@(Model.FontSize == 18)">X-Large (18pt)</option>
+                                <option value="24" selected="@(Model.FontSize == 24)">XX-Large (24pt)</option>
+                            </select>
+                        </div>
+                                                
                         <div class="form-group mb-3">
                             <label>Text Style:</label>
                             <div class="form-check">
@@ -52,6 +63,17 @@
                                 <option value="#FF0000" selected="@(Model.Color == "#FF0000")">Red</option>
                                 <option value="#0000FF" selected="@(Model.Color == "#0000FF")">Blue</option>
                                 <option value="#008000" selected="@(Model.Color == "#008000")">Green</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="highlightColor">Highlight Color:</label>
+                            <select id="highlightColor" name="highlightColor" class="form-control">
+                                <option value="none" selected="@(Model.HighlightColor == "none")">None</option>
+                                <option value="#FFFF00" selected="@(Model.HighlightColor == "#FFFF00")">Yellow</option>
+                                <option value="#90EE90" selected="@(Model.HighlightColor == "#90EE90")">Light Green</option>
+                                <option value="#ADD8E6" selected="@(Model.HighlightColor == "#ADD8E6")">Light Blue</option>
+                                <option value="#FFB6C1" selected="@(Model.HighlightColor == "#FFB6C1")">Light Pink</option>
                             </select>
                         </div>
                         
@@ -108,7 +130,9 @@
                             @(Model.BoldStyle ? "font-weight: bold;" : "")
                             @(Model.ItalicStyle ? "font-style: italic;" : "")
                             @(Model.UnderlineStyle ? "text-decoration: underline;" : "")
-                            color: @Model.Color;
+                            font-size: @(Model.FontSize)pt;
+                            color: @Model.Color; 
+                            @(Model.HighlightColor != "none" ? $"background-color: {Model.HighlightColor};" : "")
                             line-height: @Model.LineSpacing;
                             text-align: @Model.Alignment;">
                             @Model.Content

@@ -17,6 +17,9 @@ namespace ICT2106WebApp.Pages
         
         [BindProperty]
         public string Font { get; set; } = "Times New Roman";
+
+        [BindProperty]
+        public int FontSize { get; set; } = 12; 
         
         [BindProperty]
         public bool BoldStyle { get; set; } = false;
@@ -29,6 +32,9 @@ namespace ICT2106WebApp.Pages
         
         [BindProperty]
         public string Color { get; set; } = "black";
+
+        [BindProperty]
+        public string HighlightColor { get; set; } = "none"; //
         
         [BindProperty]
         public float LineSpacing { get; set; } = 1.0f;
@@ -66,13 +72,20 @@ namespace ICT2106WebApp.Pages
             var stylingDict = new Dictionary<string, object>
             {
                 { "fontFamily", Font },
-                { "bold", testBold },     // Using our test values
-                { "italic", testItalic },
-                { "underline", testUnderline },
+                { "fontSize", FontSize },
+                { "bold", BoldStyle },
+                { "italic", ItalicStyle },
+                { "underline", UnderlineStyle },
                 { "color", Color },
                 { "lineSpacing", LineSpacing },
                 { "alignment", Alignment }
             };
+
+            // Only add highlight color if not "none"
+            if (HighlightColor != "none")
+            {
+                stylingDict.Add("highlightColor", HighlightColor);
+            }
             
             var stylingList = new List<Dictionary<string, object>> { stylingDict };
             

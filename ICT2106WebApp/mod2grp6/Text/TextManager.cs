@@ -78,16 +78,42 @@ namespace ICT2106WebApp.mod2grp6.Text
             
             foreach (Dictionary<string, object> styling in stylings)
             {
+                string originalContent = node.GetContent();
+                string newContent = originalContent;
+                
+                // Handle font family
                 if (styling.ContainsKey("fontFamily"))
                 {
                     string fontFamily = styling["fontFamily"].ToString();
                     string latexFont = ConvertFontToLatex(fontFamily);
-                    
-                    // Update the node's content with LaTeX font commands
-                    string originalContent = node.GetContent();
-                    string newContent = ApplyLatexFontCommand(originalContent, latexFont);
-                    node.SetContent(newContent);
+                    newContent = ApplyLatexFontCommand(newContent, latexFont);
                 }
+                
+                // Handle font size
+                if (styling.ContainsKey("fontSize"))
+                {
+                    // Convert the font size to a float or int
+                    float fontSize = 0;
+                    if (styling["fontSize"] is float)
+                    {
+                        fontSize = (float)styling["fontSize"];
+                    }
+                    else if (styling["fontSize"] is int)
+                    {
+                        fontSize = (int)styling["fontSize"];
+                    }
+                    else if (styling["fontSize"] is string)
+                    {
+                        float.TryParse(styling["fontSize"].ToString(), out fontSize);
+                    }
+                    
+                    // Apply LaTeX font size command
+                    string latexFontSize = ConvertFontSizeToLatex(fontSize);
+                    newContent = $"{{{latexFontSize} {newContent}}}";
+                }
+                
+                // Update the node content
+                node.SetContent(newContent);
             }
             
             // If it's a composite node, apply formatting to children
@@ -202,16 +228,36 @@ namespace ICT2106WebApp.mod2grp6.Text
             
             foreach (Dictionary<string, object> styling in stylings)
             {
+                string originalContent = node.GetContent();
+                string newContent = originalContent;
+                
+                // Handle text color
                 if (styling.ContainsKey("color"))
                 {
                     string color = styling["color"].ToString();
                     string htmlColorCode = ConvertColorToLatex(color);
                     
-                    // Update the node's content with LaTeX color commands using HTML format
-                    string originalContent = node.GetContent();
-                    string newContent = $"\\textcolor[HTML]{{{htmlColorCode}}}{{{originalContent}}}";
-                    node.SetContent(newContent);
+                    // Apply LaTeX text color command
+                    newContent = $"\\textcolor[HTML]{{{htmlColorCode}}}{{{newContent}}}";
                 }
+                
+                // Handle highlighting/background color
+                if (styling.ContainsKey("highlightColor") || styling.ContainsKey("backgroundColor"))
+                {
+                    string highlightColor = styling.ContainsKey("highlightColor") 
+                        ? styling["highlightColor"].ToString() 
+                        : (styling.ContainsKey("backgroundColor") 
+                            ? styling["backgroundColor"].ToString() 
+                            : "#FFFF00"); // Default to yellow if not specified
+                    
+                    string htmlColorCode = ConvertColorToLatex(highlightColor);
+                    
+                    // Apply LaTeX highlighting command using \colorbox
+                    newContent = $"\\colorbox[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                }
+                
+                // Update the node content
+                node.SetContent(newContent);
             }
             
             // If it's a composite node, apply formatting to children
@@ -449,6 +495,54 @@ namespace ICT2106WebApp.mod2grp6.Text
                     return "sffamily"; 
                 default:
                     return "rmfamily"; 
+            }
+        }
+
+        /// Helper method to convert font sizes to LaTeX size commands
+        /// <param name="fontSize">The font size in points</param>
+        /// returns the corresponding LaTeX font size command
+        private string ConvertFontSizeToLatex(float fontSize)
+        {
+            // Map common font sizes to LaTeX size commands
+            if (fontSize <= 0)
+            {
+                return "\\normalsize"; // Default size
+            }
+            else if (fontSize < 8)
+            {
+                return "\\tiny";
+            }
+            else if (fontSize < 10)
+            {
+                return "\\footnotesize";
+            }
+            else if (fontSize < 11)
+            {
+                return "\\small";
+            }
+            else if (fontSize < 12)
+            {
+                return "\\normalsize";
+            }
+            else if (fontSize < 14)
+            {
+                return "\\large";
+            }
+            else if (fontSize < 17)
+            {
+                return "\\Large";
+            }
+            else if (fontSize < 20)
+            {
+                return "\\LARGE";
+            }
+            else if (fontSize < 25)
+            {
+                return "\\huge";
+            }
+            else
+            {
+                return "\\Huge";
             }
         }
 

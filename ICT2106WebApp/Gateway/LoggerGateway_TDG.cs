@@ -64,9 +64,9 @@ namespace ICT2106WebApp.Data
             var newLog = new Logger_SDM(logTimestamp, logDescription, logLocation);
             var bsonDocument = new BsonDocument
             {
-                { "logTimestamp", newLog.GetLogDetails().Item2 },
-                { "logDescription", newLog.GetLogDetails().Item3 },
-                { "logLocation", newLog.GetLogDetails().Item4 }
+                { "LogTimestamp", newLog.GetLogDetails().Item2 },
+                { "LogDescription", newLog.GetLogDetails().Item3 },
+                { "LogLocation", newLog.GetLogDetails().Item4 }
             };
             _logsCollection.InsertOne(bsonDocument);
         }

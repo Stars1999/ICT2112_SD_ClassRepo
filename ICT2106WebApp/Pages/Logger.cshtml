@@ -14,8 +14,12 @@
 <!-- Filter Form -->
 <form method="get" class="filter-form">
     <div class="filter-container">
-        <label for="date">Filter by Date:</label>
-        <input type="date" id="date" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="FilterStartDate" value="@Model.FilterStartDate?.ToString("yyyy-MM-dd")">
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="FilterEndDate" value="@Model.FilterEndDate?.ToString("yyyy-MM-dd")">
+
 
         <label for="location">Filter by Location:</label>
         <select id="location" name="FilterLocation">
@@ -74,11 +78,13 @@
 
 <!-- Download Button -->
 <form method="get" action="/Logger">
-    <input type="hidden" name="FilterDate" value="@Model.FilterDate?.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="FilterStartDate" value="@Model.FilterStartDate?.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="FilterEndDate" value="@Model.FilterEndDate?.ToString("yyyy-MM-dd")" />
     <input type="hidden" name="FilterLocation" value="@Model.FilterLocation" />
     <input type="hidden" name="handler" value="DownloadLog">
     <button type="submit" class="btn btn-primary">Download Logs</button>
 </form>
+
 
 <!-- Styles for Better UI -->
 <style>

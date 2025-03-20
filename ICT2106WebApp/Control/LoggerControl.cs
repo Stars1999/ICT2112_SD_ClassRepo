@@ -45,28 +45,38 @@ namespace ICT2106WebApp.Control
                 Console.WriteLine($"Error inserting log: {ex.Message}");
             }
         }
-        public List<Logger_SDM> FilterLogs(DateTime? timestamp, string errorLocation)
-        {
+        public List<Logger_SDM> FilterLogs(DateTime? startDate, DateTime? endDate, string errorLocation)
+        {      
             var logs = RetrieveAllLogs();
 
-            if (timestamp.HasValue)
+            if (startDate.HasValue && endDate.HasValue)
             {
-                var timestampFilter = new TimestampLogFilter(timestamp.Value);
+                _logger.InsertLog(DateTime.Now, $"Filtering logs from {startDate} to {endDate} at location {errorLocation}", "Mod 3");
+                DateTime start = startDate.Value.Date;
+                DateTime end = endDate.Value.Date;
+
+                var timestampFilter = new TimestampLogFilter(start, end);
                 logs = timestampFilter.FilterLogs(logs);
+                Console.WriteLine($"Filtered {logs.Count} logs between dates.");
             }
 
             if (!string.IsNullOrEmpty(errorLocation))
             {
+                _logger.InsertLog(DateTime.Now, "Filter by location", "Mod 3");
                 var locationFilter = new LocationLogFilter(errorLocation);
                 logs = locationFilter.FilterLogs(logs);
+                Console.WriteLine($"Filtered {logs.Count} logs by location.");
             }
 
             return logs;
         }
-        public byte[] DownloadLogs(DateTime? filterDate, string filterLocation)
+
+
+        public byte[] DownloadLogs(DateTime? startDate, DateTime? endDate, string filterLocation)
         {
-            var logs = filterDate.HasValue || !string.IsNullOrEmpty(filterLocation)
-                ? FilterLogs(filterDate, filterLocation)
+            // Determine if filtering by date range or location is needed
+            var logs = (startDate.HasValue || endDate.HasValue || !string.IsNullOrEmpty(filterLocation))
+                ? FilterLogs(startDate, endDate, filterLocation) // Adjusted to use the new FilterLogs method accepting date range
                 : RetrieveAllLogs();
 
             var csvBuilder = new StringBuilder();
@@ -84,6 +94,7 @@ namespace ICT2106WebApp.Control
 
             return Encoding.UTF8.GetBytes(csvBuilder.ToString());
         }
+
 
         public void ClearLogs()
         {

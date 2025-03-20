@@ -21,7 +21,10 @@ namespace ICT2106WebApp.Pages
         public List<string> AvailableLocations { get; set; } = new List<string>();
 
         [BindProperty(SupportsGet = true)]
-        public DateTime? FilterDate { get; set; }
+        public DateTime? FilterStartDate { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public DateTime? FilterEndDate { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string FilterLocation { get; set; }
@@ -33,7 +36,7 @@ namespace ICT2106WebApp.Pages
 
             AvailableLocations = _loggerControl.GetAvailableLocations();
 
-            Logs = _loggerControl.FilterLogs(FilterDate, FilterLocation);
+            Logs = _loggerControl.FilterLogs(FilterStartDate, FilterEndDate, FilterLocation);
         }
 
         public IActionResult OnPostAddLog()
@@ -54,7 +57,7 @@ namespace ICT2106WebApp.Pages
 
         public IActionResult OnGetDownloadLog()
         {
-            var csvData = _loggerControl.DownloadLogs(FilterDate, FilterLocation);
+            var csvData = _loggerControl.DownloadLogs(FilterStartDate, FilterEndDate, FilterLocation);
             return File(csvData, "text/csv", "Logs.csv");
         }
 

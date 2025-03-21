@@ -45,7 +45,7 @@ namespace ICT2106WebApp.mod2grp6
                     
                     // Get the formatted content and add it to the content list
                     List<AbstractNode> formattedContent = formatManager.ApplyBaseFormatting();
-                    
+                    this.content = formattedContent;
 
                     return true;
                 }

@@ -43,7 +43,11 @@ namespace ICT2106WebApp.mod2grp6.TestCase
         };
 
         public List<AbstractNode> TextContent = new List<AbstractNode>{
-            new SimpleNode(10, "text_run", "Lorem Ipsum", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "both" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "white" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
+            new SimpleNode(1, "text", "Lorem Ipsum", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "both" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "white" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+            new SimpleNode(2, "text", "font calibri", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Calibri" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+            new SimpleNode(3, "text", "diff spacing", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+            new SimpleNode(4, "text_run", "Lorem Ipsum", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "both" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "white" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+
         };
 
         public List<AbstractNode> MetadataContent = new List<AbstractNode>

@@ -16,6 +16,25 @@
     <button type="button" id="uploadButton" class="upload-button">Upload</button>
 </div>
 
+<!-- Dashboard.cshtml -->
+<div>
+    <button id="testButton" type="button" onclick="runCitationTest()">Run Citation Conversion Test</button>
+    <div id="testResult"></div>
+
+    <script>
+        function runCitationTest() {
+            fetch('/dashboard/runtest')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('testResult').innerText = data.message;
+                })
+                .catch(error => {
+                    document.getElementById('testResult').innerText = 'Error: ' + error;
+                });
+        }
+    </script>
+</div>
+
 <!-- Conversion Status Tracker -->
 <div id="statusTracker" class="status-tracker">
     <p id="statusMessage">Status: Waiting for file...</p>

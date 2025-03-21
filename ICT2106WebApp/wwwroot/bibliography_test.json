@@ -1,0 +1,10 @@
+{
+  "documents": [
+    {
+      "Title": "The Role of AI in Modern Healthcare",
+      "Author": "Dr. Emily Johnson",
+      "Date": "2024-03-15",
+      "LatexContent": "\\documentclass{article}\n\\title{The Role of AI in Modern Healthcare}\n\\author{Dr. Emily Johnson}\n\\date{2024-03-15}\n\\begin{document}\n\\maketitle\nAI is transforming medical diagnostics (Smith, 2019). Predictive analytics improves patient outcomes (Brown, 45).\n\n\\section{References}\nSmith, John. \"Artificial Intelligence in Medical Diagnostics.\" AI & Healthcare Journal, 2019.\nBrown, Kevin. \"Predictive Analytics in Medicine.\" Journal of Health Tech, 2021.\n\\end{document}"
+    }
+  ]
+}

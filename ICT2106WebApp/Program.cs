@@ -3,11 +3,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter, ErrorPresenter>();
 builder.Services.AddSingleton<ErrorCheckingFacade>();
 builder.Services.AddSingleton<PDFGenerator>();
+builder.Services.AddSingleton<EditorDoc>();
+builder.Services.AddSingleton<LatexGenerator>();
+builder.Services.AddSingleton<IScannerFactory, CitationScannerFactory>();
+builder.Services.AddSingleton<IScannerFactory, BibliographyScannerFactory>();
+builder.Services.AddSingleton<BibTeXConverter>();
+builder.Services.AddSingleton<LatexCompiler>();
 
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>

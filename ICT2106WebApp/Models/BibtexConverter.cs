@@ -17,7 +17,7 @@ public class BibTeXConverter : iConversionStatus // ✅ Implements the interface
         _citationFactory = citationFactory;
         _bibliographyFactory = bibliographyFactory;
         _preferredStyle = preferredStyle.ToLower(); // Ensure lowercase for consistency
-        _latexCompiler = latexCompiler;// ✅ Initialize LatexCompiler
+        _latexCompiler = latexCompiler; // ✅ Initialize LatexCompiler
 
         if (_preferredStyle != "apa" && _preferredStyle != "mla")
         {
@@ -27,97 +27,95 @@ public class BibTeXConverter : iConversionStatus // ✅ Implements the interface
     }
 
     /// <summary>
-    /// Changes the preferred citation style.
-    /// </summary>
-    public void SetPreferredStyle(string newStyle)
-    {
-        if (newStyle.ToLower() == "apa" || newStyle.ToLower() == "mla")
-        {
-            _preferredStyle = newStyle.ToLower();
-            Console.WriteLine($"[INFO] Preferred citation style changed to {_preferredStyle.ToUpper()}.");
-        }
-        else
-        {
-            Console.WriteLine($"[ERROR] Unsupported style '{newStyle}'. Keeping current style ({_preferredStyle.ToUpper()}).");
-        }
-    }
-
-    /// <summary>
     /// Converts citations and bibliography based on the preferred style.
     /// </summary>
     public string ConvertCitationsAndBibliography(string jsonData)
     {
-        using var document = JsonDocument.Parse(jsonData);
-        var root = document.RootElement;
+        Console.WriteLine($"[DEBUG] Received JSON: {jsonData}");
 
-        if (!root.TryGetProperty("documents", out JsonElement documents) || documents.GetArrayLength() == 0)
+        if (string.IsNullOrWhiteSpace(jsonData))
         {
-            Console.WriteLine("[ERROR] No documents found in JSON.");
-            return jsonData; // Return original JSON if nothing to process
+            Console.WriteLine("[ERROR] No input JSON received in BibTeXConverter.");
+            return null;
         }
 
-        var updatedDocuments = new List<object>();
-
-        foreach (var doc in documents.EnumerateArray())
+        try
         {
-            string title = doc.TryGetProperty("Title", out var titleProp) ? titleProp.GetString() ?? "Unknown Title" : "Unknown Title";
-            string author = doc.TryGetProperty("Author", out var authorProp) ? authorProp.GetString() ?? "Unknown Author" : "Unknown Author";
-            string latexContent = doc.TryGetProperty("LatexContent", out var latexProp) ? latexProp.GetString() ?? "" : "";
-
-            try
+            // ✅ Deserialize directly into a list of BibliographyDocument
+            var reference = JsonSerializer.Deserialize<Reference>(jsonData);
+            if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             {
-                latexContent = latexContent.Trim(); // ✅ Remove extra spaces
-
-                // Apply the preferred citation style
-                if (_preferredStyle == "apa")
-                {
-                    IAPA apaScanner = _citationFactory.CreateAPA();
-                    latexContent = apaScanner.FormatCitations(latexContent);
-
-                    IAPA apaBibliographyScanner = _bibliographyFactory.CreateAPA();
-                    latexContent = apaBibliographyScanner.FormatBibliographies(latexContent);
-
-                    apaScanner.ApplyAPAFormatting();
-                }
-                else if (_preferredStyle == "mla")
-                {
-                    IMLA mlaScanner = _citationFactory.CreateMLA();
-                    latexContent = mlaScanner.FormatCitations(latexContent);
-
-                    IMLA mlaBibliographyScanner = _bibliographyFactory.CreateMLA();
-                    latexContent = mlaBibliographyScanner.FormatBibliographies(latexContent);
-
-                    mlaScanner.ApplyMLAFormatting();
-                }
-
-                // ✅ Format LaTeX content properly
-                latexContent = latexContent
-                    .Replace(@"\documentclass{article}", "\\documentclass{article}") 
-                    .Replace(@"\title{", "\n\\title{")  
-                    .Replace(@"\author{", "\n\\author{") 
-                    .Replace(@"\date{", "\n\\date{") 
-                    .Replace(@"\begin{document}", "\n\\begin{document}")
-                    .Replace("\n\n", "\n"); // ✅ Ensure no double blank lines
-
-                updatedDocuments.Add(new
-                {
-                    Title = title,
-                    Author = author,
-                    Date = doc.TryGetProperty("Date", out var dateProp) ? dateProp.GetString() ?? "" : "",
-                    LatexContent = latexContent.Trim() // ✅ Ensure no extra spaces
-                });
+                Console.WriteLine("[ERROR] No documents found in JSON.");
+                return null;
             }
-            catch (Exception ex)
+
+
+            Console.WriteLine($"[DEBUG] Successfully deserialized {reference.Documents.Count} documents.");
+
+            var updatedDocuments = new List<BibliographyDocument>();
+
+            foreach (var doc in reference.Documents)
             {
-                Console.WriteLine($"[ERROR] Failed to process '{title}'. Exception: {ex.Message}\n{ex.StackTrace}");
+                try
+                {
+                    string latexContent = doc.LatexContent?.Trim() ?? "";
+
+                    // ✅ Apply citation formatting
+                    if (_preferredStyle == "apa")
+                    {
+                        IAPA apaScanner = _citationFactory.CreateAPA();
+                        latexContent = apaScanner.FormatCitations(latexContent);
+
+                        IAPA apaBibliographyScanner = _bibliographyFactory.CreateAPA();
+                        latexContent = apaBibliographyScanner.FormatBibliographies(latexContent);
+
+                        apaScanner.ApplyAPAFormatting();
+                    }
+                    else if (_preferredStyle == "mla")
+                    {
+                        IMLA mlaScanner = _citationFactory.CreateMLA();
+                        latexContent = mlaScanner.FormatCitations(latexContent);
+
+                        IMLA mlaBibliographyScanner = _bibliographyFactory.CreateMLA();
+                        latexContent = mlaBibliographyScanner.FormatBibliographies(latexContent);
+
+                        mlaScanner.ApplyMLAFormatting();
+                    }
+
+                    // ✅ Clean LaTeX content formatting
+                    latexContent = latexContent
+                        .Replace(@"\documentclass{article}", "\\documentclass{article}") 
+                        .Replace(@"\title{", "\n\\title{")  
+                        .Replace(@"\author{", "\n\\author{") 
+                        .Replace(@"\date{", "\n\\date{") 
+                        .Replace(@"\begin{document}", "\n\\begin{document}")
+                        .Replace("\n\n", "\n");
+
+                    updatedDocuments.Add(new BibliographyDocument
+                    {
+                        Title = doc.Title,
+                        Author = doc.Author,
+                        Date = doc.Date,
+                        LatexContent = latexContent
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR] Failed to process '{doc.Title}'. Exception: {ex.Message}");
+                }
             }
+
+            string updatedJson = JsonSerializer.Serialize(new Reference { Documents = updatedDocuments }, new JsonSerializerOptions { WriteIndented = true });
+
+            // ✅ Store JSON via interface
+            _latexCompiler.SetUpdatedJson(updatedJson);
+            return updatedJson;
         }
-
-        string updatedJson = JsonSerializer.Serialize(new { documents = updatedDocuments }, new JsonSerializerOptions { WriteIndented = true });
-
-        // ✅ Pass JSON via interface
-        _latexCompiler.SetUpdatedJson(updatedJson);
-        return updatedJson;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] JSON deserialization error: {ex.Message}");
+            return null;
+        }
     }
 
     /// <summary>

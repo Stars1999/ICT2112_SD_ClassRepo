@@ -3,29 +3,35 @@ using System.Text.Json;
 
 public class LatexGenerator
 {
-    private string _latexContent;
+    private string _latexContent = "";
 
     public void GenerateLatex(string jsonData)
     {
-        using var document = JsonDocument.Parse(jsonData);
-        var root = document.RootElement;
+        Console.WriteLine($"[DEBUG] LatexGenerator received JSON: {jsonData}");
 
-        if (!root.TryGetProperty("documents", out JsonElement documents) || documents.GetArrayLength() == 0)
+        try
         {
-            Console.WriteLine("[ERROR] No documents found.");
-            return;
+            var reference = JsonSerializer.Deserialize<Reference>(jsonData);
+            if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
+            {
+                Console.WriteLine("[ERROR] No valid LaTeX documents found.");
+                return;
+            }
+
+            string compiledLatex = "";
+            foreach (var doc in reference.Documents)
+            {
+                compiledLatex += doc.LatexContent + "\n%% --------------------------------------------\n";
+            }
+
+            _latexContent = compiledLatex;
+            Console.WriteLine("[INFO] LaTeX compiled successfully.");
+
         }
-
-        string compiledLatex = "";
-
-        foreach (var doc in documents.EnumerateArray())
+        catch (Exception ex)
         {
-            compiledLatex += doc.GetProperty("LatexContent").GetString() ?? "";
-            compiledLatex += "\n%% --------------------------------------------\n";
+            Console.WriteLine($"[ERROR] Failed to process JSON: {ex.Message}");
         }
-
-        _latexContent = compiledLatex;
-        Console.WriteLine("[INFO] LaTeX compiled in-memory.");
     }
 
     public string GetLatexContent()

@@ -3,61 +3,67 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text.Json;
+using MongoDB.Driver;
 
 [Route("home")]
-public class HomeController : Controller
+public class LatexEditorApplicationController : Controller
 {
     private readonly iConversionStatus _conversionStatus;
     private readonly ErrorCheckingFacade _errorCheckingFacade;
     private readonly PDFGenerator _pdfGenerator;
+    private readonly MongoDbContext _dbContext;
 
-    public HomeController(iConversionStatus conversionStatus, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator)
+    public LatexEditorApplicationController(iConversionStatus conversionStatus, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext)
     {
         _conversionStatus = conversionStatus ?? throw new ArgumentNullException(nameof(conversionStatus));
         _errorCheckingFacade = errorCheckingFacade ?? throw new ArgumentNullException(nameof(errorCheckingFacade));
         _pdfGenerator = pdfGenerator ?? throw new ArgumentNullException(nameof(pdfGenerator));
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
     [HttpGet("convert")]
-    public IActionResult Convert([FromQuery] string style = "apa") 
+    public async Task<IActionResult> Convert([FromQuery] string style = "apa")
     {
         try
         {
             Console.WriteLine($"[DEBUG] Convert() called with style: {style}");
 
-            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
+            var reference = await _dbContext.References.Find(_ => true).FirstOrDefaultAsync();
 
-            if (!System.IO.File.Exists(jsonFilePath))
+            if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             {
-                ErrorPresenter.LogError("JSON file not found!");
-                return Content("Error: JSON file not found!");
+                ErrorPresenter.LogError("No bibliography documents found in MongoDB!");
+                return Content("Error: No bibliography documents found in MongoDB!");
             }
 
-            string jsonData = System.IO.File.ReadAllText(jsonFilePath);
+            // ✅ Wrap documents in an object so it matches the Reference class
+            string jsonData = JsonSerializer.Serialize(new { Documents = reference.Documents });
+            Console.WriteLine($"[DEBUG] Successfully serialized JSON: {jsonData}");
+
+            // ✅ Create citation factories
             var citationFactory = new CitationScannerFactory();
             var bibliographyFactory = new BibliographyScannerFactory();
-            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, style);
-            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
 
+            // ✅ Initialize BibTeXConverter
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, style);
+
+            // ✅ Convert citations and bibliography
+            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
             var latexCompiler = new LatexCompiler();
             latexCompiler.SetUpdatedJson(updatedJson);
-
+            // ✅ Pass converted JSON to LatexGenerator
             var latexGenerator = new LatexGenerator();
-            latexGenerator.GenerateLatex(_conversionStatus.GetUpdatedJson());
-            string generatedLatex = latexGenerator.GetLatexContent();
+            latexGenerator.GenerateLatex(updatedJson);
 
+            string generatedLatex = latexGenerator.GetLatexContent();
             if (string.IsNullOrEmpty(generatedLatex))
             {
                 ErrorPresenter.LogError("LatexGenerator did not generate any content.");
                 return Content("Error: LaTeX generation failed.");
             }
 
-            var errors = _errorCheckingFacade.ProcessError(generatedLatex);
-            if (errors.Count > 0)
-            {
-                return Json(new { success = false, error = "Fix LaTeX errors before conversion!", errors });
-            }
-
+            // ✅ Store LaTeX in Editor
             var editorDoc = new EditorDoc();
             editorDoc.SetLatexContent(generatedLatex);
 
@@ -70,6 +76,7 @@ public class HomeController : Controller
             return Content($"Error: {ex.Message}");
         }
     }
+
 
     [HttpGet("load-latex")]
     public IActionResult LoadLatex([FromQuery] string style = "apa")
@@ -87,7 +94,6 @@ public class HomeController : Controller
 
         return Content(latexContent);
     }
-
     [HttpPost("compile-latex")]
     public async Task<IActionResult> CompileLaTeX([FromBody] LaTeXRequest request)
     {
@@ -99,6 +105,8 @@ public class HomeController : Controller
             {
                 return BadRequest("No LaTeX content provided.");
             }
+
+            // ✅ Restored LaTeX Error Checking
             var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
             if (errors.Count > 0)
             {
@@ -106,7 +114,6 @@ public class HomeController : Controller
             }
 
             bool success = await _pdfGenerator.GeneratePDF(request.LatexContent);
-
             if (!success)
             {
                 ErrorPresenter.LogError("LaTeX compilation failed.");
@@ -121,7 +128,6 @@ public class HomeController : Controller
             return Json(new { success = false, error = ex.Message });
         }
     }
-
 
     [HttpGet("errors")]
     public IActionResult GetErrors()

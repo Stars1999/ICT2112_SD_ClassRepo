@@ -18,8 +18,9 @@ namespace ICT2106WebApp.mod1grp4 {
             // Logic to fix table integrity
             foreach (var table in tables)
             {
-                await notify<bool>(OperationType.SAVE, "Table integrity has been fixed by TablePreprocessingManager and saved as backup", table);
+                await notify<bool>(OperationType.SAVE, $"Table integrity has been fixed by TablePreprocessingManager and table with id {table.GetTableId()} saved as backup", table);
             }
+            
             return tables;
         }
 

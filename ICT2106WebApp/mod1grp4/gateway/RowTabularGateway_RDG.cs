@@ -16,7 +16,7 @@ namespace ICT2106WebApp.mod1grp4
         public async Task<List<Table>> retrieveBackupTables(List<Table> tablesFromNode)
         {
             var ids = tablesFromNode.Select(t => t.GetTableId()).ToList();
-            var filter = Builders<Table>.Filter.In(t => t.GetTableId(), ids);
+            var filter = Builders<Table>.Filter.In("tableId", ids);
             return await tableCollection.Find(filter).ToListAsync();
         }
 

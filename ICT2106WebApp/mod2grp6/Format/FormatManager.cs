@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
 using ICT2106WebApp.Utilities;
 
 namespace ICT2106WebApp.mod2grp6.Format
@@ -124,32 +125,56 @@ namespace ICT2106WebApp.mod2grp6.Format
         }
 
 
-        public bool ProcessMetaData() { return true; }
-        /*public bool ProcessMetaData()
+        public bool ProcessMetaData()
         {
             try
             {
-                foreach (AbstractNode child: content){
-                    string filename = child.getFilename();
-                    string createdDate = child.getCreatedDate();
-                    string lastModified = child.GetLastModified();
-                    string fileSize = child.getFileSize();
-
-                    string latexMetaData = $@"
-                                    \newcommand{\docFileName}{filename}
-                                    \newcommand{\docCreatedDate}{createdDate}
-                                    \newcommand{\docLastModified}{lastModified}
-                                    \newcommand{\docFileSize}{fileSize}
-                                    ";
+                foreach (AbstractNode child in content)
+                {
+                    // Check if the node type is "metadata"
+                    if (child.GetNodeType() == "metadata" && child.GetStyling() != null)
+                    {
+                        // Initialize variables with default values
+                        string filename = string.Empty;
+                        string createdDate = string.Empty;
+                        string lastModified = string.Empty;
+                        string fileSize = string.Empty;
+        
+                        // Extract metadata from the styling dictionary
+                        foreach (var metadata in child.GetStyling())
+                        {
+                            if (metadata.ContainsKey("filename") && metadata["filename"] != null)
+                                filename = metadata["filename"].ToString();
+                            if (metadata.ContainsKey("CreatedDate_Internal") && metadata["CreatedDate_Internal"] != null)
+                                createdDate = metadata["CreatedDate_Internal"].ToString();
+                            if (metadata.ContainsKey("LastModified_Internal") && metadata["LastModified_Internal"] != null)
+                                lastModified = metadata["LastModified_Internal"].ToString();
+                            if (metadata.ContainsKey("size") && metadata["size"] != null)
+                                fileSize = metadata["size"].ToString();
+                        }
+        
+                        // Generate LaTeX metadata commands
+                        string latexMetaData = $@"
+        \newcommand{{\docFileName}}{{{filename}}}
+        \newcommand{{\docCreatedDate}}{{{createdDate}}}
+        \newcommand{{\docLastModified}}{{{lastModified}}}
+        \newcommand{{\docFileSize}}{{{fileSize}}}
+        ";
+        
+                        // Optionally, store or process the LaTeX metadata string
+                        Console.WriteLine(latexMetaData); // For debugging or logging
+                    }
                 }
+                return true; // Indicate successful processing
             }
             catch (Exception e)
             {
-                return false;
+                // Log the exception if necessary
+                Console.WriteLine($"Error in ProcessMetaData: {e.Message}");
+                return false; // Indicate failure
             }
-            return false;
         }
-        */
+        
 
 
         public List<AbstractNode> ApplyBaseFormatting()

@@ -129,7 +129,7 @@ namespace ICT2106WebApp.mod2grp6
                 
                 // Convert paragraph content
                 List<AbstractNode> paragraphContent = GetContentByType("paragraph");
-                bool paragraphSuccess = formatConversionManager.convertText(paragraphContent);
+                bool paragraphSuccess = formatConversionManager.convertFormat(paragraphContent);
                 
                 // Convert layout content
                 List<AbstractNode> layoutContent = GetContentByType("layout");

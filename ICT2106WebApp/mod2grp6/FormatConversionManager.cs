@@ -108,7 +108,7 @@ namespace ICT2106WebApp.mod2grp6
                 
                 if (result)
                 {
-                    // Apply necessary layout formatting operations
+                    // Apply layout formatting operations
                     layoutManager.FormatHeaders();
                     layoutManager.FormatFooters();
                     layoutManager.FormatMargins();
@@ -117,9 +117,10 @@ namespace ICT2106WebApp.mod2grp6
                     layoutManager.FormatColumnNum();
                     layoutManager.FormatColumnSpacing();
                     
-                    // Get the formatted content and add it to the content list
+                    // Get the formatted content and REPLACE the original content
                     List<AbstractNode> formattedContent = layoutManager.ApplyLayoutFormatting();
-                
+                    content.Clear();
+                    content.AddRange(formattedContent);  // Add this line
                     
                     return true;
                 }
@@ -128,12 +129,10 @@ namespace ICT2106WebApp.mod2grp6
             }
             catch (Exception ex)
             {
-                // Log exception if needed
                 Console.WriteLine($"Error in convertLayout: {ex.Message}");
                 return false;
             }
         }
-
         
         // Gets the content after conversion
         public List<AbstractNode> getContent()

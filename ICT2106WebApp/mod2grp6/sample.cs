@@ -4,7 +4,7 @@ using ICT2106WebApp.Utilities;
 
 namespace ICT2106WebApp.mod2grp6.TestCase
 {
-    class Testing
+    class TestCase
     {
         public List<AbstractNode> HeadingsAndParagraphs = new List<AbstractNode> { 
             new SimpleNode(1, "h1", "Header 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),

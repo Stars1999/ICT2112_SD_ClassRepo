@@ -14,22 +14,26 @@ namespace ICT2106WebApp.mod2grp6
     {
         // Private member to store content as defined in the class diagram
         private List<AbstractNode> content;
+        private LayoutManager layoutManager;
+        private FormatManager formatManager;
+        private TextManager textManager;
+
 
         // Constructor for FormatConversionManager
         public FormatConversionManager()
         {
             content = new List<AbstractNode>();
+            layoutManager = new LayoutManager();
+            formatManager = new FormatManager();
+            textManager = new TextManager();
         }
 
-        
+
         // Converts format-related content
         public bool convertFormat(List<AbstractNode> content)
         {
             try
             {
-                // Create a FormatManager instance to handle format operations
-                FormatManager formatManager = new FormatManager();
-                
                 // Start the formatting process
                 bool result = formatManager.StartFormatting(content);
                 
@@ -62,8 +66,6 @@ namespace ICT2106WebApp.mod2grp6
         {
             try
             {
-                // Create a TextManager instance to handle text operations
-                TextManager textManager = new TextManager();
                 
                 // Start the text formatting process
                 bool result = textManager.StartTextFormatting(content);
@@ -100,8 +102,6 @@ namespace ICT2106WebApp.mod2grp6
         {
             try
             {
-                // Create a LayoutManager instance to handle layout operations
-                LayoutManager layoutManager = new LayoutManager();
                 
                 // Start the layout formatting process
                 bool result = layoutManager.StartLayoutFormatting(content);

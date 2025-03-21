@@ -82,29 +82,29 @@ namespace ICT2106WebApp.mod2grp6.Text
                 string newContent = originalContent;
                 
                 // Handle font family
-                if (styling.ContainsKey("fontFamily"))
+                if (styling.ContainsKey("FontType"))
                 {
-                    string fontFamily = styling["fontFamily"].ToString();
+                    string fontFamily = styling["FontType"].ToString();
                     string latexFont = ConvertFontToLatex(fontFamily);
                     newContent = ApplyLatexFontCommand(newContent, latexFont);
                 }
                 
                 // Handle font size
-                if (styling.ContainsKey("fontSize"))
+                if (styling.ContainsKey("FontSize"))
                 {
                     // Convert the font size to a float or int
                     float fontSize = 0;
-                    if (styling["fontSize"] is float)
+                    if (styling["FontSize"] is float)
                     {
-                        fontSize = (float)styling["fontSize"];
+                        fontSize = (float)styling["FontSize"];
                     }
-                    else if (styling["fontSize"] is int)
+                    else if (styling["FontSize"] is int)
                     {
-                        fontSize = (int)styling["fontSize"];
+                        fontSize = (int)styling["FontSize"];
                     }
-                    else if (styling["fontSize"] is string)
+                    else if (styling["FontSize"] is string)
                     {
-                        float.TryParse(styling["fontSize"].ToString(), out fontSize);
+                        float.TryParse(styling["FontSize"].ToString(), out fontSize);
                     }
                     
                     // Apply LaTeX font size command
@@ -159,8 +159,8 @@ namespace ICT2106WebApp.mod2grp6.Text
             
             foreach (Dictionary<string, object> styling in stylings)
             {
-                bool isBold = styling.ContainsKey("bold") && (bool)styling["bold"];
-                bool isItalic = styling.ContainsKey("italic") && (bool)styling["italic"];
+                bool isBold = styling.ContainsKey("Bold") && (bool)styling["Bold"];
+                bool isItalic = styling.ContainsKey("Italic") && (bool)styling["Italic"];
                 bool isUnderline = styling.ContainsKey("underline") && (bool)styling["underline"];
                 
                 // Apply LaTeX style commands
@@ -232,9 +232,9 @@ namespace ICT2106WebApp.mod2grp6.Text
                 string newContent = originalContent;
                 
                 // Handle text color
-                if (styling.ContainsKey("color"))
+                if (styling.ContainsKey("FontColor"))
                 {
-                    string color = styling["color"].ToString();
+                    string color = styling["FontColor"].ToString();
                     string htmlColorCode = ConvertColorToLatex(color);
                     
                     // Apply LaTeX text color command
@@ -242,10 +242,10 @@ namespace ICT2106WebApp.mod2grp6.Text
                 }
                 
                 // Handle highlighting/background color
-                if (styling.ContainsKey("highlightColor") || styling.ContainsKey("backgroundColor"))
+                if (styling.ContainsKey("Highlight") || styling.ContainsKey("backgroundColor"))
                 {
-                    string highlightColor = styling.ContainsKey("highlightColor") 
-                        ? styling["highlightColor"].ToString() 
+                    string highlightColor = styling.ContainsKey("Highlight") 
+                        ? styling["Highlight"].ToString() 
                         : (styling.ContainsKey("backgroundColor") 
                             ? styling["backgroundColor"].ToString() 
                             : "#FFFF00"); // Default to yellow if not specified
@@ -303,21 +303,21 @@ namespace ICT2106WebApp.mod2grp6.Text
             
             foreach (Dictionary<string, object> styling in stylings)
             {
-                if (styling.ContainsKey("lineSpacing"))
+                if (styling.ContainsKey("LineSpacingValue"))
                 {
                     // Convert the line spacing to a float
                     float lineSpacing = 0;
-                    if (styling["lineSpacing"] is float)
+                    if (styling["LineSpacingValue"] is float)
                     {
-                        lineSpacing = (float)styling["lineSpacing"];
+                        lineSpacing = (float)styling["LineSpacingValue"];
                     }
-                    else if (styling["lineSpacing"] is int)
+                    else if (styling["LineSpacingValue"] is int)
                     {
-                        lineSpacing = (int)styling["lineSpacing"];
+                        lineSpacing = (int)styling["LineSpacingValue"];
                     }
-                    else if (styling["lineSpacing"] is string)
+                    else if (styling["LineSpacingValue"] is string)
                     {
-                        float.TryParse(styling["lineSpacing"].ToString(), out lineSpacing);
+                        float.TryParse(styling["LineSpacingValue"].ToString(), out lineSpacing);
                     }
                     
                     // Apply line spacing to the node based on its type
@@ -413,9 +413,9 @@ namespace ICT2106WebApp.mod2grp6.Text
             
             foreach (Dictionary<string, object> styling in stylings)
             {
-                if (styling.ContainsKey("alignment"))
+                if (styling.ContainsKey("Alignment"))
                 {
-                    string alignment = styling["alignment"].ToString().ToLower();
+                    string alignment = styling["Alignment"].ToString().ToLower();
                     string latexAlignment = GetLatexAlignmentEnvironment(alignment);
                     
                     // Update the node's content with LaTeX alignment environment

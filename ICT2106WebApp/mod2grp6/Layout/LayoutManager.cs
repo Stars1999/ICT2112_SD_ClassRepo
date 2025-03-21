@@ -123,9 +123,9 @@ namespace ICT2106WebApp.mod2grp6.Layout
 
                     foreach (var style in styling)
                     {
-                        if (style.ContainsKey("alignment"))
+                        if (style.ContainsKey("Alignment"))
                         {
-                            string alignment = style["alignment"].ToString().ToLower();
+                            string alignment = style["Alignment"].ToString().ToLower();
                             if (alignment == "center")
                                 hasCenterAlign = true;
                             else if (alignment == "right")

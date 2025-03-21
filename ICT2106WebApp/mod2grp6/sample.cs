@@ -4,7 +4,7 @@ using ICT2106WebApp.Utilities;
 
 namespace ICT2106WebApp.mod2grp6.TestCase
 {
-    class TestCase
+    class TestCases
     {
         public List<AbstractNode> HeadingsAndParagraphs = new List<AbstractNode> { 
             new SimpleNode(1, "h1", "Header 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
@@ -46,12 +46,14 @@ namespace ICT2106WebApp.mod2grp6.TestCase
             new SimpleNode(10, "text_run", "Lorem Ipsum", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "both" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "white" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
         };
 
-        List<AbstractNode> Metadata = new List<AbstractNode>
+        public List<AbstractNode> MetadataContent = new List<AbstractNode>
             {
-                new SimpleNode(1, "metadata", "CreatedDate_Internal: 2025-02-21 05:57:00Z", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" } } }),
-                new SimpleNode(2, "metadata", "LastModified_Internal: 2025-03-17 06:25:00Z", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "LastModified_Internal", "2025-03-17 06:25:00Z" } } }),
-                new SimpleNode(3, "metadata", "filename: Datarepository_zx_v2.docx", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "filename", "Datarepository_zx_v2.docx" } } }),
-                new SimpleNode(4, "metadata", "size: 2148554", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "size", "2148554" } } })
+                new SimpleNode(1, "metadata", "aa", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" }, { "LastModified_Internal", "2025-03-17 06:25:00Z" }, { "filename", "Datarepository_zx_v2.docx" }, { "size", "2148554" } } }),
+                //new SimpleNode(1, "metadata", "", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" }, { "LastModified_Internal", "2025-03-17 06:25:00Z" }, { "LastModified_Internal", "2025-03-17 06:25:00Z" }, { "filename", "Datarepository_zx_v2.docx" }, { "size", "2148554" } } }),
+                //new SimpleNode(1, "metadata", "CreatedDate_Internal: 2025-02-21 05:57:00Z", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" } } }),
+                //new SimpleNode(2, "metadata", "LastModified_Internal: 2025-03-17 06:25:00Z", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "LastModified_Internal", "2025-03-17 06:25:00Z" } } }),
+                //new SimpleNode(3, "metadata", "filename: Datarepository_zx_v2.docx", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "filename", "Datarepository_zx_v2.docx" } } }),
+                //new SimpleNode(4, "metadata", "size: 2148554", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "size", "2148554" } } })
             };
 
         public List<AbstractNode> MathContent = new List<AbstractNode>
@@ -96,7 +98,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 new SimpleNode(6, "image", "Image_rId14.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Justify (Ctrl + J)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 0, Vertical Offset: 0" }, { "WidthEMU", 3840480 }, { "HeightEMU", 2560320 } } })
             };
 
-        public List<AbstractNode> Bibliography = new List<AbstractNode>
+        public List<AbstractNode> BibliographyContent = new List<AbstractNode>
             {
                 new SimpleNode(1, "bibliography", "Reference (IEE)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
             };

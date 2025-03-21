@@ -21,12 +21,14 @@ namespace ICT2106WebApp.mod2grp6.Format
             }
         }
 
-        public bool FormatHeadings()
+                public bool FormatHeadings()
         {
             try
             {
                 foreach (AbstractNode child in content)
                 {
+                    if (child.GetNodeType() == "metadata") return false;
+
                     String command;
                     switch (child.GetNodeType())
                     {
@@ -51,8 +53,8 @@ namespace ICT2106WebApp.mod2grp6.Format
 
                     // Get the text content
                     string formattedText = child.GetContent();
-
-                    // Check for bold or italic styling
+        
+                    // Check for styling
                     if (child.GetStyling() != null)
                     {
                         foreach (var style in child.GetStyling())
@@ -63,11 +65,17 @@ namespace ICT2106WebApp.mod2grp6.Format
                                 formattedText = $@"\textit{{{formattedText}}}";
                             if (style.ContainsKey("FontColor") && !string.IsNullOrEmpty((string)style["FontColor"]) && (string)style["FontColor"] != "000000")
                                 formattedText = $@"\textcolor[HTML]{{{(string)style["FontColor"]}}}{{{formattedText}}}";
+                            // Add FontSize checking
+                            if (style.ContainsKey("FontSize") && style["FontSize"] != null)
+                            {
+                                int fontSize = Convert.ToInt32(style["FontSize"]);
+                                formattedText = $@"{{\fontsize{{{fontSize}}}{{auto}}\selectfont {formattedText}}}";
+                            }
                         }
                     }
                     // Apply the command to the formatted text
                     formattedText = $"{command}{{{formattedText}}}";
-
+        
                     // Set the formatted text back to the child node
                     child.SetContent(formattedText);
                 }
@@ -77,25 +85,22 @@ namespace ICT2106WebApp.mod2grp6.Format
             {
                 return false;
             }
-            //somehow got here means thrs an issue
-            return false;
         }
-
-
+        
         public bool FormatParagraphs()
         {
             try
             {
                 foreach (AbstractNode child in content)
                 {
-                    if (!child.GetNodeType().Contains("paragraph"))return false;
+                    if (!child.GetNodeType().Contains("paragraph")) return false;
                     
                     String command = @"\paragraph";
-
+        
                     // Get the text content
                     string formattedText = child.GetContent();
-
-                    // Check for bold or italic styling
+        
+                    // Check for styling
                     if (child.GetStyling() != null)
                     {
                         foreach (var style in child.GetStyling())
@@ -106,11 +111,17 @@ namespace ICT2106WebApp.mod2grp6.Format
                                 formattedText = $@"\textit{{{formattedText}}}";
                             if (style.ContainsKey("FontColor") && !string.IsNullOrEmpty((string)style["FontColor"]) && (string)style["FontColor"] != "000000")
                                 formattedText = $@"\textcolor[HTML]{{{(string)style["FontColor"]}}}{{{formattedText}}}";
+                            // Add FontSize checking
+                            if (style.ContainsKey("FontSize") && style["FontSize"] != null)
+                            {
+                                int fontSize = Convert.ToInt32(style["FontSize"]);
+                                formattedText = $@"{{\fontsize{{{fontSize}}}{{auto}}\selectfont {formattedText}}}";
+                            }
                         }
                     }
                     // Apply the command to the formatted text
                     formattedText = $"{command}{{{formattedText}}}";
-
+        
                     // Set the formatted text back to the child node
                     child.SetContent(formattedText);
                 }
@@ -120,8 +131,6 @@ namespace ICT2106WebApp.mod2grp6.Format
             {
                 return false;
             }
-            //somehow got here means thrs an issue
-            return false;
         }
 
 
@@ -158,11 +167,10 @@ namespace ICT2106WebApp.mod2grp6.Format
         \newcommand{{\docFileName}}{{{filename}}}
         \newcommand{{\docCreatedDate}}{{{createdDate}}}
         \newcommand{{\docLastModified}}{{{lastModified}}}
-        \newcommand{{\docFileSize}}{{{fileSize}}}
-        ";
+        \newcommand{{\docFileSize}}{{{fileSize}}}";
         
-                        // Optionally, store or process the LaTeX metadata string
-                        Console.WriteLine(latexMetaData); // For debugging or logging
+                        // Set the metadata commands to the child node
+                        child.SetContent(latexMetaData);
                     }
                 }
                 return true; // Indicate successful processing

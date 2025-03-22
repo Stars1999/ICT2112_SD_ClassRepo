@@ -11,9 +11,9 @@ namespace ICT2106WebApp.Controllers
     [Route("dashboard")]
     public class Dashboard_InputController : Controller
     {
-        private readonly IParser _parser;
+        private readonly IDocument _parser;
 
-        public Dashboard_InputController(IParser parser)
+        public Dashboard_InputController(IDocument parser)
         {
             _parser = parser;
         }

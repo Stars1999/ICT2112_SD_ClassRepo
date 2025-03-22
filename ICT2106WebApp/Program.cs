@@ -23,7 +23,7 @@ builder.Services.AddScoped<Dashboard_PageController>();
 // builder.Services.AddScoped<LoggerControl>();
 
 // Register IParser and its implementation
-builder.Services.AddScoped<IParser, DocumentParserService>(); // Register the parser service
+builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
 
 // Register PDF Quality Checker dependencies
 builder.Services.AddSingleton<IPDFQualityChecker>(provider => QualityCheckerFactory.CreateDefaultChecker());

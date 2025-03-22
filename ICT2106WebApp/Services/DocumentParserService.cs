@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ICT2106WebApp.Services
 {
-    public class DocumentParserService : IParser
+    public class DocumentParserService : IDocument
     {
         private readonly string _uploadPath = "wwwroot/uploads"; // Temporary path to store files
         private readonly Dictionary<string, string> _conversionStatus; // To track conversion status
@@ -34,12 +34,12 @@ namespace ICT2106WebApp.Services
         }
 
         // Method to retrieve the document by file name
-        public IParser.Document RetrieveDocument(string documentIdentifier)
+        public IDocument.Document RetrieveDocument(string documentIdentifier)
         {
             var filePath = Path.Combine(_uploadPath, documentIdentifier);
             if (File.Exists(filePath))
             {
-                return new IParser.Document(documentIdentifier, documentIdentifier, filePath);  // Return IParser.Document
+                return new IDocument.Document(documentIdentifier, documentIdentifier, filePath);  // Return IParser.Document
             }
 
             return null;  // Return null if the document is not found

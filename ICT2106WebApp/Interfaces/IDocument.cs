@@ -1,6 +1,6 @@
 namespace ICT2106WebApp.Interfaces
 {
-    public interface IParser
+    public interface IDocument
     {
         // Method to store the document temporarily
         void StoreDocument(IFormFile file);

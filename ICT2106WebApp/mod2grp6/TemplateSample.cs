@@ -86,11 +86,11 @@ namespace ICT2106WebApp.mod2grp6.TestCase
             } })
         };
 
-// Mathematical content
+        // Mathematical content
         public List<AbstractNode> MathContent = new List<AbstractNode>
         {
             // Original formulas correctly formatted
-            new SimpleNode(1, "math", "Performance Improvement = \\frac{Post-Test\\_Score - Pre-Test\\_Score}{Pre-Test\\_Score} \\times 100\\%", 
+            new SimpleNode(1, "math", "PI = \\frac{Post-Test\\_Score - Pre-Test\\_Score}{Pre-Test\\_Score} \\times 100\\%", 
                 new List<Dictionary<string, object>> { new Dictionary<string, object> { 
                     { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
                     { "FontSize", 12 }, { "FontType", "Times New Roman" }, 
@@ -98,7 +98,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                     { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } 
                 } }),
                 
-            new SimpleNode(2, "math", "Student Engagement Index = \\sum(Time\\_Spent \\times Interaction\\_Rate \\times Completion\\_Rate)", 
+            new SimpleNode(2, "math", "S.Index = \\sum(Time\\_Spent \\times Interaction\\_Rate \\times Completion\\_Rate)", 
                 new List<Dictionary<string, object>> { new Dictionary<string, object> { 
                     { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
                     { "FontSize", 12 }, { "FontType", "Times New Roman" }, 

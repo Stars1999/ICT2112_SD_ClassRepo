@@ -152,17 +152,27 @@
         logMessages.insertBefore(newRow, logMessages.firstChild);
     }
 
-    // Function to run the citation test
+    
+    // Function to run the citation test and log the results
     function runCitationTest() {
         fetch('/dashboard/runtest')
             .then(response => response.json())
             .then(data => {
+                // Display the result
                 document.getElementById('testResult').innerText = data.message;
+
+                // Log the test result to the error log section
+                logError("Citation Test Result: " + data.message); // Logging the result
             })
             .catch(error => {
+                // Handle error
                 document.getElementById('testResult').innerText = 'Error: ' + error;
+
+                // Log the error to the error log section
+                logError("Citation Test failed: " + error); // Logging the error
             });
     }
+
 </script>
 
 <!-- Styles for the page -->

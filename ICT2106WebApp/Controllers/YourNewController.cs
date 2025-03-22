@@ -32,10 +32,10 @@ namespace ICT2106WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApplyTemplate(string documentId, string templateId)
+        public IActionResult ApplyTemplate(string documentId, string templateId, bool useTemplateData = true)
         {
-            // Process the template application
-            bool success = _documentManager.convertToLatexTemplate(documentId, templateId);
+            // Process the template application using TemplateSample data
+            bool success = ((DocumentManager)_documentManager).convertToLatexTemplateWithTemplate(documentId, templateId, useTemplateData);
             
             // Return JSON result
             return Json(new { success = success });
@@ -68,16 +68,47 @@ namespace ICT2106WebApp.Controllers
                 "\\usepackage{graphicx}",
                 new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
             ));
-            
+
             ieeeTemplate.Add(new SimpleNode(
                 4,
+                "package",
+                "\\usepackage{algorithm}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+            ));
+
+            ieeeTemplate.Add(new SimpleNode(
+                5,
+                "package",
+                "\\usepackage{algorithmic}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+            ));
+            
+            ieeeTemplate.Add(new SimpleNode(
+                6,
                 "columnFormat",
                 "% IEEE papers are typically two-column format",
                 new List<Dictionary<string, object>> { new Dictionary<string, object> { { "comment", true } } }
             ));
             
+            // IEEE title and author format
+            ieeeTemplate.Add(new SimpleNode(
+                7,
+                "titleFormat",
+                "\\title{$title$}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "title" } } }
+            ));
+            
+            ieeeTemplate.Add(new SimpleNode(
+                8,
+                "authorFormat",
+                "\\author{$authors$}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "author" } } }
+            ));
+            
             // Store the template in the TemplateManager
             _templateManager.SetTemplate("ieee", ieeeTemplate);
+            
+            // You could add more templates here (ACM, Springer, etc.)
         }
     }
 }

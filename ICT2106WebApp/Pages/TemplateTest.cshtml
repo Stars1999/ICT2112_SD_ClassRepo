@@ -84,7 +84,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>Original LaTeX Format</h5>
                         <span class="badge @(Model.OriginalLaTeXResult ? "bg-success" : "bg-danger")">
-                            @(Model.OriginalLaTeXResult ? "Conversion Success" : "Conversion Failed")
+                              @(Model.OriginalLaTeXResult ? "Conversion Success" : "Conversion Failed") 
                         </span>
                     </div>
                     <div class="card-body">
@@ -98,8 +98,10 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>IEEE Template Format</h5>
-                        <span class="badge @(Model.TemplateResult ? "bg-success" : "bg-danger")">
-                            @(Model.TemplateResult ? "Template Applied" : "Template Failed")
+                        <span class="badge @(Model.TemplateResult ? "bg-success" : "")">
+                            @* @(Model.TemplateResult ? "Template Applied" : "Template Failed") *@ 
+                            @* Don't need conversion success result for applied templates since its not class implementation *@
+
                         </span>
                     </div>
                     <div class="card-body">

@@ -106,7 +106,7 @@ namespace ICT2106WebApp.Pages
         
         private string GenerateOriginalLaTeXContent()
         {
-            // Create a string representation of the LaTeX content based on the converted nodes
+            // Create a string representation of the LaTeX content
             var content = new System.Text.StringBuilder();
             
             // Document class and basic packages
@@ -124,15 +124,29 @@ namespace ICT2106WebApp.Pages
             content.AppendLine("\\setlength{\\parskip}{1em}");
             content.AppendLine();
             
-            // Set up title and author
+            // Get title from first heading
             string title = "Artificial Intelligence in Modern Education";
             if (FormatContent.Count > 0 && FormatContent[0].GetNodeType() == "h1")
             {
-                title = CleanText(FormatContent[0].GetContent());
+                title = CleanTextForLaTeX(FormatContent[0].GetContent());
+            }
+            
+            // Get author from metadata if available
+            string authors = "J. Smith, K. Johnson, L. Chen";
+            if (MetadataContent.Count > 0 && MetadataContent[0].GetStyling() != null)
+            {
+                foreach (var style in MetadataContent[0].GetStyling())
+                {
+                    if (style.ContainsKey("author"))
+                    {
+                        authors = style["author"].ToString();
+                        break;
+                    }
+                }
             }
             
             content.AppendLine($"\\title{{{title}}}");
-            content.AppendLine("\\author{J. Smith, K. Johnson, L. Chen}");
+            content.AppendLine($"\\author{{{authors}}}");
             content.AppendLine("\\date{\\today}");
             content.AppendLine();
             
@@ -140,22 +154,42 @@ namespace ICT2106WebApp.Pages
             content.AppendLine("\\maketitle");
             content.AppendLine();
             
-            // Add abstract section - ensure there's content in the abstract
+            // Add abstract section
             if (FormatContent.Count > 1 && FormatContent[1].GetNodeType() == "h2" && 
-                CleanText(FormatContent[1].GetContent()).Contains("Abstract"))
+                CleanTextForLaTeX(FormatContent[1].GetContent()).Contains("Abstract"))
             {
                 content.AppendLine("\\begin{abstract}");
                 if (ParagraphContent.Count > 0)
                 {
-                    string abstractText = CleanText(ParagraphContent[0].GetContent());
-                    // Make sure the abstract text doesn't have any unbalanced braces
-                    abstractText = EnsureBalancedBraces(abstractText);
+                    // Get the abstract text
+                    string abstractText = ParagraphContent[0].GetContent();
+                    
+                    // Check if the abstract should be italic based on node styling
+                    bool isItalic = false;
+                    foreach (var style in ParagraphContent[0].GetStyling())
+                    {
+                        if (style.ContainsKey("Italic") && (bool)style["Italic"])
+                        {
+                            isItalic = true;
+                            break;
+                        }
+                    }
+                    
+                    // Clean up the text
+                    abstractText = CleanTextForLaTeX(abstractText);
+                    
+                    // Apply italic formatting if needed
+                    if (isItalic)
+                    {
+                        abstractText = $"\\textit{{{abstractText}}}";
+                    }
+                    
                     content.AppendLine(abstractText);
                 }
                 else
                 {
-                    // Always include some content in abstract to avoid LaTeX errors
-                    content.AppendLine("This paper examines the role of artificial intelligence in modern educational systems.");
+                    // Default abstract with italic formatting
+                    content.AppendLine("\\textit{This paper examines the role of artificial intelligence in modern educational systems. We explore how AI-driven tools can enhance learning experiences, personalize education, and support both educators and students. Key findings indicate that while AI offers significant benefits, challenges remain regarding implementation, ethics, and accessibility.}");
                 }
                 content.AppendLine("\\end{abstract}");
                 content.AppendLine();
@@ -165,7 +199,7 @@ namespace ICT2106WebApp.Pages
             for (int i = 2; i < FormatContent.Count; i++)
             {
                 string nodeType = FormatContent[i].GetNodeType();
-                string nodeContent = CleanText(FormatContent[i].GetContent());
+                string nodeContent = CleanTextForLaTeX(FormatContent[i].GetContent());
                 
                 if (nodeType == "h2")
                 {
@@ -184,9 +218,12 @@ namespace ICT2106WebApp.Pages
                 // Add corresponding paragraphs after each heading
                 if (i - 1 < ParagraphContent.Count)
                 {
-                    string paraText = CleanText(ParagraphContent[i - 1].GetContent());
-                    // Make sure paragraph text doesn't have any unbalanced braces
-                    paraText = EnsureBalancedBraces(paraText);
+                    var paragraph = ParagraphContent[i - 1];
+                    string paraText = CleanTextForLaTeX(paragraph.GetContent());
+                    
+                    // Apply formatting based on paragraph styling
+                    paraText = ApplyNodeStyling(paraText, paragraph);
+                    
                     content.AppendLine(paraText);
                     content.AppendLine();
                 }
@@ -199,7 +236,7 @@ namespace ICT2106WebApp.Pages
                 
                 foreach (var node in MathContent)
                 {
-                    string mathText = CleanMathContent(node.GetContent());
+                    string mathText = CleanTextForLaTeX(node.GetContent(), "math");
                     if (!string.IsNullOrEmpty(mathText))
                     {
                         // Use proper equation environment with balanced braces
@@ -215,214 +252,68 @@ namespace ICT2106WebApp.Pages
             if (ListContent.Count > 0)
             {
                 content.AppendLine("\\section*{Key Points}");
-                AppendListItems(content, ListContent);
+                
+                // Determine if we have numbered lists
+                bool hasNumberedLists = false;
+                foreach (var node in ListContent)
+                {
+                    if (node.GetNodeType().Contains("numbered"))
+                    {
+                        hasNumberedLists = true;
+                        break;
+                    }
+                }
+                
+                // Add bulleted lists
+                if (!hasNumberedLists)
+                {
+                    content.AppendLine("\\begin{itemize}");
+                    foreach (var node in ListContent)
+                    {
+                        if (node.GetNodeType().Contains("bulleted"))
+                        {
+                            string itemText = CleanTextForLaTeX(node.GetContent());
+                            content.AppendLine($"  \\item {EnsureBalancedBraces(itemText)}");
+                        }
+                    }
+                    content.AppendLine("\\end{itemize}");
+                }
+                else
+                {
+                    // Add numbered lists
+                    content.AppendLine("\\begin{enumerate}");
+                    foreach (var node in ListContent)
+                    {
+                        if (node.GetNodeType().Contains("numbered"))
+                        {
+                            string itemText = CleanTextForLaTeX(node.GetContent());
+                            content.AppendLine($"  \\item {EnsureBalancedBraces(itemText)}");
+                        }
+                    }
+                    content.AppendLine("\\end{enumerate}");
+                }
+                content.AppendLine();
             }
             
             // Add bibliography
             if (BibliographyContent.Count > 0)
             {
-                AppendBibliography(content, BibliographyContent);
+                content.AppendLine("\\begin{thebibliography}{99}");
+                
+                foreach (var node in BibliographyContent)
+                {
+                    string bibText = CleanTextForLaTeX(node.GetContent());
+                    content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {bibText}");
+                }
+                
+                content.AppendLine("\\end{thebibliography}");
+                content.AppendLine();
             }
             
             // End document
             content.AppendLine("\\end{document}");
             
             return content.ToString();
-        }
-
-        // Helper method to ensure balanced braces in LaTeX content
-        private string EnsureBalancedBraces(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return "";
-            
-            // Count opening and closing braces
-            int openBraces = 0;
-            int closeBraces = 0;
-            
-            foreach (char c in text)
-            {
-                if (c == '{') openBraces++;
-                if (c == '}') closeBraces++;
-            }
-            
-            // Add missing closing braces
-            string result = text;
-            for (int i = 0; i < openBraces - closeBraces; i++)
-            {
-                result += "}";
-            }
-            
-            // Add missing opening braces (should be at the start to avoid messing up the structure)
-            for (int i = 0; i < closeBraces - openBraces; i++)
-            {
-                result = "{" + result;
-            }
-            
-            return result;
-        }
-
-        // Simpler helper to clean text for LaTeX
-        private string CleanText(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return "";
-            
-            // First, fix any incorrectly double-escaped ampersands (this is crucial)
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\&", "\\&");
-            
-            // Remove problematic command patterns
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\paragraph\\\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textit\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbf\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\selectfont\b", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\fontsize\{[^}]*\}\{[^}]*\}", "");
-            
-            // Remove trailing backslashes
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\$", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\(\s)", "$1");
-            
-            // Remove any \textbackslash{} followed by ampersand
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\s*\}&", "\\&");
-            
-            // Fix any double-brace patterns {{ or }} that aren't meant to be escaped
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\{\{", "{");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\}\}", "}");
-            
-            // NOW properly handle ampersands AFTER fixing double-escaping
-            // Only replace & with \& if it's not already escaped
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"(?<!\\)&", "\\&");
-            
-            // Other character replacements
-            text = text.Replace("%", "\\%");
-            text = text.Replace("$", "\\$");
-            text = text.Replace("#", "\\#");
-            text = text.Replace("_", "\\_");
-            text = text.Replace("×", "$\\times$");
-            
-            // Extract content from section commands if needed
-            if (text.Contains("\\section{") || text.Contains("\\subsection{") || text.Contains("\\subsubsection{"))
-            {
-                int startIndex = text.IndexOf('{');
-                int endIndex = text.LastIndexOf('}');
-                
-                if (startIndex >= 0 && endIndex > startIndex)
-                {
-                    return text.Substring(startIndex + 1, endIndex - startIndex - 1);
-                }
-            }
-            
-            return text;
-        }
-
-        // Safe math content processor
-        private string CleanMathContent(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return "";
-            
-            // Convert Unicode math symbols to LaTeX commands
-            text = text.Replace("Σ", "\\Sigma ");
-            text = text.Replace("×", "\\times ");
-            text = text.Replace("≥", "\\geq ");
-            text = text.Replace("≠", "\\neq ");
-            text = text.Replace("±", "\\pm ");
-            text = text.Replace("∞", "\\infty ");
-            text = text.Replace("∴", "\\therefore ");
-            text = text.Replace("∃", "\\exists ");
-            text = text.Replace("∀", "\\forall ");
-            text = text.Replace("→", "\\rightarrow ");
-            text = text.Replace("π", "\\pi ");
-            text = text.Replace("α", "\\alpha ");
-            
-            // Remove any \textbackslash{} in math mode
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\}", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"_\\", "_");
-            
-            // Remove problematic command patterns
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\paragraph\\\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textit\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbf\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\selectfont\b", "");
-            
-            return text;
-        }
-
-        // Helper for safe list generation
-        private void AppendListItems(System.Text.StringBuilder content, List<AbstractNode> items, string listType = "itemize")
-        {
-            if (items == null || items.Count == 0)
-                return;
-            
-            content.AppendLine($"\\begin{{{listType}}}");
-            
-            bool hasValidItems = false;
-            
-            foreach (var node in items)
-            {
-                string itemText = CleanText(node.GetContent());
-                if (!string.IsNullOrWhiteSpace(itemText))
-                {
-                    // Ensure each item has balanced braces
-                    content.AppendLine($"  \\item {EnsureBalancedBraces(itemText)}");
-                    hasValidItems = true;
-                }
-            }
-            
-            // Always ensure there's at least one item
-            if (!hasValidItems)
-            {
-                content.AppendLine("  \\item No items available");
-            }
-            
-            content.AppendLine($"\\end{{{listType}}}");
-            content.AppendLine();
-        }
-
-        private void AppendBibliography(System.Text.StringBuilder content, List<AbstractNode> bibNodes, bool isIEEE = false)
-        {
-            if (bibNodes == null || bibNodes.Count == 0)
-                return;
-            
-            if (isIEEE)
-            {
-                content.AppendLine("\\section{References}");
-                content.AppendLine("\\bibliographystyle{IEEEtran}");
-            }
-            
-            content.AppendLine("\\begin{thebibliography}{99}");
-            
-            bool hasValidItems = false;
-            foreach (var node in bibNodes)
-            {
-                // Get the raw content first
-                string bibText = node.GetContent();
-                
-                // CRITICAL: Fix any double-escaped ampersands first (\\& → \&)
-                bibText = System.Text.RegularExpressions.Regex.Replace(bibText, @"\\\\&", "\\&");
-                
-                // Now apply general cleanup
-                bibText = CleanText(bibText);
-                
-                // Final sanity check for any remaining problematic patterns
-                bibText = System.Text.RegularExpressions.Regex.Replace(bibText, @"\\textbackslash\{\s*\}&", "\\&");
-                bibText = System.Text.RegularExpressions.Regex.Replace(bibText, @"\\\\&", "\\&");
-                
-                if (!string.IsNullOrEmpty(bibText))
-                {
-                    content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {bibText}");
-                    hasValidItems = true;
-                }
-            }
-            
-            // Always ensure there's at least one bibliography item
-            if (!hasValidItems)
-            {
-                content.AppendLine("  \\bibitem{dummy} No references available");
-            }
-            
-            content.AppendLine("\\end{thebibliography}");
-            content.AppendLine();
         }
 
         private string GenerateTemplateAppliedContent()
@@ -440,8 +331,6 @@ namespace ICT2106WebApp.Pages
             content.AppendLine("\\usepackage{algorithm}");
             content.AppendLine("\\usepackage{algorithmic}");
             content.AppendLine("\\usepackage{hyperref}");
-            
-            // Add Unicode support
             content.AppendLine("\\usepackage{textgreek}");
             content.AppendLine("\\usepackage{amsfonts}");
             content.AppendLine("\\usepackage{amssymb}");
@@ -453,7 +342,7 @@ namespace ICT2106WebApp.Pages
             
             if (FormatContent.Count > 0 && FormatContent[0].GetNodeType() == "h1")
             {
-                title = StripLaTeXCommands(FormatContent[0].GetContent());
+                title = CleanTextForLaTeX(FormatContent[0].GetContent());
             }
             
             if (MetadataContent.Count > 0 && MetadataContent[0].GetStyling() != null)
@@ -479,12 +368,34 @@ namespace ICT2106WebApp.Pages
             
             // Add abstract section
             if (FormatContent.Count > 1 && FormatContent[1].GetNodeType() == "h2" && 
-                StripLaTeXCommands(FormatContent[1].GetContent()).Contains("Abstract"))
+                CleanTextForLaTeX(FormatContent[1].GetContent()).Contains("Abstract"))
             {
                 content.AppendLine("\\begin{abstract}");
                 if (ParagraphContent.Count > 0)
                 {
-                    string abstractText = StripLaTeXCommands(ParagraphContent[0].GetContent());
+                    // Get the abstract text
+                    string abstractText = ParagraphContent[0].GetContent();
+                    
+                    // Clean up the text
+                    abstractText = CleanTextForLaTeX(abstractText);
+                    
+                    // Check if the abstract should be italic based on node styling
+                    bool isItalic = false;
+                    foreach (var style in ParagraphContent[0].GetStyling())
+                    {
+                        if (style.ContainsKey("Italic") && (bool)style["Italic"])
+                        {
+                            isItalic = true;
+                            break;
+                        }
+                    }
+                    
+                    // Apply italic formatting if needed
+                    if (isItalic)
+                    {
+                        abstractText = $"\\textit{{{abstractText}}}";
+                    }
+                    
                     content.AppendLine(abstractText);
                 }
                 content.AppendLine("\\end{abstract}");
@@ -496,7 +407,7 @@ namespace ICT2106WebApp.Pages
             for (int i = 2; i < FormatContent.Count; i++)
             {
                 string nodeType = FormatContent[i].GetNodeType();
-                string nodeContent = StripLaTeXCommands(FormatContent[i].GetContent());
+                string nodeContent = CleanTextForLaTeX(FormatContent[i].GetContent());
                 
                 if (nodeType == "h2")
                 {
@@ -515,7 +426,12 @@ namespace ICT2106WebApp.Pages
                 // Add corresponding paragraphs after each heading
                 if (i - 1 < ParagraphContent.Count)
                 {
-                    string paraText = StripLaTeXCommands(ParagraphContent[i - 1].GetContent());
+                    var paragraph = ParagraphContent[i - 1];
+                    string paraText = CleanTextForLaTeX(paragraph.GetContent());
+                    
+                    // Apply formatting based on paragraph styling
+                    paraText = ApplyNodeStyling(paraText, paragraph);
+                    
                     content.AppendLine(paraText);
                     content.AppendLine();
                 }
@@ -524,20 +440,84 @@ namespace ICT2106WebApp.Pages
             // Add math content with proper handling
             if (MathContent.Count > 0)
             {
-                AppendMathContent(content, MathContent);
+                content.AppendLine("\\section*{Mathematical Formulations}");
+                
+                foreach (var node in MathContent)
+                {
+                    string mathText = CleanTextForLaTeX(node.GetContent(), "math");
+                    if (!string.IsNullOrEmpty(mathText))
+                    {
+                        // Use proper equation environment
+                        content.AppendLine("\\begin{equation}");
+                        content.AppendLine(EnsureBalancedBraces(mathText));
+                        content.AppendLine("\\end{equation}");
+                        content.AppendLine();
+                    }
+                }
             }
             
-            // Add lists with proper items
+            // Add lists with proper items using IEEE style
             if (ListContent.Count > 0)
             {
                 content.AppendLine("\\section{Key Findings}");
-                AppendListItems(content, ListContent);
+                
+                // Separate bulleted and numbered lists
+                var bulletedLists = new List<AbstractNode>();
+                var numberedLists = new List<AbstractNode>();
+                
+                foreach (var node in ListContent)
+                {
+                    if (node.GetNodeType().Contains("numbered"))
+                    {
+                        numberedLists.Add(node);
+                    }
+                    else
+                    {
+                        bulletedLists.Add(node);
+                    }
+                }
+                
+                // Add bulleted lists
+                if (bulletedLists.Count > 0)
+                {
+                    content.AppendLine("\\begin{itemize}");
+                    foreach (var node in bulletedLists)
+                    {
+                        string itemText = CleanTextForLaTeX(node.GetContent());
+                        content.AppendLine($"  \\item {EnsureBalancedBraces(itemText)}");
+                    }
+                    content.AppendLine("\\end{itemize}");
+                    content.AppendLine();
+                }
+                
+                // Add numbered lists
+                if (numberedLists.Count > 0)
+                {
+                    content.AppendLine("\\begin{enumerate}");
+                    foreach (var node in numberedLists)
+                    {
+                        string itemText = CleanTextForLaTeX(node.GetContent());
+                        content.AppendLine($"  \\item {EnsureBalancedBraces(itemText)}");
+                    }
+                    content.AppendLine("\\end{enumerate}");
+                    content.AppendLine();
+                }
             }
             
-            // Bibliography section in IEEE format with proper handling
+            // Bibliography section in IEEE format
             if (BibliographyContent.Count > 0)
             {
-                AppendBibliography(content, BibliographyContent, true);
+                content.AppendLine("\\section{References}");
+                content.AppendLine("\\begin{thebibliography}{99}");
+                
+                foreach (var node in BibliographyContent)
+                {
+                    string bibText = CleanTextForLaTeX(node.GetContent());
+                    content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {bibText}");
+                }
+                
+                content.AppendLine("\\end{thebibliography}");
+                content.AppendLine();
             }
             
             // End document
@@ -545,25 +525,111 @@ namespace ICT2106WebApp.Pages
             
             return content.ToString();
         }
+
+        // Helper method to apply node styling (bold, italic, etc.) based on node properties
+        private string ApplyNodeStyling(string text, AbstractNode node)
+        {
+            if (string.IsNullOrEmpty(text) || node == null || node.GetStyling() == null)
+                return text;
+            
+            foreach (var style in node.GetStyling())
+            {
+                // Apply bold formatting
+                if (style.ContainsKey("Bold") && (bool)style["Bold"])
+                {
+                    text = $"\\textbf{{{text}}}";
+                }
+                
+                // Apply italic formatting
+                if (style.ContainsKey("Italic") && (bool)style["Italic"])
+                {
+                    text = $"\\textit{{{text}}}";
+                }
+                
+                // Apply color formatting if not default black
+                if (style.ContainsKey("FontColor") && !string.IsNullOrEmpty((string)style["FontColor"]) && (string)style["FontColor"] != "000000")
+                {
+                    text = $"\\textcolor[HTML]{{{(string)style["FontColor"]}}}{{{text}}}";
+                }
+                
+                // Apply alignment if specified
+                if (style.ContainsKey("Alignment") && !string.IsNullOrEmpty((string)style["Alignment"]))
+                {
+                    string alignment = ((string)style["Alignment"]).ToLower();
+                    if (alignment == "center")
+                    {
+                        text = $"\\begin{{center}}\n{text}\n\\end{{center}}";
+                    }
+                    else if (alignment == "right")
+                    {
+                        text = $"\\begin{{flushright}}\n{text}\n\\end{{flushright}}";
+                    }
+                    else if (alignment == "justified")
+                    {
+                        // No specific command needed for justified text in LaTeX (it's the default)
+                    }
+                }
+            }
+            
+            return text;
+        }
         
-        // Helper method to properly clean LaTeX content
-        private string StripLaTeXCommands(string text)
+        // Helper method to ensure balanced braces in LaTeX content
+        private string EnsureBalancedBraces(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return "";
             
-            // Remove problematic command artifacts first
+            // Count opening and closing braces
+            int openBraces = 0;
+            int closeBraces = 0;
+            
+            foreach (char c in text)
+            {
+                if (c == '{') openBraces++;
+                if (c == '}') closeBraces++;
+            }
+            
+            // Add missing closing braces
+            string result = text;
+            for (int i = 0; i < openBraces - closeBraces; i++)
+            {
+                result += "}";
+            }
+            
+            // Add missing opening braces
+            for (int i = 0; i < closeBraces - openBraces; i++)
+            {
+                result = "{" + result;
+            }
+            
+            return result;
+        }
+
+        // Consolidated text cleaning method
+        private string CleanTextForLaTeX(string text, string contentType = "text")
+        {
+            if (string.IsNullOrEmpty(text))
+                return "";
+            
+            // Fix any incorrectly double-escaped ampersands
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\&", "\\&");
+            
+            // Remove problematic command patterns
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\paragraph\\\\", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textit\\", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbf\\", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\selectfont\b", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\fontsize\{[^}]*\}\{[^}]*\}", "");
             
-            // Remove trailing double backslashes
+            // Remove trailing backslashes
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\$", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\(\s)", "$1");
             
-            // Check if this is section content
+            // Remove any \textbackslash{} followed by ampersand
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\s*\}&", "\\&");
+            
+            // Extract content from section commands if needed
             if (text.Contains("\\section{") || text.Contains("\\subsection{") || text.Contains("\\subsubsection{"))
             {
                 int startIndex = text.IndexOf('{');
@@ -575,103 +641,44 @@ namespace ICT2106WebApp.Pages
                 }
             }
             
-            // Handle mathematical content differently
-            if (text.Contains("$") || text.Contains("\\begin{equation}"))
+            // Different handling for math content
+            if (contentType == "math")
             {
-                // Don't apply text-mode escaping to math content
+                // Convert Unicode math symbols to LaTeX commands
+                text = text.Replace("Σ", "\\Sigma ");
+                text = text.Replace("×", "\\times ");
+                text = text.Replace("≥", "\\geq ");
+                text = text.Replace("≠", "\\neq ");
+                text = text.Replace("±", "\\pm ");
+                text = text.Replace("∞", "\\infty ");
+                text = text.Replace("∴", "\\therefore ");
+                text = text.Replace("∃", "\\exists ");
+                text = text.Replace("∀", "\\forall ");
+                text = text.Replace("→", "\\rightarrow ");
+                text = text.Replace("π", "\\pi ");
+                text = text.Replace("α", "\\alpha ");
+                
+                // Fix unnecessary backslashes for math mode
+                text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\}", "");
+                text = System.Text.RegularExpressions.Regex.Replace(text, @"_\\", "_");
+                
                 return text;
             }
             
-            // Fix Greek letters - replace Unicode with LaTeX commands
-            text = System.Text.RegularExpressions.Regex.Replace(text, "Σ", "\\\\Sigma");
+            // Handle regular text content
+            // Fix any double-brace patterns
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\{\{", "{");
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\}\}", "}");
             
-            // Replace problematic ampersands correctly
-            text = text.Replace("&", "\\&");
-            
-            // Replace non-breaking spaces
-            text = text.Replace("\u00A0", "~");
-            
-            // Replace times symbol with proper LaTeX command
+            // Handle special LaTeX characters
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"(?<!\\)&", "\\&");
+            text = text.Replace("%", "\\%");
+            text = text.Replace("$", "\\$");
+            text = text.Replace("#", "\\#");
+            text = text.Replace("_", "\\_");
             text = text.Replace("×", "$\\times$");
             
-            // Handle special LaTeX characters only for regular text
-            if (!text.Contains("\\begin{") && !text.Contains("\\end{") && !text.StartsWith("\\"))
-            {
-                // Handle additional special characters
-                var specialChars = new Dictionary<string, string>
-                {
-                    { "%", "\\%" },
-                    { "$", "\\$" },
-                    { "#", "\\#" },
-                    { "_", "\\_" },
-                    { "{", "\\{" },
-                    { "}", "\\}" }
-                };
-                
-                foreach (var pair in specialChars)
-                {
-                    // Only replace if not already escaped
-                    if (!text.Contains("\\" + pair.Key))
-                        text = text.Replace(pair.Key, pair.Value);
-                }
-            }
-            
             return text;
         }
-        
-        // Special method for handling math content
-        private string ProcessMathContent(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return "";
-            
-            // Convert problematic command artifacts first
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\paragraph\\\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textit\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbf\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\selectfont\b", "");
-            
-            // Fix Unicode characters with LaTeX math equivalents
-            text = text.Replace("Σ", "\\Sigma ");
-            text = text.Replace("×", "\\times ");
-            text = text.Replace("≥", "\\geq ");
-            text = text.Replace("≠", "\\neq ");
-            text = text.Replace("±", "\\pm ");
-            text = text.Replace("∞", "\\infty ");
-            text = text.Replace("∴", "\\therefore ");
-            text = text.Replace("∃", "\\exists ");
-            text = text.Replace("∀", "\\forall ");
-            text = text.Replace("→", "\\rightarrow ");
-            text = text.Replace("π", "\\pi ");
-            text = text.Replace("α", "\\alpha ");
-            
-            // Fix unnecessary backslashes
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash{}", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"_\\", "_");
-            
-            return text;
-        }
-        
-        // Helper method to generate proper math content in LaTeX
-        private void AppendMathContent(System.Text.StringBuilder content, List<AbstractNode> mathNodes)
-        {
-            if (mathNodes == null || mathNodes.Count == 0)
-                return;
-            
-            content.AppendLine("\\section*{Mathematical Formulations}");
-            
-            foreach (var node in mathNodes)
-            {
-                string mathText = ProcessMathContent(node.GetContent());
-                if (!string.IsNullOrEmpty(mathText))
-                {
-                    // Use proper equation environment
-                    content.AppendLine("\\begin{equation}");
-                    content.AppendLine(mathText);
-                    content.AppendLine("\\end{equation}");
-                    content.AppendLine();
-                }
-            }
-        }
-
-}}
+    }
+}

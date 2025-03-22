@@ -1,28 +1,40 @@
 using System;
+using System.Threading.Tasks;
 
 public class EditorDoc
 {
-    private static string _latexContent = ""; // Static variable to persist across requests
+    private readonly EditorDocumentMapper _mapper;
 
-    public void SetLatexContent(string latexContent)
+    public EditorDoc(EditorDocumentMapper mapper)
     {
-        if (string.IsNullOrEmpty(latexContent))
-        {
-            Console.WriteLine("[ERROR] Attempted to store empty LaTeX content in EditorDoc.");
-        }
-        else
-        {
-            _latexContent = latexContent;
-            Console.WriteLine("[INFO] LaTeX content stored successfully.");
-        }
+        _mapper = mapper;
     }
 
-    public string GetLatexContent()
+
+    // Used for autosave / live editing
+    public async Task UpdateLatexContentAsync(string latexContent)
     {
-        if (string.IsNullOrEmpty(_latexContent))
+        if (string.IsNullOrEmpty(latexContent)) return;
+
+        var doc = new EditorDocument
         {
-            Console.WriteLine("[WARNING] No LaTeX content found in EditorDoc.");
+            DocumentID = 1,
+            LatexContent = latexContent,
+            LastModified = DateTime.UtcNow
+        };
+
+        await _mapper.UpsertAsync(doc);
+    }
+
+    public async Task<string> GetLatexContentAsync()
+    {
+        var doc = await _mapper.GetLatestAsync();
+        if (doc == null || string.IsNullOrEmpty(doc.LatexContent))
+        {
+            Console.WriteLine("[WARNING] No LaTeX content found in EditorDocuments collection.");
+            return string.Empty;
         }
-        return _latexContent;
+
+        return doc.LatexContent;
     }
 }

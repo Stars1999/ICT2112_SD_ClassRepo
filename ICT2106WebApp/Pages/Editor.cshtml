@@ -252,7 +252,9 @@ We can cite this reference \cite{unknown} here.
                 fetch(`/home/convert?style=${selectedStyle}`, { method: 'GET' })
                 .then(response => {
                     console.log(`[INFO] Style updated to ${selectedStyle}, reloading editor.`);
-                    window.location.href = '/home/editor'; // ✅ Reload editor with new citation style
+                    setTimeout(() => {
+                        window.location.href = '/home/editor';
+                    }, 500);// ✅ Reload editor with new citation style
                 })
                 .catch(error => console.error('Error changing citation style:', error));
             });
@@ -265,6 +267,25 @@ We can cite this reference \cite{unknown} here.
                     console.log("[INFO] No errors, citation style dropdown is enabled.");
                 }
             }
+
+            function autoSaveToDatabase(content) {
+                fetch('/home/save-latex', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ latexContent: content })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("[AUTO-SAVE] LaTeX saved to DB.");
+                    } else {
+                        console.warn("[AUTO-SAVE] Failed:", data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error("[AUTO-SAVE] Error:", err);
+                });
+            } 
 
             // Error detection state
             let currentErrors = [];
@@ -296,12 +317,18 @@ We can cite this reference \cite{unknown} here.
                     // Set up event listener for changes
                     editor.on('change', function() {
                         console.log("CodeMirror content changed");
+
                         // Clear the timeout if it's already set
                         clearTimeout(typingTimer);
-                        
-                        // Set a new timeout for error detection
-                        typingTimer = setTimeout(detectErrors, doneTypingInterval);
+
+                        // Set a new timeout for both error detection and autosave
+                        typingTimer = setTimeout(() => {
+                            const currentContent = editor.getValue();
+                            detectErrors(); // Run your error detection
+                            autoSaveToDatabase(currentContent);// Save the current LaTeX to DB
+                        }, doneTypingInterval);
                     });
+
                 } else {
                     console.log("Using plain textarea editor");
                     

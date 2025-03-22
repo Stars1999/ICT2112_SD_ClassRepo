@@ -15,6 +15,7 @@ builder.Services.AddSingleton<IScannerFactory, CitationScannerFactory>();
 builder.Services.AddSingleton<IScannerFactory, BibliographyScannerFactory>();
 builder.Services.AddSingleton<BibTeXConverter>();
 builder.Services.AddSingleton<LatexCompiler>();
+builder.Services.AddSingleton<EditorDocumentMapper>();
 
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>

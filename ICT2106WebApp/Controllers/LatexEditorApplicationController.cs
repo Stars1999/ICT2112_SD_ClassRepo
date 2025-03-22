@@ -13,13 +13,15 @@ public class LatexEditorApplicationController : Controller
     private readonly ErrorCheckingFacade _errorCheckingFacade;
     private readonly PDFGenerator _pdfGenerator;
     private readonly MongoDbContext _dbContext;
+    private readonly EditorDoc _editorDoc;
 
-    public LatexEditorApplicationController(iConversionStatus conversionStatus, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext)
+    public LatexEditorApplicationController(iConversionStatus conversionStatus, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext, EditorDoc editorDoc)
     {
         _conversionStatus = conversionStatus ?? throw new ArgumentNullException(nameof(conversionStatus));
         _errorCheckingFacade = errorCheckingFacade ?? throw new ArgumentNullException(nameof(errorCheckingFacade));
         _pdfGenerator = pdfGenerator ?? throw new ArgumentNullException(nameof(pdfGenerator));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _editorDoc = editorDoc ?? throw new ArgumentNullException(nameof(editorDoc));
     }
 
     [HttpGet("convert")]
@@ -62,10 +64,13 @@ public class LatexEditorApplicationController : Controller
                 ErrorPresenter.LogError("LatexGenerator did not generate any content.");
                 return Content("Error: LaTeX generation failed.");
             }
+            Console.WriteLine("[DEBUG] Generated LaTeX:");
+            Console.WriteLine(generatedLatex);
+            // var editorDoc = new EditorDoc();
+            // editorDoc.SetLatexContent(generatedLatex);
 
             // ✅ Store LaTeX in Editor
-            var editorDoc = new EditorDoc();
-            editorDoc.SetLatexContent(generatedLatex);
+            await _editorDoc.UpdateLatexContentAsync(generatedLatex);
 
             Console.WriteLine("[INFO] LaTeX content successfully stored in EditorDoc.");
             return RedirectToAction("Editor");
@@ -79,12 +84,11 @@ public class LatexEditorApplicationController : Controller
 
 
     [HttpGet("load-latex")]
-    public IActionResult LoadLatex([FromQuery] string style = "apa")
+    public async Task<IActionResult> LoadLatex([FromQuery] string style = "apa")
     {
         Console.WriteLine($"[DEBUG] /home/load-latex accessed with style: {style}");
 
-        var editorDoc = new EditorDoc();
-        string latexContent = editorDoc.GetLatexContent();
+        var latexContent = await _editorDoc.GetLatexContentAsync();
 
         if (string.IsNullOrEmpty(latexContent))
         {
@@ -94,6 +98,7 @@ public class LatexEditorApplicationController : Controller
 
         return Content(latexContent);
     }
+    
     [HttpPost("compile-latex")]
     public async Task<IActionResult> CompileLaTeX([FromBody] LaTeXRequest request)
     {
@@ -128,6 +133,28 @@ public class LatexEditorApplicationController : Controller
             return Json(new { success = false, error = ex.Message });
         }
     }
+    [HttpPost("save-latex")]
+    public async Task<IActionResult> SaveLatex([FromBody] LaTeXRequest request)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.LatexContent))
+                return BadRequest("No LaTeX content provided.");
+
+            var editorDocMapper = new EditorDocumentMapper(_dbContext);
+            var editorDoc = new EditorDoc(editorDocMapper);
+
+            await editorDoc.UpdateLatexContentAsync(request.LatexContent);
+
+            return Ok(new { success = true, message = "Saved successfully." });
+        }
+        catch (Exception ex)
+        {
+            ErrorPresenter.LogError(ex.Message);
+            return Json(new { success = false, error = ex.Message });
+        }
+    }
+
 
     [HttpGet("errors")]
     public IActionResult GetErrors()

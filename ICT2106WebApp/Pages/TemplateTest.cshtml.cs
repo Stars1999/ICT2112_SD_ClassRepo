@@ -268,6 +268,9 @@ namespace ICT2106WebApp.Pages
             if (string.IsNullOrEmpty(text))
                 return "";
             
+            // First, fix any incorrectly double-escaped ampersands (this is crucial)
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\&", "\\&");
+            
             // Remove problematic command patterns
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\paragraph\\\\", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textit\\", "");
@@ -279,15 +282,18 @@ namespace ICT2106WebApp.Pages
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\$", "");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\(\s)", "$1");
             
-            // Remove any \textbackslash{} to avoid issues
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\}", "");
+            // Remove any \textbackslash{} followed by ampersand
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\s*\}&", "\\&");
             
             // Fix any double-brace patterns {{ or }} that aren't meant to be escaped
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\{\{", "{");
             text = System.Text.RegularExpressions.Regex.Replace(text, @"\}\}", "}");
             
-            // Replace problematic characters
-            text = text.Replace("&", "\\&");
+            // NOW properly handle ampersands AFTER fixing double-escaping
+            // Only replace & with \& if it's not already escaped
+            text = System.Text.RegularExpressions.Regex.Replace(text, @"(?<!\\)&", "\\&");
+            
+            // Other character replacements
             text = text.Replace("%", "\\%");
             text = text.Replace("$", "\\$");
             text = text.Replace("#", "\\#");
@@ -373,7 +379,6 @@ namespace ICT2106WebApp.Pages
             content.AppendLine();
         }
 
-        // Safe bibliography generation
         private void AppendBibliography(System.Text.StringBuilder content, List<AbstractNode> bibNodes, bool isIEEE = false)
         {
             if (bibNodes == null || bibNodes.Count == 0)
@@ -390,14 +395,22 @@ namespace ICT2106WebApp.Pages
             bool hasValidItems = false;
             foreach (var node in bibNodes)
             {
-                string bibText = CleanText(node.GetContent());
-                // Ensure no & characters in bibliography
-                bibText = bibText.Replace("&", "\\&");
+                // Get the raw content first
+                string bibText = node.GetContent();
+                
+                // CRITICAL: Fix any double-escaped ampersands first (\\& → \&)
+                bibText = System.Text.RegularExpressions.Regex.Replace(bibText, @"\\\\&", "\\&");
+                
+                // Now apply general cleanup
+                bibText = CleanText(bibText);
+                
+                // Final sanity check for any remaining problematic patterns
+                bibText = System.Text.RegularExpressions.Regex.Replace(bibText, @"\\textbackslash\{\s*\}&", "\\&");
+                bibText = System.Text.RegularExpressions.Regex.Replace(bibText, @"\\\\&", "\\&");
                 
                 if (!string.IsNullOrEmpty(bibText))
                 {
-                    // Ensure each bibitem has balanced braces
-                    content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {EnsureBalancedBraces(bibText)}");
+                    content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {bibText}");
                     hasValidItems = true;
                 }
             }
@@ -411,6 +424,7 @@ namespace ICT2106WebApp.Pages
             content.AppendLine("\\end{thebibliography}");
             content.AppendLine();
         }
+
         private string GenerateTemplateAppliedContent()
         {
             // Create a string representation of the IEEE template-applied LaTeX content

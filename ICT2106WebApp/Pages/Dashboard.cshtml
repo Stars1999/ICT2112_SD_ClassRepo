@@ -8,7 +8,6 @@
 <!-- File upload section -->
 <div class="file-upload-container">
     <input type="file" id="fileInput" name="UploadedFile" required class="file-input" />
-    @* <span id="fileName" class="file-name">No file chosen</span> <!-- Display selected file name --> *@
 </div>
 
 <!-- Upload Button -->
@@ -16,23 +15,10 @@
     <button type="button" id="uploadButton" class="upload-button">Upload</button>
 </div>
 
-<!-- Dashboard.cshtml -->
+<!-- Test Case Button -->
 <div>
-    <button id="testButton" type="button" onclick="runCitationTest()">Run Citation Conversion Test</button>
-    <div id="testResult"></div>
-
-    <script>
-        function runCitationTest() {
-            fetch('/dashboard/runtest')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('testResult').innerText = data.message;
-                })
-                .catch(error => {
-                    document.getElementById('testResult').innerText = 'Error: ' + error;
-                });
-        }
-    </script>
+    <button id="testButton" type="button" onclick="runCitationTest()" class="test-button">Run Citation Conversion Test</button>
+    <div id="testResult" class="test-result"></div>
 </div>
 
 <!-- Conversion Status Tracker -->
@@ -57,6 +43,23 @@
     <button onclick="closeSuccessModal()" class="modal-button close-success-modal">Close</button>
 </div>
 
+<!-- Error Log Section with Table -->
+<div id="logSection" class="log-section">
+    <h4>Error Logs</h4>
+    <table id="logTable" class="log-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Timestamp</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody id="logMessages">
+            <!-- Logs will be dynamically added here -->
+        </tbody>
+    </table>
+</div>
+
 <script>
     document.getElementById("uploadButton").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent default form submission
@@ -66,13 +69,18 @@
 
         // Check if no file is selected
         if (!fileInput) {
+            logError("No file selected for upload.");
             alert("Please select a file to upload.");
             return;
         }
 
+        // Update file name
+        document.getElementById("fileInput").innerText = fileInput.name;
+
         // Check if the file is a .docx
         let fileExtension = fileInput.name.split('.').pop().toLowerCase();
         if (fileExtension !== "docx") {
+            logError("Invalid file type. Only .docx files are allowed.");
             alert("Only .docx files are allowed. Please upload a valid .docx file.");
             document.getElementById("fileInput").value = ""; // Clear the file input
             return;
@@ -80,7 +88,7 @@
 
         formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
 
-        fetch("/dashboard/upload", { // POST to /dashboard/upload endpoint
+        fetch("/dashboard/upload", {
             method: "POST",
             body: formData
         })
@@ -88,22 +96,14 @@
         .then(data => {
             if (data.success) {
                 document.getElementById("statusMessage").innerText = "Status: Converting...";
-
-                // Simulate conversion progress update
-                let progress = 0;
-                let progressInterval = setInterval(function () {
-                    progress += 10;
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    if (progress === 100) {
-                        clearInterval(progressInterval);
-                        document.getElementById("statusMessage").innerText = "Status: Conversion completed!";
-                    }
-                }, 1000);
+                updateProgress();
             } else {
+                logError(data.message);
                 alert("Error: " + data.message);
             }
         })
         .catch(error => {
+            logError("Upload failed: " + error.message);
             alert("Upload failed. " + error.message);
             console.error("Upload error:", error);
         });
@@ -111,6 +111,58 @@
         // Clear the file input after the form submission
         document.getElementById("fileInput").value = "";
     });
+
+    function updateProgress() {
+        let progress = 0;
+        let progressInterval = setInterval(function () {
+            progress += 10;
+            document.getElementById("statusProgress").style.width = progress + "%";
+            if (progress === 100) {
+                clearInterval(progressInterval);
+                document.getElementById("statusMessage").innerText = "Status: Conversion completed!";
+            }
+        }, 1000);
+    }
+
+    // Function to log errors in the log table
+    function logError(message) {
+        const logMessages = document.getElementById("logMessages");
+
+        // Get the current timestamp
+        const timestamp = new Date().toLocaleString();
+
+        // Create a new row for the table
+        const newRow = document.createElement("tr");
+
+        // Add cells with error details
+        const indexCell = document.createElement("td");
+        const timestampCell = document.createElement("td");
+        const messageCell = document.createElement("td");
+
+        indexCell.innerText = logMessages.children.length + 1; // Incrementing index for each new log
+        timestampCell.innerText = timestamp;
+        messageCell.innerText = message;
+
+        // Append the cells to the row
+        newRow.appendChild(indexCell);
+        newRow.appendChild(timestampCell);
+        newRow.appendChild(messageCell);
+
+        // Insert the row at the top for latest logs
+        logMessages.insertBefore(newRow, logMessages.firstChild);
+    }
+
+    // Function to run the citation test
+    function runCitationTest() {
+        fetch('/dashboard/runtest')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('testResult').innerText = data.message;
+            })
+            .catch(error => {
+                document.getElementById('testResult').innerText = 'Error: ' + error;
+            });
+    }
 </script>
 
 <!-- Styles for the page -->
@@ -136,7 +188,6 @@
         color: #555;
     }
 
-    /* Upload button styles */
     .upload-button {
         padding: 10px 20px;
         background-color: #007bff;
@@ -147,7 +198,17 @@
         font-size: 16px;
     }
 
-    /* Conversion Status Tracker */
+    .test-button {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
     .status-tracker {
         margin-top: 20px;
     }
@@ -188,7 +249,37 @@
         background: rgba(0, 128, 0, 0.7);
     }
 
-    /* Modal button styles */
+    .log-section {
+        margin-top: 30px;
+        padding: 10px;
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .log-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .log-table th, .log-table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
+    .log-table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .log-messages {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 10px;
+        color: #d9534f;
+    }
+
     .modal-button {
         padding: 8px 16px;
         border: none;
@@ -207,7 +298,6 @@
         color: white;
     }
 
-    /* Status message styles */
     #statusMessage {
         margin-top: 20px;
         color: #333;

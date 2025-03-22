@@ -5,65 +5,118 @@
 }
 
 <div class="container">
-    <h2 class="mb-4">Template Preview</h2>
+    <h1>Document Template Test</h1>
     
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    Original Document Content
-                </div>
-                <div class="card-body">
-                    <form method="post">
+    <div class="row mb-4">
+        <div class="col">
+            <form method="post">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Load Document & Apply Template</h5>
+                    </div>
+                    <div class="card-body">
                         <div class="form-group mb-3">
-                            <label for="content">Text Content:</label>
-                            <textarea id="content" name="content" class="form-control" rows="3" required>@Model.Content</textarea>
+                            <label for="templateSelect">Select Template:</label>
+                            <select asp-for="SelectedTemplateId" class="form-control" id="templateSelect">
+                                <option value="ieee">IEEE Conference Format</option>
+                                <option value="acm">ACM Format</option>
+                                <option value="springer">Springer Format</option>
+                            </select>
                         </div>
-
-                        <!-- Add other fields for text formatting like font, bold, etc. -->
-
-                        <button type="submit" class="btn btn-primary">Apply Template</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    Template Preview (Before Confirmation)
-                </div>
-                <div class="card-body">
-                    @if (Model.ConversionSuccess)
-                    {
-                        <div class="alert alert-success">Template Applied Successfully!</div>
-                    }
-
-                    <h5>LaTeX Preview:</h5>
-                    <div class="bg-light p-3 mb-3" style="font-family: monospace; white-space: pre-wrap;">
-                        @foreach (var node in Model.ConvertedNodes)
-                        {
-                            @node.GetContent()<br/>
-                        }
-                    </div>
-
-                    <h5>Preview (Simplified):</h5>
-                    <div class="border p-3">
-                        <div style="
-                            @(Model.Font == "Times New Roman" ? "font-family: 'Times New Roman', Times, serif;" : 
-                             Model.Font == "Arial" ? "font-family: Arial, sans-serif;" :
-                             Model.Font == "Calibri" ? "font-family: 'Calibri', monospace;" : "")
-                            @(Model.BoldStyle ? "font-weight: bold;" : "")
-                            @(Model.ItalicStyle ? "font-style: italic;" : "")
-                            @(Model.UnderlineStyle ? "text-decoration: underline;" : "")
-                            color: @Model.Color;
-                            line-height: @Model.LineSpacing;
-                            text-align: @Model.Alignment;">
-                            @Model.Content
-                        </div>
+                        <button type="submit" class="btn btn-primary">Load Document & Apply Template</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+    
+    @if (Model.IsDocumentLoaded)
+    {
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Document Content Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Format Elements:</strong> @Model.FormatContent.Count
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Text Elements:</strong> @Model.TextContent.Count
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Paragraph Elements:</strong> @Model.ParagraphContent.Count
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <strong>Layout Elements:</strong> @Model.LayoutContent.Count
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Math Elements:</strong> @Model.MathContent.Count
+                            </div>
+                            <div class="col-md-4">
+                                <strong>List Elements:</strong> @Model.ListContent.Count
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <strong>Image Elements:</strong> @Model.ImageContent.Count
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Bibliography Elements:</strong> @Model.BibliographyContent.Count
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Metadata Elements:</strong> @Model.MetadataContent.Count
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Original LaTeX Format Column -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Original LaTeX Format</h5>
+                        <span class="badge @(Model.OriginalLaTeXResult ? "bg-success" : "bg-danger")">
+                            @(Model.OriginalLaTeXResult ? "Conversion Success" : "Conversion Failed")
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <pre style="max-height: 500px; overflow-y: auto;"><code>@Model.OriginalLaTeXContent</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Template-Applied LaTeX Format Column -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>IEEE Template Format</h5>
+                        <span class="badge @(Model.TemplateResult ? "bg-success" : "bg-danger")">
+                            @(Model.TemplateResult ? "Template Applied" : "Template Failed")
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <pre style="max-height: 500px; overflow-y: auto;"><code>@Model.TemplateAppliedContent</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        // Add any JavaScript for enhancing the template test page
+        $(document).ready(function() {
+            // For example, you could add syntax highlighting for LaTeX
+            // if you include a syntax highlighting library
+        });
+    </script>
+}

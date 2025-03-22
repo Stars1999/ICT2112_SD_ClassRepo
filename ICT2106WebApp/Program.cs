@@ -2,8 +2,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
+
+// Register application services
 builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Text.IFormatText, ICT2106WebApp.mod2grp6.Text.TextManager>();
 builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Template.TemplateManager>();
+builder.Services.AddScoped<ICT2106WebApp.mod2grp6.DocumentManager>();
 
 var app = builder.Build();
 
@@ -19,5 +23,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

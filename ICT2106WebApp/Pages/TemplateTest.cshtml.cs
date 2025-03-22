@@ -526,6 +526,44 @@ namespace ICT2106WebApp.Pages
             return content.ToString();
         }
 
+        private void AppendMathContent(System.Text.StringBuilder content, List<AbstractNode> mathNodes)
+        {
+            if (mathNodes == null || mathNodes.Count == 0)
+                return;
+            
+            // Add necessary LaTeX packages for math
+            content.AppendLine("% Required math packages for advanced formulas");
+            content.AppendLine("\\usepackage{amsmath}");
+            content.AppendLine("\\usepackage{amssymb}");
+            content.AppendLine();
+            
+            content.AppendLine("\\section*{Mathematical Formulations}");
+            
+            foreach (var node in mathNodes)
+            {
+                string mathText = node.GetContent();
+                
+                if (!string.IsNullOrEmpty(mathText))
+                {
+                    // Check if the formula contains specific environments
+                    if (mathText.Contains("\\begin{"))
+                    {
+                        // If it already has an environment, use it as is
+                        content.AppendLine(mathText);
+                    }
+                    else
+                    {
+                        // Use equation environment for displayed equations
+                        content.AppendLine("\\begin{equation}");
+                        content.AppendLine(mathText);
+                        content.AppendLine("\\end{equation}");
+                    }
+                    content.AppendLine();
+                }
+            }
+        }
+        
+
         // Helper method to apply node styling (bold, italic, etc.) based on node properties
         private string ApplyNodeStyling(string text, AbstractNode node)
         {
@@ -657,6 +695,8 @@ namespace ICT2106WebApp.Pages
                 text = text.Replace("→", "\\rightarrow ");
                 text = text.Replace("π", "\\pi ");
                 text = text.Replace("α", "\\alpha ");
+                text = text.Replace("Σ", "\\sum ");
+
                 
                 // Fix unnecessary backslashes for math mode
                 text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\}", "");

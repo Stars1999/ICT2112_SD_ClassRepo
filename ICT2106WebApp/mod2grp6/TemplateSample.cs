@@ -86,12 +86,50 @@ namespace ICT2106WebApp.mod2grp6.TestCase
             } })
         };
 
-        // Mathematical content
+// Mathematical content
         public List<AbstractNode> MathContent = new List<AbstractNode>
         {
-            new SimpleNode(1, "math", "Performance Improvement = (Post-Test_Score - Pre-Test_Score) / Pre-Test_Score × 100%", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, { "FontSize", 12 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(2, "math", "Student Engagement Index = Σ(Time_Spent × Interaction_Rate × Completion_Rate)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, { "FontSize", 12 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(3, "math", "ROI = (Educational_Benefit - Implementation_Cost) / Implementation_Cost", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, { "FontSize", 12 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
+            // Original formulas correctly formatted
+            new SimpleNode(1, "math", "Performance Improvement = \\frac{Post-Test\\_Score - Pre-Test\\_Score}{Pre-Test\\_Score} \\times 100\\%", 
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { 
+                    { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
+                    { "FontSize", 12 }, { "FontType", "Times New Roman" }, 
+                    { "FontColor", "000000" }, { "Highlight", "none" }, 
+                    { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } 
+                } }),
+                
+            new SimpleNode(2, "math", "Student Engagement Index = \\sum(Time\\_Spent \\times Interaction\\_Rate \\times Completion\\_Rate)", 
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { 
+                    { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
+                    { "FontSize", 12 }, { "FontType", "Times New Roman" }, 
+                    { "FontColor", "000000" }, { "Highlight", "none" }, 
+                    { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } 
+                } }),
+                
+            new SimpleNode(3, "math", "ROI = \\frac{Educational\\_Benefit - Implementation\\_Cost}{Implementation\\_Cost}", 
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { 
+                    { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
+                    { "FontSize", 12 }, { "FontType", "Times New Roman" }, 
+                    { "FontColor", "000000" }, { "Highlight", "none" }, 
+                    { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } 
+                } }),
+
+            // Additional complex formulas
+            new SimpleNode(4, "math", "\\frac{1}{\\sqrt{2\\pi}\\sigma} e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}", 
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { 
+                    { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
+                    { "FontSize", 12 }, { "FontType", "Times New Roman" }, 
+                    { "FontColor", "000000" }, { "Highlight", "none" }, 
+                    { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } 
+                } }),
+                
+            new SimpleNode(5, "math", "\\int_{a}^{b} f(x) dx = F(b) - F(a)", 
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { 
+                    { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, 
+                    { "FontSize", 12 }, { "FontType", "Times New Roman" }, 
+                    { "FontColor", "000000" }, { "Highlight", "none" }, 
+                    { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } 
+                } })
         };
 
         // Lists

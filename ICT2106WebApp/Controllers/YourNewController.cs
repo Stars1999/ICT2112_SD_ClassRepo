@@ -26,6 +26,9 @@ namespace ICT2106WebApp.Controllers
         {
             // Initialize sample data for the IEEE template
             InitializeIEEETemplate();
+
+            // Initialize sample data for the Editorial template
+            InitializeEditorialTemplate();
             
             // For initial page load, just return the view
             return View();
@@ -109,6 +112,99 @@ namespace ICT2106WebApp.Controllers
             _templateManager.SetTemplate("ieee", ieeeTemplate);
             
             // You could add more templates here (ACM, Springer, etc.)
+        }
+
+        private void InitializeEditorialTemplate()
+        {
+            var editorialTemplate = new List<AbstractNode>();
+
+            editorialTemplate.Add(new SimpleNode(
+                1,
+                "documentClass",
+                "\\documentclass{article}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "documentclass" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                2,
+                "package",
+                "\\usepackage[utf8]{inputenc}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                3,
+                "package",
+                "\\usepackage{multicol}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                4,
+                "package",
+                "\\usepackage{geometry}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                5,
+                "layout",
+                "\\geometry{margin=1in}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "layout" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                6,
+                "title",
+                "\\title{$title$}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "title" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                7,
+                "author",
+                "\\author{$authors$}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "author" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                8,
+                "beginDoc",
+                "\\begin{document}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "begin" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                9,
+                "maketitle",
+                "\\maketitle",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "maketitle" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                10,
+                "beginGrid",
+                "\\begin{multicols}{2}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+            ));
+
+            // Your actual body content will be added later via GenerateTemplateAppliedContent()
+
+            editorialTemplate.Add(new SimpleNode(
+                11,
+                "endGrid",
+                "\\end{multicols}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+            ));
+
+            editorialTemplate.Add(new SimpleNode(
+                12,
+                "endDoc",
+                "\\end{document}",
+                new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "end" } } }
+            ));
+
+            _templateManager.SetTemplate("editorial", editorialTemplate);
         }
     }
 }

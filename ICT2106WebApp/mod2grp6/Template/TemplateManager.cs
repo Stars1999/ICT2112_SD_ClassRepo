@@ -7,14 +7,21 @@ namespace ICT2106WebApp.mod2grp6.Template
     {
         private Dictionary<string, List<AbstractNode>> templates = new Dictionary<string, List<AbstractNode>>();
 
-        // Convert the document to the specified template (with 2-column layout)
+        // Convert the document to the specified template
         public Template ConvertToTemplate(string id)
         {
             if (templates.ContainsKey(id))
             {
                 var templateContent = templates[id];
-                AddTwoColumnLayout(templateContent); // Apply IEEE-style two-column layout
-                return new Template(id, "IEEE Style Template", templateContent);
+
+                // Apply IEEE-specific layout
+                if (id == "ieee")
+                {
+                    AddTwoColumnLayout(templateContent);
+                    return new Template(id, "IEEE Style Template", templateContent);
+                }
+
+                return new Template(id, $"{id} Template", templateContent);
             }
             return null;
         }
@@ -46,7 +53,6 @@ namespace ICT2106WebApp.mod2grp6.Template
         // Helper method to apply a two-column layout (IEEE format)
         private void AddTwoColumnLayout(List<AbstractNode> templateContent)
         {
-            // Add LaTeX commands for two-column layout
             var columnLayoutNode = new SimpleNode(
                 1,
                 "columnFormat",

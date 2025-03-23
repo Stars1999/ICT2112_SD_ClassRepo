@@ -15,7 +15,7 @@ namespace ICT2106WebApp.mod1grp4
         // Retrieve backup tables with a given list of ids
         public async Task<List<Table>> retrieveBackupTables(List<Table> tablesFromNode)
         {
-            var ids = tablesFromNode.Select(t => t.GetTableId()).ToList();
+            var ids = tablesFromNode.Select(t => t.tableId).ToList();
             var filter = Builders<Table>.Filter.In("tableId", ids);
             return await tableCollection.Find(filter).ToListAsync();
         }
@@ -23,7 +23,7 @@ namespace ICT2106WebApp.mod1grp4
         // Save a table
         public async Task<bool> saveTable(Table table)
         {
-            var filter = Builders<Table>.Filter.Eq("tableId", table.GetTableId());
+            var filter = Builders<Table>.Filter.Eq("tableId", table.tableId);
             // var filter = Builders<Table>.Filter.Eq(t => t.GetTableId(), table.GetTableId());
             var result = await tableCollection.ReplaceOneAsync(filter, table, new ReplaceOptions { IsUpsert = true });
             return result.IsAcknowledged && result.ModifiedCount > 0;

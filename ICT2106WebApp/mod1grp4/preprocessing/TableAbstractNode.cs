@@ -1,20 +1,21 @@
-// FOR NOW BEFORE INTEGRATION WITH MOD 3
+using System.Collections.Generic;
+
 namespace ICT2106WebApp.mod1grp4
 {
     public class TableAbstractNode
     {
         public string nodeID { get; set; }
-        public List<Run> runs { get; set; }
+        public List<RowNode> runs { get; set; }
     }
 
-    public class Run
+    public class RowNode
     {
-        public List<Cell> runs { get; set; }
+        public List<CellNode> runs { get; set; }
     }
 
-    public class Cell
+    public class CellNode
     {
         public string content { get; set; }
-        public Dictionary<string, bool> styling { get; set; }
+        public Dictionary<string, object> styling { get; set; }
     }
 }

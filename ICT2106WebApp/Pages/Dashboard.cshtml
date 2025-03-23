@@ -23,11 +23,12 @@
 
 <!-- Conversion Status Tracker -->
 <div id="statusTracker" class="status-tracker">
-    <p id="statusMessage">Status: Waiting for file...</p>
+    <p id="statusMessage">Status: Waiting for test case execution...</p>
     <div id="statusBar" class="status-bar">
         <div id="statusProgress" class="status-progress"></div>
     </div>
 </div>
+
 
 <!-- Modal for Error Message -->
 <div id="errorModal" class="modal error-modal">
@@ -112,66 +113,79 @@
         document.getElementById("fileInput").value = "";
     });
 
-    function updateProgress() {
-        let progress = 0;
-        let progressInterval = setInterval(function () {
-            progress += 10;
-            document.getElementById("statusProgress").style.width = progress + "%";
-            if (progress === 100) {
-                clearInterval(progressInterval);
-                document.getElementById("statusMessage").innerText = "Status: Conversion completed!";
-            }
-        }, 1000);
-    }
+    // Function to update progress dynamically
+function updateProgress(progress) {
+    document.getElementById("statusProgress").style.width = progress + "%";
+    document.getElementById("statusMessage").innerText = "Test Case Progress: " + progress + "%";
+
+    // Log progress dynamically in the log section
+    logError("Test Case Progress: " + progress + "%");
+}
 
     // Function to log errors in the log table
-    function logError(message) {
-        const logMessages = document.getElementById("logMessages");
+function logError(message) {
+    const logMessages = document.getElementById("logMessages");
 
-        // Get the current timestamp
-        const timestamp = new Date().toLocaleString();
+    // Get the current timestamp
+    const timestamp = new Date().toLocaleString();
 
-        // Create a new row for the table
-        const newRow = document.createElement("tr");
+    // Create a new row for the table
+    const newRow = document.createElement("tr");
 
-        // Add cells with error details
-        const indexCell = document.createElement("td");
-        const timestampCell = document.createElement("td");
-        const messageCell = document.createElement("td");
+    // Add cells with error details
+    const indexCell = document.createElement("td");
+    const timestampCell = document.createElement("td");
+    const messageCell = document.createElement("td");
 
-        indexCell.innerText = logMessages.children.length + 1; // Incrementing index for each new log
-        timestampCell.innerText = timestamp;
-        messageCell.innerText = message;
+    indexCell.innerText = logMessages.children.length + 1; // Incrementing index for each new log
+    timestampCell.innerText = timestamp;
+    messageCell.innerText = message;
 
-        // Append the cells to the row
-        newRow.appendChild(indexCell);
-        newRow.appendChild(timestampCell);
-        newRow.appendChild(messageCell);
+    // Append the cells to the row
+    newRow.appendChild(indexCell);
+    newRow.appendChild(timestampCell);
+    newRow.appendChild(messageCell);
 
-        // Insert the row at the top for latest logs
-        logMessages.insertBefore(newRow, logMessages.firstChild);
-    }
+    // Insert the row at the top for latest logs
+    logMessages.insertBefore(newRow, logMessages.firstChild);
+}
 
     
-    // Function to run the citation test and log the results
-    function runCitationTest() {
-        fetch('/dashboard/runtest')
-            .then(response => response.json())
-            .then(data => {
-                // Display the result
-                document.getElementById('testResult').innerText = data.message;
+    // Function to run the citation test and log the results in the error log
+function runCitationTest() {
+    fetch('/dashboard/runtest')
+        .then(response => response.json())
+        .then(data => {
+            // Log each progress update into the error log table
+            logError("Test Case Progress: 0%");
+            let progress = 0;
+            let progressInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 20; // Simulating progress in 20% increments
+                    logError("Test Case Progress: " + progress + "%");
+                    // Update the progress bar width based on the current progress
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                } else {
+                    clearInterval(progressInterval);
+                    if (data.message.includes('Test Passed')) {
+                        logError("Test Case Completed Successfully!");
+                        document.getElementById("statusMessage").innerText = "Test Case Completed!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                    } else {
+                        logError("Test Case Failed: " + data.message); // Log final result as failure
+                        document.getElementById("statusMessage").innerText = "Test Case Failed!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                    }
+                }
+            }, 1000); // Update progress every 1 second
+        })
+        .catch(error => {
+            // Handle error
+            logError("Citation Test failed: " + error);  // Log the error in the log section
+        });
+}
 
-                // Log the test result to the error log section
-                logError("Citation Test Result: " + data.message); // Logging the result
-            })
-            .catch(error => {
-                // Handle error
-                document.getElementById('testResult').innerText = 'Error: ' + error;
 
-                // Log the error to the error log section
-                logError("Citation Test failed: " + error); // Logging the error
-            });
-    }
 
 </script>
 

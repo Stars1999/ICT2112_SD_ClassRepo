@@ -37,7 +37,7 @@ namespace ICT2106WebApp.mod1grp4
       var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
       // Temporary JSON file for testing abstract node
-      string jsonFilePath = "c:\\Users\\Joel\\OneDrive\\Documents\\SIT ICT\\y2\\y2 tri 2\\Software Design\\latex project\\ICT2106WebApp\\mod1grp4\\dummyTableNode.json";
+      string jsonFilePath = "./dummyTableNode.json";
       string jsonData = await File.ReadAllTextAsync(jsonFilePath);
       var abstractNodes = JsonSerializer.Deserialize<List<TableAbstractNode>>(jsonData);
       

@@ -1,4 +1,5 @@
 using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace ICT2106WebApp.mod1grp4 {    
     public class CellStyling
@@ -10,18 +11,18 @@ namespace ICT2106WebApp.mod1grp4 {
         public bool italic { get; set; }
 
         [BsonElement("border")]
-        public Border border { get; set; }
+        public Dictionary<string, string> border { get; set; }
 
         [BsonElement("size")]
-        public Size size { get; set; }
+        public Dictionary<string, string> size { get; set; }
 
         [BsonElement("backgroundcolor")]
         public string backgroundcolor { get; set; }
 
         public CellStyling()
         {
-            border = new Border();
-            size = new Size();
+            border = new Dictionary<string, string>();
+            size = new Dictionary<string, string>();
         }
     }
 }

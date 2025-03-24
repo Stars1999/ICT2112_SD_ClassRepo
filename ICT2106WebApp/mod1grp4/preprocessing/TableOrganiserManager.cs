@@ -7,6 +7,7 @@ namespace ICT2106WebApp.mod1grp4
     {
         public List<Table> organiseTables(List<TableAbstractNode> abstractNodes)
         {
+            Console.WriteLine("MODULE 1 GROUP 4: START");
             var tables = new List<Table>();
 
             foreach (var node in abstractNodes)
@@ -23,13 +24,13 @@ namespace ICT2106WebApp.mod1grp4
                         var cellContent = cellNode.content;
                         var cellStylingJson = JsonSerializer.Serialize(cellNode.styling);
                         var cellStyling = JsonSerializer.Deserialize<CellStyling>(cellStylingJson);
-                        cells.Add(new TableCell(cellContent, cellStyling) { type = "cell" });
+                        cells.Add(new TableCell(cellContent, cellStyling) { type = "Cell" });
                     }
 
-                    rows.Add(new TableRow(string.Empty, cells) {type = "row"});
+                    rows.Add(new TableRow(string.Empty, cells) {type = "Row"});
                 }
 
-                tables.Add(new Table(tableId, rows, false, string.Empty) { type = "table" });
+                tables.Add(new Table(tableId, rows, false, node.content) { type = "Table" });
             }
 
             return tables;

@@ -24,15 +24,15 @@ namespace ICT2106WebApp.mod1grp4
         public async Task<bool> saveTable(Table table)
         {
             var filter = Builders<Table>.Filter.Eq("tableId", table.tableId);
-            // var filter = Builders<Table>.Filter.Eq(t => t.GetTableId(), table.GetTableId());
             var result = await tableCollection.ReplaceOneAsync(filter, table, new ReplaceOptions { IsUpsert = true });
             return result.IsAcknowledged && result.ModifiedCount > 0;
         }
 
-        // Delete all tables in the collection
-        public async Task<bool> deleteTables()
+        // Delete specified tables in the collection
+        public async Task<bool> deleteTable(Table table)
         {
-            var result = await tableCollection.DeleteManyAsync(Builders<Table>.Filter.Empty);
+            var filter = Builders<Table>.Filter.Eq("tableId", table.tableId);
+            var result = await tableCollection.DeleteOneAsync(filter);
             return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
@@ -55,7 +55,11 @@ namespace ICT2106WebApp.mod1grp4
                     }
                     break;
                 case OperationType.DELETE:
-                    return (T)(object)await deleteTables();
+                    if (data is Table tableToDelete)
+                    {
+                        return (T)(object)await deleteTable(tableToDelete);
+                    }
+                    break;
             }
             return default(T);
         }

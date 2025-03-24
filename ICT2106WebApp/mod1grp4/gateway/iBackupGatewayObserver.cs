@@ -3,7 +3,7 @@ namespace ICT2106WebApp.mod1grp4 {
     {
         Task<List<Table>> retrieveBackupTables(List<Table> tables);
         Task<bool> saveTable(Table table);
-        Task<bool> deleteTables();
+        Task<bool> deleteTable(Table table);
         Task<T> updateSubject<T>(OperationType type, string message, object data);
     }
 } 

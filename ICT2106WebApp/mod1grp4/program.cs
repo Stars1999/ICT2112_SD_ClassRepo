@@ -42,10 +42,6 @@ namespace ICT2106WebApp.mod1grp4
       var abstractNodes = JsonSerializer.Deserialize<List<TableAbstractNode>>(jsonData);
       
       // Step 1: Organize tables
-      if (abstractNodes == null)
-      {
-        throw new InvalidOperationException("Failed to deserialize abstract nodes from JSON data.");
-      }
       var tableOrganiser = new TableOrganiserManager();
       List<Table> tablesFromNode = tableOrganiser.organiseTables(abstractNodes);
 
@@ -63,8 +59,14 @@ namespace ICT2106WebApp.mod1grp4
       // Console.WriteLine("LaTeX Output:");  // PUT YOUR WRITELINES IN YOUR OWN CLASS
       // Console.WriteLine(latexOutput);
 
-      // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node)
-      Console.WriteLine("Post-processing completed. LaTeX output ready for node.");
+      // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node, validation of latex)
+      var tableValidationManager = new TableValidationManager();
+      // var validationResults = tableValidationManager.validateTableLatexOutput(processedTables);
+
+      var processedTableManager = new ProcessedTableManager();
+      processedTableManager.attach(rowTabularGateway_RDG);
+      // processedTableManager.logProcessingStatus(validationResults);
+      await processedTableManager.slotProcessedTableToTree(cleanedTables);
     }
   }
 }

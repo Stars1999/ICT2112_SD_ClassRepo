@@ -5,9 +5,6 @@ using ICT2106WebApp.Utilities;
 namespace ICT2106WebApp.mod2grp6.Text
 {
     /// <summary>
-    /// TextManager class responsible for handling text formatting operations.
-    /// Implements the IFormatText interface.
-    /// </summary>
     public class TextManager : IFormatText
     {
         // Private member to store text content
@@ -22,8 +19,6 @@ namespace ICT2106WebApp.mod2grp6.Text
         }
 
         /// Starts the text formatting process by initializing the content
-        /// <param name="content">The document content to format</param>
-        /// returns true if initialization was successful, false otherwise
         public bool StartTextFormatting(List<AbstractNode> content)
         {
             try

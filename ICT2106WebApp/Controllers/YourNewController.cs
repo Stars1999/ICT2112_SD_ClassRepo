@@ -29,6 +29,12 @@ namespace ICT2106WebApp.Controllers
 
             // Initialize sample data for the Editorial template
             InitializeEditorialTemplate();
+
+            // Create a TemplateObserver instance
+            TemplateObserver observer = new TemplateObserver(); // Create the observer object
+
+            // Attach the observer to TemplateManager
+            _templateManager.Attach(observer);
             
             // For initial page load, just return the view
             return View();

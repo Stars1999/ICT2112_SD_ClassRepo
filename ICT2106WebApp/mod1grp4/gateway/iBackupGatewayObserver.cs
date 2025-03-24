@@ -1,4 +1,5 @@
 namespace ICT2106WebApp.mod1grp4 {
+    // iBackupGatewayObserver (Joel - COM
     public interface iBackupGatewayObserver
     {
         Task<List<Table>> retrieveBackupTables(List<Table> tables);

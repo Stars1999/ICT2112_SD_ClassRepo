@@ -5,6 +5,7 @@ namespace ICT2106WebApp.mod1grp4
 {
     public class TableOrganiserManager : iTableOrganise<TableAbstractNode>
     {
+        // Convert the abstract nodes given into custom table entity (Joel - COMPLETED)
         public List<Table> organiseTables(List<TableAbstractNode> abstractNodes)
         {
             Console.WriteLine("MODULE 1 GROUP 4: START");

@@ -4,11 +4,12 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ICT2106WebApp.mod1grp4
 {
+    // Table (Joel - COMPLETED)
     public class Table
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId MongoId { get; set; } // MongoDB ID
+        private ObjectId MongoId { get; set; } // MongoDB ID
 
         [BsonElement("tableId")]
         public int tableId { get; set; } // Represents nodeid in json

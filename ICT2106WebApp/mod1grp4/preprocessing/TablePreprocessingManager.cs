@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-
-
 namespace ICT2106WebApp.mod1grp4 {
     class TablePreprocessingManager : iBackupTabularSubject, iPreprocessedTable
     {
@@ -11,9 +6,10 @@ namespace ICT2106WebApp.mod1grp4 {
 
         }
 
+        // Fix table integrity and fixing corrupted tables then save as backup (Jing Kai - NOT COMPLETED)
         public async Task<List<Table>> fixTableIntegrity(List<Table> tables)
         {
-            // Logic to fix table integrity
+            // Logic to fix table integrity -- insert here
             foreach (var table in tables)
             {
                 await notify<bool>(OperationType.SAVE, $"Table integrity has been fixed by TablePreprocessingManager and table with id {table.tableId} saved as backup", table);
@@ -22,6 +18,7 @@ namespace ICT2106WebApp.mod1grp4 {
             return tables;
         }
 
+        // Recover backup tables if ids tally with abstract node and whats in our database collection (Joel - COMPLETED)
         public async Task<List<Table>> recoverBackupTablesIfExist(List<Table> tablesFromNode)
         {
             // Retrieve tables using backupObserver

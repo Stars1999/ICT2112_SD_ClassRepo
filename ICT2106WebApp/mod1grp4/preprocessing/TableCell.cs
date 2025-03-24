@@ -2,6 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ICT2106WebApp.mod1grp4
 {
+    // TableCell (Joel - COMPLETED)
     public class TableCell
     {
         [BsonElement("type")]

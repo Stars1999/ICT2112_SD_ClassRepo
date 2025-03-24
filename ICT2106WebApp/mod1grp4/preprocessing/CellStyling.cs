@@ -2,6 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace ICT2106WebApp.mod1grp4 {    
+    // CellStyling (Joel - COMPLETED)
     public class CellStyling
     {
         [BsonElement("bold")]

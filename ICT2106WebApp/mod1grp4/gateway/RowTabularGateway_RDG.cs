@@ -12,7 +12,7 @@ namespace ICT2106WebApp.mod1grp4
             tableCollection = database.GetCollection<Table>("tables");
         }
 
-        // Retrieve backup tables with a given list of ids
+        // Retrieve backup tables with a given list of ids (Joel - COMPLETED)
         public async Task<List<Table>> retrieveBackupTables(List<Table> tablesFromNode)
         {
             var ids = tablesFromNode.Select(t => t.tableId).ToList();
@@ -20,7 +20,7 @@ namespace ICT2106WebApp.mod1grp4
             return await tableCollection.Find(filter).ToListAsync();
         }
 
-        // Save a table
+        // Save a table (Joel - COMPLETED)
         public async Task<bool> saveTable(Table table)
         {
             var filter = Builders<Table>.Filter.Eq("tableId", table.tableId);
@@ -28,7 +28,7 @@ namespace ICT2106WebApp.mod1grp4
             return result.IsAcknowledged && result.ModifiedCount > 0;
         }
 
-        // Delete specified tables in the collection
+        // Delete specified tables in the collection (Joel - COMPLETED)
         public async Task<bool> deleteTable(Table table)
         {
             var filter = Builders<Table>.Filter.Eq("tableId", table.tableId);
@@ -36,7 +36,7 @@ namespace ICT2106WebApp.mod1grp4
             return result.IsAcknowledged && result.DeletedCount > 0;
         }
 
-        // Update the subjects with a message
+        // Update the subjects with a message (Joel - COMPLETED)
         public async Task<T> updateSubject<T>(OperationType type, string message, object data)
         {
             Console.WriteLine($"Observer: {message}");

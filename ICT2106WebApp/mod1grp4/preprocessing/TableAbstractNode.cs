@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace ICT2106WebApp.mod1grp4
 {
+    // Dummy abstract node styling (Joel - COMPLETED)
     public class TableAbstractNode
     {
         public string nodeID { get; set; }

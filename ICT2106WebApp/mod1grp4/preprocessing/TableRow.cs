@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ICT2106WebApp.mod1grp4
 {
+    // TableRow (Joel - COMPLETED)
     public class TableRow
     {
         [BsonElement("type")]

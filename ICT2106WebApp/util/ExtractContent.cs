@@ -158,14 +158,14 @@ namespace Utilities
 			// ✅ Convert font size from half-points
 			int fontSize = fontSizeRaw != null ? int.Parse(fontSizeRaw) / 2 : 12; // Default 12pt
 
-            // Extract line spacing
-            // Default is Multiple, 1.15x, 276 twips
-            string lineSpacingType = "Multiple (1.15x)";
-            double lineSpacingValue = 13.8; // 276 twips / 20 = 13.8pt
+			// Extract line spacing
+			// Default is Multiple, 1.15x, 276 twips
+			string lineSpacingType = "Multiple (1.15x)";
+			double lineSpacingValue = 13.8; // 276 twips / 20 = 13.8pt
 
-            if (paragraph.ParagraphProperties != null)
-            {
-                var spacingElement = paragraph.ParagraphProperties.SpacingBetweenLines;
+			if (paragraph.ParagraphProperties != null)
+			{
+				var spacingElement = paragraph.ParagraphProperties.SpacingBetweenLines;
 
 				if (spacingElement != null)
 				{
@@ -179,8 +179,8 @@ namespace Utilities
 					{
 						try
 						{
-                            // Provided value is in twips, so need to convert to what is shown in Word
-                            int twipValue = int.Parse(spacingElement.Line.Value ?? "");
+							// Provided value is in twips, so need to convert to what is shown in Word
+							int twipValue = int.Parse(spacingElement.Line.Value ?? "");
 							lineSpacingValue = twipValue / 20.0;
 
 							// Convert "auto" into actual line spacing type names
@@ -214,9 +214,9 @@ namespace Utilities
 						}
 					}
 				}
-            }
+			}
 
-            var paragraphData = new Dictionary<string, object>();
+			var paragraphData = new Dictionary<string, object>();
 			paragraphData["alignment"] = alignment;
 			// paragraphData["fontType"] = fontType;
 			// paragraphData["fontSize"] = fontSize;
@@ -239,9 +239,9 @@ namespace Utilities
 					{ "fonttype", paraFontType },
 					{ "fontcolor", fontColor },
 					{ "highlight", highlightColor },
-                    { "lineSpacingType", lineSpacingType },
+					{ "lineSpacingType", lineSpacingType },
 					{ "lineSpacingValue", lineSpacingValue },
-                },
+				},
 			};
 			// the one below can grab as text
 			// // check for internal using word. This works
@@ -631,7 +631,7 @@ namespace Utilities
 					haveBibliography = true;
 					return new Dictionary<string, object>
 					{
-						{ "type", "Bibliography" },
+						{ "type", "bibliography" },
 						{ "content", text },
 						{ "styling", PropertiesList },
 					};

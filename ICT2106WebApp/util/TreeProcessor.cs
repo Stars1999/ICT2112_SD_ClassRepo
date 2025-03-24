@@ -85,7 +85,7 @@ namespace Utilities
 		}
 
 		// Recursive method to print the tree hierarchy
-		private void PrintTree(AbstractNode node, int level)
+		public void PrintTree(AbstractNode node, int level)
 		{
 			// Print the node's content (could be its type or content)
 			Console.WriteLine(

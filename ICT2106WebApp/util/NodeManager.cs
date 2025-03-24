@@ -51,7 +51,7 @@ namespace Utilities
 					return 7;
 				case "row":
 					return 8;
-				case "runsParagraph":
+				case "paragraph":
 					return 9;
 				default:
 					return -1;

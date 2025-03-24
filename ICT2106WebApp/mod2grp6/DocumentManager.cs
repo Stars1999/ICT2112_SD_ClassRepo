@@ -12,7 +12,7 @@ namespace ICT2106WebApp.mod2grp6
         private FormatConversionManager formatConversionManager;
         private TemplateManager templateManager;
         
-        // Sample document data from sample.cs
+        // Sample document data from sample.cs in actual implementation this variable would not be needed
         private Dictionary<string, List<AbstractNode>> documentContent;
         
         // Constructor for DocumentManager
@@ -90,6 +90,7 @@ namespace ICT2106WebApp.mod2grp6
         }
         
         /// <summary>
+        /// Converts a document to a LaTeX template
         public bool convertToLatexTemplate(string id, string templateId)
         {
             try
@@ -129,6 +130,25 @@ namespace ICT2106WebApp.mod2grp6
             }
         }
         
+        // Helper methods for retrieving content - these now simply call GetContentByType
+        private List<AbstractNode> retrieveFormatContent(string id)
+        {
+            return GetContentByType("format");
+        }
         
+        private List<AbstractNode> retrieveTextContent(string id)
+        {
+            return GetContentByType("text");
+        }
+        
+        private List<AbstractNode> retrieveParagraphContent(string id)
+        {
+            return GetContentByType("paragraph");
+        }
+        
+        private List<AbstractNode> retrieveLayoutContent(string id)
+        {
+            return GetContentByType("layout");
+        }
     }
 }

@@ -1,10 +1,10 @@
 namespace ICT2106WebApp.mod1grp4 {
-    // iBackupGatewayObserver (Joel - COM
+    // iBackupGatewayObserver (Joel - COMPLETED)
     public interface iBackupGatewayObserver
     {
-        Task<List<Table>> retrieveBackupTables(List<Table> tables);
-        Task<bool> saveTable(Table table);
-        Task<bool> deleteTable(Table table);
-        Task<T> updateSubject<T>(OperationType type, string message, object data);
+        public Task<List<Table>> retrieveBackupTables(List<Table> tables);
+        public Task<bool> saveTable(Table table);
+        public Task<bool> deleteTable(Table table);
+        public Task<T> updateSubject<T>(OperationType type, string message, object data);
     }
 } 

@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Text.Json;
 
 namespace ICT2106WebApp.mod1grp4
 {
-    class ProcessedTableManager : iBackupTabularSubject
+    // ProcessedTableManager (Siti - COMPLETED)
+    public class ProcessedTableManager : iBackupTabularSubject
     {
         public ProcessedTableManager()
         {
         }
 
+        // Use module 3 logger to log latex validation status (Siti - COMPLETED)
         public bool logProcessingStatus(string description) {
             // Log to module 3
             var logID = Guid.NewGuid().ToString();
@@ -21,15 +19,16 @@ namespace ICT2106WebApp.mod1grp4
             return true;
         }
 
+        // Use group 3 function to slot processed tables to tree (Siti - COMPLETED)
         public async Task<bool> slotProcessedTableToTree(List<Table> processedTables)
         {
             // Convert back to node and slot into tree
             var abstractNodes = tableToNode(processedTables);
             
-            // Create JSON for debugging
+            // Create JSON for debugging and showcasing for me and andrea part
             var json = JsonSerializer.Serialize(abstractNodes, new JsonSerializerOptions { WriteIndented = true });
             await File.WriteAllTextAsync("debug_abstract_nodes.json", json);
-            Console.WriteLine("Debug JSON created: debug_abstract_nodes.json");
+            Console.WriteLine("Debug JSON created for showcase: debug_abstract_nodes.json");
 
             // use group 3 updateLatexDocument function to slot back into tree
             // updateLatexDocument(abstractNodes);
@@ -42,9 +41,10 @@ namespace ICT2106WebApp.mod1grp4
             return true;
         }
 
-        public List<TableAbstractNode> tableToNode(List<Table> processedTables)
+        // Convert tables back to node format (Siti - COMPLETED)
+        public List<AbstractNode> tableToNode(List<Table> processedTables)
         {
-            var abstractNodes = new List<TableAbstractNode>();
+            var abstractNodes = new List<AbstractNode>();
 
             foreach (var table in processedTables)
             {
@@ -64,9 +64,12 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 { "bold", cell.styling.bold },
                                 { "italic", cell.styling.italic },
+                                { "fontsize", cell.styling.fontsize },
+                                { "underline", cell.styling.underline },
+                                { "horizontalalignment", cell.styling.horizontalalignment },   
                                 { "border", cell.styling.border },
                                 { "size", cell.styling.size },
-                                { "backgroundcolor", cell.styling.backgroundcolor }
+                                { "backgroundcolor", cell.styling.backgroundcolor }    
                             }
                         };
                         cellNodes.Add(cellNode);
@@ -81,7 +84,7 @@ namespace ICT2106WebApp.mod1grp4
                     rowNodes.Add(rowNode);
                 }
 
-                var tableNode = new TableAbstractNode
+                var tableNode = new AbstractNode
                 {
                     nodeID = table.tableId.ToString(),
                     type = "Table",
@@ -94,6 +97,7 @@ namespace ICT2106WebApp.mod1grp4
             return abstractNodes;
         }
 
+        // Delete tables that are no longer needed (Siti - COMPLETED)
         public async Task<bool> deleteTables(List<Table> tables)
         {
             foreach (var table in tables)

@@ -1,6 +1,6 @@
 namespace ICT2106WebApp.mod1grp4 {
     // iBackupTabularSubject (Joel - COMPLETED)
-    abstract class iBackupTabularSubject {
+    public abstract class iBackupTabularSubject {
         private ICollection<iBackupGatewayObserver> observers;
 
         public iBackupTabularSubject() {
@@ -17,7 +17,7 @@ namespace ICT2106WebApp.mod1grp4 {
             observers.Remove(observer);
         }
 
-        protected async Task<T> notify<T>(OperationType type, string message, object data) {
+        public async Task<T> notify<T>(OperationType type, string message, object data) {
             foreach (iBackupGatewayObserver observer in observers)
             {
                 return await observer.updateSubject<T>(type, message, data);

@@ -1,20 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-
 namespace ICT2106WebApp.mod1grp4
 {
-    class TableLatexConversionManager : iBackupTabularSubject, iTableLatexConversion
-    // public class TableLatexConversionManager
-    // public class TableLatexConversionManager : iTableLatexConversion
+    // TableLatexConversionManager (Andrea - COMPLETED)
+    public class TableLatexConversionManager : iBackupTabularSubject, iTableLatexConversion
     {
-        // private iTableLatexConversion _latexConverter;
-
-        // public TableLatexConversionManager(iTableLatexConversion latexConverter)
-        // {
-        //     _latexConverter = latexConverter;
-        // }
 
         private iBackupGatewayObserver backupObserver;
 
@@ -23,15 +11,9 @@ namespace ICT2106WebApp.mod1grp4
 
         }
 
+        // Convert table to latex (Andrea - COMPLETED)
         public async Task<List<Table>> convertToLatexAsync(List<Table> tableList)
         {
-
-            // iTableCellCollection cellCollection = new TableCellCollection(table.GetCells());
-            // iTableCellIterator iterator = cellCollection.CreateIterator();
-
-            // Get numebr of columns
-
-
             foreach (var table in tableList)
             {
                 if (table.tableCompletionState == false)
@@ -150,13 +132,6 @@ namespace ICT2106WebApp.mod1grp4
             await notify<bool>(OperationType.SAVE, "Updated LaTeX checkpoint for table", table);
             return true;
         }
-
-        // public async Task<bool> UpdateLatexCheckpointAsync(int nodeId, string latexOutput)
-        // {
-        //     await Task.Delay(500);  // Simulating a time-consuming operation (e.g., database or file I/O)
-        //     Console.WriteLine($"Updated LaTeX checkpoint for Node {nodeId}.");
-        //     return true;
-        // }
     }
 
 }

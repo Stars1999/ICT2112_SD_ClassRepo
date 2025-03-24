@@ -3,7 +3,7 @@ using MongoDB.Driver;
 namespace ICT2106WebApp.mod1grp4
 {
     // RDG for operations within our backup tables collection through the gateway
-    class RowTabularGateway_RDG : iBackupGatewayObserver
+    public class RowTabularGateway_RDG : iBackupGatewayObserver
     {
         private readonly IMongoCollection<Table> tableCollection;
 

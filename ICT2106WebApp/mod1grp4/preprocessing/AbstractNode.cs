@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-
 namespace ICT2106WebApp.mod1grp4
 {
-    // Dummy abstract node styling (Joel - COMPLETED)
-    public class TableAbstractNode
+    // Dummy abstract node  (Joel - COMPLETED)
+    public class AbstractNode
     {
         public string nodeID { get; set; }
         public string type { get; set; }

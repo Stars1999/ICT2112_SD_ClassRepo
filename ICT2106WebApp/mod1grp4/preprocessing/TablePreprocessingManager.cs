@@ -1,5 +1,5 @@
 namespace ICT2106WebApp.mod1grp4 {
-    class TablePreprocessingManager : iBackupTabularSubject, iPreprocessedTable
+    public class TablePreprocessingManager : iBackupTabularSubject, iPreprocessedTable
     {
         public TablePreprocessingManager() 
         {

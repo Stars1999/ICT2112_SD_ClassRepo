@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Text.Json;
 
 namespace ICT2106WebApp.mod1grp4
@@ -36,12 +29,14 @@ namespace ICT2106WebApp.mod1grp4
       var serviceProvider = builder.Services.BuildServiceProvider();
       var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
+
       // Temporary JSON file for testing abstract node
       string jsonFilePath = "./dummyTableNode.json";
       string jsonData = await File.ReadAllTextAsync(jsonFilePath);
-      var abstractNodes = JsonSerializer.Deserialize<List<TableAbstractNode>>(jsonData);
+      var abstractNodes = JsonSerializer.Deserialize<List<AbstractNode>>(jsonData);
+
       
-      // Step 1: Organize tables
+      // Step 1: Convert abstract node to custom table entity
       var tableOrganiser = new TableOrganiserManager();
       List<Table> tablesFromNode = tableOrganiser.organiseTables(abstractNodes);
 
@@ -57,14 +52,12 @@ namespace ICT2106WebApp.mod1grp4
       latexConversionManager.attach(rowTabularGateway_RDG);
       List<Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
 
-
-      // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node, validation of latex)
-      var tableValidationManager = new TableValidationManager();
-      var validationResults = tableValidationManager.validateTableLatexOutput(abstractNodes,processedTables);
-
+      // // Step 4: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
+      // var tableValidationManager = new TableValidationManager();
+      // var validationStatus = tableValidationManager.validateTableLatexOutput(abstractNodes,processedTables);
       var processedTableManager = new ProcessedTableManager();
       processedTableManager.attach(rowTabularGateway_RDG);
-      // processedTableManager.logProcessingStatus(validationResults);
+      // processedTableManager.logProcessingStatus(validationStatus);
       await processedTableManager.slotProcessedTableToTree(cleanedTables);
     }
   }

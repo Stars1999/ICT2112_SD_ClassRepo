@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace ICT2106WebApp.mod1grp4
 {
-    public class TableOrganiserManager : iTableOrganise<TableAbstractNode>
+    public class TableOrganiserManager : iTableOrganise<AbstractNode>
     {
         // Convert the abstract nodes given into custom table entity (Joel - COMPLETED)
-        public List<Table> organiseTables(List<TableAbstractNode> abstractNodes)
+        public List<Table> organiseTables(List<AbstractNode> abstractNodes)
         {
             Console.WriteLine("MODULE 1 GROUP 4: START");
             var tables = new List<Table>();

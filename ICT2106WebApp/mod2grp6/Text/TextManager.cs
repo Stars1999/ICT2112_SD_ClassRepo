@@ -4,7 +4,6 @@ using ICT2106WebApp.Utilities;
 
 namespace ICT2106WebApp.mod2grp6.Text
 {
-    /// <summary>
     public class TextManager : IFormatText
     {
         // Private member to store text content
@@ -54,7 +53,98 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 foreach (AbstractNode node in content)
                 {
-                    ApplyFontFormatting(node);
+                    // Apply font formatting to the current node
+                    List<Dictionary<string, object>> stylings = node.GetStyling();
+                    
+                    foreach (Dictionary<string, object> styling in stylings)
+                    {
+                        string originalContent = node.GetContent();
+                        string newContent = originalContent;
+                        
+                        // Handle font family
+                        if (styling.ContainsKey("FontType"))
+                        {
+                            string fontFamily = styling["FontType"].ToString();
+                            string latexFont = ConvertFontToLatex(fontFamily);
+                            newContent = ApplyLatexFontCommand(newContent, latexFont);
+                        }
+                        
+                        // Handle font size
+                        if (styling.ContainsKey("FontSize"))
+                        {
+                            // Convert the font size to a float or int
+                            float fontSize = 0;
+                            if (styling["FontSize"] is float)
+                            {
+                                fontSize = (float)styling["FontSize"];
+                            }
+                            else if (styling["FontSize"] is int)
+                            {
+                                fontSize = (int)styling["FontSize"];
+                            }
+                            else if (styling["FontSize"] is string)
+                            {
+                                float.TryParse(styling["FontSize"].ToString(), out fontSize);
+                            }
+                            
+                            // Apply LaTeX font size command
+                            string latexFontSize = ConvertFontSizeToLatex(fontSize);
+                            newContent = $"{{{latexFontSize} {newContent}}}";
+                        }
+                        
+                        // Update the node content
+                        node.SetContent(newContent);
+                    }
+                    
+                    // If it's a composite node, apply formatting to children
+                    if (node is CompositeNode compositeNode)
+                    {
+                        foreach (AbstractNode child in compositeNode.GetChildren())
+                        {
+                            // Recursive inline of ApplyFontFormatting for child nodes
+                            List<Dictionary<string, object>> childStylings = child.GetStyling();
+                            
+                            foreach (Dictionary<string, object> styling in childStylings)
+                            {
+                                string originalContent = child.GetContent();
+                                string newContent = originalContent;
+                                
+                                // Handle font family
+                                if (styling.ContainsKey("FontType"))
+                                {
+                                    string fontFamily = styling["FontType"].ToString();
+                                    string latexFont = ConvertFontToLatex(fontFamily);
+                                    newContent = ApplyLatexFontCommand(newContent, latexFont);
+                                }
+                                
+                                // Handle font size
+                                if (styling.ContainsKey("FontSize"))
+                                {
+                                    // Convert the font size to a float or int
+                                    float fontSize = 0;
+                                    if (styling["FontSize"] is float)
+                                    {
+                                        fontSize = (float)styling["FontSize"];
+                                    }
+                                    else if (styling["FontSize"] is int)
+                                    {
+                                        fontSize = (int)styling["FontSize"];
+                                    }
+                                    else if (styling["FontSize"] is string)
+                                    {
+                                        float.TryParse(styling["FontSize"].ToString(), out fontSize);
+                                    }
+                                    
+                                    // Apply LaTeX font size command
+                                    string latexFontSize = ConvertFontSizeToLatex(fontSize);
+                                    newContent = $"{{{latexFontSize} {newContent}}}";
+                                }
+                                
+                                // Update the node content
+                                child.SetContent(newContent);
+                            }
+                        }
+                    }
                 }
                 return true;
             }
@@ -62,62 +152,6 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 Console.WriteLine($"Error in FormatFonts: {ex.Message}");
                 return false;
-            }
-        }
-
-        // Helper method to recursively apply font formatting to nodes
-        private void ApplyFontFormatting(AbstractNode node)
-        {
-            // Apply font formatting to the current node
-            List<Dictionary<string, object>> stylings = node.GetStyling();
-            
-            foreach (Dictionary<string, object> styling in stylings)
-            {
-                string originalContent = node.GetContent();
-                string newContent = originalContent;
-                
-                // Handle font family
-                if (styling.ContainsKey("FontType"))
-                {
-                    string fontFamily = styling["FontType"].ToString();
-                    string latexFont = ConvertFontToLatex(fontFamily);
-                    newContent = ApplyLatexFontCommand(newContent, latexFont);
-                }
-                
-                // Handle font size
-                if (styling.ContainsKey("FontSize"))
-                {
-                    // Convert the font size to a float or int
-                    float fontSize = 0;
-                    if (styling["FontSize"] is float)
-                    {
-                        fontSize = (float)styling["FontSize"];
-                    }
-                    else if (styling["FontSize"] is int)
-                    {
-                        fontSize = (int)styling["FontSize"];
-                    }
-                    else if (styling["FontSize"] is string)
-                    {
-                        float.TryParse(styling["FontSize"].ToString(), out fontSize);
-                    }
-                    
-                    // Apply LaTeX font size command
-                    string latexFontSize = ConvertFontSizeToLatex(fontSize);
-                    newContent = $"{{{latexFontSize} {newContent}}}";
-                }
-                
-                // Update the node content
-                node.SetContent(newContent);
-            }
-            
-            // If it's a composite node, apply formatting to children
-            if (node is CompositeNode compositeNode)
-            {
-                foreach (AbstractNode child in compositeNode.GetChildren())
-                {
-                    ApplyFontFormatting(child);
-                }
             }
         }
 
@@ -135,7 +169,74 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 foreach (AbstractNode node in content)
                 {
-                    ApplyStyleFormatting(node);
+                    // Apply style formatting to the current node
+                    List<Dictionary<string, object>> stylings = node.GetStyling();
+                    
+                    foreach (Dictionary<string, object> styling in stylings)
+                    {
+                        bool isBold = styling.ContainsKey("Bold") && (bool)styling["Bold"];
+                        bool isItalic = styling.ContainsKey("Italic") && (bool)styling["Italic"];
+                        bool isUnderline = styling.ContainsKey("underline") && (bool)styling["underline"];
+                        
+                        // Apply LaTeX style commands
+                        string originalContent = node.GetContent();
+                        string newContent = originalContent;
+
+                        if (isBold)
+                        {
+                            newContent = $"\\textbf{{{newContent}}}";
+                        }
+
+                        if (isItalic)
+                        {
+                            newContent = $"\\textit{{{newContent}}}";
+                        }
+
+                        if (isUnderline)
+                        {
+                            newContent = $"\\underline{{{newContent}}}";
+                        }
+
+                        node.SetContent(newContent);
+                    }
+                    
+                    // If it's a composite node, apply formatting to children
+                    if (node is CompositeNode compositeNode)
+                    {
+                        foreach (AbstractNode child in compositeNode.GetChildren())
+                        {
+                            // Apply style formatting to the child node
+                            List<Dictionary<string, object>> childStylings = child.GetStyling();
+                            
+                            foreach (Dictionary<string, object> styling in childStylings)
+                            {
+                                bool isBold = styling.ContainsKey("Bold") && (bool)styling["Bold"];
+                                bool isItalic = styling.ContainsKey("Italic") && (bool)styling["Italic"];
+                                bool isUnderline = styling.ContainsKey("underline") && (bool)styling["underline"];
+                                
+                                // Apply LaTeX style commands
+                                string originalContent = child.GetContent();
+                                string newContent = originalContent;
+
+                                if (isBold)
+                                {
+                                    newContent = $"\\textbf{{{newContent}}}";
+                                }
+
+                                if (isItalic)
+                                {
+                                    newContent = $"\\textit{{{newContent}}}";
+                                }
+
+                                if (isUnderline)
+                                {
+                                    newContent = $"\\underline{{{newContent}}}";
+                                }
+
+                                child.SetContent(newContent);
+                            }
+                        }
+                    }
                 }
                 return true;
             }
@@ -143,50 +244,6 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 Console.WriteLine($"Error in FormatStyles: {ex.Message}");
                 return false;
-            }
-        }
-        
-        // Helper method to recursively apply style formatting to nodes
-        private void ApplyStyleFormatting(AbstractNode node)
-        {
-            // Apply style formatting to the current node
-            List<Dictionary<string, object>> stylings = node.GetStyling();
-            
-            foreach (Dictionary<string, object> styling in stylings)
-            {
-                bool isBold = styling.ContainsKey("Bold") && (bool)styling["Bold"];
-                bool isItalic = styling.ContainsKey("Italic") && (bool)styling["Italic"];
-                bool isUnderline = styling.ContainsKey("underline") && (bool)styling["underline"];
-                
-                // Apply LaTeX style commands
-                string originalContent = node.GetContent();
-                string newContent = originalContent;
-
-                if (isBold)
-                {
-                    newContent = $"\\textbf{{{newContent}}}";
-                }
-
-                if (isItalic)
-                {
-                    newContent = $"\\textit{{{newContent}}}";
-                }
-
-                if (isUnderline)
-                {
-                    newContent = $"\\underline{{{newContent}}}";
-                }
-
-                node.SetContent(newContent);
-            }
-            
-            // If it's a composite node, apply formatting to children
-            if (node is CompositeNode compositeNode)
-            {
-                foreach (AbstractNode child in compositeNode.GetChildren())
-                {
-                    ApplyStyleFormatting(child);
-                }
             }
         }
         
@@ -204,7 +261,86 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 foreach (AbstractNode node in content)
                 {
-                    ApplyColorFormatting(node);
+                    // Apply color formatting to the current node
+                    List<Dictionary<string, object>> stylings = node.GetStyling();
+                    
+                    foreach (Dictionary<string, object> styling in stylings)
+                    {
+                        string originalContent = node.GetContent();
+                        string newContent = originalContent;
+                        
+                        // Handle text color
+                        if (styling.ContainsKey("FontColor"))
+                        {
+                            string color = styling["FontColor"].ToString();
+                            string htmlColorCode = ConvertColorToLatex(color);
+                            
+                            // Apply LaTeX text color command
+                            newContent = $"\\textcolor[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                        }
+                        
+                        // Handle highlighting/background color
+                        if (styling.ContainsKey("Highlight") || styling.ContainsKey("backgroundColor"))
+                        {
+                            string highlightColor = styling.ContainsKey("Highlight") 
+                                ? styling["Highlight"].ToString() 
+                                : (styling.ContainsKey("backgroundColor") 
+                                    ? styling["backgroundColor"].ToString() 
+                                    : "#FFFF00"); // Default to yellow if not specified
+                            
+                            string htmlColorCode = ConvertColorToLatex(highlightColor);
+                            
+                            // Apply LaTeX highlighting command using \colorbox
+                            newContent = $"\\colorbox[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                        }
+                        
+                        // Update the node content
+                        node.SetContent(newContent);
+                    }
+                    
+                    // If it's a composite node, apply formatting to children
+                    if (node is CompositeNode compositeNode)
+                    {
+                        foreach (AbstractNode child in compositeNode.GetChildren())
+                        {
+                            // Apply color formatting to the child node
+                            List<Dictionary<string, object>> childStylings = child.GetStyling();
+                            
+                            foreach (Dictionary<string, object> styling in childStylings)
+                            {
+                                string originalContent = child.GetContent();
+                                string newContent = originalContent;
+                                
+                                // Handle text color
+                                if (styling.ContainsKey("FontColor"))
+                                {
+                                    string color = styling["FontColor"].ToString();
+                                    string htmlColorCode = ConvertColorToLatex(color);
+                                    
+                                    // Apply LaTeX text color command
+                                    newContent = $"\\textcolor[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                                }
+                                
+                                // Handle highlighting/background color
+                                if (styling.ContainsKey("Highlight") || styling.ContainsKey("backgroundColor"))
+                                {
+                                    string highlightColor = styling.ContainsKey("Highlight") 
+                                        ? styling["Highlight"].ToString() 
+                                        : (styling.ContainsKey("backgroundColor") 
+                                            ? styling["backgroundColor"].ToString() 
+                                            : "#FFFF00"); // Default to yellow if not specified
+                                    
+                                    string htmlColorCode = ConvertColorToLatex(highlightColor);
+                                    
+                                    // Apply LaTeX highlighting command using \colorbox
+                                    newContent = $"\\colorbox[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                                }
+                                
+                                // Update the node content
+                                child.SetContent(newContent);
+                            }
+                        }
+                    }
                 }
                 return true;
             }
@@ -212,56 +348,6 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 Console.WriteLine($"Error in FormatColors: {ex.Message}");
                 return false;
-            }
-        }
-        
-        // Helper method to recursively apply color formatting to nodes
-        private void ApplyColorFormatting(AbstractNode node)
-        {
-            // Apply color formatting to the current node
-            List<Dictionary<string, object>> stylings = node.GetStyling();
-            
-            foreach (Dictionary<string, object> styling in stylings)
-            {
-                string originalContent = node.GetContent();
-                string newContent = originalContent;
-                
-                // Handle text color
-                if (styling.ContainsKey("FontColor"))
-                {
-                    string color = styling["FontColor"].ToString();
-                    string htmlColorCode = ConvertColorToLatex(color);
-                    
-                    // Apply LaTeX text color command
-                    newContent = $"\\textcolor[HTML]{{{htmlColorCode}}}{{{newContent}}}";
-                }
-                
-                // Handle highlighting/background color
-                if (styling.ContainsKey("Highlight") || styling.ContainsKey("backgroundColor"))
-                {
-                    string highlightColor = styling.ContainsKey("Highlight") 
-                        ? styling["Highlight"].ToString() 
-                        : (styling.ContainsKey("backgroundColor") 
-                            ? styling["backgroundColor"].ToString() 
-                            : "#FFFF00"); // Default to yellow if not specified
-                    
-                    string htmlColorCode = ConvertColorToLatex(highlightColor);
-                    
-                    // Apply LaTeX highlighting command using \colorbox
-                    newContent = $"\\colorbox[HTML]{{{htmlColorCode}}}{{{newContent}}}";
-                }
-                
-                // Update the node content
-                node.SetContent(newContent);
-            }
-            
-            // If it's a composite node, apply formatting to children
-            if (node is CompositeNode compositeNode)
-            {
-                foreach (AbstractNode child in compositeNode.GetChildren())
-                {
-                    ApplyColorFormatting(child);
-                }
             }
         }
 
@@ -279,7 +365,152 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 foreach (AbstractNode node in content)
                 {
-                    ApplyLineSpacingFormatting(node);
+                    // Apply line spacing formatting to the current node
+                    List<Dictionary<string, object>> stylings = node.GetStyling();
+                    
+                    foreach (Dictionary<string, object> styling in stylings)
+                    {
+                        if (styling.ContainsKey("LineSpacingValue"))
+                        {
+                            // Convert the line spacing to a float
+                            float lineSpacing = 0;
+                            if (styling["LineSpacingValue"] is float)
+                            {
+                                lineSpacing = (float)styling["LineSpacingValue"];
+                            }
+                            else if (styling["LineSpacingValue"] is int)
+                            {
+                                lineSpacing = (int)styling["LineSpacingValue"];
+                            }
+                            else if (styling["LineSpacingValue"] is string)
+                            {
+                                float.TryParse(styling["LineSpacingValue"].ToString(), out lineSpacing);
+                            }
+                            
+                            // Apply line spacing to the node based on its type
+                            if (node.GetNodeType().Equals("paragraph", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // For paragraphs, apply line spacing using LaTeX commands
+                                string originalContent = node.GetContent();
+                                
+                                // Convert the line spacing value to a LaTeX-compatible format
+                                // LaTeX typically uses either direct multipliers (like 1.5) or specific measurements
+                                string latexSpacing;
+                                if (lineSpacing <= 0)
+                                {
+                                    latexSpacing = "1.0"; // Default single spacing
+                                }
+                                else if (lineSpacing <= 1.0)
+                                {
+                                    latexSpacing = lineSpacing.ToString("0.0");
+                                }
+                                else if (lineSpacing <= 2.0)
+                                {
+                                    latexSpacing = lineSpacing.ToString("0.0");
+                                }
+                                else
+                                {
+                                    // Cap at a reasonable maximum for very large values
+                                    latexSpacing = "2.0";
+                                }
+                                
+                                // Apply the line spacing command to the content
+                                // Using the \linespread command which affects the baselineskip
+                                string newContent = $"{{\\linespread{{{latexSpacing}}}\\selectfont {originalContent}}}";
+                                
+                                node.SetContent(newContent);
+                            }
+                            else if (node.GetNodeType().Equals("section", StringComparison.OrdinalIgnoreCase) || 
+                                    node.GetNodeType().Equals("document", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // For section or document level nodes, we might need a different approach
+                                // Add the line spacing command at the beginning of the content
+                                string originalContent = node.GetContent();
+                                
+                                // For these container nodes, we typically want the command to affect everything inside
+                                string latexSpacing = lineSpacing.ToString("0.0");
+                                string spacingCommand = $"\\linespread{{{latexSpacing}}}\\selectfont";
+                                
+                                string newContent = spacingCommand + "\n" + originalContent;
+                                node.SetContent(newContent);
+                            }
+                        }
+                    }
+                    
+                    // If it's a composite node, apply formatting to children
+                    if (node is CompositeNode compositeNode)
+                    {
+                        foreach (AbstractNode child in compositeNode.GetChildren())
+                        {
+                            // Apply line spacing formatting to the child node
+                            List<Dictionary<string, object>> childStylings = child.GetStyling();
+                            
+                            foreach (Dictionary<string, object> styling in childStylings)
+                            {
+                                if (styling.ContainsKey("LineSpacingValue"))
+                                {
+                                    // Convert the line spacing to a float
+                                    float lineSpacing = 0;
+                                    if (styling["LineSpacingValue"] is float)
+                                    {
+                                        lineSpacing = (float)styling["LineSpacingValue"];
+                                    }
+                                    else if (styling["LineSpacingValue"] is int)
+                                    {
+                                        lineSpacing = (int)styling["LineSpacingValue"];
+                                    }
+                                    else if (styling["LineSpacingValue"] is string)
+                                    {
+                                        float.TryParse(styling["LineSpacingValue"].ToString(), out lineSpacing);
+                                    }
+                                    
+                                    // Apply line spacing to the node based on its type
+                                    if (child.GetNodeType().Equals("paragraph", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        // For paragraphs, apply line spacing using LaTeX commands
+                                        string originalContent = child.GetContent();
+                                        
+                                        // Convert the line spacing value to a LaTeX-compatible format
+                                        string latexSpacing;
+                                        if (lineSpacing <= 0)
+                                        {
+                                            latexSpacing = "1.0"; // Default single spacing
+                                        }
+                                        else if (lineSpacing <= 1.0)
+                                        {
+                                            latexSpacing = lineSpacing.ToString("0.0");
+                                        }
+                                        else if (lineSpacing <= 2.0)
+                                        {
+                                            latexSpacing = lineSpacing.ToString("0.0");
+                                        }
+                                        else
+                                        {
+                                            // Cap at a reasonable maximum for very large values
+                                            latexSpacing = "2.0";
+                                        }
+                                        
+                                        // Apply the line spacing command to the content
+                                        string newContent = $"{{\\linespread{{{latexSpacing}}}\\selectfont {originalContent}}}";
+                                        
+                                        child.SetContent(newContent);
+                                    }
+                                    else if (child.GetNodeType().Equals("section", StringComparison.OrdinalIgnoreCase) || 
+                                            child.GetNodeType().Equals("document", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        // For section or document level nodes, we might need a different approach
+                                        string originalContent = child.GetContent();
+                                        
+                                        string latexSpacing = lineSpacing.ToString("0.0");
+                                        string spacingCommand = $"\\linespread{{{latexSpacing}}}\\selectfont";
+                                        
+                                        string newContent = spacingCommand + "\n" + originalContent;
+                                        child.SetContent(newContent);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 return true;
             }
@@ -287,91 +518,6 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 Console.WriteLine($"Error in FormatLineSpacing: {ex.Message}");
                 return false;
-            }
-        }
-        
-        // Helper method to recursively apply line spacing formatting to nodes
-        private void ApplyLineSpacingFormatting(AbstractNode node)
-        {
-            // Apply line spacing formatting to the current node
-            List<Dictionary<string, object>> stylings = node.GetStyling();
-            
-            foreach (Dictionary<string, object> styling in stylings)
-            {
-                if (styling.ContainsKey("LineSpacingValue"))
-                {
-                    // Convert the line spacing to a float
-                    float lineSpacing = 0;
-                    if (styling["LineSpacingValue"] is float)
-                    {
-                        lineSpacing = (float)styling["LineSpacingValue"];
-                    }
-                    else if (styling["LineSpacingValue"] is int)
-                    {
-                        lineSpacing = (int)styling["LineSpacingValue"];
-                    }
-                    else if (styling["LineSpacingValue"] is string)
-                    {
-                        float.TryParse(styling["LineSpacingValue"].ToString(), out lineSpacing);
-                    }
-                    
-                    // Apply line spacing to the node based on its type
-                    if (node.GetNodeType().Equals("paragraph", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // For paragraphs, apply line spacing using LaTeX commands
-                        string originalContent = node.GetContent();
-                        
-                        // Convert the line spacing value to a LaTeX-compatible format
-                        // LaTeX typically uses either direct multipliers (like 1.5) or specific measurements
-                        string latexSpacing;
-                        if (lineSpacing <= 0)
-                        {
-                            latexSpacing = "1.0"; // Default single spacing
-                        }
-                        else if (lineSpacing <= 1.0)
-                        {
-                            latexSpacing = lineSpacing.ToString("0.0");
-                        }
-                        else if (lineSpacing <= 2.0)
-                        {
-                            latexSpacing = lineSpacing.ToString("0.0");
-                        }
-                        else
-                        {
-                            // Cap at a reasonable maximum for very large values
-                            latexSpacing = "2.0";
-                        }
-                        
-                        // Apply the line spacing command to the content
-                        // Using the \linespread command which affects the baselineskip
-                        string newContent = $"{{\\linespread{{{latexSpacing}}}\\selectfont {originalContent}}}";
-                        
-                        node.SetContent(newContent);
-                    }
-                    else if (node.GetNodeType().Equals("section", StringComparison.OrdinalIgnoreCase) || 
-                            node.GetNodeType().Equals("document", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // For section or document level nodes, we might need a different approach
-                        // Add the line spacing command at the beginning of the content
-                        string originalContent = node.GetContent();
-                        
-                        // For these container nodes, we typically want the command to affect everything inside
-                        string latexSpacing = lineSpacing.ToString("0.0");
-                        string spacingCommand = $"\\linespread{{{latexSpacing}}}\\selectfont";
-                        
-                        string newContent = spacingCommand + "\n" + originalContent;
-                        node.SetContent(newContent);
-                    }
-                }
-            }
-            
-            // If it's a composite node, apply formatting to children
-            if (node is CompositeNode compositeNode)
-            {
-                foreach (AbstractNode child in compositeNode.GetChildren())
-                {
-                    ApplyLineSpacingFormatting(child);
-                }
             }
         }
 
@@ -389,7 +535,46 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 foreach (AbstractNode node in content)
                 {
-                    ApplyAlignmentFormatting(node);
+                    // Apply alignment formatting to the current node
+                    List<Dictionary<string, object>> stylings = node.GetStyling();
+                    
+                    foreach (Dictionary<string, object> styling in stylings)
+                    {
+                        if (styling.ContainsKey("Alignment"))
+                        {
+                            string alignment = styling["Alignment"].ToString().ToLower();
+                            string latexAlignment = GetLatexAlignmentEnvironment(alignment);
+                            
+                            // Update the node's content with LaTeX alignment environment
+                            string originalContent = node.GetContent();
+                            string newContent = $"\\begin{{{latexAlignment}}}\n{originalContent}\n\\end{{{latexAlignment}}}";
+                            node.SetContent(newContent);
+                        }
+                    }
+                    
+                    // If it's a composite node, apply formatting to children
+                    if (node is CompositeNode compositeNode)
+                    {
+                        foreach (AbstractNode child in compositeNode.GetChildren())
+                        {
+                            // Apply alignment formatting to the child node
+                            List<Dictionary<string, object>> childStylings = child.GetStyling();
+                            
+                            foreach (Dictionary<string, object> styling in childStylings)
+                            {
+                                if (styling.ContainsKey("Alignment"))
+                                {
+                                    string alignment = styling["Alignment"].ToString().ToLower();
+                                    string latexAlignment = GetLatexAlignmentEnvironment(alignment);
+                                    
+                                    // Update the node's content with LaTeX alignment environment
+                                    string originalContent = child.GetContent();
+                                    string newContent = $"\\begin{{{latexAlignment}}}\n{originalContent}\n\\end{{{latexAlignment}}}";
+                                    child.SetContent(newContent);
+                                }
+                            }
+                        }
+                    }
                 }
                 return true;
             }
@@ -397,36 +582,6 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 Console.WriteLine($"Error in FormatAlignment: {ex.Message}");
                 return false;
-            }
-        }
-        
-        // Helper method to recursively apply alignment formatting to nodes
-        private void ApplyAlignmentFormatting(AbstractNode node)
-        {
-            // Apply alignment formatting to the current node
-            List<Dictionary<string, object>> stylings = node.GetStyling();
-            
-            foreach (Dictionary<string, object> styling in stylings)
-            {
-                if (styling.ContainsKey("Alignment"))
-                {
-                    string alignment = styling["Alignment"].ToString().ToLower();
-                    string latexAlignment = GetLatexAlignmentEnvironment(alignment);
-                    
-                    // Update the node's content with LaTeX alignment environment
-                    string originalContent = node.GetContent();
-                    string newContent = $"\\begin{{{latexAlignment}}}\n{originalContent}\n\\end{{{latexAlignment}}}";
-                    node.SetContent(newContent);
-                }
-            }
-            
-            // If it's a composite node, apply formatting to children
-            if (node is CompositeNode compositeNode)
-            {
-                foreach (AbstractNode child in compositeNode.GetChildren())
-                {
-                    ApplyAlignmentFormatting(child);
-                }
             }
         }
 
@@ -445,7 +600,26 @@ namespace ICT2106WebApp.mod2grp6.Text
                 // Mark all nodes as converted
                 foreach (AbstractNode node in content)
                 {
-                    MarkNodeAsConverted(node);
+                    // Mark the current node as converted
+                    node.SetConverted(true);
+                    
+                    // If it's a composite node, mark all children as converted
+                    if (node is CompositeNode compositeNode)
+                    {
+                        foreach (AbstractNode child in compositeNode.GetChildren())
+                        {
+                            child.SetConverted(true);
+                            
+                            // If child is also a composite node, recursively mark all its children
+                            if (child is CompositeNode childCompositeNode)
+                            {
+                                foreach (AbstractNode grandChild in childCompositeNode.GetChildren())
+                                {
+                                    grandChild.SetConverted(true);
+                                }
+                            }
+                        }
+                    }
                 }
                 
                 return content;
@@ -454,22 +628,6 @@ namespace ICT2106WebApp.mod2grp6.Text
             {
                 Console.WriteLine($"Error in ApplyTextFormatting: {ex.Message}");
                 return null;
-            }
-        }
-        
-        // Helper method to recursively mark nodes as converted
-        private void MarkNodeAsConverted(AbstractNode node)
-        {
-            // Mark the current node as converted
-            node.SetConverted(true);
-            
-            // If it's a composite node, mark all children as converted
-            if (node is CompositeNode compositeNode)
-            {
-                foreach (AbstractNode child in compositeNode.GetChildren())
-                {
-                    MarkNodeAsConverted(child);
-                }
             }
         }
         

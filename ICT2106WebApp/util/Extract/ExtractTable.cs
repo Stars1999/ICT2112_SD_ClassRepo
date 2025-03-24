@@ -29,8 +29,8 @@ namespace Utilities
 				var cellList = new List<Dictionary<string, object>>();
 
 				//Extract height of row
-				var rowHeight = row.Descendants<TableRowHeight>().FirstOrDefault();
-				var rowheight = ((float.Parse(rowHeight?.Val)*2.54)/1440).ToString("#.##");
+				// var rowHeight = row.Descendants<TableRowHeight>().FirstOrDefault();
+				// var rowheight = ((float.Parse(rowHeight?.Val)*2.54)/1440).ToString("#.##");
 				//height originally given in twips, to convert to cm need (twip*2.54)/1440
 
 				foreach (var cell in row.Elements<TableCell>())
@@ -82,13 +82,13 @@ namespace Utilities
 					// };
 
 					// // Extract cell width (Height will extracted above)
-					var cellWidth = cell.Descendants<TableCellWidth>().FirstOrDefault();
-					var cellSizeDetails = new Dictionary<string, object>
-					{
-						{ "cellwidth", ((float.Parse(cellWidth?.Width?.Value)*2.54)/1440).ToString("#.##") },
-						//width originally given in twips, to convert to cm need (twip*2.54)/1440
-						{ "cellheight", rowheight}
-					};
+					// var cellWidth = cell.Descendants<TableCellWidth>().FirstOrDefault();
+					// var cellSizeDetails = new Dictionary<string, object>
+					// {
+					// 	{ "cellwidth", ((float.Parse(cellWidth?.Width?.Value)*2.54)/1440).ToString("#.##") },
+					// 	//width originally given in twips, to convert to cm need (twip*2.54)/1440
+					// 	// { "cellheight", rowheight}
+					// };
 
 					// Extract cell background color
 					var cellShading = cell.Descendants<Shading>().FirstOrDefault();
@@ -109,7 +109,7 @@ namespace Utilities
 								//GPT Start
 								{ "border", cellBorderDetails },
 								// { "padding", cellPaddingDetails },
-								{ "size", cellSizeDetails },
+								// { "size", cellSizeDetails },
 								{ "backgroundcolor", cellColor },
 								//GPT End
 							}

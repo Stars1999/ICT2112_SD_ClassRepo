@@ -53,11 +53,6 @@ namespace ICT2106WebApp.mod2grp6.TestCase
         public List<AbstractNode> MetadataContent = new List<AbstractNode>
             {
                 new SimpleNode(1, "metadata", "aa", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" }, { "LastModified_Internal", "2025-03-17 06:25:00Z" }, { "filename", "Datarepository_zx_v2.docx" }, { "size", "2148554" } } }),
-                //new SimpleNode(1, "metadata", "", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" }, { "LastModified_Internal", "2025-03-17 06:25:00Z" }, { "LastModified_Internal", "2025-03-17 06:25:00Z" }, { "filename", "Datarepository_zx_v2.docx" }, { "size", "2148554" } } }),
-                //new SimpleNode(1, "metadata", "CreatedDate_Internal: 2025-02-21 05:57:00Z", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "CreatedDate_Internal", "2025-02-21 05:57:00Z" } } }),
-                //new SimpleNode(2, "metadata", "LastModified_Internal: 2025-03-17 06:25:00Z", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "LastModified_Internal", "2025-03-17 06:25:00Z" } } }),
-                //new SimpleNode(3, "metadata", "filename: Datarepository_zx_v2.docx", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "filename", "Datarepository_zx_v2.docx" } } }),
-                //new SimpleNode(4, "metadata", "size: 2148554", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "size", "2148554" } } })
             };
 
         public List<AbstractNode> MathContent = new List<AbstractNode>

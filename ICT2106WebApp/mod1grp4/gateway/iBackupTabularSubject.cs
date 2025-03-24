@@ -1,6 +1,6 @@
 namespace ICT2106WebApp.mod1grp4 {
     // iBackupTabularSubject (Joel - COMPLETED)
-    class iBackupTabularSubject {
+    abstract class iBackupTabularSubject {
         private ICollection<iBackupGatewayObserver> observers;
 
         public iBackupTabularSubject() {

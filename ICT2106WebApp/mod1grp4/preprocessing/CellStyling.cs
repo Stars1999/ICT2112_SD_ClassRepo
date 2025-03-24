@@ -11,6 +11,15 @@ namespace ICT2106WebApp.mod1grp4 {
         [BsonElement("italic")]
         public bool italic { get; set; }
 
+        [BsonElement("underline")]
+        public bool underline { get; set; }
+
+        [BsonElement("fontsize")]
+        public int fontsize { get; set; }
+
+        [BsonElement("horizontalalignment")]
+        public string horizontalalignment { get; set; }
+
         [BsonElement("border")]
         public Dictionary<string, string> border { get; set; }
 

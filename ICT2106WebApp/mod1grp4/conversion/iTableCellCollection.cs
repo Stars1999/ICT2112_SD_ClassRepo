@@ -2,7 +2,7 @@ namespace ICT2106WebApp.mod1grp4
 {
     interface iTableCellCollection
     {
-        iTableCellIterator CreateIterator();
+        iTableCellIterator createIterator();
         // private List<TableCell_SDM> _cells;
 
         // public TableCellCollection(List<TableCell_SDM> cells)

@@ -55,12 +55,12 @@ namespace ICT2106WebApp.mod1grp4
       // Step 3: Convert tables to LaTeX
       var latexConversionManager = new TableLatexConversionManager();
       latexConversionManager.attach(rowTabularGateway_RDG);
-      List<Table> processedTables = await latexConversionManager.ConvertToLatexAsync(cleanedTables);
+      List<Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
 
 
       // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node, validation of latex)
       var tableValidationManager = new TableValidationManager();
-      // var validationResults = tableValidationManager.validateTableLatexOutput(processedTables);
+      var validationResults = tableValidationManager.validateTableLatexOutput(abstractNodes,processedTables);
 
       var processedTableManager = new ProcessedTableManager();
       processedTableManager.attach(rowTabularGateway_RDG);

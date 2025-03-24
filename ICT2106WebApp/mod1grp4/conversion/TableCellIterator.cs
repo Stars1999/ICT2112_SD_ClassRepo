@@ -12,7 +12,7 @@ namespace ICT2106WebApp.mod1grp4
             _cells = cells;
         }
 
-        public TableCell Current()
+        public TableCell current()
         {
             if (_currentIndex < _cells.Count)
             {
@@ -21,14 +21,14 @@ namespace ICT2106WebApp.mod1grp4
             return null;
         }
 
-        public bool IsDone()
+        public bool isDone()
         {
             return _currentIndex >= _cells.Count;
         }
 
-        public void Next()
+        public void next()
         {
-            if (!IsDone())
+            if (!isDone())
             {
                 _currentIndex++;
             }

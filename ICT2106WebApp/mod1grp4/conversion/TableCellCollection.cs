@@ -13,7 +13,7 @@ namespace ICT2106WebApp.mod1grp4
             _cells = cells;
         }
 
-        public iTableCellIterator CreateIterator()
+        public iTableCellIterator createIterator()
         {
             return new TableCellIterator(_cells);
         }

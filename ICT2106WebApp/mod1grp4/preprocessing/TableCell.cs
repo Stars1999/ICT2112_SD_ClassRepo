@@ -4,6 +4,9 @@ namespace ICT2106WebApp.mod1grp4
 {
     public class TableCell
     {
+        [BsonElement("type")]
+        public string type { get; set; }
+        
         [BsonElement("content")]
         public string content { get; set; }
 

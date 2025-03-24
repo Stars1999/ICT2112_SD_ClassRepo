@@ -2,7 +2,7 @@
   {
     "nodeID": "1",
     "type": "Table",
-    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\nLmao \u0026 \\textbf{I} \u0026 Am \\\\\n\\hline\nGoing \u0026 To \u0026 \\textbf{Remod} \\\\\n\\hline\n\\end{tabular}",
+    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\n \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont Lmao}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{I}}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont Am}} \\\\\n\\hline\n \\multicolumn{1}{|l|} {{\\fontsize{11}{\\baselineskip}\\selectfont Going}} \u0026  \\multicolumn{1}{|l|} {{\\fontsize{11}{\\baselineskip}\\selectfont To}} \u0026  \\multicolumn{1}{|l|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{Remod}}} \\\\\n\\hline\n\\end{tabular}",
     "runs": [
       {
         "type": "Row",
@@ -183,7 +183,7 @@
   {
     "nodeID": "2",
     "type": "Table",
-    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\noooooooooooo \u0026 \\textbf{Iiii} \u0026 Ammmm \\\\\n\\hline\nGoingggg \u0026 Tooooo \u0026 \\textbf{Remoddddd} \\\\\n\\hline\n\\end{tabular}",
+    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\n \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont oooooooooooo}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{Iiii}}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont Ammmm}} \\\\\n\\hline\n \\multicolumn{1}{|r|} {{\\fontsize{11}{\\baselineskip}\\selectfont Goingggg}} \u0026  \\multicolumn{1}{|r|} {{\\fontsize{11}{\\baselineskip}\\selectfont Tooooo}} \u0026  \\multicolumn{1}{|r|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{Remoddddd}}} \\\\\n\\hline\n\\end{tabular}",
     "runs": [
       {
         "type": "Row",
@@ -364,7 +364,7 @@
   {
     "nodeID": "3",
     "type": "Table",
-    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\nhelp \u0026 \\textbf{me} \u0026 Am \\\\\n\\hline\nGoing \u0026 To \u0026 \\textbf{Remod} \\\\\n\\hline\n\\end{tabular}",
+    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\n \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont help}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{me}}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont Am}} \\\\\n\\hline\n \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont Going}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont To}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{Remod}}} \\\\\n\\hline\n\\end{tabular}",
     "runs": [
       {
         "type": "Row",
@@ -545,7 +545,7 @@
   {
     "nodeID": "4",
     "type": "Table",
-    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\noh my god \u0026 \\textbf{I} \u0026 Am \\\\\n\\hline\nreally going \u0026 To \u0026 \\textbf{Remod} \\\\\n\\hline\n\\end{tabular}",
+    "content": "\\begin{tabular}{|c|c|c|}\n\\hline\n \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont oh my god}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{I}}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont Am}} \\\\\n\\hline\n \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont really going}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont To}} \u0026  \\multicolumn{1}{|c|} {{\\fontsize{11}{\\baselineskip}\\selectfont \\textbf{Remod}}} \\\\\n\\hline\n\\end{tabular}",
     "runs": [
       {
         "type": "Row",

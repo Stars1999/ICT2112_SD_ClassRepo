@@ -52,12 +52,11 @@ namespace ICT2106WebApp.mod1grp4
       var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
       List<Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
 
-      // // Step 3: Convert tables to LaTeX
-      // var latexConversionManager = new TableLatexConversionManager();
-      // latexConversionManager.attach(rowTabularGateway_RDG);
-      // string latexOutput = await latexConversionManager.ConvertToLatexAsync(cleanedTables); // @andrea take in the list of cleaned tables instead
-      // Console.WriteLine("LaTeX Output:");  // PUT YOUR WRITELINES IN YOUR OWN CLASS
-      // Console.WriteLine(latexOutput);
+      // Step 3: Convert tables to LaTeX
+      var latexConversionManager = new TableLatexConversionManager();
+      latexConversionManager.attach(rowTabularGateway_RDG);
+      List<Table> processedTables = await latexConversionManager.ConvertToLatexAsync(cleanedTables);
+
 
       // // Step 4: Post-processing (e.g., prepare LaTeX output to pass to node, validation of latex)
       var tableValidationManager = new TableValidationManager();

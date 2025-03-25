@@ -1,0 +1,329 @@
+@page
+@{
+    ViewData["Title"] = "Dashboard - Upload Document";
+}
+
+<h2>Upload a Document</h2>
+
+<!-- File upload section -->
+<div class="file-upload-container">
+    <input type="file" id="fileInput" name="UploadedFile" required class="file-input" />
+</div>
+
+<!-- Upload Button -->
+<div>
+    <button type="button" id="uploadButton" class="upload-button">Upload</button>
+</div>
+
+<!-- Test Case Button -->
+<div>
+    <button id="testButton" type="button" onclick="runCitationTest()" class="test-button">Run Citation Conversion Test</button>
+    <div id="testResult" class="test-result"></div>
+</div>
+
+<!-- Conversion Status Tracker -->
+<div id="statusTracker" class="status-tracker">
+    <p id="statusMessage">Status: Waiting for test case execution...</p>
+    <div id="statusBar" class="status-bar">
+        <div id="statusProgress" class="status-progress"></div>
+    </div>
+</div>
+
+
+<!-- Modal for Error Message -->
+<div id="errorModal" class="modal error-modal">
+    <h4>Error</h4>
+    <p id="errorMessage" class="error-message"></p>
+    <button onclick="closeModal()" class="modal-button close-error-modal">Close</button>
+</div>
+
+<!-- Modal for Success Message -->
+<div id="successModal" class="modal success-modal">
+    <h4>Success</h4>
+    <p id="successMessage" class="success-message"></p>
+    <button onclick="closeSuccessModal()" class="modal-button close-success-modal">Close</button>
+</div>
+
+<!-- Error Log Section with Table -->
+<div id="logSection" class="log-section">
+    <h4>Error Logs</h4>
+    <table id="logTable" class="log-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Timestamp</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody id="logMessages">
+            <!-- Logs will be dynamically added here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.getElementById("uploadButton").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        let formData = new FormData();
+        let fileInput = document.getElementById("fileInput").files[0];
+
+        // Check if no file is selected
+        if (!fileInput) {
+            logError("No file selected for upload.");
+            alert("Please select a file to upload.");
+            return;
+        }
+
+        // Update file name
+        document.getElementById("fileInput").innerText = fileInput.name;
+
+        // Check if the file is a .docx
+        let fileExtension = fileInput.name.split('.').pop().toLowerCase();
+        if (fileExtension !== "docx") {
+            logError("Invalid file type. Only .docx files are allowed.");
+            alert("Only .docx files are allowed. Please upload a valid .docx file.");
+            document.getElementById("fileInput").value = ""; // Clear the file input
+            return;
+        }
+
+        formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
+
+        fetch("/dashboard/upload", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("statusMessage").innerText = "Status: Converting...";
+                updateProgress();
+            } else {
+                logError(data.message);
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => {
+            logError("Upload failed: " + error.message);
+            alert("Upload failed. " + error.message);
+            console.error("Upload error:", error);
+        });
+
+        // Clear the file input after the form submission
+        document.getElementById("fileInput").value = "";
+    });
+
+    // Function to update progress dynamically
+function updateProgress(progress) {
+    document.getElementById("statusProgress").style.width = progress + "%";
+    document.getElementById("statusMessage").innerText = "Test Case Progress: " + progress + "%";
+
+    // Log progress dynamically in the log section
+    logError("Test Case Progress: " + progress + "%");
+}
+
+    // Function to log errors in the log table
+function logError(message) {
+    const logMessages = document.getElementById("logMessages");
+
+    // Get the current timestamp
+    const timestamp = new Date().toLocaleString();
+
+    // Create a new row for the table
+    const newRow = document.createElement("tr");
+
+    // Add cells with error details
+    const indexCell = document.createElement("td");
+    const timestampCell = document.createElement("td");
+    const messageCell = document.createElement("td");
+
+    indexCell.innerText = logMessages.children.length + 1; // Incrementing index for each new log
+    timestampCell.innerText = timestamp;
+    messageCell.innerText = message;
+
+    // Append the cells to the row
+    newRow.appendChild(indexCell);
+    newRow.appendChild(timestampCell);
+    newRow.appendChild(messageCell);
+
+    // Insert the row at the top for latest logs
+    logMessages.insertBefore(newRow, logMessages.firstChild);
+}
+
+    
+    // Function to run the citation test and log the results in the error log
+function runCitationTest() {
+    fetch('/dashboard/runtest')
+        .then(response => response.json())
+        .then(data => {
+            // Log each progress update into the error log table
+            logError("Test Case Progress: 0%");
+            let progress = 0;
+            let progressInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 20; // Simulating progress in 20% increments
+                    logError("Test Case Progress: " + progress + "%");
+                    // Update the progress bar width based on the current progress
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                } else {
+                    clearInterval(progressInterval);
+                    if (data.message.includes('Test Passed')) {
+                        logError("Test Case Completed Successfully!");
+                        document.getElementById("statusMessage").innerText = "Test Case Completed!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                    } else {
+                        logError("Test Case Failed: " + data.message); // Log final result as failure
+                        document.getElementById("statusMessage").innerText = "Test Case Failed!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                    }
+                }
+            }, 1000); // Update progress every 1 second
+        })
+        .catch(error => {
+            // Handle error
+            logError("Citation Test failed: " + error);  // Log the error in the log section
+        });
+}
+
+
+
+</script>
+
+<!-- Styles for the page -->
+<style>
+    /* File upload section styles */
+    .file-upload-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .file-input {
+        padding: 10px;
+        margin-right: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 300px;
+    }
+
+    .file-name {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .upload-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .test-button {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+    .status-tracker {
+        margin-top: 20px;
+    }
+
+    .status-bar {
+        width: 100%;
+        height: 20px;
+        background-color: #f3f3f3;
+    }
+
+    .status-progress {
+        width: 0%;
+        height: 100%;
+        background-color: green;
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        padding: 20px;
+        border-radius: 5px;
+        z-index: 9999;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .error-modal {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .success-modal {
+        background: rgba(0, 128, 0, 0.7);
+    }
+
+    .log-section {
+        margin-top: 30px;
+        padding: 10px;
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .log-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .log-table th, .log-table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+    }
+
+    .log-table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .log-messages {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 10px;
+        color: #d9534f;
+    }
+
+    .modal-button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .close-error-modal {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .close-success-modal {
+        background-color: #28a745;
+        color: white;
+    }
+
+    #statusMessage {
+        margin-top: 20px;
+        color: #333;
+    }
+</style>

@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-public class BibTeXConverter : iConversionStatus //Implements the interface
+public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Implements the interface
 {
     private readonly IScannerFactory _citationFactory;
     private readonly IScannerFactory _bibliographyFactory;
     private string _preferredStyle; // Default APA, can be changed
     private readonly iConversionStatus _latexCompiler; //Reference to LatexCompiler
     private readonly IInsertBibTex _bibtexMapper;
+
+    private readonly iStartBibtexConversion _startBibtexConversion;
 
     /// <summary>
     /// Constructor for BibTeXConverter
@@ -150,5 +152,9 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
     public string GetUpdatedJson()
     {
         return _latexCompiler.GetUpdatedJson();
+    }
+
+    public void startBibtexConversion(string mod2)
+    {
     }
 }

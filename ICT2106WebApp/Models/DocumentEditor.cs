@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-public class EditorDoc
+public class EditorDoc: iUpdateEditorDoc
 {
     private readonly EditorDocumentMapper _mapper;
 

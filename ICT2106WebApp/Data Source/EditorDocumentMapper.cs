@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using System.Threading.Tasks;
 
-public class EditorDocumentMapper
+public class EditorDocumentMapper : iRetrieveEditorDoc
 {
     private readonly IMongoCollection<EditorDocument> _collection;
 

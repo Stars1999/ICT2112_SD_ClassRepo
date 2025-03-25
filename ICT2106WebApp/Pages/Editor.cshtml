@@ -343,19 +343,17 @@ We can cite this reference \cite{unknown} here.
                     });
                 }
                 
-                // Set up event handlers for loading content
-                fetch('/home/load-latex')
+                // ✅ Load LaTeX content using savedStyle during initialization
+                fetch(`/home/load-latex?style=${savedStyle}`)
                     .then(response => response.text())
                     .then(content => {
-                        console.log("Loaded LaTeX content from server");
+                        console.log(`Loaded LaTeX content from server using style: ${savedStyle}`);
                         if (content && !content.startsWith("Error:")) {
                             if (editor) {
                                 editor.setValue(content);
                             } else {
                                 latexEditor.value = content;
                             }
-                            
-                            // Initial error detection
                             detectErrors();
                         } else {
                             console.warn("No valid LaTeX content loaded:", content);

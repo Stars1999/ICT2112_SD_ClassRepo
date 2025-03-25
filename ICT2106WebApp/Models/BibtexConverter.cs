@@ -2,22 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 
-public class BibTeXConverter : iConversionStatus // ✅ Implements the interface
+public class BibTeXConverter : iConversionStatus //Implements the interface
 {
     private readonly IScannerFactory _citationFactory;
     private readonly IScannerFactory _bibliographyFactory;
     private string _preferredStyle; // Default APA, can be changed
-    private readonly iConversionStatus _latexCompiler; // ✅ Reference to LatexCompiler
+    private readonly iConversionStatus _latexCompiler; //Reference to LatexCompiler
+    private readonly IInsertBibTex _bibtexMapper;
 
     /// <summary>
     /// Constructor for BibTeXConverter
     /// </summary>
-    public BibTeXConverter(IScannerFactory citationFactory, IScannerFactory bibliographyFactory, iConversionStatus latexCompiler, string preferredStyle = "apa")
+    public BibTeXConverter(IScannerFactory citationFactory, IScannerFactory bibliographyFactory, iConversionStatus latexCompiler, IInsertBibTex bibtexMapper, string preferredStyle = "apa")
     {
         _citationFactory = citationFactory;
         _bibliographyFactory = bibliographyFactory;
         _preferredStyle = preferredStyle.ToLower(); // Ensure lowercase for consistency
-        _latexCompiler = latexCompiler; // ✅ Initialize LatexCompiler
+        _latexCompiler = latexCompiler; // Initialize LatexCompiler
+        _bibtexMapper = bibtexMapper;
 
         if (_preferredStyle != "apa" && _preferredStyle != "mla")
         {
@@ -60,7 +62,7 @@ public class BibTeXConverter : iConversionStatus // ✅ Implements the interface
                 {
                     string latexContent = doc.LatexContent?.Trim() ?? "";
 
-                    // ✅ Apply citation formatting
+                    // Apply citation formatting
                     if (_preferredStyle == "apa")
                     {
                         IAPA apaScanner = _citationFactory.CreateAPA();
@@ -82,7 +84,7 @@ public class BibTeXConverter : iConversionStatus // ✅ Implements the interface
                         mlaScanner.ApplyMLAFormatting();
                     }
 
-                    // ✅ Clean LaTeX content formatting
+                    // Clean LaTeX content formatting
                     latexContent = latexContent
                         .Replace(@"\documentclass{article}", "\\documentclass{article}") 
                         .Replace(@"\title{", "\n\\title{")  
@@ -107,8 +109,21 @@ public class BibTeXConverter : iConversionStatus // ✅ Implements the interface
 
             string updatedJson = JsonSerializer.Serialize(new Reference { Documents = updatedDocuments }, new JsonSerializerOptions { WriteIndented = true });
 
-            // ✅ Store JSON via interface
+            // Store JSON via interface
             _latexCompiler.SetUpdatedJson(updatedJson);
+
+            if (_bibtexMapper == null)
+                {
+                    Console.WriteLine("[FATAL] BibTeXConverter received a NULL bibtexMapper!");
+                }
+                else
+                {
+                    Console.WriteLine("[DEBUG] Preparing to insert converted JSON into MongoDB...");
+                    _bibtexMapper.SetUpdatedJson(updatedJson);
+                    Console.WriteLine("[DEBUG] Called SetUpdatedJson successfully.");
+                }
+
+
             return updatedJson;
         }
         catch (Exception ex)

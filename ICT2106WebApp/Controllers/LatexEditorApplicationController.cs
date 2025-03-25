@@ -24,6 +24,34 @@ public class LatexEditorApplicationController : Controller
         _editorDoc = editorDoc ?? throw new ArgumentNullException(nameof(editorDoc));
     }
 
+
+    [HttpGet("load-and-insert")]
+    public async Task<IActionResult> LoadFromFileAndInsert()
+    {
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
+
+        if (!System.IO.File.Exists(path))
+            return NotFound("File not found.");
+
+        string json = await System.IO.File.ReadAllTextAsync(path);
+
+        var reference = JsonSerializer.Deserialize<Reference>(json, new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    });
+
+        if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
+            return BadRequest("Invalid reference data.");
+
+        reference.InsertedAt = DateTime.UtcNow;
+        reference.Source = "File Load";
+
+        await _dbContext.References.InsertOneAsync(reference);
+
+        return Ok("Loaded and inserted JSON from file.");
+    }
+
+
     [HttpGet("convert")]
     public async Task<IActionResult> Convert([FromQuery] string style = "apa")
     {
@@ -39,19 +67,22 @@ public class LatexEditorApplicationController : Controller
                 return Content("Error: No bibliography documents found in MongoDB!");
             }
 
-            // ✅ Wrap documents in an object so it matches the Reference class
-            string jsonData = JsonSerializer.Serialize(new { Documents = reference.Documents });
+            // Wrap documents in an object so it matches the Reference class
+            string jsonData = JsonSerializer.Serialize(reference, new JsonSerializerOptions { WriteIndented = true });
             Console.WriteLine($"[DEBUG] Successfully serialized JSON: {jsonData}");
 
-            // ✅ Create citation factories
+            // Create citation factories
             var citationFactory = new CitationScannerFactory();
             var bibliographyFactory = new BibliographyScannerFactory();
 
-            // ✅ Initialize BibTeXConverter
-            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, style);
+            // Initialize BibTeXConverter
+            var bibtexMapper = new BibTexMapper(_dbContext); // Injecting MongoDB context
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, bibtexMapper, style);
 
-            // ✅ Convert citations and bibliography
+            // Convert citations and bibliography
             string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
+
+
             var latexCompiler = new LatexCompiler();
             latexCompiler.SetUpdatedJson(updatedJson);
             // ✅ Pass converted JSON to LatexGenerator

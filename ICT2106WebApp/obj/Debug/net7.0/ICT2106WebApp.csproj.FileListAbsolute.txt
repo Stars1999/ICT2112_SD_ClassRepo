@@ -307,3 +307,9 @@ C:\Users\User\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7
 C:\Users\User\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb
 C:\Users\User\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
 C:\Users\User\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll
+C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\DnsClient.dll
+C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Bson.dll
+C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Driver.dll
+C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\SharpCompress.dll
+C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Snappier.dll
+C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ZstdSharp.dll

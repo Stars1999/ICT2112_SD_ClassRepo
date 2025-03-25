@@ -5,6 +5,7 @@ builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
+builder.Services.AddSingleton<iGetGeneratedLatex, LatexGenerator>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter, ErrorPresenter>();
 builder.Services.AddSingleton<ErrorCheckingFacade>();
@@ -17,7 +18,6 @@ builder.Services.AddSingleton<BibTeXConverter>();
 builder.Services.AddSingleton<LatexCompiler>();
 builder.Services.AddSingleton<EditorDocumentMapper>();
 builder.Services.AddSingleton<BibTexMapper>();
-builder.Services.AddSingleton<ErrorMapper>();
 builder.Services.AddSingleton<IInsertBibTex, BibTexMapper>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>

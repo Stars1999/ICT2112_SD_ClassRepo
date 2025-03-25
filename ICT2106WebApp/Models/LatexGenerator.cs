@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 
-public class LatexGenerator
+public class LatexGenerator : iGetGeneratedLatex
 {
     private string _latexContent = "";
 

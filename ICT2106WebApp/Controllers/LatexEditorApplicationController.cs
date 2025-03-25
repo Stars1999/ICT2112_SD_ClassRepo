@@ -10,14 +10,16 @@ using MongoDB.Driver;
 public class LatexEditorApplicationController : Controller
 {
     private readonly iConversionStatus _conversionStatus;
+    private readonly iGetGeneratedLatex _latexGenerator;
     private readonly ErrorCheckingFacade _errorCheckingFacade;
     private readonly PDFGenerator _pdfGenerator;
     private readonly MongoDbContext _dbContext;
     private readonly EditorDoc _editorDoc;
 
-    public LatexEditorApplicationController(iConversionStatus conversionStatus, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext, EditorDoc editorDoc)
+    public LatexEditorApplicationController(iConversionStatus conversionStatus, iGetGeneratedLatex latexGenerator, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext, EditorDoc editorDoc)
     {
         _conversionStatus = conversionStatus ?? throw new ArgumentNullException(nameof(conversionStatus));
+        _latexGenerator = latexGenerator ?? throw new ArgumentNullException(nameof(latexGenerator));
         _errorCheckingFacade = errorCheckingFacade ?? throw new ArgumentNullException(nameof(errorCheckingFacade));
         _pdfGenerator = pdfGenerator ?? throw new ArgumentNullException(nameof(pdfGenerator));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
@@ -86,10 +88,13 @@ public class LatexEditorApplicationController : Controller
             var latexCompiler = new LatexCompiler();
             latexCompiler.SetUpdatedJson(updatedJson);
             // ✅ Pass converted JSON to LatexGenerator
-            var latexGenerator = new LatexGenerator();
-            latexGenerator.GenerateLatex(updatedJson);
+            // var latexGenerator = new LatexGenerator();
+            // latexGenerator.GenerateLatex(updatedJson);
 
-            string generatedLatex = latexGenerator.GetLatexContent();
+            // Pass converted JSON to LatexGenerator via the injected iGetGeneratedLatex interface
+            _latexGenerator.GenerateLatex(updatedJson);
+
+            string generatedLatex = _latexGenerator.GetLatexContent();
             if (string.IsNullOrEmpty(generatedLatex))
             {
                 ErrorPresenter.LogError("LatexGenerator did not generate any content.");

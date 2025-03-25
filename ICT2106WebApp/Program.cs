@@ -17,6 +17,7 @@ builder.Services.AddSingleton<BibTeXConverter>();
 builder.Services.AddSingleton<LatexCompiler>();
 builder.Services.AddSingleton<EditorDocumentMapper>();
 builder.Services.AddSingleton<BibTexMapper>();
+builder.Services.AddSingleton<ErrorMapper>();
 builder.Services.AddSingleton<IInsertBibTex, BibTexMapper>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>

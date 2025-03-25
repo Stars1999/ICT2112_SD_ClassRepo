@@ -16,6 +16,7 @@ public class MongoDbContext
     public IMongoCollection<Reference> References => _database.GetCollection<Reference>("BibTexEntry");
     public IMongoDatabase Database => _database;
     //public IMongoCollection<Reference> References => _database.GetCollection<Reference>("References");
+    public IMongoCollection<ErrorStyle> ErrorStyles => _database.GetCollection<ErrorStyle>("ErrorStyles");
 }
 
 

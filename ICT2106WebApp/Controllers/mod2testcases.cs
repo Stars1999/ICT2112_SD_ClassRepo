@@ -97,7 +97,7 @@
         }
 
         // --------------------------------- PASS METHOD --------------------------------- //
-        public void RunPassTests()
+        public List<bool> RunPassTests()
         {
             List<bool> results = new List<bool>();
 
@@ -148,10 +148,11 @@
             }
 
             Console.WriteLine(string.Join(", ", results));
+            return results;
         }
 
         // --------------------------------- FAIL METHOD --------------------------------- //
-        public void RunFailTests()
+        public List<bool> RunFailTests()
         {
             List<bool> results = new List<bool>();
 
@@ -202,6 +203,7 @@
             }
 
             Console.WriteLine(string.Join(", ", results));
+            return results;
         }
 
         // --------------------------------- HELPER METHODS --------------------------------- //

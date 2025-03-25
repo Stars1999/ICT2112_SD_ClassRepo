@@ -1,5 +1,6 @@
 wwwroot\bibliography_test.json
 wwwroot\css\site.css
+wwwroot\document.tex
 wwwroot\favicon.ico
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
@@ -63,3 +64,4 @@ wwwroot\pdfs\document.aux
 wwwroot\pdfs\document.log
 wwwroot\pdfs\document.pdf
 wwwroot\pdfs\document.tex
+wwwroot\uploads\SG60_Figma_Wireframe_Plan (1).docx

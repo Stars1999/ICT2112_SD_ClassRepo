@@ -644,6 +644,7 @@ namespace Utilities
 						{
 							{ "type", "paragraph_run?" },
 							{ "content", text },
+							  { "styling", new List<object>() }  // Ensure no comma here after the last item
 						};
 					}
 					else
@@ -652,6 +653,7 @@ namespace Utilities
 						{
 							{ "type", "paragraph_run" },
 							{ "content", runsList },
+							  { "styling", new List<object>() }  // Ensure no comma here after the last item
 						};
 					}
 				}
@@ -695,6 +697,7 @@ namespace Utilities
 						{ "type", FormatExtractor.GetParagraphType(style) },
 						{ "content", text },
 						{ "runs", runsList },
+						{ "styling??", new List<object>() }  // Ensure no comma here after the last item
 					};
 					return finalDictionary;
 				}

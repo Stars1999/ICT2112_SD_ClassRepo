@@ -320,13 +320,13 @@ public static class DocumentProcessor
 			documentContents.Insert(0, layoutElement);
 
 			// // to create rootnode
-			// var layoutElementRoot = new Dictionary<string, object>
-			// {
-			// 	{ "id", 0 },
-			// 	{ "type", "root" },
-			// 	{ "content", "" },
-			// };
-			// documentContents.Insert(0, layoutElementRoot);
+			var layoutElementRoot = new Dictionary<string, object>
+			{
+				{ "id", 0 },
+				{ "type", "root" },
+				{ "content", "" },
+			};
+			documentContents.Insert(0, layoutElementRoot);
 
 			var documentData = new
 			{
@@ -350,20 +350,26 @@ public static class DocumentProcessor
 			List<AbstractNode> nodesList = new List<AbstractNode>();
 			string jsonOutput = string.Empty;
 
+
+			var numberofRunNode = 0;
+			var numberofMainNode = 0;
+
 			// Going through each object in the document list
+			List<AbstractNode> runListNodes = new List<AbstractNode>();
+
 			foreach (var item in documentContents)
 			{
 				// Going through each item's key-value pair of the object
 				if (item is Dictionary<string, object> dictionary)
 				{
 					Console.WriteLine("Dictionary contents:");
+					string nodeType = "";
+					string content = "";
+					List<Dictionary<string, object>> styling = new List<Dictionary<string, object>>();
+
 					// Loop through the dictionary and print the key-value pairs
 					foreach (var kvp in dictionary)
 					{
-						string nodeType = "";
-						string content = "";
-						List<Dictionary<string, object>> styling = new List<Dictionary<string, object>>();
-						List<object> myList = new List<object>();
 
 						if (kvp.Key == "type")
 						{
@@ -413,13 +419,6 @@ public static class DocumentProcessor
 							{
 								Console.WriteLine("The 'styling' value is not a List<object>.");
 							}
-						}
-						if (nodeType != "" && content != "")
-						{
-							var node = nodeManager.CreateNode(id++, nodeType, content, styling);
-							Console.WriteLine($"myid:{id} {kvp.Key}: {kvp.Value}\n");
-							nodesList.Add(node);
-							// end of parent node.
 						}
 
 						// run nodes below and i need to create it
@@ -494,25 +493,45 @@ public static class DocumentProcessor
 								if (runType != "" && runContent != "")
 								{
 									var runNode = nodeManager.CreateNode(id++, runType, runContent, new List<Dictionary<string, object>> { runStyling });
+									numberofRunNode = numberofRunNode + 1;
 									Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
-									nodesList.Add(runNode);
+									// nodesList.Add(runNode);
+									runListNodes.Add(runNode);
 								}
+								// nodesList.Add(runNode);
 							}
-							// nodesList.Add(runNode);
+							// end of run nodes
 						}
 
-						Console.WriteLine("\n");
+						// end of an object / Parent node
 					}
+
+					if (nodeType != "" || content != "")
+					{
+						var node = nodeManager.CreateNode(id++, nodeType, content, styling);
+						numberofMainNode = numberofMainNode + 1;
+						nodesList.Add(node);
+						nodeType = "";
+						content = "";
+						styling = null;
+					}
+					else
+					{
+						Console.WriteLine($"Weird its null\n type: {nodeType}\ncontent: {content}\n");
+					}
+
+
+					foreach (var runnodeitem in runListNodes)
+					{
+						nodesList.Add(runnodeitem);
+					}
+					runListNodes.Clear();
+
 				}
+				// end of checking dictionary
 
-				// Console.WriteLine(nodesList[0]);
-
-				// var atemprootnode = nodeManager.CreateNode(0, "root", "", null);
-				// nodesList.Insert(0, atemprootnode);
-				// Console.WriteLine(nodesList[0]);
-
-				// CompositeNode rootnode = treeProcessor.CreateTree(nodesList);
-				// treeProcessor.PrintTree(rootnode, 0);
+				CompositeNode rootnode = treeProcessor.CreateTree(nodesList);
+				treeProcessor.PrintTree(rootnode, 0);
 
 				// Convert to JSON format with UTF-8 encoding fix (preserves emojis, math, and Chinese)
 				jsonOutput = JsonSerializer.Serialize(
@@ -530,12 +549,13 @@ public static class DocumentProcessor
 				//end
 			}
 
-
+			Console.WriteLine($"number of Main node: {numberofMainNode}\n");
+			Console.WriteLine($"number of Run node: {numberofRunNode}\n");
 
 			/* Checking my json & nodes*/
 
 			//Check nodelist and count the number of nodes
-			Console.WriteLine("\n\n\n\n\n\n\n\n\nodesList.Count");
+			Console.WriteLine("\n\n\n\n\n\n\n\n\n nodesList.Count");
 			Console.WriteLine(nodesList.Count);
 			int nodeNum = 0;
 			foreach (var nodeInList in nodesList)
@@ -558,7 +578,7 @@ public static class DocumentProcessor
 			// Count the number of items in the "document" array
 			JArray documentArray = (JArray)jsonObject["document"];
 			int documentCount = documentArray.Count;
-			Console.WriteLine($"Number of items in the document array: {documentCount}");
+			Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
 
 			// Check if there are "runs" in any of the document items
 			var totalCounts = 0;
@@ -572,23 +592,27 @@ public static class DocumentProcessor
 				if (runs != null)
 				{
 					totalCounts = totalCounts + runs.Count();
-					Console.WriteLine($"This item has {runs.Count()} runs.");
+					// Console.WriteLine($"This item has {runs.Count()} runs.");
 				}
 				else
 				{
-					Console.WriteLine("This item has no runs.");
+					// Console.WriteLine("This item has no runs.");
 				}
 
 				i = i + 1;
 			}
+
+			Console.WriteLine("total run count");
 			Console.WriteLine(totalCounts);
+			Console.WriteLine("\n");
+
 			totalCounts = totalCounts + i;
 			Console.WriteLine("total = ");
 			Console.WriteLine(totalCounts);
 
 			// Create the tree
 			// here is the error
-			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
+			// CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 			// treeProcessor.PrintTree(rootnodehere, 0);
 
 

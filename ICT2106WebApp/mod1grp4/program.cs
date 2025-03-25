@@ -53,11 +53,12 @@ namespace ICT2106WebApp.mod1grp4
       List<Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
 
       // // Step 4: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
-      // var tableValidationManager = new TableValidationManager();
-      // var validationStatus = tableValidationManager.validateTableLatexOutput(abstractNodes,processedTables);
+      var tableValidationManager = new TableValidationManager();
+      var validationStatus = tableValidationManager.validateTableLatexOutput(abstractNodes, processedTables);
+
       var processedTableManager = new ProcessedTableManager();
       processedTableManager.attach(rowTabularGateway_RDG);
-      // processedTableManager.logProcessingStatus(validationStatus);
+      processedTableManager.logProcessingStatus(validationStatus);
       await processedTableManager.slotProcessedTableToTree(cleanedTables);
     }
   }

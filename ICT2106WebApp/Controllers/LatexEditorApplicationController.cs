@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using MongoDB.Driver;
 
-[Route("home")]
+[Route("understem")]
 public class LatexEditorApplicationController : Controller
 {
     private readonly iConversionStatus _conversionStatus;

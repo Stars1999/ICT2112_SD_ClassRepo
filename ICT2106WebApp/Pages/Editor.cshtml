@@ -228,7 +228,7 @@ We can cite this reference \cite{unknown} here.
             console.log(`[INFO] Loaded citation style: ${savedStyle}`);
 
             // ✅ Load LaTeX content into editor AFTER applying the selected style
-            fetch(`/home/load-latex?style=${savedStyle}`)
+            fetch(`/understem/load-latex?style=${savedStyle}`)
                 .then(response => response.text())
                 .then(data => {
                     if (data.trim() !== '') {
@@ -249,11 +249,11 @@ We can cite this reference \cite{unknown} here.
 
                 console.log(`[DEBUG] User selected: ${selectedStyle}`);
 
-                fetch(`/home/convert?style=${selectedStyle}`, { method: 'GET' })
+                fetch(`/understem/convert?style=${selectedStyle}`, { method: 'GET' })
                 .then(response => {
                     console.log(`[INFO] Style updated to ${selectedStyle}, reloading editor.`);
                     setTimeout(() => {
-                        window.location.href = '/home/editor';
+                        window.location.href = '/understem/editor';
                     }, 500);// ✅ Reload editor with new citation style
                 })
                 .catch(error => console.error('Error changing citation style:', error));
@@ -269,7 +269,7 @@ We can cite this reference \cite{unknown} here.
             }
 
             function autoSaveToDatabase(content) {
-                fetch('/home/save-latex', {
+                fetch('/understem/save-latex', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ latexContent: content })
@@ -344,7 +344,7 @@ We can cite this reference \cite{unknown} here.
                 }
                 
                 // ✅ Load LaTeX content using savedStyle during initialization
-                fetch(`/home/load-latex?style=${savedStyle}`)
+                fetch(`/understem/load-latex?style=${savedStyle}`)
                     .then(response => response.text())
                     .then(content => {
                         console.log(`Loaded LaTeX content from server using style: ${savedStyle}`);
@@ -813,7 +813,7 @@ We can cite this reference \cite{unknown} here.
             let latexContent = editor ? editor.getValue() : latexEditor.value;
             compilationStatus.textContent = "Compiling...";
 
-            fetch('/home/compile-latex', {
+            fetch('/understem/compile-latex', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ latexContent })

@@ -1,8 +1,9 @@
 using System.Reflection.Metadata;
+using MongoDB.Driver;
 
 namespace Utilities
 {
-	public class TreeProcessor
+	public class TreeProcessor: ITreeUpdateNotify
 	{
 		// private List<string> nodeOrder = new List<string>
 		// {
@@ -17,8 +18,17 @@ namespace Utilities
 		// 	"row",
 		// 	"runsParagraph",
 		// };
+		// Save Tree to Database 
+		private readonly INodeUpdate _treeUpdate;
 
-		public CompositeNode CreateTree(List<AbstractNode> sequentialList)
+		public TreeProcessor()
+		{
+			// _docxRetrieve = (IDocumentRetrieve) new DocumentGateway_RDG();
+			_treeUpdate = (INodeUpdate) new DocumentGateway_RDG();
+			_treeUpdate.treeUpdate = this;
+			// _docxRetrieve.docxRetrieve = this;
+		}
+        public CompositeNode CreateTree(List<AbstractNode> sequentialList)
 		{
 			Stack<AbstractNode> nodeStack = new Stack<AbstractNode>();
 			AbstractNode rootNode = sequentialList[0];
@@ -68,9 +78,11 @@ namespace Utilities
 			return (CompositeNode)rootNode;
 		}
 
-		public void SaveTreeToDatabase(AbstractNode rootNode)
+		public async Task SaveTreeToDatabase(AbstractNode rootNode)
 		{
+			Console.WriteLine("inside this function now");
 			// TODO: Save tree to database
+			await _treeUpdate.saveTree(rootNode);
 		}
 
 		public bool ValidateTree(Document document, AbstractNode rootNode)
@@ -79,17 +91,12 @@ namespace Utilities
 			return true; // Dummy return
 		}
 
-		public void NotifyUpdatedTree()
-		{
-			// TODO: Notify updated tree??
-		}
-
 		// Recursive method to print the tree hierarchy
 		public void PrintTree(AbstractNode node, int level)
 		{
 			// Print the node's content (could be its type or content)
 			Console.WriteLine(
-				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent()
+				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent() + " STYLING: " + node.GetStyling()
 			);
 
 			if (node is CompositeNode compositeNode)
@@ -101,5 +108,11 @@ namespace Utilities
 				}
 			}
 		}
-	}
+
+
+        public Task NotifyUpdatedTree(AbstractNode node)
+        {
+			return Task.CompletedTask;
+        }
+    }
 }

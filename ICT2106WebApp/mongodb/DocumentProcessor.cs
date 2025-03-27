@@ -112,7 +112,7 @@ public class DocumentParsing : IDocumentUpdateNotify
 	// IDocumentUpdateNotify
 	public async Task notifyUpdatedDocument(Docx docx)
 	{
-		Console.WriteLine($"DocumentProcessor -> Document updated: {docx.Title}");
+		Console.WriteLine($"DocumentProcessor -> Notify Document updated: {docx.Title}");
 		// Additional async operations if necessary
 		await Task.CompletedTask; // Keeps method async-compatible
 	}

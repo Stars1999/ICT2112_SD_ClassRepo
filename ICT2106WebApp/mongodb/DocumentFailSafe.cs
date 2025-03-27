@@ -98,20 +98,26 @@
 
 public class DocumentFailSafe : IDocumentRetrieveNotify
 {
-	private readonly Lazy<IDocumentRetrieve> _docxRetrieve;
+	// private readonly Lazy<IDocumentRetrieve> _docxRetrieve;
+	private readonly IDocumentRetrieve _docxRetrieve;
 
-	// private readonly DocxRDG _docxRDG;
-	public DocumentFailSafe(IServiceProvider serviceProvider)
+	// // private readonly DocxRDG _docxRDG;
+	// public DocumentFailSafe(IServiceProvider serviceProvider)
+	// {
+	// 	_docxRetrieve = new Lazy<IDocumentRetrieve>(
+	// 		() => serviceProvider.GetRequiredService<IDocumentRetrieve>()
+	// 	);
+	// }
+	public DocumentFailSafe()
 	{
-		_docxRetrieve = new Lazy<IDocumentRetrieve>(
-			() => serviceProvider.GetRequiredService<IDocumentRetrieve>()
-		);
-	}
+		_docxRetrieve = (IDocumentRetrieve) new DocumentGateway_RDG();
+		_docxRetrieve.docxRetrieve = this;
+    }
 
 	// Retrieve Saved Document
 	public async Task retrieveSavedDocument(string id, string outputPath)
 	{
-		var docx = await _docxRetrieve.Value.getDocument(id);
+		var docx = await _docxRetrieve.getDocument(id);
 		if (docx == null)
 		{
 			throw new FileNotFoundException($"Document with ID {id} not found in database.");
@@ -125,7 +131,7 @@ public class DocumentFailSafe : IDocumentRetrieveNotify
 	// IDocumentRetrieveNotify
 	public async Task notifyRetrievedDocument(Docx docx)
 	{
-		Console.WriteLine($"DocumentFailSafe -> Document retrieved: {docx.Title}");
+		Console.WriteLine($"DocumentFailSafe -> Notify Document retrieved: {docx.Title}");
 		await Task.CompletedTask;
 	}
 }

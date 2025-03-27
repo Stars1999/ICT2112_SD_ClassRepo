@@ -1,5 +1,13 @@
+using MongoDB.Bson; // Add this namespace
+using MongoDB.Bson.Serialization.Attributes; // And this one
+using MongoDB.Driver;
+using System.Collections.Generic;
+
 namespace Utilities
 {
+	[BsonDiscriminator("AbstractNode")]
+	[BsonKnownTypes(typeof(CompositeNode))]
+	[BsonKnownTypes(typeof(SimpleNode))]
 	public abstract class AbstractNode
 	{
 		protected int nodeId;

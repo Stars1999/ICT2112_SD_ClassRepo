@@ -47,12 +47,12 @@ namespace Utilities
 					return 5;
 				case "h6":
 					return 6;
+				case "paragraph":
+					return 7;
 				case "table":
 					return 7;
 				case "row":
 					return 8;
-				case "paragraph":
-					return 9;
 				default:
 					return -1;
 			}

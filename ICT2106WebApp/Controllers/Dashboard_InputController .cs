@@ -95,7 +95,7 @@ public class Dashboard_InputController : Controller
         int totalSteps = 5;
         for (int i = 1; i <= totalSteps; i++)
         {
-            await Task.Delay(1000); // Simulate each step with delay
+            //await Task.Delay(1000); // Simulate each step with delay
             int progress = (i * 100) / totalSteps;
             _parser.UpdateConversionStatus("Citation Test", $"{progress}% complete");
             //_logger.LogInformation($"Step {i}/{totalSteps}: {progress}% complete");
@@ -109,6 +109,23 @@ public class Dashboard_InputController : Controller
 
         return Ok(new { message = resultMessage });
     }
+
+
+    // GET: /dashboard/runtestmod2
+    [HttpGet("runtestmod2")]
+    public async Task<IActionResult> runCitationTest2()
+    {
+        var mod2Test = new mod2testcases();
+
+        // Call the RunPassTests() or RunFailTests()
+        var passResults = mod2Test.RunPassTests(); // RunPassTests() or RunFailTests()
+
+        // Assuming you want to return the test results as success/failure message
+        var resultMessage = passResults.All(r => r) ? "Test Passed (MOD2)" : "Test Failed (MOD2)";
+        
+        return Ok(new { message = resultMessage });
+    }
+
 }
 
 }

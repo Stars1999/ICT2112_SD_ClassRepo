@@ -306,8 +306,8 @@
     //    {
     //        // Example of use (i.e: called by scheduler etc)
     //        var test = new mod2testcases();
-    //        test.RunPassTests();
-    //        test.RunFailTests();
+    //        List<bool> passResults = test.RunPassTests();
+    //        List<bool> failResults = test.RunFailTests();
     //    }
     //}
 }

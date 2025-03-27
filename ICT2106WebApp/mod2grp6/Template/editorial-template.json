@@ -1,5 +1,144 @@
 {
-    "TemplateId": "editorial",
-    "Name": "Editorial Template", 
-    "Content": "\\documentclass[twocolumn]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage{graphicx}\n\\usepackage{multicol}\n\\usepackage{geometry}\n\\geometry{margin=1in}\n\\usepackage{fancyhdr}\n\\pagestyle{fancy}\n\\fancyhf{}\n\\renewcommand{\\headrulewidth}{0pt}\n\\lfoot{Editorial Perspective}\n\\rfoot{Page \\thepage}\n\n\\title{${TITLE}}\n\\author{${AUTHORS}}\n\\date{}\n\n\\begin{document}\n\\onecolumn\n\\maketitle\n\n${CONTENT}\n\n\\end{document}"
-  }
+  "Id": "editorial",
+  "TemplateName": "Editorial Template",
+  "Content": [
+    {
+      "NodeId": 1,
+      "NodeType": "columnFormat",
+      "Content": "\\usepackage{multicol} \\begin{multicols}{2}",
+      "Styling": []
+    },
+    {
+      "NodeId": 2,
+      "NodeType": "columnEnd",
+      "Content": "\\end{multicols}",
+      "Styling": []
+    },
+    {
+      "NodeId": 3,
+      "NodeType": "header",
+      "Content": "\\documentclass[twocolumn]{article}",
+      "Styling": []
+    },
+    {
+      "NodeId": 4,
+      "NodeType": "header",
+      "Content": "\\usepackage[utf8]{inputenc}",
+      "Styling": []
+    },
+    {
+      "NodeId": 5,
+      "NodeType": "header",
+      "Content": "\\usepackage{graphicx}",
+      "Styling": []
+    },
+    {
+      "NodeId": 6,
+      "NodeType": "header",
+      "Content": "\\usepackage{multicol}",
+      "Styling": []
+    },
+    {
+      "NodeId": 7,
+      "NodeType": "header",
+      "Content": "\\usepackage{geometry}",
+      "Styling": []
+    },
+    {
+      "NodeId": 8,
+      "NodeType": "header",
+      "Content": "\\geometry{margin=1in}",
+      "Styling": []
+    },
+    {
+      "NodeId": 9,
+      "NodeType": "header",
+      "Content": "\\usepackage{fancyhdr}",
+      "Styling": []
+    },
+    {
+      "NodeId": 10,
+      "NodeType": "header",
+      "Content": "\\pagestyle{fancy}",
+      "Styling": []
+    },
+    {
+      "NodeId": 11,
+      "NodeType": "header",
+      "Content": "\\fancyhf{}",
+      "Styling": []
+    },
+    {
+      "NodeId": 12,
+      "NodeType": "header",
+      "Content": "\\renewcommand{\\headrulewidth}{0pt}",
+      "Styling": []
+    },
+    {
+      "NodeId": 13,
+      "NodeType": "footer",
+      "Content": "\\lfoot{Editorial Perspective}",
+      "Styling": []
+    },
+    {
+      "NodeId": 14,
+      "NodeType": "footer",
+      "Content": "\\rfoot{Page \\thepage}",
+      "Styling": []
+    },
+    {
+      "NodeId": 15,
+      "NodeType": "title",
+      "Content": "\\title{Editorial Perspective on AI in Education}",
+      "Styling": []
+    },
+    {
+      "NodeId": 16,
+      "NodeType": "author",
+      "Content": "\\author{Jane Doe}",
+      "Styling": []
+    },
+    {
+      "NodeId": 17,
+      "NodeType": "abstract",
+      "Content": "\\begin{abstract}This editorial explores the implications of AI in education...</abstract>",
+      "Styling": []
+    },
+    {
+      "NodeId": 18,
+      "NodeType": "section",
+      "Content": "\\onecolumn \\section{Introduction}",
+      "Styling": []
+    },
+    {
+      "NodeId": 19,
+      "NodeType": "paragraph",
+      "Content": "AI is reshaping the landscape of modern education...",
+      "Styling": [{"Bold": true, "FontSize": 14}]
+    },
+    {
+      "NodeId": 20,
+      "NodeType": "section",
+      "Content": "\\section{Implications for Teachers}",
+      "Styling": []
+    },
+    {
+      "NodeId": 21,
+      "NodeType": "paragraph",
+      "Content": "Teachers can leverage AI to enhance the learning experience...",
+      "Styling": [{"Italic": true, "FontSize": 12}]
+    },
+    {
+      "NodeId": 22,
+      "NodeType": "section",
+      "Content": "\\section{Conclusion}",
+      "Styling": []
+    },
+    {
+      "NodeId": 23,
+      "NodeType": "paragraph",
+      "Content": "AI presents both challenges and opportunities in education...",
+      "Styling": [{"FontSize": 12}]
+    }
+  ]
+}

@@ -1,5 +1,144 @@
 {
-    "TemplateId": "ieee",
-    "Name": "IEEE Style Template",
-    "Content": "\\documentclass[conference]{IEEEtran}\n\\usepackage[utf8]{inputenc}\n\\usepackage{graphicx}\n\\usepackage{amsmath}\n\\usepackage{xcolor}\n\\usepackage{cite}\n\\usepackage{algorithm}\n\\usepackage{algorithmic}\n\\usepackage{hyperref}\n\\usepackage{textgreek}\n\\usepackage{amsfonts}\n\\usepackage{amssymb}\n\n\\title{${TITLE}}\n\\author{${AUTHORS}}\n\n\\begin{document}\n\\maketitle\n\n${CONTENT}\n\n\\end{document}"
-  }
+  "Id": "ieee",
+  "TemplateName": "IEEE Template",
+  "Content": [
+    {
+      "NodeId": 1,
+      "NodeType": "columnFormat",
+      "Content": "\\usepackage{multicol} \\begin{multicols}{2}",
+      "Styling": []
+    },
+    {
+      "NodeId": 2,
+      "NodeType": "columnEnd",
+      "Content": "\\end{multicols}",
+      "Styling": []
+    },
+    {
+      "NodeId": 3,
+      "NodeType": "header",
+      "Content": "\\documentclass[conference]{IEEEtran}",
+      "Styling": []
+    },
+    {
+      "NodeId": 4,
+      "NodeType": "header",
+      "Content": "\\usepackage[utf8]{inputenc}",
+      "Styling": []
+    },
+    {
+      "NodeId": 5,
+      "NodeType": "header",
+      "Content": "\\usepackage{graphicx}",
+      "Styling": []
+    },
+    {
+      "NodeId": 6,
+      "NodeType": "header",
+      "Content": "\\usepackage{amsmath}",
+      "Styling": []
+    },
+    {
+      "NodeId": 7,
+      "NodeType": "header",
+      "Content": "\\usepackage{xcolor}",
+      "Styling": []
+    },
+    {
+      "NodeId": 8,
+      "NodeType": "header",
+      "Content": "\\usepackage{cite}",
+      "Styling": []
+    },
+    {
+      "NodeId": 9,
+      "NodeType": "header",
+      "Content": "\\usepackage{algorithm}",
+      "Styling": []
+    },
+    {
+      "NodeId": 10,
+      "NodeType": "header",
+      "Content": "\\usepackage{algorithmic}",
+      "Styling": []
+    },
+    {
+      "NodeId": 11,
+      "NodeType": "header",
+      "Content": "\\usepackage{hyperref}",
+      "Styling": []
+    },
+    {
+      "NodeId": 12,
+      "NodeType": "header",
+      "Content": "\\usepackage{textgreek}",
+      "Styling": []
+    },
+    {
+      "NodeId": 13,
+      "NodeType": "header",
+      "Content": "\\usepackage{amsfonts}",
+      "Styling": []
+    },
+    {
+      "NodeId": 14,
+      "NodeType": "header",
+      "Content": "\\usepackage{amssymb}",
+      "Styling": []
+    },
+    {
+      "NodeId": 15,
+      "NodeType": "title",
+      "Content": "\\title{Artificial Intelligence in Modern Education}",
+      "Styling": []
+    },
+    {
+      "NodeId": 16,
+      "NodeType": "author",
+      "Content": "\\author{Unknown Author}",
+      "Styling": []
+    },
+    {
+      "NodeId": 17,
+      "NodeType": "abstract",
+      "Content": "\\begin{abstract}This paper discusses the impact of AI in modern education...</abstract>",
+      "Styling": []
+    },
+    {
+      "NodeId": 18,
+      "NodeType": "section",
+      "Content": "\\section{Introduction}",
+      "Styling": []
+    },
+    {
+      "NodeId": 19,
+      "NodeType": "paragraph",
+      "Content": "The role of AI is rapidly growing in various fields...",
+      "Styling": [{"Bold": true, "FontSize": 12}]
+    },
+    {
+      "NodeId": 20,
+      "NodeType": "section",
+      "Content": "\\section{Related Work}",
+      "Styling": []
+    },
+    {
+      "NodeId": 21,
+      "NodeType": "paragraph",
+      "Content": "Previous studies have explored AI applications in education...",
+      "Styling": [{"Italic": true, "FontSize": 12}]
+    },
+    {
+      "NodeId": 22,
+      "NodeType": "section",
+      "Content": "\\section{Conclusion}",
+      "Styling": []
+    },
+    {
+      "NodeId": 23,
+      "NodeType": "paragraph",
+      "Content": "In conclusion, AI has the potential to revolutionize education...",
+      "Styling": [{"FontSize": 12}]
+    }
+  ]
+}

@@ -280,18 +280,24 @@ namespace ICT2106WebApp.mod2grp6.Text
                         }
                         
                         // Handle highlighting/background color
-                        if (styling.ContainsKey("Highlight") || styling.ContainsKey("backgroundColor"))
+                        if ((styling.ContainsKey("Highlight") && styling["Highlight"] != null && 
+                            styling["Highlight"].ToString().ToLower() != "none") || 
+                            (styling.ContainsKey("backgroundColor") && styling["backgroundColor"] != null))
                         {
-                            string highlightColor = styling.ContainsKey("Highlight") 
+                            string highlightColor = styling.ContainsKey("Highlight") && 
+                                                    styling["Highlight"] != null && 
+                                                    styling["Highlight"].ToString().ToLower() != "none"
                                 ? styling["Highlight"].ToString() 
-                                : (styling.ContainsKey("backgroundColor") 
+                                : (styling.ContainsKey("backgroundColor") && styling["backgroundColor"] != null
                                     ? styling["backgroundColor"].ToString() 
-                                    : "#FFFF00"); // Default to yellow if not specified
+                                    : ""); 
                             
-                            string htmlColorCode = ConvertColorToLatex(highlightColor);
-                            
-                            // Apply LaTeX highlighting command using \colorbox
-                            newContent = $"\\colorbox[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                            if (!string.IsNullOrEmpty(highlightColor) && highlightColor.ToLower() != "none")
+                            {
+                                string htmlColorCode = ConvertColorToLatex(highlightColor);
+                                // Apply LaTeX highlighting command using \colorbox
+                                newContent = $"\\colorbox[HTML]{{{htmlColorCode}}}{{{newContent}}}";
+                            }
                         }
                         
                         // Update the node content
@@ -713,6 +719,13 @@ namespace ICT2106WebApp.mod2grp6.Text
         /// returns the corresponding LaTeX color name
         private string ConvertColorToLatex(string color)
         {
+
+            // Handle "none" as a special case
+            if (color.ToLower() == "none" || string.IsNullOrEmpty(color))
+            {
+                return "FFFFFF"; // Use white or transparent instead of black
+            }
+            
             // For hex colors, return in HTML format
             if (color.StartsWith("#") && (color.Length == 7 || color.Length == 9))
             {

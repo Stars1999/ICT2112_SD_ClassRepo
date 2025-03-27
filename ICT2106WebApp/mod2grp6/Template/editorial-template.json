@@ -1,0 +1,5 @@
+{
+    "TemplateId": "editorial",
+    "Name": "Editorial Template", 
+    "Content": "\\documentclass[twocolumn]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage{graphicx}\n\\usepackage{multicol}\n\\usepackage{geometry}\n\\geometry{margin=1in}\n\\usepackage{fancyhdr}\n\\pagestyle{fancy}\n\\fancyhf{}\n\\renewcommand{\\headrulewidth}{0pt}\n\\lfoot{Editorial Perspective}\n\\rfoot{Page \\thepage}\n\n\\title{${TITLE}}\n\\author{${AUTHORS}}\n\\date{}\n\n\\begin{document}\n\\onecolumn\n\\maketitle\n\n${CONTENT}\n\n\\end{document}"
+  }

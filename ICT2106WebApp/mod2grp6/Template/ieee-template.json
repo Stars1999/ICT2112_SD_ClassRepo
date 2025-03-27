@@ -1,0 +1,5 @@
+{
+    "TemplateId": "ieee",
+    "Name": "IEEE Style Template",
+    "Content": "\\documentclass[conference]{IEEEtran}\n\\usepackage[utf8]{inputenc}\n\\usepackage{graphicx}\n\\usepackage{amsmath}\n\\usepackage{xcolor}\n\\usepackage{cite}\n\\usepackage{algorithm}\n\\usepackage{algorithmic}\n\\usepackage{hyperref}\n\\usepackage{textgreek}\n\\usepackage{amsfonts}\n\\usepackage{amssymb}\n\n\\title{${TITLE}}\n\\author{${AUTHORS}}\n\n\\begin{document}\n\\maketitle\n\n${CONTENT}\n\n\\end{document}"
+  }

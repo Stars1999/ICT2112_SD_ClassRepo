@@ -315,7 +315,6 @@ namespace ICT2106WebApp.Pages
                     content.AppendLine();
                 }
 
-                // Main content - include ALL paragraphs with CJK support
                 content.AppendLine("\\section*{Content}");
                 foreach (var paragraph in ParagraphContent.Skip(1))
                 {

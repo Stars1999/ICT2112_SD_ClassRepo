@@ -32,7 +32,7 @@ public class LatexEditorApplicationController : Controller
     [HttpGet("load-and-insert")]
     public async Task<IActionResult> LoadFromFileAndInsert()
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mla_test.json");
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "apa_test.json");
 
         if (!System.IO.File.Exists(path))
             return NotFound("File not found.");

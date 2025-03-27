@@ -313,3 +313,9 @@ C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software de
 C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\SharpCompress.dll
 C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Snappier.dll
 C:\Users\chris\OneDrive - Singapore Institute Of Technology\y2 tri 2\software design\project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ZstdSharp.dll
+C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\DnsClient.dll
+C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Bson.dll
+C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Driver.dll
+C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\SharpCompress.dll
+C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Snappier.dll
+C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ZstdSharp.dll

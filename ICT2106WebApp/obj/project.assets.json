@@ -837,32 +837,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\aaron\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Leon\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aaron\\OneDrive\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
+      "projectUniqueName": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
       "projectName": "ICT2106WebApp",
-      "projectPath": "C:\\Users\\aaron\\OneDrive\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
-      "packagesPath": "C:\\Users\\aaron\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aaron\\OneDrive\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\",
+      "projectPath": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
+      "packagesPath": "C:\\Users\\Leon\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\aaron\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Leon\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -915,7 +907,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

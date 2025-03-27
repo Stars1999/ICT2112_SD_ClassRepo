@@ -35,7 +35,7 @@ namespace ICT2106WebApp.Controllers
 
 		public string getTestStatus(int modNumber)
 		{
-			bool result = RunModTestCases(modNumber);
+			bool result = runModTestCases(modNumber);
 			return result ? $"Module {modNumber}: Passed" : $"Module {modNumber}: Failed";
 		}
 	}

@@ -157,36 +157,36 @@ public class Dashboard_InputController : Controller
 
 
 
-    // GET: /dashboard/runtestmod2
-    [HttpGet("runtestmod2pass")]
-    public async Task<IActionResult> runCitationTest2Pass()
-    {
-        var mod2Test = new mod2testcases();
+        // GET: /dashboard/runtestmod2
+        [HttpGet("runtestmod2pass")]
+        public async Task<IActionResult> runCitationTest2Pass()
+        {
+            var mod2Test = new mod2testcases();
 
-        // Call the RunPassTests() or RunFailTests()
-        var passResults = mod2Test.RunPassTests(); // RunPassTests() or RunFailTests()
+            // Call the RunPassTests() or RunFailTests()
+            var passResults = mod2Test.RunPassTests(); // RunPassTests() or RunFailTests()
 
-        // return the test results as success/failure message
-        var resultMessage = passResults.All(r => r) ? "Test Passed (MOD2)" : "Test Failed (MOD2)";
-        
-        return Ok(new { message = resultMessage });
+            // return the test results as success/failure message
+            var resultMessage = $"{(passResults ? "All tests passed" : "Some tests failed")}";
+
+            return Ok(new { message = resultMessage });
+        }
+
+        // GET: /dashboard/runtestmod2
+        [HttpGet("runtestmod2fail")]
+        public async Task<IActionResult> runCitationTest2Fail()
+        {
+            var mod2Test = new mod2testcases();
+
+            // Call the RunPassTests() or RunFailTests()
+            bool passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()
+
+            // return the test results as success/failure message
+            var resultMessage = $"{(passResults ? "All tests passed" : "Some tests failed")}";
+
+            return Ok(new { message = resultMessage });
+        }
+
     }
-
-    // GET: /dashboard/runtestmod2
-    [HttpGet("runtestmod2fail")]
-    public async Task<IActionResult> runCitationTest2Fail()
-    {
-        var mod2Test = new mod2testcases();
-
-        // Call the RunPassTests() or RunFailTests()
-        var passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()
-
-        // return the test results as success/failure message
-        var resultMessage = passResults.All(r => r) ? "Test Passed (MOD2)" : "Test Failed (MOD2)";
-        
-        return Ok(new { message = resultMessage });
-    }
-
-}
 
 }

@@ -65,14 +65,14 @@ namespace ICT2106WebApp.Pages
         
         public IActionResult OnPost()
         {
-            // Step 1: Load document content using TemplateSample data
-            LoadDocumentContent(true);
+            // Step 1: Load document content 
+            LoadDocumentContent();
             
             // Step 2: Convert to original LaTeX format
-            OriginalLaTeXResult = ((DocumentManager)_documentManager).toLaTeXWithTemplate("template", true);
+            //OriginalLaTeXResult = ((DocumentManager)_documentManager).toLaTeXWithTemplate("template", true);
             
             // Step 3: Convert to template-applied LaTeX format
-            TemplateResult = ((DocumentManager)_documentManager).convertToLatexTemplateWithTemplate("template", SelectedTemplateId, true);
+            //TemplateResult = ((DocumentManager)_documentManager).convertToLatexTemplateWithTemplate("template", SelectedTemplateId, true);
             
             // Step 4: Get formatted content for display
             GenerateDisplayContent();
@@ -80,18 +80,17 @@ namespace ICT2106WebApp.Pages
             return Page();
         }
         
-        private void LoadDocumentContent(bool useTemplateData = true)
+        private void LoadDocumentContent()
         {
             // Load all content types from the DocumentManager using TemplateSample data
-            MetadataContent = _documentManager.GetContentByType("metadata", useTemplateData);
-            FormatContent = _documentManager.GetContentByType("format", useTemplateData);
-            TextContent = _documentManager.GetContentByType("text", useTemplateData);
-            ParagraphContent = _documentManager.GetContentByType("paragraph", useTemplateData);
-            LayoutContent = _documentManager.GetContentByType("layout", useTemplateData);
-            MathContent = _documentManager.GetContentByType("math", useTemplateData);
-            ListContent = _documentManager.GetContentByType("lists", useTemplateData);
-            ImageContent = _documentManager.GetContentByType("images", useTemplateData);
-            BibliographyContent = _documentManager.GetContentByType("bibliography", useTemplateData);
+            MetadataContent = _documentManager.GetContentForTemplateByType("metadata");
+            FormatContent = _documentManager.GetContentForTemplateByType("format");
+            TextContent = _documentManager.GetContentForTemplateByType("text");
+            ParagraphContent = _documentManager.GetContentForTemplateByType("paragraph");
+            LayoutContent = _documentManager.GetContentForTemplateByType("layout");
+            MathContent = _documentManager.GetContentForTemplateByType("math");
+            ListContent = _documentManager.GetContentForTemplateByType("lists");
+            ImageContent = _documentManager.GetContentForTemplateByType("images");
             
             IsDocumentLoaded = true;
         }

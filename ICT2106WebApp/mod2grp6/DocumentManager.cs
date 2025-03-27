@@ -11,17 +11,20 @@ namespace ICT2106WebApp.mod2grp6
         // Services and components needed for document operations
         private FormatConversionManager formatConversionManager;
         private TemplateManager templateManager;
-        
-        // Sample document data from sample.cs in actual implementation this variable would not be needed
+
+        // Sample document data from sample.cs
+        //remove when submitting
         private Dictionary<string, List<AbstractNode>> documentContent;
         private Dictionary<string, List<AbstractNode>> templateDocumentContent;
-        
+
         // Constructor for DocumentManager
         public DocumentManager()
         {
             formatConversionManager = new FormatConversionManager();
             templateManager = new TemplateManager();
 
+
+            // all these to be removed when submitting as a zip
             //get nodes from sample.cs in class integration it would be pulled from mod1 
             TestCases sample = new TestCases();
             documentContent = new Dictionary<string, List<AbstractNode>>();
@@ -35,10 +38,8 @@ namespace ICT2106WebApp.mod2grp6
             documentContent["math"] = sample.MathContent;
             documentContent["lists"] = sample.Lists;
             documentContent["images"] = sample.Images;
-            documentContent["bibliography"] = sample.BibliographyContent;
 
-            // Get nodes from TemplateSample.cs for template testing
-            TemplateSample templateSample = new TemplateSample();
+            TestCases templateSample = new TestCases();
             templateDocumentContent = new Dictionary<string, List<AbstractNode>>();
 
             // Retrieve content from TemplateSample
@@ -50,63 +51,61 @@ namespace ICT2106WebApp.mod2grp6
             templateDocumentContent["math"] = templateSample.MathContent;
             templateDocumentContent["lists"] = templateSample.Lists;
             templateDocumentContent["images"] = templateSample.Images;
-            templateDocumentContent["bibliography"] = templateSample.BibliographyContent;
         }
-        
+
         /// <summary>
         /// Retrieve content by content type
-        /// </summary>
-        public List<AbstractNode> GetContentByType(string contentType, bool useTemplateData = false)
+        //this should be removed for zip submission
+        public List<AbstractNode> GetContentByType(string contentType)
         {
-            Dictionary<string, List<AbstractNode>> source = useTemplateData ? templateDocumentContent : documentContent;
-            
-            if (source.ContainsKey(contentType))
+            if (documentContent.ContainsKey(contentType))
             {
-                return source[contentType];
+                return documentContent[contentType];
             }
-            
+
             return new List<AbstractNode>();
         }
-        
-        /// <summary>
-        /// Implements IProcessDocument.toLaTeX
-        /// </summary>
-        public bool toLaTeX(string id)
+
+        //this should be removed for zip submission
+        public List<AbstractNode> GetContentForTemplateByType(string contentType)
         {
-            // Call the extended version with default useTemplateData = false
-            return toLaTeXInternal(id, false);
+            if (documentContent.ContainsKey(contentType))
+            {
+                return templateDocumentContent[contentType];
+            }
+
+            return new List<AbstractNode>();
         }
-        
+
         /// <summary>
-        /// Internal implementation with template data flag
-        /// </summary>
-        private bool toLaTeXInternal(string id, bool useTemplateData)
+        /// Converts document to LaTeX format
+        public bool toLaTeX(string id)
         {
             try
             {
                 // Convert format content
-                List<AbstractNode> formatContent = GetContentByType("format", useTemplateData);
+                List<AbstractNode> formatContent = documentContent["format"];
                 bool formatSuccess = formatConversionManager.convertFormat(formatContent);
 
                 //convert metadata
-                List<AbstractNode> metadataContent = GetContentByType("metadata", useTemplateData);
+                List<AbstractNode> metadataContent = documentContent["metadata"];
                 bool metadataSuccess = formatConversionManager.convertFormat(metadataContent);
-                
+
                 // Convert text content
-                List<AbstractNode> textContent = GetContentByType("text", useTemplateData);
+                List<AbstractNode> textContent = documentContent["text"];
                 bool textSuccess = formatConversionManager.convertText(textContent);
-                
+
                 // Convert paragraph content
-                List<AbstractNode> paragraphContent = GetContentByType("paragraph", useTemplateData);
+                List<AbstractNode> paragraphContent = documentContent["paragraph"];
                 bool paragraphSuccess = formatConversionManager.convertFormat(paragraphContent);
-                
-                
+
+
                 // Convert layout content
-                List<AbstractNode> layoutContent = GetContentByType("layout", useTemplateData);
+                List<AbstractNode> layoutContent = documentContent["layout"];
                 bool layoutSuccess = formatConversionManager.convertLayout(layoutContent);
-                
+
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
-                
+
                 return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }
             catch (Exception ex)
@@ -115,33 +114,24 @@ namespace ICT2106WebApp.mod2grp6
                 return false;
             }
         }
-        
+
         /// <summary>
-        /// Implements both IProcessDocument.convertToLatexTemplate and IProcessTemplate.convertToLatexTemplate
-        /// </summary>
         public bool convertToLatexTemplate(string id, string templateId)
         {
-            // Call the extended version with default useTemplateData = false
-            return convertToLatexTemplateInternal(id, templateId, false);
-        }
-        
-        /// <summary>
-        /// Internal implementation with template data flag
-        /// </summary>
-        private bool convertToLatexTemplateInternal(string id, string templateId, bool useTemplateData)
-        {
-            try
+
+            //idk what this is but it was here before not sure if working
+            /*            try
             {
                 // Retrieve all content types
                 List<AbstractNode> allContent = new List<AbstractNode>();
-                allContent.AddRange(GetContentByType("format", useTemplateData));
-                allContent.AddRange(GetContentByType("text", useTemplateData));
-                allContent.AddRange(GetContentByType("paragraph", useTemplateData));
-                allContent.AddRange(GetContentByType("layout", useTemplateData));
-                allContent.AddRange(GetContentByType("math", useTemplateData));
-                allContent.AddRange(GetContentByType("lists", useTemplateData));
-                allContent.AddRange(GetContentByType("images", useTemplateData));
-                
+                allContent.AddRange(GetContentByType("format"));
+                allContent.AddRange(GetContentByType("text"));
+                allContent.AddRange(GetContentByType("paragraph"));
+                allContent.AddRange(GetContentByType("layout"));
+                allContent.AddRange(GetContentByType("math"));
+                allContent.AddRange(GetContentByType("lists"));
+                allContent.AddRange(GetContentByType("images"));
+
                 // Get the template
                 Template.Template template = templateManager.ConvertToTemplate(templateId);
                 if (template != null)
@@ -149,15 +139,15 @@ namespace ICT2106WebApp.mod2grp6
                     // Merge with template content
                     List<AbstractNode> templateContent = template.GetContent();
                     allContent.AddRange(templateContent);
-                    
+
                     // Apply conversions
                     bool formatSuccess = formatConversionManager.convertFormat(allContent);
                     bool textSuccess = formatConversionManager.convertText(allContent);
                     bool layoutSuccess = formatConversionManager.convertLayout(allContent);
-                    
+
                     return formatSuccess && textSuccess && layoutSuccess;
                 }
-                
+
                 return false;
             }
             catch (Exception ex)
@@ -165,43 +155,10 @@ namespace ICT2106WebApp.mod2grp6
                 Console.WriteLine($"Error in convertToLatexTemplate: {ex.Message}");
                 return false;
             }
+            */
+            return false;
         }
-        
-        /// <summary>
-        /// Public method that allows using template data for conversion
-        /// </summary>
-        public bool convertToLatexTemplateWithTemplate(string id, string templateId, bool useTemplateData)
-        {
-            return convertToLatexTemplateInternal(id, templateId, useTemplateData);
-        }
-        
-        /// <summary>
-        /// Public method that allows using template data for LaTeX conversion
-        /// </summary>
-        public bool toLaTeXWithTemplate(string id, bool useTemplateData)
-        {
-            return toLaTeXInternal(id, useTemplateData);
-        }
-        
-        // Helper methods for retrieving content - these now simply call GetContentByType
-        private List<AbstractNode> retrieveFormatContent(string id, bool useTemplateData = false)
-        {
-            return GetContentByType("format", useTemplateData);
-        }
-        
-        private List<AbstractNode> retrieveTextContent(string id, bool useTemplateData = false)
-        {
-            return GetContentByType("text", useTemplateData);
-        }
-        
-        private List<AbstractNode> retrieveParagraphContent(string id, bool useTemplateData = false)
-        {
-            return GetContentByType("paragraph", useTemplateData);
-        }
-        
-        private List<AbstractNode> retrieveLayoutContent(string id, bool useTemplateData = false)
-        {
-            return GetContentByType("layout", useTemplateData);
-        }
+
+
     }
 }

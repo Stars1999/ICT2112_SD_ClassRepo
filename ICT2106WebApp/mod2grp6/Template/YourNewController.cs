@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/* using Microsoft.AspNetCore.Mvc;
 using ICT2106WebApp.mod2grp6;
 using ICT2106WebApp.mod2grp6.Template;
 using ICT2106WebApp.Utilities;
@@ -213,4 +213,4 @@ namespace ICT2106WebApp.Controllers
             _templateManager.SetTemplate("editorial", editorialTemplate);
         }
     }
-}
+} */

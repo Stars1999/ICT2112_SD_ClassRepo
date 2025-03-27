@@ -96,10 +96,5 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 new SimpleNode(5, "image", "Image_rId13.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Right Align (Ctrl + R)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 2264485, Vertical Offset: 1046" }, { "WidthEMU", 3469535 }, { "HeightEMU", 2312895 } } }),
                 new SimpleNode(6, "image", "Image_rId14.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Justify (Ctrl + J)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 0, Vertical Offset: 0" }, { "WidthEMU", 3840480 }, { "HeightEMU", 2560320 } } })
             };
-
-        public List<AbstractNode> BibliographyContent = new List<AbstractNode>
-            {
-                new SimpleNode(1, "bibliography", "Reference (IEE)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
-            };
     }
 }

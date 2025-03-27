@@ -58,7 +58,6 @@ namespace ICT2106WebApp.Pages
             MathContent = _documentManager.GetContentByType("math");
             ListContent = _documentManager.GetContentByType("lists");
             ImageContent = _documentManager.GetContentByType("images");
-            BibliographyContent = _documentManager.GetContentByType("bibliography");
             
             IsDocumentLoaded = true;
             

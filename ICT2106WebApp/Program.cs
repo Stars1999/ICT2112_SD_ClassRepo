@@ -32,7 +32,7 @@ builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
 builder.Services.AddSingleton<iGetGeneratedLatex, LatexGenerator>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter, ErrorPresenter>();
-builder.Services.AddSingleton<ErrorCheckingFacade>();
+//builder.Services.AddSingleton<ErrorCheckingFacade>();
 builder.Services.AddSingleton<PDFGenerator>();
 builder.Services.AddSingleton<EditorDoc>();
 builder.Services.AddSingleton<LatexGenerator>();
@@ -44,16 +44,18 @@ builder.Services.AddSingleton<EditorDocumentMapper>();
 builder.Services.AddSingleton<BibTexMapper>();
 builder.Services.AddSingleton<IInsertBibTex, BibTexMapper>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
+builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>
 {
     var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();
     return new ErrorPresenter(errorAnalyser);
 });
-builder.Services.AddSingleton<ErrorCheckingFacade>(provider =>
+builder.Services.AddScoped<ErrorCheckingFacade>(provider =>
 {
     var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();
     var errorPresenter = provider.GetRequiredService<iErrorPresenter>();
-    return new ErrorCheckingFacade(errorAnalyser, errorPresenter);
+    var logger = provider.GetRequiredService<ICT2106WebApp.Interfaces.ILogger>();
+    return new ErrorCheckingFacade(errorAnalyser, errorPresenter, logger);
 });
 
 var app = builder.Build();

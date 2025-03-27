@@ -118,12 +118,12 @@ namespace ICT2106WebApp.mod2grp6
         /// <summary>
         public bool convertToLatexTemplate(string id, string templateId)
         {
-
-            //idk what this is but it was here before not sure if working
-            /*            try
+            try
             {
-                // Retrieve all content types
+                // Step 1: Retrieve document content
                 List<AbstractNode> allContent = new List<AbstractNode>();
+                
+                // Retrieve all document content types (headings, paragraphs, etc.)
                 allContent.AddRange(GetContentByType("format"));
                 allContent.AddRange(GetContentByType("text"));
                 allContent.AddRange(GetContentByType("paragraph"));
@@ -131,23 +131,24 @@ namespace ICT2106WebApp.mod2grp6
                 allContent.AddRange(GetContentByType("math"));
                 allContent.AddRange(GetContentByType("lists"));
                 allContent.AddRange(GetContentByType("images"));
-
-                // Get the template
+                
+                // Step 2: Retrieve the template by templateId
                 Template.Template template = templateManager.ConvertToTemplate(templateId);
                 if (template != null)
                 {
-                    // Merge with template content
+                    // Step 3: Merge template content with the document content
                     List<AbstractNode> templateContent = template.GetContent();
                     allContent.AddRange(templateContent);
-
-                    // Apply conversions
+                    
+                    // Step 4: Apply conversions for the format, text, and layout
                     bool formatSuccess = formatConversionManager.convertFormat(allContent);
                     bool textSuccess = formatConversionManager.convertText(allContent);
                     bool layoutSuccess = formatConversionManager.convertLayout(allContent);
-
+                    
                     return formatSuccess && textSuccess && layoutSuccess;
                 }
 
+                // If template is not found, return false
                 return false;
             }
             catch (Exception ex)
@@ -155,10 +156,6 @@ namespace ICT2106WebApp.mod2grp6
                 Console.WriteLine($"Error in convertToLatexTemplate: {ex.Message}");
                 return false;
             }
-            */
-            return false;
         }
-
-
     }
 }

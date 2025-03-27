@@ -1146,8 +1146,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>3zydq2qfms</Fingerprint>
-      <Integrity>T/ScrsctzOZD2MY6EF4S/GT2qXWud2RQ8sY5PN0cz+k=</Integrity>
+      <Fingerprint>p1ytfn4hyn</Fingerprint>
+      <Integrity>nfy2uQfkoPBL1Fe+bDYQuWAParzGu6xDR+LeaBQdOzE=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.aux'))</OriginalItemSpec>
@@ -1164,8 +1164,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>of36kfibs4</Fingerprint>
-      <Integrity>HJljr+ZneNS0BJWKGzO2WCXHPb0ul6fGO0weruuKIWE=</Integrity>
+      <Fingerprint>kbcsum1a62</Fingerprint>
+      <Integrity>oExF8j6eQy7fw44Nj3qqPSEfj8SM3D8LtWBgyMxjqHk=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.log'))</OriginalItemSpec>
@@ -1182,8 +1182,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>b2py2jhfwp</Fingerprint>
-      <Integrity>Y/H/923vJ8x+JGvhf8p0sPD10wcxoKjsy1shQHvzKUU=</Integrity>
+      <Fingerprint>1q202mbwdc</Fingerprint>
+      <Integrity>yRfow+xzlLh6QtiVgxT/B3bT6VZAtT1ZMKP3RhVHc8w=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.pdf'))</OriginalItemSpec>
@@ -1200,29 +1200,11 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>lrgidisv5v</Fingerprint>
-      <Integrity>YVraHo3NSLogfBVlFN7IzxeoFOHr9fqLsfE4diQNIdM=</Integrity>
+      <Fingerprint>qcdpwboljr</Fingerprint>
+      <Integrity>2vtOQxEtk1MRbPagU4nRu6Cyoi49IMXIr4i0L6oL9wA=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.tex'))</OriginalItemSpec>
-    </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.toc'))">
-      <SourceType>Package</SourceType>
-      <SourceId>ICT2106WebApp</SourceId>
-      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
-      <BasePath>_content/ICT2106WebApp</BasePath>
-      <RelativePath>pdfs/document.toc</RelativePath>
-      <AssetKind>All</AssetKind>
-      <AssetMode>All</AssetMode>
-      <AssetRole>Primary</AssetRole>
-      <RelatedAsset></RelatedAsset>
-      <AssetTraitName></AssetTraitName>
-      <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>s0a84nla6b</Fingerprint>
-      <Integrity>vPRtB2jlrGk63ze2CIs9lZP/XtI+Ny/UDFhKXhANWOQ=</Integrity>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.toc'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\SG60_Figma_Wireframe_Plan (1).docx'))">
       <SourceType>Package</SourceType>
@@ -1241,24 +1223,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\SG60_Figma_Wireframe_Plan (1).docx'))</OriginalItemSpec>
-    </StaticWebAsset>
-    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\SRS Grp 2016A (1).docx'))">
-      <SourceType>Package</SourceType>
-      <SourceId>ICT2106WebApp</SourceId>
-      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
-      <BasePath>_content/ICT2106WebApp</BasePath>
-      <RelativePath>uploads/SRS Grp 2016A (1).docx</RelativePath>
-      <AssetKind>All</AssetKind>
-      <AssetMode>All</AssetMode>
-      <AssetRole>Primary</AssetRole>
-      <RelatedAsset></RelatedAsset>
-      <AssetTraitName></AssetTraitName>
-      <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>2v9miwu9t2</Fingerprint>
-      <Integrity>bs0aUXEhxLw9oCnBGR13OM7mg+pbmdbfSw2nIAypFhM=</Integrity>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\SRS Grp 2016A (1).docx'))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>
 </Project>

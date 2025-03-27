@@ -61,7 +61,7 @@ namespace ICT2106WebApp.Data
         // Implements ILogger Interface for inserting logs
         public void InsertLog(DateTime logTimestamp, string logDescription, string logLocation)
         {
-            var newLog = new Logger_SDM(logTimestamp, logDescription, logLocation);
+            var newLog = new Logger_SDM(logTimestamp.AddHours(8), logDescription, logLocation);
             var bsonDocument = new BsonDocument
             {
                 { "LogTimestamp", newLog.GetLogDetails().Item2 },

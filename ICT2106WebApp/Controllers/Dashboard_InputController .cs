@@ -80,12 +80,22 @@ public class Dashboard_InputController : Controller
         return PhysicalFile(document.FilePath, "application/octet-stream", fileName);
     }
 
-    // GET: /dashboard/runtest
     [HttpGet("runtestmod3fail")]
-    public async Task<IActionResult> runCitationTest3Fail()
+    public async Task<IActionResult> RunCitationTest3Fail()
     {
         string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
-        string latexFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "document.tex");
+
+        // Fail scenario LaTeX content
+        string latexContentFail = @"\documentclass{article}
+    \title{The Role of AI in Modern Healthcare}
+    \author{Dr. Emily Johnson}
+    \date{2024-03-15}
+    \begin{document}
+    \maketitle
+    AI is transforming medical diagnostics. Predictive analytics does not mention the source.
+    \section{References}
+    Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
+    \end{document}";
 
         CustomLogger logger = new LoggerGateway_TDG();
 
@@ -95,19 +105,22 @@ public class Dashboard_InputController : Controller
         int totalSteps = 5;
         for (int i = 1; i <= totalSteps; i++)
         {
-            //await Task.Delay(1000); // Simulate each step with delay
             int progress = (i * 100) / totalSteps;
             _parser.UpdateConversionStatus("Citation Test", $"{progress}% complete");
-            //_logger.LogInformation($"Step {i}/{totalSteps}: {progress}% complete");
         }
 
-        bool isValid = await validator.ValidateCitationConversionAsync(jsonFilePath, latexFilePath);
+        // Pass isFileContent: true to use the string content directly
+        bool isValid = await validator.ValidateCitationConversionAsync(jsonFilePath, latexContentFail, isFileContent: true);
 
         string resultMessage = isValid 
             ? "Test Passed: All citations were correctly converted." 
             : "Test Failed: Some citations were not converted correctly.";
 
-        return Ok(new { message = resultMessage });
+        return Ok(new { 
+            message = resultMessage, 
+            isValid = isValid,
+            scenarioType = "Failure"
+        });
     }
 
 

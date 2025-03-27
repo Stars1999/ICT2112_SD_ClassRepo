@@ -47,7 +47,7 @@ public class CitationValidator
                 }
             }
         }
-        _logger.InsertLog(DateTime.Now, "Extracted original citation keys.", "CitationValidator.ExtractOriginalCitationsAsync");
+        _logger.InsertLog(DateTime.Now, "Extracted original citation keys.", "CitationValidator");
         return citations;
     }
 
@@ -59,13 +59,15 @@ public class CitationValidator
     {
         var citations = new List<string>();
 
-        // Regex to find \cite{...} commands.
-        var matches = Regex.Matches(latexContent, @"\\cite\{([^}]+)\}");
+        // Extract citations in the format (Smith, 2019)
+        var matches = Regex.Matches(latexContent, @"\(([A-Z][a-zA-Z\.\- ]+),\s*(\d{4})\)");
         foreach (Match match in matches)
         {
-            if (match.Groups.Count > 1)
+            if (match.Success && match.Groups.Count > 2)
             {
-                citations.Add(match.Groups[1].Value);
+                string author = match.Groups[1].Value.Trim().Replace(" ", "");
+                string year = match.Groups[2].Value;
+                citations.Add($"{author}{year}");
             }
         }
 
@@ -77,25 +79,28 @@ public class CitationValidator
     /// Validates that every citation extracted from the original JSON has been
     /// converted properly in the final LaTeX output.
     /// </summary>
-    public async Task<bool> ValidateCitationConversionAsync(string jsonFilePath, string latexFilePath)
+    public async Task<bool> ValidateCitationConversionAsync(string jsonFilePath, string latexContent, bool isFileContent = false)
     {
         List<string> originalCitations = await ExtractOriginalCitationsAsync(jsonFilePath);
 
-        string finalLatex = await File.ReadAllTextAsync(latexFilePath);
+        string finalLatex = isFileContent 
+            ? latexContent 
+            : await File.ReadAllTextAsync(latexContent);
+
         List<string> convertedCitations = ExtractConvertedCitations(finalLatex);
 
-        _logger.InsertLog(DateTime.Now, $"Original Citations: {string.Join(", ", originalCitations)}", "CitationValidator.ValidateCitationConversionAsync");
-        _logger.InsertLog(DateTime.Now, $"Converted Citations: {string.Join(", ", convertedCitations)}", "CitationValidator.ValidateCitationConversionAsync");
+        _logger.InsertLog(DateTime.Now, $"Original Citations: {string.Join(", ", originalCitations)}", "CitationValidator");
+        _logger.InsertLog(DateTime.Now, $"Converted Citations: {string.Join(", ", convertedCitations)}", "CitationValidator");
 
         foreach (var expected in originalCitations)
         {
             if (!convertedCitations.Contains(expected))
             {
-                _logger.InsertLog(DateTime.Now, $"Citation key '{expected}' not found in the converted output.", "CitationValidator.ValidateCitationConversionAsync");
+                _logger.InsertLog(DateTime.Now, $"Citation key '{expected}' not found in the converted output.", "CitationValidator");
                 return false;
             }
         }
-        _logger.InsertLog(DateTime.Now, "All expected citations have been converted correctly.", "CitationValidator.ValidateCitationConversionAsync");
+        _logger.InsertLog(DateTime.Now, "All expected citations have been converted correctly.", "CitationValidator");
         return true;
     }
 }
@@ -115,15 +120,32 @@ public class TestRunner
     {
         // Replace these paths with the actual file locations.
         string jsonFilePath = "wwwroot/bibliography_test.json";
-        string latexFilePath = "wwwroot/document.tex";
+        string latexFilePathPass = "wwwroot/document.tex";
 
         // Create a logger (in production, use DI)
         CustomLogger logger = new ConsoleLogger();
 
         // Create the validator with the logger
         var validator = new CitationValidator(logger);
-        bool isValid = await validator.ValidateCitationConversionAsync(jsonFilePath, latexFilePath);
 
-        Console.WriteLine(isValid ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+        // Pass Scenario
+        bool isValidPass = await validator.ValidateCitationConversionAsync(jsonFilePath, latexFilePathPass);
+        Console.WriteLine(isValidPass ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+
+        // Fail Scenario
+        string latexContentFail = @"\documentclass{article}
+\title{The Role of AI in Modern Healthcare}
+\author{Dr. Emily Johnson}
+\date{2024-03-15}
+\begin{document}
+\maketitle
+AI is transforming medical diagnostics. Predictive analytics does not mention the source.
+\section{References}
+Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
+\end{document}";
+
+        // Fail Scenario
+        bool isValidFail = await validator.ValidateCitationConversionAsync(jsonFilePath, latexContentFail, isFileContent: true);
+        Console.WriteLine(isValidFail ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
     }
 }

@@ -400,12 +400,30 @@
                         </div>
                     }
                 </div>
-                <div class="card-footer">
+                <div class="card-footer d-flex justify-content-between">
                     <form method="post">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-file-earmark-text"></i> Load Sample Document Content
                         </button>
                     </form>
+                    @if (Model.IsDocumentLoaded)
+                    {
+                        <button id="copyAllContentBtn" class="btn btn-success">
+                            <i class="bi bi-clipboard"></i> Copy Tab Content
+                        </button>
+                        <!-- Toast notification for copy success -->
+                        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+                            <div id="copyToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header bg-success text-white">
+                                    <strong class="me-auto">Success</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body">
+                                    Tab content copied to clipboard!
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -424,6 +442,47 @@
                     tabTrigger.show()
                 })
             })
+            
+            // Copy Current Tab Content functionality
+            const copyAllContentBtn = document.getElementById('copyAllContentBtn');
+            if (copyAllContentBtn) {
+                copyAllContentBtn.addEventListener('click', function() {
+                    // Find the active tab
+                    const activeTabPane = document.querySelector('.tab-pane.active');
+                    if (!activeTabPane) {
+                        alert('No active tab found');
+                        return;
+                    }
+                    
+                    // Get ONLY the content column from table (3rd column)
+                    // Skip the heading and just concatenate the content cells
+                    let allContent = '';
+                    
+                    const tableRows = activeTabPane.querySelectorAll('tbody tr');
+                    tableRows.forEach(function(row) {
+                        const contentCell = row.querySelector('td:nth-child(3)');
+                        if (contentCell) {
+                            const content = contentCell.textContent.trim();
+                            if (content) {
+                                allContent += content + '\n\n';
+                            }
+                        }
+                    });
+                    
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(allContent)
+                        .then(() => {
+                            // Show toast notification
+                            const toastEl = document.getElementById('copyToast');
+                            const toast = new bootstrap.Toast(toastEl);
+                            toast.show();
+                        })
+                        .catch(err => {
+                            console.error('Could not copy text: ', err);
+                            alert('Failed to copy content. Please try again.');
+                        });
+                });
+            }
         });
     </script>
 }

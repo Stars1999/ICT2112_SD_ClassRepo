@@ -40,11 +40,6 @@ namespace ICT2106WebApp.Domain
             return report;
         }
 
-        public List<string> GetQualityMetrics()
-        {
-            return _qualityChecks.Select(q => q.MetricName).ToList();
-        }
-
         private class TextFormattingCheck : QualityCheck
         {
             public override string MetricName => "Text Formatting";

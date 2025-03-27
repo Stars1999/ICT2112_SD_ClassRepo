@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
 using ICT2106WebApp.mod2grp6;
+using System.Text;
 using ICT2106WebApp.Utilities;
 using ICT2106WebApp.mod2grp6.Template;
 
@@ -105,133 +106,132 @@ namespace ICT2106WebApp.Pages
         }
 
         private string GenerateEditorialTemplate(string title, string authors)
-{
-    var content = new System.Text.StringBuilder();
-
-    // Editorial Template Specific Packages
-    content.AppendLine("\\documentclass[twocolumn]{article}");
-    content.AppendLine("\\usepackage[utf8]{inputenc}");
-    content.AppendLine("\\usepackage{graphicx}");
-    content.AppendLine("\\usepackage{multicol}");
-    content.AppendLine("\\usepackage{geometry}");
-    content.AppendLine("\\geometry{margin=1in}");
-    content.AppendLine("\\usepackage{fancyhdr}");
-    content.AppendLine("\\pagestyle{fancy}");
-    content.AppendLine("\\fancyhf{}");
-    content.AppendLine("\\renewcommand{\\headrulewidth}{0pt}");
-    content.AppendLine("\\lfoot{Editorial Perspective}");
-    content.AppendLine("\\rfoot{Page \\thepage}");
-    content.AppendLine();
-
-    // Title and Author Configuration
-    content.AppendLine($"\\title{{{title}}}");
-    content.AppendLine($"\\author{{{CleanTextForLaTeX(authors)}}}");
-    content.AppendLine("\\date{}"); // Remove date
-    content.AppendLine();
-
-    content.AppendLine("\\begin{document}");
-
-    // Switch to single column for the title and abstract
-    content.AppendLine("\\onecolumn");
-    content.AppendLine("\\maketitle");
-
-    // Abstract Section
-    if (ParagraphContent.Count > 0)
-    {
-        content.AppendLine("\\begin{abstract}");
-        string abstractText = CleanTextForLaTeX(ParagraphContent[0].GetContent());
-        content.AppendLine(abstractText);
-        content.AppendLine("\\end{abstract}");
-        content.AppendLine();
-    }
-
-    // Switch back to two-column layout for the main content
-    content.AppendLine("\\twocolumn");
-    content.AppendLine("\\begin{multicols}{2}");
-
-    // Iterate through paragraphs for content
-    for (int i = 1; i < ParagraphContent.Count; i++)
-    {
-        var paragraph = ParagraphContent[i];
-        string paraText = CleanTextForLaTeX(paragraph.GetContent());
-        paraText = ApplyNodeStyling(paraText, paragraph);
-
-        // Section headers from FormatContent
-        if (i < FormatContent.Count && FormatContent[i].GetNodeType() == "h2")
         {
-            content.AppendLine($"\\section*{{{CleanTextForLaTeX(FormatContent[i].GetContent())}}}");
-        }
+            var content = new System.Text.StringBuilder();
 
-        content.AppendLine(paraText);
-        content.AppendLine("\\vspace{0.5em}");
-    }
+            // Editorial Template Specific Packages
+            content.AppendLine("\\documentclass[twocolumn]{article}");
+            content.AppendLine("\\usepackage[utf8]{inputenc}");
+            content.AppendLine("\\usepackage{graphicx}");
+            content.AppendLine("\\usepackage{multicol}");
+            content.AppendLine("\\usepackage{geometry}");
+            content.AppendLine("\\geometry{margin=1in}");
+            content.AppendLine("\\usepackage{fancyhdr}");
+            content.AppendLine("\\pagestyle{fancy}");
+            content.AppendLine("\\fancyhf{}");
+            content.AppendLine("\\renewcommand{\\headrulewidth}{0pt}");
+            content.AppendLine("\\lfoot{Editorial Perspective}");
+            content.AppendLine("\\rfoot{Page \\thepage}");
+            content.AppendLine();
 
-    // Mathematical Content
-    if (MathContent.Count > 0)
-    {
-        content.AppendLine("\\section*{Mathematical Insights}");
-        foreach (var node in MathContent)
-        {
-            string mathText = CleanTextForLaTeX(node.GetContent(), "math");
-            content.AppendLine("\\begin{equation}");
-            content.AppendLine(EnsureBalancedBraces(mathText));
-            content.AppendLine("\\end{equation}");
-        }
-    }
+            // Title and Author Configuration
+            content.AppendLine($"\\title{{{title}}}");
+            content.AppendLine($"\\author{{{CleanTextForLaTeX(authors)}}}");
+            content.AppendLine("\\date{}"); // Remove date
+            content.AppendLine();
 
-    // List Content
-    if (ListContent.Count > 0)
-    {
-        content.AppendLine("\\section*{Key Points}");
-        
-        var bulletedLists = ListContent.Where(n => n.GetNodeType().Contains("bulleted")).ToList();
-        var numberedLists = ListContent.Where(n => n.GetNodeType().Contains("numbered")).ToList();
+            content.AppendLine("\\begin{document}");
 
-        if (bulletedLists.Any())
-        {
-            content.AppendLine("\\begin{itemize}");
-            foreach (var item in bulletedLists)
+            // Switch to single column for the title and abstract
+            content.AppendLine("\\onecolumn");
+            content.AppendLine("\\maketitle");
+
+            // Abstract Section
+            if (ParagraphContent.Count > 0)
             {
-                content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                content.AppendLine("\\begin{abstract}");
+                string abstractText = CleanTextForLaTeX(ParagraphContent[0].GetContent());
+                content.AppendLine(abstractText);
+                content.AppendLine("\\end{abstract}");
+                content.AppendLine();
             }
-            content.AppendLine("\\end{itemize}");
-        }
 
-        if (numberedLists.Any())
-        {
-            content.AppendLine("\\begin{enumerate}");
-            foreach (var item in numberedLists)
+            // Switch back to two-column layout for the main content
+            content.AppendLine("\\twocolumn");
+            content.AppendLine("\\begin{multicols}{2}");
+
+            // Iterate through paragraphs for content
+            for (int i = 1; i < ParagraphContent.Count; i++)
             {
-                content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                var paragraph = ParagraphContent[i];
+                string paraText = CleanTextForLaTeX(paragraph.GetContent());
+                paraText = ApplyNodeStyling(paraText, paragraph);
+
+                // Section headers from FormatContent
+                if (i < FormatContent.Count && FormatContent[i].GetNodeType() == "h2")
+                {
+                    content.AppendLine($"\\section*{{{CleanTextForLaTeX(FormatContent[i].GetContent())}}}");
+                }
+
+                content.AppendLine(paraText);
+                content.AppendLine("\\vspace{0.5em}");
             }
-            content.AppendLine("\\end{enumerate}");
+
+            // Mathematical Content
+            if (MathContent.Count > 0)
+            {
+                content.AppendLine("\\section*{Mathematical Insights}");
+                foreach (var node in MathContent)
+                {
+                    string mathText = CleanTextForLaTeX(node.GetContent(), "math");
+                    content.AppendLine("\\begin{equation}");
+                    content.AppendLine(EnsureBalancedBraces(mathText));
+                    content.AppendLine("\\end{equation}");
+                }
+            }
+
+            // List Content
+            if (ListContent.Count > 0)
+            {
+                content.AppendLine("\\section*{Key Points}");
+                
+                var bulletedLists = ListContent.Where(n => n.GetNodeType().Contains("bulleted")).ToList();
+                var numberedLists = ListContent.Where(n => n.GetNodeType().Contains("numbered")).ToList();
+
+                if (bulletedLists.Any())
+                {
+                    content.AppendLine("\\begin{itemize}");
+                    foreach (var item in bulletedLists)
+                    {
+                        content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                    }
+                    content.AppendLine("\\end{itemize}");
+                }
+
+                if (numberedLists.Any())
+                {
+                    content.AppendLine("\\begin{enumerate}");
+                    foreach (var item in numberedLists)
+                    {
+                        content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                    }
+                    content.AppendLine("\\end{enumerate}");
+                }
+            }
+
+            // Bibliography
+            if (BibliographyContent.Count > 0)
+            {
+                content.AppendLine("\\section*{References}");
+                content.AppendLine("\\begin{thebibliography}{99}");
+                foreach (var node in BibliographyContent)
+                {
+                    string bibText = CleanTextForLaTeX(node.GetContent());
+                    content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {bibText}");
+                }
+                content.AppendLine("\\end{thebibliography}");
+            }
+
+            content.AppendLine("\\end{multicols}");
+            content.AppendLine("\\end{document}");
+
+            return content.ToString();
         }
-    }
-
-    // Bibliography
-    if (BibliographyContent.Count > 0)
-    {
-        content.AppendLine("\\section*{References}");
-        content.AppendLine("\\begin{thebibliography}{99}");
-        foreach (var node in BibliographyContent)
-        {
-            string bibText = CleanTextForLaTeX(node.GetContent());
-            content.AppendLine($"  \\bibitem{{ref{node.GetNodeId()}}} {bibText}");
-        }
-        content.AppendLine("\\end{thebibliography}");
-    }
-
-    content.AppendLine("\\end{multicols}");
-    content.AppendLine("\\end{document}");
-
-    return content.ToString();
-}
-
 
         private string GenerateTemplateAppliedContent()
         {
             string title = "Artificial Intelligence in Modern Education";
-            string authors = "J. Smith, K. Johnson, L. Chen";
+            string authors = "Unknown Author";
 
             // Update title and authors from FormatContent and MetadataContent
             if (FormatContent.Count > 0 && FormatContent[0].GetNodeType() == "h1")
@@ -239,14 +239,18 @@ namespace ICT2106WebApp.Pages
                 title = CleanTextForLaTeX(FormatContent[0].GetContent());
             }
 
-            if (MetadataContent.Count > 0 && MetadataContent[0].GetStyling() != null)
+            if (MetadataContent.Count > 0)
             {
-                foreach (var style in MetadataContent[0].GetStyling())
+                var metadata = MetadataContent[0].GetStyling();
+                if (metadata != null)
                 {
-                    if (style.ContainsKey("author"))
+                    foreach (var style in metadata)
                     {
-                        authors = style["author"].ToString();
-                        break;
+                        if (style.ContainsKey("author") && style["author"] != null)
+                        {
+                            authors = CleanTextForLaTeX(style["author"].ToString());
+                            break;
+                        }
                     }
                 }
             }
@@ -308,6 +312,16 @@ namespace ICT2106WebApp.Pages
                     }
                     content.AppendLine("\\end{abstract}");
                     content.AppendLine("\\IEEEpeerreviewmaketitle");
+                    content.AppendLine();
+                }
+
+                // Main content - include ALL paragraphs with CJK support
+                content.AppendLine("\\section*{Content}");
+                foreach (var paragraph in ParagraphContent.Skip(1))
+                {
+                    string paraText = CleanTextForLaTeX(paragraph.GetContent());
+                    paraText = ApplyNodeStyling(paraText, paragraph);
+                    content.AppendLine(paraText);
                     content.AppendLine();
                 }
 
@@ -422,138 +436,148 @@ namespace ICT2106WebApp.Pages
         }
 
         private string GenerateOriginalLaTeXContent()
-{
-    var content = new System.Text.StringBuilder();
-
-    // Base LaTeX setup
-    content.AppendLine("\\documentclass{article}");
-    content.AppendLine("\\usepackage[utf8]{inputenc}");
-    content.AppendLine("\\usepackage{graphicx}");
-    content.AppendLine("\\usepackage{amsmath}");
-    content.AppendLine("\\usepackage{xcolor}");
-    content.AppendLine("\\usepackage{hyperref}");
-    content.AppendLine("\\usepackage{amsfonts}");
-    content.AppendLine("\\usepackage{amssymb}");
-    content.AppendLine();
-
-    // Metadata
-    string title = "Untitled Document";
-    string authors = "Unknown Author";
-
-    if (FormatContent.Count > 0 && FormatContent[0].GetNodeType() == "h1")
-    {
-        title = CleanTextForLaTeX(FormatContent[0].GetContent());
-    }
-
-    if (MetadataContent.Count > 0)
-    {
-        foreach (var style in MetadataContent[0].GetStyling())
         {
-            if (style.ContainsKey("author"))
-            {
-                authors = style["author"].ToString();
-                break;
-            }
-        }
-    }
+            var content = new System.Text.StringBuilder();
 
-    content.AppendLine($"\\title{{{title}}}");
-    content.AppendLine($"\\author{{{authors}}}");
-    content.AppendLine("\\date{}");
-    content.AppendLine("\\begin{document}");
-    content.AppendLine("\\maketitle");
-    content.AppendLine();
-
-    // Abstract
-    if (ParagraphContent.Count > 0)
-    {
-        content.AppendLine("\\begin{abstract}");
-        string abstractText = CleanTextForLaTeX(ParagraphContent[0].GetContent());
-        content.AppendLine(abstractText);
-        content.AppendLine("\\end{abstract}");
-        content.AppendLine();
-    }
-
-    // Main sections
-    for (int i = 1; i < FormatContent.Count; i++)
-    {
-        string nodeType = FormatContent[i].GetNodeType();
-        string nodeText = CleanTextForLaTeX(FormatContent[i].GetContent());
-
-        if (nodeType == "h2")
-            content.AppendLine($"\\section*{{{nodeText}}}");
-        else if (nodeType == "h3")
-            content.AppendLine($"\\subsection*{{{nodeText}}}");
-
-        if (i - 1 < ParagraphContent.Count)
-        {
-            string paraText = CleanTextForLaTeX(ParagraphContent[i - 1].GetContent());
-            paraText = ApplyNodeStyling(paraText, ParagraphContent[i - 1]);
-            content.AppendLine(paraText);
+            // Base LaTeX setup
+            content.AppendLine("\\documentclass{article}");
+            content.AppendLine("\\usepackage[utf8]{inputenc}");
+            content.AppendLine("\\usepackage{graphicx}");
+            content.AppendLine("\\usepackage{amsmath}");
+            content.AppendLine("\\usepackage{xcolor}");
+            content.AppendLine("\\usepackage{hyperref}");
+            content.AppendLine("\\usepackage{amssymb}");
+            content.AppendLine("\\usepackage{textcomp}");
             content.AppendLine();
-        }
-    }
 
-    // Math Section
-    if (MathContent.Count > 0)
-    {
-        content.AppendLine("\\section*{Mathematical Content}");
-        foreach (var math in MathContent)
-        {
-            content.AppendLine("\\begin{equation}");
-            content.AppendLine(EnsureBalancedBraces(CleanTextForLaTeX(math.GetContent(), "math")));
-            content.AppendLine("\\end{equation}");
+            // Metadata
+            string title = "Untitled Document";
+            string authors = "Unknown Author";
+
+            if (FormatContent.Count > 0 && FormatContent[0].GetNodeType() == "h1")
+            {
+                title = CleanTextForLaTeX(FormatContent[0].GetContent());
+            }
+
+            if (MetadataContent.Count > 0)
+            {
+                foreach (var style in MetadataContent[0].GetStyling())
+                {
+                    if (style.ContainsKey("author"))
+                    {
+                        authors = style["author"].ToString();
+                        break;
+                    }
+                }
+            }
+
+            content.AppendLine($"\\title{{{title}}}");
+            content.AppendLine($"\\author{{{authors}}}");
+            content.AppendLine("\\date{}");
+            content.AppendLine("\\begin{document}");
+            content.AppendLine("\\maketitle");
             content.AppendLine();
-        }
-    }
 
-    // Lists
-    if (ListContent.Count > 0)
-    {
-        content.AppendLine("\\section*{Lists}");
-
-        var bulleted = ListContent.Where(x => x.GetNodeType().Contains("bulleted")).ToList();
-        var numbered = ListContent.Where(x => x.GetNodeType().Contains("numbered")).ToList();
-
-        if (bulleted.Count > 0)
-        {
-            content.AppendLine("\\begin{itemize}");
-            foreach (var item in bulleted)
+            // Abstract
+            if (ParagraphContent.Count > 0)
             {
-                content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                content.AppendLine("\\begin{abstract}");
+                string abstractText = CleanTextForLaTeX(ParagraphContent[0].GetContent());
+                content.AppendLine(abstractText);
+                content.AppendLine("\\end{abstract}");
+                content.AppendLine();
             }
-            content.AppendLine("\\end{itemize}");
-        }
 
-        if (numbered.Count > 0)
-        {
-            content.AppendLine("\\begin{enumerate}");
-            foreach (var item in numbered)
+            // Main content - include ALL paragraphs
+            content.AppendLine("\\section*{Content}");
+            foreach (var paragraph in ParagraphContent.Skip(1)) // Skip abstract paragraph
             {
-                content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                string paraText = CleanTextForLaTeX(paragraph.GetContent());
+                paraText = ApplyNodeStyling(paraText, paragraph);
+                content.AppendLine(paraText);
+                content.AppendLine(); // Add space between paragraphs
             }
-            content.AppendLine("\\end{enumerate}");
+
+            // Main sections
+            for (int i = 1; i < FormatContent.Count; i++)
+            {
+                string nodeType = FormatContent[i].GetNodeType();
+                string nodeText = CleanTextForLaTeX(FormatContent[i].GetContent());
+
+                if (nodeType == "h2")
+                    content.AppendLine($"\\section*{{{nodeText}}}");
+                else if (nodeType == "h3")
+                    content.AppendLine($"\\subsection*{{{nodeText}}}");
+
+                if (i - 1 < ParagraphContent.Count)
+                {
+                    string paraText = CleanTextForLaTeX(ParagraphContent[i - 1].GetContent());
+                    paraText = ApplyNodeStyling(paraText, ParagraphContent[i - 1]);
+                    content.AppendLine(paraText);
+                    content.AppendLine();
+                }
+            }
+
+            // Math Section
+            if (MathContent.Count > 0)
+            {
+                content.AppendLine("\\section*{Mathematical Content}");
+                foreach (var math in MathContent)
+                {
+                    content.AppendLine("\\begin{equation}");
+                    content.AppendLine(EnsureBalancedBraces(CleanTextForLaTeX(math.GetContent(), "math")));
+                    content.AppendLine("\\end{equation}");
+                    content.AppendLine();
+                }
+            }
+
+            // Lists
+            if (ListContent.Count > 0)
+            {
+                content.AppendLine("\\section*{Lists}");
+
+                var bulleted = ListContent.Where(x => x.GetNodeType().Contains("bulleted")).ToList();
+                var numbered = ListContent.Where(x => x.GetNodeType().Contains("numbered")).ToList();
+
+                if (bulleted.Count > 0)
+                {
+                    content.AppendLine("\\begin{itemize}");
+                    foreach (var item in bulleted)
+                    {
+                        content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                    }
+                    content.AppendLine("\\end{itemize}");
+                }
+
+                if (numbered.Count > 0)
+                {
+                    content.AppendLine("\\begin{enumerate}");
+                    foreach (var item in numbered)
+                    {
+                        content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+                    }
+                    content.AppendLine("\\end{enumerate}");
+                }
+
+                content.AppendLine();
+            }
+
+            // Bibliography
+            if (BibliographyContent.Count > 0)
+            {
+                content.AppendLine("\\section*{References}");
+                content.AppendLine("\\begin{thebibliography}{99}");
+                foreach (var bib in BibliographyContent)
+                {
+                    content.AppendLine($"  \\bibitem{{ref{bib.GetNodeId()}}} {CleanTextForLaTeX(bib.GetContent())}");
+                }
+                content.AppendLine("\\end{thebibliography}");
+            }
+
+            content.AppendLine("\\end{document}");
+
+            return content.ToString();
         }
-
-        content.AppendLine();
-    }
-
-    // Bibliography
-    if (BibliographyContent.Count > 0)
-    {
-        content.AppendLine("\\section*{References}");
-        content.AppendLine("\\begin{thebibliography}{99}");
-        foreach (var bib in BibliographyContent)
-        {
-            content.AppendLine($"  \\bibitem{{ref{bib.GetNodeId()}}} {CleanTextForLaTeX(bib.GetContent())}");
-        }
-        content.AppendLine("\\end{thebibliography}");
-    }
-
-    content.AppendLine("\\end{document}");
-
-    return content.ToString();
-}
 
 
         // Helper methods
@@ -639,75 +663,57 @@ namespace ICT2106WebApp.Pages
         {
             if (string.IsNullOrEmpty(text))
                 return "";
-            
-            // Fix any incorrectly double-escaped ampersands
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\&", "\\&");
-            
-            // Remove problematic command patterns
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\paragraph\\\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textit\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbf\\", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\selectfont\b", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\fontsize\{[^}]*\}\{[^}]*\}", "");
-            
-            // Remove trailing backslashes
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\$", "");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\\\(\s)", "$1");
-            
-            // Remove any \textbackslash{} followed by ampersand
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\s*\}&", "\\&");
-            
-            // Extract content from section commands if needed
-            if (text.Contains("\\section{") || text.Contains("\\subsection{") || text.Contains("\\subsubsection{"))
-            {
-                int startIndex = text.IndexOf('{');
-                int endIndex = text.LastIndexOf('}');
-                
-                if (startIndex >= 0 && endIndex > startIndex)
-                {
-                    return text.Substring(startIndex + 1, endIndex - startIndex - 1);
-                }
-            }
-            
-            // Different handling for math content
+
+            // Special handling for math content
             if (contentType == "math")
             {
-                // Convert Unicode math symbols to LaTeX commands
-                text = text.Replace("Σ", "\\Sigma ");
-                text = text.Replace("×", "\\times ");
-                text = text.Replace("≥", "\\geq ");
-                text = text.Replace("≠", "\\neq ");
-                text = text.Replace("±", "\\pm ");
-                text = text.Replace("∞", "\\infty ");
-                text = text.Replace("∴", "\\therefore ");
-                text = text.Replace("∃", "\\exists ");
-                text = text.Replace("∀", "\\forall ");
-                text = text.Replace("→", "\\rightarrow ");
-                text = text.Replace("π", "\\pi ");
-                text = text.Replace("α", "\\alpha ");
-                text = text.Replace("Σ", "\\sum ");
-                
-                // Fix unnecessary backslashes for math mode
-                text = System.Text.RegularExpressions.Regex.Replace(text, @"\\textbackslash\{\}", "");
-                text = System.Text.RegularExpressions.Regex.Replace(text, @"_\\", "_");
-                
-                return text;
+                var mathReplacements = new Dictionary<string, string>
+                {
+                    {"×", "\\times "}, {"≥", "\\geq "}, {"≠", "\\neq "},
+                    {"±", "\\pm "}, {"∞", "\\infty "}, {"∴", "\\therefore "},
+                    {"∃", "\\exists "}, {"∀", "\\forall "}, {"→", "\\rightarrow "},
+                    {"π", "\\pi "}, {"α", "\\alpha "}, {"√", "\\sqrt{"},
+                    {"∫", "\\int "}, {"∧", "\\wedge "}, {"∨", "\\vee "}
+                };
+
+                foreach (var (unicode, latex) in mathReplacements)
+                {
+                    text = text.Replace(unicode, latex);
+                }
+                return EnsureBalancedBraces(text);
             }
-            
-            // Handle regular text content
-            // Fix any double-brace patterns
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\{\{", "{");
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"\}\}", "}");
-            
-            // Handle special LaTeX characters
-            text = System.Text.RegularExpressions.Regex.Replace(text, @"(?<!\\)&", "\\&");
-            text = text.Replace("%", "\\%");
-            text = text.Replace("$", "\\$");
-            text = text.Replace("#", "\\#");
-            text = text.Replace("_", "\\_");
-            text = text.Replace("×", "$\\times$");
-            
-            return text;
+
+            // General text processing
+            var sb = new StringBuilder();
+            foreach (char c in text)
+            {
+                switch (c)
+                {
+                    // Basic LaTeX special characters
+                    case '&': sb.Append("\\&"); break;
+                    case '%': sb.Append("\\%"); break;
+                    case '$': sb.Append("\\$"); break;
+                    case '#': sb.Append("\\#"); break;
+                    case '_': sb.Append("\\_"); break;
+                    case '{': sb.Append("\\{"); break;
+                    case '}': sb.Append("\\}"); break;
+                    case '~': sb.Append("\\textasciitilde "); break;
+                    case '^': sb.Append("\\textasciicircum "); break;
+                    case '\\': sb.Append("\\textbackslash "); break;
+                    case '<': sb.Append("\\textless "); break;
+                    case '>': sb.Append("\\textgreater "); break;
+                    case '|': sb.Append("\\textbar "); break;
+                    
+                    default:
+                        // Only keep ASCII characters
+                        if (c <= 0x7F)
+                        {
+                            sb.Append(c);
+                        }
+                        break;
+                }
+            }
+            return sb.ToString();
         }
     }
 }

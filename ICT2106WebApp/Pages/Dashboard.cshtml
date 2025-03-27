@@ -15,14 +15,24 @@
     <button type="button" id="uploadButton" class="upload-button">Upload</button>
 </div>
 
-<!-- Test Case Button (Hanif) -->
+<!-- Fail Test Case Button (Hanif) -->
 <div>
-    <button id="testButton" type="button" onclick="runCitationTest()" class="test-button">Run Citation Conversion Test (MOD3)</button>
+    <button id="testButton" type="button" onclick="runCitationTest3Fail()" class="test-button">Run Citation Conversion Test (MOD3) Failed</button>
     <div id="testResult" class="test-result"></div>
 </div>
-<!-- Test Case Button (Yolanda) -->
+<!-- Pass Test Case Button (Hanif)-->
 <div>
-    <button id="testButton" type="button" onclick="runCitationTest2()" class="test-button">Run Citation Conversion Test (MOD2)</button>
+    <button id="testButton" type="button" onclick="runCitationTest3Pass()" class="test-button">Run Citation Conversion Test (MOD3) Passed</button>
+    <div id="testResult" class="test-result"></div>
+</div>
+<!-- Fail Test Case Button (Yolanda)-->
+<div>
+    <button id="testButton" type="button" onclick="runCitationTest2Fail()" class="test-button">Run Citation Conversion Test (MOD2) Failed</button>
+    <div id="testResult" class="test-result"></div>
+</div>
+<!-- Pass Test Case Button (Yolanda) -->
+<div>
+    <button id="testButton" type="button" onclick="runCitationTest2Pass()" class="test-button">Run Citation Conversion Test (MOD2) Passed </button>
     <div id="testResult" class="test-result"></div>
 </div>
 
@@ -164,8 +174,8 @@ function logError(message) {
 
     
     // Function to run the citation test and log the results in the error log
-function runCitationTest() {
-    fetch('/dashboard/runtest')
+function runCitationTest3Fail() {
+    fetch('/dashboard/runtestmod3fail')
         .then(response => response.json())
         .then(data => {
             // Log each progress update into the error log table
@@ -197,9 +207,46 @@ function runCitationTest() {
         });
 }
 
-function runCitationTest2() {
+
+ // Function to run the citation test and log the results in the error log
+function runCitationTest3Pass() {
+    fetch('/dashboard/runtestmod3pass')
+        .then(response => response.json())
+        .then(data => {
+            // Log each progress update into the error log table
+            logError("Test Case Progress: 0%");
+            let progress = 0;
+            let progressInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 20; // Simulating progress in 20% increments
+                    logError("Test Case Progress: " + progress + "%");
+                    // Update the progress bar width based on the current progress
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                } else {
+                    clearInterval(progressInterval);
+                    if (data.message.includes('Test Passed')) {
+                        logError("Test Case Completed Successfully!");
+                        document.getElementById("statusMessage").innerText = "Test Case Completed!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                    } else {
+                        logError("Test Case Failed: " + data.message); // Log final result as failure
+                        document.getElementById("statusMessage").innerText = "Test Case Failed!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                    }
+                }
+            }, 1000); // Update progress every 1 second
+        })
+        .catch(error => {
+            // Handle error
+            logError("Citation Test failed: " + error);  // Log the error in the log section
+        });
+}
+
+
+
+function runCitationTest2Pass() {
     // Call the backend to run the second set of test cases (MOD2)
-    fetch('/dashboard/runtestmod2')
+    fetch('/dashboard/runtestmod2pass')
         .then(response => response.json())
         .then(data => {
             // Log the start of the test
@@ -231,6 +278,40 @@ function runCitationTest2() {
         });
 }
 
+
+function runCitationTest2Fail() {
+    // Call the backend to run the second set of test cases (MOD2)
+    fetch('/dashboard/runtestmod2fail')
+        .then(response => response.json())
+        .then(data => {
+            // Log the start of the test
+            logError("Test Case Started (MOD2)");
+
+            let progress = 0;
+            let progressInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 20; // Simulate progress
+                    logError("Test Case Progress (MOD2): " + progress + "%");
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                } else {
+                    clearInterval(progressInterval);
+                    if (data.message.includes("Test Passed")) {
+                        logError("Test Case Completed Successfully (MOD2)!");
+                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD2)!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                    } else {
+                        logError("Test Case Failed (MOD2): " + data.message);
+                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD2)!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                    }
+                }
+            }, 1000); // Update every 1 second
+        })
+        .catch(error => {
+            // Log any error that occurs
+            logError("Citation Test (MOD2) failed: " + error);
+        });
+}
 
 
 </script>

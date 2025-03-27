@@ -81,8 +81,8 @@ public class Dashboard_InputController : Controller
     }
 
     // GET: /dashboard/runtest
-    [HttpGet("runtest")]
-    public async Task<IActionResult> RunCitationTest()
+    [HttpGet("runtestmod3fail")]
+    public async Task<IActionResult> runCitationTest3Fail()
     {
         string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
         string latexFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "document.tex");
@@ -111,16 +111,64 @@ public class Dashboard_InputController : Controller
     }
 
 
+
+// GET: /dashboard/runtest
+    [HttpGet("runtestmod3pass")]
+    public async Task<IActionResult> runCitationTest3Pass()
+    {
+        string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
+        string latexFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "document.tex");
+
+        CustomLogger logger = new LoggerGateway_TDG();
+
+        var validator = new CitationValidator(logger);
+
+        // Track progress of citation validation
+        int totalSteps = 5;
+        for (int i = 1; i <= totalSteps; i++)
+        {
+            //await Task.Delay(1000); // Simulate each step with delay
+            int progress = (i * 100) / totalSteps;
+            _parser.UpdateConversionStatus("Citation Test", $"{progress}% complete");
+            //_logger.LogInformation($"Step {i}/{totalSteps}: {progress}% complete");
+        }
+
+        bool isValid = await validator.ValidateCitationConversionAsync(jsonFilePath, latexFilePath);
+
+        string resultMessage = isValid 
+            ? "Test Passed: All citations were correctly converted." 
+            : "Test Failed: Some citations were not converted correctly.";
+
+        return Ok(new { message = resultMessage });
+    }
+
+
+
     // GET: /dashboard/runtestmod2
-    [HttpGet("runtestmod2")]
-    public async Task<IActionResult> runCitationTest2()
+    [HttpGet("runtestmod2pass")]
+    public async Task<IActionResult> runCitationTest2Pass()
     {
         var mod2Test = new mod2testcases();
 
         // Call the RunPassTests() or RunFailTests()
         var passResults = mod2Test.RunPassTests(); // RunPassTests() or RunFailTests()
 
-        // Assuming you want to return the test results as success/failure message
+        // return the test results as success/failure message
+        var resultMessage = passResults.All(r => r) ? "Test Passed (MOD2)" : "Test Failed (MOD2)";
+        
+        return Ok(new { message = resultMessage });
+    }
+
+    // GET: /dashboard/runtestmod2
+    [HttpGet("runtestmod2fail")]
+    public async Task<IActionResult> runCitationTest2Fail()
+    {
+        var mod2Test = new mod2testcases();
+
+        // Call the RunPassTests() or RunFailTests()
+        var passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()
+
+        // return the test results as success/failure message
         var resultMessage = passResults.All(r => r) ? "Test Passed (MOD2)" : "Test Failed (MOD2)";
         
         return Ok(new { message = resultMessage });

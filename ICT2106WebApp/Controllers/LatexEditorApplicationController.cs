@@ -30,7 +30,7 @@ public class LatexEditorApplicationController : Controller
     [HttpGet("load-and-insert")]
     public async Task<IActionResult> LoadFromFileAndInsert()
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "apa_test.json");
 
         if (!System.IO.File.Exists(path))
             return NotFound("File not found.");
@@ -38,20 +38,23 @@ public class LatexEditorApplicationController : Controller
         string json = await System.IO.File.ReadAllTextAsync(path);
 
         var reference = JsonSerializer.Deserialize<Reference>(json, new JsonSerializerOptions
-    {
-        PropertyNameCaseInsensitive = true
-    });
+        {
+            PropertyNameCaseInsensitive = true
+        });
 
         if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             return BadRequest("Invalid reference data.");
 
+        // ✅ Force a new MongoDB document by clearing the _id
+        reference.Id = null;
         reference.InsertedAt = DateTime.UtcNow;
-        reference.Source = "File Load";
 
         await _dbContext.References.InsertOneAsync(reference);
 
-        return Ok("Loaded and inserted JSON from file.");
+        Console.WriteLine("[INFO] Inserted fresh BibTeX entry without touching existing ones.");
+        return Ok("Inserted new reference from file.");
     }
+
 
 
     [HttpGet("convert")]
@@ -61,7 +64,11 @@ public class LatexEditorApplicationController : Controller
         {
             Console.WriteLine($"[DEBUG] Convert() called with style: {style}");
 
-            var reference = await _dbContext.References.Find(_ => true).FirstOrDefaultAsync();
+            var reference = await _dbContext.References
+                .Find(_ => true)
+                .SortByDescending(r => r.InsertedAt)
+                .FirstOrDefaultAsync();
+
 
             if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             {
@@ -79,10 +86,10 @@ public class LatexEditorApplicationController : Controller
 
             // Initialize BibTeXConverter
             var bibtexMapper = new BibTexMapper(_dbContext); // Injecting MongoDB context
-            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, bibtexMapper, style);
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, bibtexMapper);
 
             // Convert citations and bibliography
-            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
+            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData,style);
 
 
             var latexCompiler = new LatexCompiler();

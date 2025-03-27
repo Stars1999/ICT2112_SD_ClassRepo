@@ -40,6 +40,7 @@ public class BibTexMapper : IInsertBibTex
                 {
                     // If it exists, update it
                     Console.WriteLine("[DEBUG] Found existing reference, updating.");
+        
                     _context.References.ReplaceOne(
                         r => r.Id == existingReference.Id, reference // Replace existing document by _id
                     );

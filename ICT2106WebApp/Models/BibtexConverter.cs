@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+
 
 public class BibTeXConverter : iConversionStatus //Implements the interface
 {
@@ -20,20 +22,29 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
         _preferredStyle = preferredStyle.ToLower(); // Ensure lowercase for consistency
         _latexCompiler = latexCompiler; // Initialize LatexCompiler
         _bibtexMapper = bibtexMapper;
-
-        if (_preferredStyle != "apa" && _preferredStyle != "mla")
-        {
-            Console.WriteLine($"[WARNING] Invalid preferred style '{_preferredStyle}', defaulting to APA.");
-            _preferredStyle = "apa";
-        }
     }
+
+    private string DetectCitationStyle(string latexContent)
+    {
+        if (string.IsNullOrWhiteSpace(latexContent)) return "apa"; // Default fallback
+
+        // APA Example: (Smith, 2019)
+        if (Regex.IsMatch(latexContent, @"\([A-Z][a-z]+, \d{4}\)")) return "apa";
+
+        // MLA Example: (Smith 45)
+        if (Regex.IsMatch(latexContent, @"\([A-Z][a-z]+ \d+\)")) return "mla";
+
+        return "apa"; // Fallback
+    }
+
 
     /// <summary>
     /// Converts citations and bibliography based on the preferred style.
     /// </summary>
-    public string ConvertCitationsAndBibliography(string jsonData)
+    public string ConvertCitationsAndBibliography(string jsonData, string overrideStyle = null)
     {
         Console.WriteLine($"[DEBUG] Received JSON: {jsonData}");
+        
 
         if (string.IsNullOrWhiteSpace(jsonData))
         {
@@ -58,9 +69,16 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
 
             foreach (var doc in reference.Documents)
             {
+        
                 try
                 {
                     string latexContent = doc.LatexContent?.Trim() ?? "";
+
+                    _preferredStyle = !string.IsNullOrWhiteSpace(overrideStyle)
+                    ? overrideStyle.ToLower()
+                    : DetectCitationStyle(latexContent);
+
+                    Console.WriteLine($"[INFO] Detected citation style: {_preferredStyle}");
 
                     // Apply citation formatting
                     if (_preferredStyle == "apa")

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ICT2106WebApp.Utilities;
 
-namespace ICT2106WebApp.Models
+namespace ICT2106WebApp.mod2grp6.Template
 {
     public class LaTeXDocument
     {

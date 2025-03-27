@@ -159,7 +159,7 @@ namespace Utilities
 					{ "type", "row" },
 					{ "content", "" },
 					{ "runs", cellList },
-					{ "styling", rowStyling },
+					// { "styling", rowStyling },
 				};
 
 				tableRows.Add(rowDict);

@@ -813,7 +813,7 @@ public static class DocumentProcessor
 			else if (element is Table table)
 			{
 				Console.WriteLine("📝 Extracting Table");
-				// elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
+				elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
 			}
 		}
 		return elements;

@@ -40,8 +40,10 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
     /// Converts citations and bibliography based on the preferred style.
     /// </summary>
     public string ConvertCitationsAndBibliography(string jsonData, string overrideStyle = null)
+    public string ConvertCitationsAndBibliography(string jsonData, string overrideStyle = null)
     {
         Console.WriteLine($"[DEBUG] Received JSON: {jsonData}");
+        
 
         if (string.IsNullOrWhiteSpace(jsonData))
         {
@@ -66,6 +68,7 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
 
             foreach (var doc in reference.Documents)
             {
+        
                 try
                 {
                     string latexContent = doc.OriginalLatexContent?.Trim() ?? doc.LatexContent?.Trim() ?? "";

@@ -32,7 +32,7 @@ public class LatexEditorApplicationController : Controller
     [HttpGet("load-and-insert")]
     public async Task<IActionResult> LoadFromFileAndInsert()
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mla_test.json");
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
 
         if (!System.IO.File.Exists(path))
             return NotFound("File not found.");
@@ -47,19 +47,15 @@ public class LatexEditorApplicationController : Controller
         if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             return BadRequest("Invalid reference data.");
 
-        reference.Id = null;
         reference.InsertedAt = DateTime.UtcNow;
         reference.Source = "File Load";
 
-        foreach (var doc in reference.Documents)
-        {
-            doc.OriginalLatexContent = doc.LatexContent;
-        }
-
         await _dbContext.References.InsertOneAsync(reference);
 
-        return Ok("Loaded and inserted JSON from file.");
+        Console.WriteLine("[INFO] Inserted fresh BibTeX entry without touching existing ones.");
+        return Ok("Inserted new reference from file.");
     }
+
 
 
     [HttpGet("convert")]
@@ -69,10 +65,7 @@ public class LatexEditorApplicationController : Controller
         {
             Console.WriteLine($"[DEBUG] Convert() called with style: {style}");
 
-            var reference = await _dbContext.References
-                .Find(_ => true)
-                .SortByDescending(r => r.InsertedAt)
-                .FirstOrDefaultAsync();
+            var reference = await _dbContext.References.Find(_ => true).FirstOrDefaultAsync();
 
             if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             {
@@ -84,8 +77,23 @@ public class LatexEditorApplicationController : Controller
             string jsonData = JsonSerializer.Serialize(reference, new JsonSerializerOptions { WriteIndented = true });
             Console.WriteLine($"[DEBUG] Successfully serialized JSON: {jsonData}");
 
+            // Create citation factories
+            var citationFactory = new CitationScannerFactory();
+            var bibliographyFactory = new BibliographyScannerFactory();
+
+            // Initialize BibTeXConverter
+            var bibtexMapper = new BibTexMapper(_dbContext); // Injecting MongoDB context
+            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, bibtexMapper, style);
+
             // Convert citations and bibliography
-            string updatedJson = _converter.ConvertCitationsAndBibliography(jsonData, style);
+            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
+
+
+            var latexCompiler = new LatexCompiler();
+            latexCompiler.SetUpdatedJson(updatedJson);
+            // ✅ Pass converted JSON to LatexGenerator
+            // var latexGenerator = new LatexGenerator();
+            // latexGenerator.GenerateLatex(updatedJson);
 
             // Pass converted JSON to LatexGenerator via the injected iGetGeneratedLatex interface
             _latexGenerator.GenerateLatex();

@@ -356,6 +356,7 @@ public static class DocumentProcessor
 
 			// Going through each object in the document list
 			List<AbstractNode> runListNodes = new List<AbstractNode>();
+			List<AbstractNode> runRunListNodes = new List<AbstractNode>();
 
 			foreach (var item in documentContents)
 			{
@@ -487,16 +488,98 @@ public static class DocumentProcessor
 											Console.WriteLine("The 'styling' value is not a List<object>.");
 										}
 									}
+									
+									if(runKvp.Key == "runs") {
+										var runRunsList = (List<Dictionary<string, object>>)runKvp.Value;
+										// Loop through each text_run in runs
+										foreach (var runRun in runRunsList)
+										{
+											string runRunType = "";
+											string runRunContent = "";
+											Dictionary<string, object> runRunStyling = new Dictionary<string, object>();
+
+											Console.WriteLine("JSONBUILDINGrunrun");
+											Console.WriteLine(runRun);
+											// Process the 'type' and 'content' for each run
+											foreach (var runRunKvp in runRun)
+											{
+												if (runRunKvp.Key == "type")
+												{
+													runRunType = (string)runRunKvp.Value;
+													Console.WriteLine($"runType: {runRunKvp.Value}");
+													Console.WriteLine($"runType: {runRunType}");
+												}
+												if (runRunKvp.Key == "content")
+												{
+													runRunContent = (string)runRunKvp.Value;
+													Console.WriteLine($"runContent: {runRunKvp.Value}");
+													Console.WriteLine($"runContent: {runRunContent}");
+												}
+												if (runRunKvp.Key == "styling")
+												{
+													if (kvp.Value is List<object> objectList)
+													{
+														List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+
+														// Now iterate through the List<object> and check each item
+														foreach (var itemhere in objectList)
+														{
+															// Check if each item is a Dictionary<string, object>
+															if (itemhere is Dictionary<string, object> stylingDictionary)
+															{
+																// Add the dictionary to the stylingList
+																stylingList.Add(stylingDictionary);
+
+																// Process the dictionary (just printing the contents for now)
+																Console.WriteLine("Found a dictionary in styling:");
+																foreach (var styleKvp in stylingDictionary)
+																{
+																	string styleKey = styleKvp.Key;
+																	object styleValue = styleKvp.Value;
+																	Console.WriteLine($"Key: {styleKey}, Value: {styleValue}");
+																}
+															}
+															else
+															{
+																Console.WriteLine("Item in styling list is not a dictionary.");
+															}
+														}
+														Console.WriteLine("Finished processing styling list.");
+													}
+													else
+													{
+														Console.WriteLine("The 'styling' value is not a List<object>.");
+													}
+												}
+											}
+
+											// Create a node for each run (assuming it's a "text_run")
+											if (runRunType != "")
+											{
+												var runRunNode = nodeManager.CreateNode(id++, runRunType, runRunContent, new List<Dictionary<string, object>> { runRunStyling });
+												numberofRunNode = numberofRunNode + 1;
+												Console.WriteLine($"run myid:{id} {runRunType}: {runRunContent}\n");
+												// nodesList.Add(runNode);
+												runRunListNodes.Add(runRunNode);
+											}
+											// nodesList.Add(runNode);
+										}
+									}
 								}
 
 								// Create a node for each run (assuming it's a "text_run")
-								if (runType != "" && runContent != "")
+								if (runType != "")
 								{
 									var runNode = nodeManager.CreateNode(id++, runType, runContent, new List<Dictionary<string, object>> { runStyling });
 									numberofRunNode = numberofRunNode + 1;
 									Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
 									// nodesList.Add(runNode);
 									runListNodes.Add(runNode);
+									foreach (var runrunnodeitem in runRunListNodes)
+									{
+										runListNodes.Add(runrunnodeitem);
+									}
+									runRunListNodes.Clear();
 								}
 								// nodesList.Add(runNode);
 							}

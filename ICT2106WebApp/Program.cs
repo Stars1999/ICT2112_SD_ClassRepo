@@ -530,9 +530,6 @@ public static class DocumentProcessor
 				}
 				// end of checking dictionary
 
-				CompositeNode rootnode = treeProcessor.CreateTree(nodesList);
-				treeProcessor.PrintTree(rootnode, 0);
-
 				// Convert to JSON format with UTF-8 encoding fix (preserves emojis, math, and Chinese)
 				jsonOutput = JsonSerializer.Serialize(
 					documentData,
@@ -563,9 +560,13 @@ public static class DocumentProcessor
 				nodeNum = nodeNum + 1;
 				Console.Write("nodeNum:");
 				Console.Write(nodeNum);
+				Console.Write("\n");
 
 				var thetypehere = nodeInList.GetNodeType();
 				Console.WriteLine($"type:{thetypehere}");
+
+				var thelevelhere = nodeInList.GetNodeLevel();
+				Console.WriteLine($"level:{thelevelhere}");
 
 				var thecontenthere = nodeInList.GetContent();
 				Console.WriteLine($"content:{thecontenthere}");
@@ -610,11 +611,9 @@ public static class DocumentProcessor
 			Console.WriteLine("total = ");
 			Console.WriteLine(totalCounts);
 
-			// Create the tree
-			// here is the error
-			// CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
-			// treeProcessor.PrintTree(rootnodehere, 0);
-
+			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
+			treeProcessor.PrintTree(rootnodehere, 0);
 
 		}
 	}

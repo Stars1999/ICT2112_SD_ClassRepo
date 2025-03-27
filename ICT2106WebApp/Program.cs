@@ -14,15 +14,13 @@ builder.Services.AddScoped<ICT2106WebApp.Interfaces.ILogger, LoggerGateway_TDG>(
 builder.Services.AddScoped<LoggerControl>();
 builder.Services.AddScoped<Dashboard_InputController>();
 builder.Services.AddScoped<Dashboard_PageController>();
-// builder.Services.AddScoped<LoggerControl>();
 
 // Register IParser and its implementation
 builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
 
-// Register PDF Quality Checker dependencies
-builder.Services.AddSingleton<IPDFQualityChecker>(provider => QualityCheckerFactory.CreateDefaultChecker());
-builder.Services.AddSingleton<IPDFProvider, MockPDFProvider>(); // Change to FilePDFProvider if needed
-builder.Services.AddSingleton<PDFQualityRepository>();
+// Register PDFQualityChecker directly
+builder.Services.AddSingleton<IPDFQualityChecker, PDFQualityChecker>();
+builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();
 
 // Add services to the container.
 builder.Services.AddControllers(); // <-- Ensure this line is here

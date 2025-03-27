@@ -1,12 +1,53 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\ianko\\git\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\ianko\\git\\ict2112_sd_classrepo\\ict2106webapp\\controllers\\latexeditorapplicationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:controllers\\latexeditorapplicationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|c:\\users\\ianko\\git\\ict2112_sd_classrepo\\ict2106webapp\\wwwroot\\pdfs\\document.tex||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{422374AE-5294-4BB4-91E6-1B6D3163BBFF}|ICT2106WebApp.csproj|solutionrelative:wwwroot\\pdfs\\document.tex||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "document.tex",
+              "DocumentMoniker": "C:\\Users\\ianko\\git\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\pdfs\\document.tex",
+              "RelativeDocumentMoniker": "wwwroot\\pdfs\\document.tex",
+              "ToolTip": "C:\\Users\\ianko\\git\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\pdfs\\document.tex",
+              "RelativeToolTip": "wwwroot\\pdfs\\document.tex",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAX/SURBVFhHnZdbbBTXGcd/Zy7r2WW9u17b2Nxc3NgOMV4oajCupUKDhIRl5BKkOkpLW9q0UsQjQkV9SN3GqFUeiBRF5KF9SIvEQ6pSEjWmyITSVE4odcriiphLwJDa3tiujS/sstc5pw9hrc3MGi/5S39pdc6Z7/ud78w3OyNw6MiRI4GDBw\u002B\u002BZNt2SgjhnF6UUgqlFABSShKJRLq3t/f1U6dOzTvXLimllCvDvn37Nh0/fnxISumcKiqlFLlcjlQqxezsLP39/c09PT3XnOuWkuYciMfjHiEEj2NN0xBCKCklO3fuHD5w4MBTzrhLyQWQD1qq8gCmaQqfz6dyuRyHDh0a7urqetK5tphcAEqpxaClWtd1PB4PlmWJXC6nGhsb6enpud7R0bEshAvgcStAQRUMw0BKKSzLUo2NjRw9evR6Z2dnk3N9oVwAgGuHpVrXdcrKyshms8I0TbV582aOHTt2Y//\u002B/UtCuLa6e/fup0\u002BePDlo27ZzakkJIZBSkkwmicViDAwMEIvFyGQyqqamRtTV1XHhwoUnTpw4MeK8dskK6LpesvMVMAwDv99PJBKhra2N9vZ2UV9fr7LZLC0tLVedeVgKwNlmpVj7vBMIBoPU1dXR1NREc3MzkUhEbNmyRbW3t3t37doVceZyAWif97RzeFkJITBNE5/PR2VlJbW1tdTU1LBy5UpWrVol1q9fj67rHud1LoB8Gz6O89D5YygrK8Pr9eLz\u002BRbt9/spds\u002B5APgSXeCEyNswDLSH91P\u002Bt1OukcJdlWLnWiklQgOv12JycgrTNBdjFlNRgHzg5axpGoaho5SNQuL3m4RCIZLpAB8Px8jlskzPzCx2SjGIogDLWdd1UDbJ1AI5e4HRmMnwzQCvHLvDd577La\u002B99meuXvMRDgfp7\u002B/HsiyEEIt/34VyASilXGUutK7rTE1N8rf3J/nlr8rpfu6/fO/5T/nZYUjF\u002B4mNvcmVy28wNJQmm00Rjye4\u002B\u002BlddF0vvQLLKRTS\u002BOlP1mIYv8Myf47P91cCAVhR3srbf\u002Bmj7933CPjf4tVXj9OycSPnzp3HMIyisV0Ay1VA0zRM08sTDXdZs3qW3Z3dHD7czVAUbt8Oc39hlunZBZ59tpO6r9QTrqpibm6WyclJTNN0pnMDlCKP6SMUvMqmzdvYsf0ZGhoyTE\u002BnuX2rnLnZKTLpNJWV1Xz/hz8gXFGJQDAei5UGsFwFhBDoho8nm/7BqT\u002B9Sy6XIxi8j66nuHLFIpudJ5VKkUqniN\u002BPY3m96KbJ\u002BPg4wWDQmc4NUKqe/\u002B4BXnjhxySTSZIpSUPDPP\u002BbyjA5mUXaabKZJA8exMlk0lRXVTE2Nk4oGHS1gQuglDciAI/pQSkQQiObkdTXzwJZ7tzxEI0KLv0TbDtHMpkkFKrAztlcvHhxhTOfCyCv/Gt3MYPCssqQ0kaILOm0QTZTBmTofdmm5xdv8c47rzAzfY9MOkMoFMKWNtt3fKvVmWdJAOeuv1gBgddrITTFBwNZdj7zIfPzb9Dd/SIbNryE1/dHkskJpJRIZVNTW4tt21SEw9udeQznQF7FnlqF8np9SFvja1vS1Ne/jtCqCIcjdHX9iJbIJvz\u002BFUSjlxkcvMTNGzfZ8NQGMun0Lmcc15Oho6Pj6TNnzgw\u002B6sNECEEikeBy9AqW14u0bSoqwoyNj/HJjRuMjIwwOjaKZVmUeSwSiThzc3OqqrparFu3JtD7cu/9fKwlj2A5\u002Bf1\u002BFhYWuD58jbNnz/KbXx/lD79/k2g0yszMDOlUmluf3OL8\u002BXP8a/AS9\u002B7NIASsXr3224VxvhRA/ngC5X7eO3\u002BO68PXSDx4wNjoKB98OMDf37/AxMQEgUA527a1sXVrK1tbW4WUsu/qf4Y\u002BLozlOoK9e/d\u002B/fTp0x85xx\u002BlZDJJ2zfaWLN6LeHKSgLl5QQCATZubKYlEmFTJIKu6\u002BzZsyfS19f3hZdTFwAQAr4KuHr2EVLr1q6r/uaOHS/Oz81FL0f//dFnsc8mHPETwAgwVzBWFABAfzj36FZ4KE3ThJRSAfbD6zRd1yn4tsjHcn1s/B9eKU3zckAzHwAAAABJRU5ErkJggg==",
+              "WhenOpened": "2025-03-27T03:38:54.7Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LatexEditorApplicationController.cs",
+              "DocumentMoniker": "C:\\Users\\ianko\\git\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Controllers\\LatexEditorApplicationController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LatexEditorApplicationController.cs",
+              "ToolTip": "C:\\Users\\ianko\\git\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Controllers\\LatexEditorApplicationController.cs",
+              "RelativeToolTip": "Controllers\\LatexEditorApplicationController.cs",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAkwMcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T03:21:48.926Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

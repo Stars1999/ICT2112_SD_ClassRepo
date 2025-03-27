@@ -161,6 +161,37 @@ public class LatexEditorApplicationController : Controller
                 return Json(new { success = false, error = "LaTeX compilation failed. Check logs for details." });
             }
 
+            // Run PDF quality check after successful compilation
+            try
+            {
+                var pdfProvider = HttpContext.RequestServices.GetService(typeof(ICT2106WebApp.Interfaces.IPDFProvider)) as ICT2106WebApp.Interfaces.IPDFProvider;
+                var pdfQualityChecker = HttpContext.RequestServices.GetService(typeof(ICT2106WebApp.Interfaces.IPDFQualityChecker)) as ICT2106WebApp.Interfaces.IPDFQualityChecker;
+                
+                if (pdfProvider != null && pdfQualityChecker != null)
+                {
+                    Console.WriteLine("[INFO] Running PDF quality check after successful compilation");
+                    var pdfContent = pdfProvider.GetPDFContent();
+                    var qualityReport = pdfQualityChecker.CheckPDFQuality(pdfContent);
+                    
+                    // Add quality report information to the response
+                    return Json(new { 
+                        success = true, 
+                        pdfUrl = _pdfGenerator.GetGeneratedPDFUrl(),
+                        qualityCheck = new {
+                            qualityScore = qualityReport.QualityScore,
+                            isSuccessful = qualityReport.IsSuccessful,
+                            issues = qualityReport.Issues,
+                            metrics = qualityReport.Metrics
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WARNING] PDF quality check failed: {ex.Message}");
+                // Continue with normal response even if quality check fails
+            }
+
             return Json(new { success = true, pdfUrl = _pdfGenerator.GetGeneratedPDFUrl() });
         }
         catch (Exception ex)
@@ -169,6 +200,7 @@ public class LatexEditorApplicationController : Controller
             return Json(new { success = false, error = ex.Message });
         }
     }
+
     [HttpPost("save-latex")]
     public async Task<IActionResult> SaveLatex([FromBody] LaTeXRequest request)
     {

@@ -1164,8 +1164,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>lzq96rgqy6</Fingerprint>
-      <Integrity>4YKdDkipehEwTIXyWROlf9AMKEtnRQFjQyHeOaslWNQ=</Integrity>
+      <Fingerprint>kbcsum1a62</Fingerprint>
+      <Integrity>oExF8j6eQy7fw44Nj3qqPSEfj8SM3D8LtWBgyMxjqHk=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.log'))</OriginalItemSpec>
@@ -1182,8 +1182,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>zikxkdyrf7</Fingerprint>
-      <Integrity>K67Ojnq2L9MkZrrs1wNGcyr5O2w1ocxs63V6d+m+hCE=</Integrity>
+      <Fingerprint>1q202mbwdc</Fingerprint>
+      <Integrity>yRfow+xzlLh6QtiVgxT/B3bT6VZAtT1ZMKP3RhVHc8w=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\pdfs\document.pdf'))</OriginalItemSpec>

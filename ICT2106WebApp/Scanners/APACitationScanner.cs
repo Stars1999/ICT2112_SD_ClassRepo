@@ -9,11 +9,20 @@ public class APACitationScanner : IAPA
         Console.WriteLine("[DEBUG] Formatting APA citations...");
 
         // ✅ Match inline citations like (Smith, 45) and replace with correct APA format (Smith, 2019)
-        latexContent = Regex.Replace(latexContent, @"\((\w+),\s*\d+\)", match =>
+        // Convert MLA-style: (Author PageNumber) ➡️ (Author, Year)
+        latexContent = Regex.Replace(latexContent, @"\(([A-Z][a-z]+) (\d+)\)", match =>
         {
-            string author = match.Groups[1].Value; // Extract author name
-            string year = GetPublicationYear(author, latexContent); // Get the correct year from bibliography
-            return $"({author}, {year})"; // Correct APA format
+            string author = match.Groups[1].Value;
+            string year = GetPublicationYear(author, latexContent);
+            return $"({author}, {year})";
+        });
+
+        // Optional: reprocess (Author, wrongYear) to fix APA if needed
+        latexContent = Regex.Replace(latexContent, @"\(([A-Z][a-z]+),\s*(\d{4})\)", match =>
+        {
+            string author = match.Groups[1].Value;
+            string year = GetPublicationYear(author, latexContent);
+            return $"({author}, {year})";
         });
 
         return latexContent;

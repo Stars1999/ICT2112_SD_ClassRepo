@@ -1,24 +1,25 @@
 using System;
 
-public class LatexCompiler : iConversionStatus
+public class LatexCompiler:iCompileLatex
 {
-    private string _updatedJson;
+    private readonly iConversionStatus _converter;
 
-    public void SetUpdatedJson(string convertedJson)
+    public LatexCompiler(iConversionStatus converter)
     {
-        _updatedJson = convertedJson;
-        Console.WriteLine("[INFO] JSON updated in-memory.");
+        _converter = converter;
     }
 
-    public string GetUpdatedJson()
+    public string Compile()
     {
-        return _updatedJson;
-    }
+        if (!_converter.fetchConversionStatus())
+        {
+            Console.WriteLine("[ERROR] No converted JSON available.");
+            return null;
+        }
 
-    public bool fetchConversionStatus()
-    {
-        bool status = !string.IsNullOrEmpty(_updatedJson);
-        Console.WriteLine($"[INFO] LatexCompiler Conversion Status: {status}");
-        return status;
+        string json = _converter.GetUpdatedJson();
+        // Use json to generate LaTeX or forward to generator...
+        Console.WriteLine("[INFO] LaTeXCompiler is using converted JSON.");
+        return json;
     }
 }

@@ -4,9 +4,22 @@ using System.Text.Json;
 public class LatexGenerator : iGetGeneratedLatex
 {
     private string _latexContent = "";
+    private readonly iCompileLatex _compiler;
 
-    public void GenerateLatex(string jsonData)
+    public LatexGenerator(iCompileLatex compiler)
     {
+        _compiler = compiler;
+    }
+
+    public void GenerateLatex()
+    {
+        string jsonData = _compiler.Compile();
+        if (string.IsNullOrEmpty(jsonData))
+        {
+            Console.WriteLine("[ERROR] No JSON received from compiler.");
+            return;
+        }
+
         Console.WriteLine($"[DEBUG] LatexGenerator received JSON: {jsonData}");
 
         try

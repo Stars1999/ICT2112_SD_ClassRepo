@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 public class PDFGenerator
 {
     private readonly string outputDirectory;
+    private readonly iGetGeneratedLatex _latexProvider;
 
-    public PDFGenerator()
+
+    public PDFGenerator(iGetGeneratedLatex latexProvider)
     {
+         _latexProvider = latexProvider;
         // Define the directory where PDFs will be stored
         outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pdfs");
 
@@ -19,10 +22,11 @@ public class PDFGenerator
         }
     }
 
-    public async Task<bool> GeneratePDF(string latexContent)
+    public async Task<bool> GeneratePDF()
     {
         try
         {
+            string latexContent = _latexProvider.GetLatexContent();
             Console.WriteLine("[INFO] Starting LaTeX to PDF compilation...");
 
             // Define LaTeX file path

@@ -4,7 +4,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<MongoDbContext>();
-builder.Services.AddSingleton<iConversionStatus, LatexCompiler>();
 builder.Services.AddSingleton<iGetGeneratedLatex, LatexGenerator>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
 builder.Services.AddSingleton<iErrorPresenter, ErrorPresenter>();
@@ -14,12 +13,18 @@ builder.Services.AddSingleton<EditorDoc>();
 builder.Services.AddSingleton<LatexGenerator>();
 builder.Services.AddSingleton<IScannerFactory, CitationScannerFactory>();
 builder.Services.AddSingleton<IScannerFactory, BibliographyScannerFactory>();
-builder.Services.AddSingleton<BibTeXConverter>();
+builder.Services.AddSingleton<iConversionStatus,BibTeXConverter>();
 builder.Services.AddSingleton<LatexCompiler>();
+builder.Services.AddSingleton<iCompileLatex, LatexCompiler>();
 builder.Services.AddSingleton<EditorDocumentMapper>();
 builder.Services.AddSingleton<BibTexMapper>();
 builder.Services.AddSingleton<IInsertBibTex, BibTexMapper>();
 builder.Services.AddSingleton<iErrorAnalyser, ErrorAnalyser>();
+// BibTeXConverter used as both concrete + interface
+builder.Services.AddSingleton<BibTeXConverter>();
+builder.Services.AddSingleton<iConversionStatus>(sp => sp.GetRequiredService<BibTeXConverter>());
+
+
 builder.Services.AddSingleton<iErrorPresenter>(provider =>
 {
     var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();

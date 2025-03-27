@@ -38,11 +38,29 @@ public class BibTexMapper : IInsertBibTex
 
                 if (existingReference != null)
                 {
-                    // If it exists, update it
                     Console.WriteLine("[DEBUG] Found existing reference, updating.");
+
+                    // ✅ Important: Preserve original _id
+                    reference.Id = existingReference.Id;
+                    reference.InsertedAt = DateTime.UtcNow;
+                    reference.Source = "Converted";
+
+                    for (int i = 0; i < reference.Documents.Count; i++)
+                    {
+                        var newDoc = reference.Documents[i];
+                        var oldDoc = existingReference.Documents
+                            .FirstOrDefault(d => d.Title == newDoc.Title && d.Author == newDoc.Author);
+
+                        if (oldDoc != null && !string.IsNullOrWhiteSpace(oldDoc.OriginalLatexContent))
+                        {
+                            newDoc.OriginalLatexContent = oldDoc.OriginalLatexContent;
+                        }
+                    }
+
                     _context.References.ReplaceOne(
-                        r => r.Id == existingReference.Id, reference // Replace existing document by _id
+                        r => r.Id == existingReference.Id, reference
                     );
+
                     Console.WriteLine($"[INFO] Updated existing reference with {reference.Documents.Count} document(s).");
                 }
                 else

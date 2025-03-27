@@ -9,28 +9,30 @@ using MongoDB.Driver;
 [Route("home")]
 public class LatexEditorApplicationController : Controller
 {
-    private readonly iConversionStatus _conversionStatus;
     private readonly iGetGeneratedLatex _latexGenerator;
     private readonly ErrorCheckingFacade _errorCheckingFacade;
     private readonly PDFGenerator _pdfGenerator;
     private readonly MongoDbContext _dbContext;
     private readonly EditorDoc _editorDoc;
+    private readonly BibTeXConverter _converter;
 
-    public LatexEditorApplicationController(iConversionStatus conversionStatus, iGetGeneratedLatex latexGenerator, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext, EditorDoc editorDoc)
+
+    public LatexEditorApplicationController(BibTeXConverter converter,
+    iGetGeneratedLatex latexGenerator, ErrorCheckingFacade errorCheckingFacade, PDFGenerator pdfGenerator, MongoDbContext dbContext, EditorDoc editorDoc)
     {
-        _conversionStatus = conversionStatus ?? throw new ArgumentNullException(nameof(conversionStatus));
         _latexGenerator = latexGenerator ?? throw new ArgumentNullException(nameof(latexGenerator));
         _errorCheckingFacade = errorCheckingFacade ?? throw new ArgumentNullException(nameof(errorCheckingFacade));
         _pdfGenerator = pdfGenerator ?? throw new ArgumentNullException(nameof(pdfGenerator));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _editorDoc = editorDoc ?? throw new ArgumentNullException(nameof(editorDoc));
+        _converter = converter ?? throw new ArgumentNullException(nameof(converter));
     }
 
 
     [HttpGet("load-and-insert")]
     public async Task<IActionResult> LoadFromFileAndInsert()
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mla_test.json");
 
         if (!System.IO.File.Exists(path))
             return NotFound("File not found.");
@@ -38,15 +40,21 @@ public class LatexEditorApplicationController : Controller
         string json = await System.IO.File.ReadAllTextAsync(path);
 
         var reference = JsonSerializer.Deserialize<Reference>(json, new JsonSerializerOptions
-    {
-        PropertyNameCaseInsensitive = true
-    });
+        {
+            PropertyNameCaseInsensitive = true
+        });
 
         if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             return BadRequest("Invalid reference data.");
 
+        reference.Id = null;
         reference.InsertedAt = DateTime.UtcNow;
         reference.Source = "File Load";
+
+        foreach (var doc in reference.Documents)
+        {
+            doc.OriginalLatexContent = doc.LatexContent;
+        }
 
         await _dbContext.References.InsertOneAsync(reference);
 
@@ -61,7 +69,10 @@ public class LatexEditorApplicationController : Controller
         {
             Console.WriteLine($"[DEBUG] Convert() called with style: {style}");
 
-            var reference = await _dbContext.References.Find(_ => true).FirstOrDefaultAsync();
+            var reference = await _dbContext.References
+                .Find(_ => true)
+                .SortByDescending(r => r.InsertedAt)
+                .FirstOrDefaultAsync();
 
             if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
             {
@@ -73,26 +84,11 @@ public class LatexEditorApplicationController : Controller
             string jsonData = JsonSerializer.Serialize(reference, new JsonSerializerOptions { WriteIndented = true });
             Console.WriteLine($"[DEBUG] Successfully serialized JSON: {jsonData}");
 
-            // Create citation factories
-            var citationFactory = new CitationScannerFactory();
-            var bibliographyFactory = new BibliographyScannerFactory();
-
-            // Initialize BibTeXConverter
-            var bibtexMapper = new BibTexMapper(_dbContext); // Injecting MongoDB context
-            var converter = new BibTeXConverter(citationFactory, bibliographyFactory, _conversionStatus, bibtexMapper, style);
-
             // Convert citations and bibliography
-            string updatedJson = converter.ConvertCitationsAndBibliography(jsonData);
-
-
-            var latexCompiler = new LatexCompiler();
-            latexCompiler.SetUpdatedJson(updatedJson);
-            // ✅ Pass converted JSON to LatexGenerator
-            // var latexGenerator = new LatexGenerator();
-            // latexGenerator.GenerateLatex(updatedJson);
+            string updatedJson = _converter.ConvertCitationsAndBibliography(jsonData, style);
 
             // Pass converted JSON to LatexGenerator via the injected iGetGeneratedLatex interface
-            _latexGenerator.GenerateLatex(updatedJson);
+            _latexGenerator.GenerateLatex();
 
             string generatedLatex = _latexGenerator.GetLatexContent();
             if (string.IsNullOrEmpty(generatedLatex))
@@ -102,11 +98,9 @@ public class LatexEditorApplicationController : Controller
             }
             Console.WriteLine("[DEBUG] Generated LaTeX:");
             Console.WriteLine(generatedLatex);
-            // var editorDoc = new EditorDoc();
-            // editorDoc.SetLatexContent(generatedLatex);
 
-            // ✅ Store LaTeX in Editor
-            await _editorDoc.UpdateLatexContentAsync(generatedLatex);
+            // Store LaTeX in Editor
+            await _editorDoc.UpdateLatexContentAsync();
 
             Console.WriteLine("[INFO] LaTeX content successfully stored in EditorDoc.");
             return RedirectToAction("Editor");
@@ -118,6 +112,127 @@ public class LatexEditorApplicationController : Controller
         }
     }
 
+    // New endpoint for APA style
+    [HttpGet("load-apa-latex")]
+    public async Task<IActionResult> LoadApaLatex()
+    {
+        try
+        {
+            Console.WriteLine("[DEBUG] load-apa-latex endpoint called");
+            
+            // Get the latest reference from the database
+            var reference = await _dbContext.References
+                .Find(_ => true)
+                .SortByDescending(r => r.InsertedAt)
+                .FirstOrDefaultAsync();
+            
+            if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
+            {
+                ErrorPresenter.LogError("No bibliography documents found in MongoDB!");
+                return Content("Error: No bibliography documents found in MongoDB!");
+            }
+            
+            // Convert to APA style
+            string jsonData = JsonSerializer.Serialize(reference, new JsonSerializerOptions { WriteIndented = true });
+            string updatedJson = _converter.ConvertCitationsAndBibliography(jsonData, "apa");
+            
+            if (string.IsNullOrEmpty(updatedJson))
+            {
+                ErrorPresenter.LogError("APA style conversion failed.");
+                return Content("Error: APA style conversion failed.");
+            }
+            
+            // Generate LaTeX with APA style
+            _latexGenerator.GenerateLatex();
+            
+            string generatedLatex = _latexGenerator.GetLatexContent();
+            if (string.IsNullOrEmpty(generatedLatex))
+            {
+                ErrorPresenter.LogError("LatexGenerator did not generate any content after APA style change.");
+                return Content("Error: LaTeX generation failed after APA style change.");
+            }
+            
+            // Update the editor content with the new style
+            await _editorDoc.UpdateLatexContentAsync();
+            
+            // Save the style preference in a cookie
+            Response.Cookies.Append("selectedCitationStyle", "apa", new CookieOptions { 
+                Expires = DateTime.Now.AddDays(30),
+                Path = "/" 
+            });
+            
+            Console.WriteLine("[INFO] Citation style successfully changed to APA.");
+            
+            // Redirect back to the editor
+            return RedirectToAction("Editor");
+        }
+        catch (Exception ex)
+        {
+            ErrorPresenter.LogError(ex.Message);
+            return Content($"Error: {ex.Message}");
+        }
+    }
+
+    // New endpoint for MLA style
+    [HttpGet("load-mla-latex")]
+    public async Task<IActionResult> LoadMlaLatex()
+    {
+        try
+        {
+            Console.WriteLine("[DEBUG] load-mla-latex endpoint called");
+            
+            // Get the latest reference from the database
+            var reference = await _dbContext.References
+                .Find(_ => true)
+                .SortByDescending(r => r.InsertedAt)
+                .FirstOrDefaultAsync();
+            
+            if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
+            {
+                ErrorPresenter.LogError("No bibliography documents found in MongoDB!");
+                return Content("Error: No bibliography documents found in MongoDB!");
+            }
+            
+            // Convert to MLA style
+            string jsonData = JsonSerializer.Serialize(reference, new JsonSerializerOptions { WriteIndented = true });
+            string updatedJson = _converter.ConvertCitationsAndBibliography(jsonData, "mla");
+            
+            if (string.IsNullOrEmpty(updatedJson))
+            {
+                ErrorPresenter.LogError("MLA style conversion failed.");
+                return Content("Error: MLA style conversion failed.");
+            }
+            
+            // Generate LaTeX with MLA style
+            _latexGenerator.GenerateLatex();
+            
+            string generatedLatex = _latexGenerator.GetLatexContent();
+            if (string.IsNullOrEmpty(generatedLatex))
+            {
+                ErrorPresenter.LogError("LatexGenerator did not generate any content after MLA style change.");
+                return Content("Error: LaTeX generation failed after MLA style change.");
+            }
+            
+            // Update the editor content with the new style
+            await _editorDoc.UpdateLatexContentAsync();
+            
+            // Save the style preference in a cookie
+            Response.Cookies.Append("selectedCitationStyle", "mla", new CookieOptions { 
+                Expires = DateTime.Now.AddDays(30),
+                Path = "/" 
+            });
+            
+            Console.WriteLine("[INFO] Citation style successfully changed to MLA.");
+            
+            // Redirect back to the editor
+            return RedirectToAction("Editor");
+        }
+        catch (Exception ex)
+        {
+            ErrorPresenter.LogError(ex.Message);
+            return Content($"Error: {ex.Message}");
+        }
+    }
 
     [HttpGet("load-latex")]
     public async Task<IActionResult> LoadLatex([FromQuery] string style = "apa")
@@ -142,19 +257,21 @@ public class LatexEditorApplicationController : Controller
         {
             Console.WriteLine("[DEBUG] Received LaTeX content for compilation.");
 
-            if (string.IsNullOrEmpty(request.LatexContent))
+            string latexContent = _latexGenerator.GetLatexContent();
+
+            if (string.IsNullOrEmpty(latexContent))
             {
                 return BadRequest("No LaTeX content provided.");
             }
 
-            // ✅ Restored LaTeX Error Checking
-            var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
+            // Restored LaTeX Error Checking
+            var errors = _errorCheckingFacade.ProcessError(latexContent);
             if (errors.Count > 0)
             {
                 return Json(new { success = false, error = "Fix LaTeX errors before compilation!", errors });
             }
 
-            bool success = await _pdfGenerator.GeneratePDF(request.LatexContent);
+            bool success = await _pdfGenerator.GeneratePDF();
             if (!success)
             {
                 ErrorPresenter.LogError("LaTeX compilation failed.");
@@ -169,6 +286,7 @@ public class LatexEditorApplicationController : Controller
             return Json(new { success = false, error = ex.Message });
         }
     }
+    
     [HttpPost("save-latex")]
     public async Task<IActionResult> SaveLatex([FromBody] LaTeXRequest request)
     {
@@ -177,10 +295,7 @@ public class LatexEditorApplicationController : Controller
             if (string.IsNullOrWhiteSpace(request.LatexContent))
                 return BadRequest("No LaTeX content provided.");
 
-            var editorDocMapper = new EditorDocumentMapper(_dbContext);
-            var editorDoc = new EditorDoc(editorDocMapper);
-
-            await editorDoc.UpdateLatexContentAsync(request.LatexContent);
+            await _editorDoc.UpdateLatexContentAsync(request.LatexContent);
 
             return Ok(new { success = true, message = "Saved successfully." });
         }
@@ -190,7 +305,6 @@ public class LatexEditorApplicationController : Controller
             return Json(new { success = false, error = ex.Message });
         }
     }
-
 
     [HttpGet("errors")]
     public IActionResult GetErrors()

@@ -1,10 +1,10 @@
+using System.Text.RegularExpressions;
 public class MLABibliographyScanner : IMLA
 {
     public string FormatCitations(string latexContent)
     {
         Console.WriteLine("[DEBUG] Formatting MLA citations...");
-        return latexContent.Replace(@"\cite{", "(").Replace("}", ")");
-
+        return Regex.Replace(latexContent, @"\\cite\{(.*?)\}", "($1)"); 
     }
 
     public string FormatBibliographies(string latexContent)

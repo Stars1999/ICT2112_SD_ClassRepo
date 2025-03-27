@@ -423,25 +423,139 @@ namespace ICT2106WebApp.Pages
         }
 
         private string GenerateOriginalLaTeXContent()
-        {
-            // (This is the original method from the previous code, which remains unchanged)
-            var content = new System.Text.StringBuilder();
-            
-            // Document class and basic packages
-            content.AppendLine("\\documentclass{article}");
-            content.AppendLine("\\usepackage[utf8]{inputenc}");
-            content.AppendLine("\\usepackage{graphicx}");
-            content.AppendLine("\\usepackage{amsmath}");
-            content.AppendLine("\\usepackage{xcolor}");
-            content.AppendLine("\\usepackage{hyperref}");
-            content.AppendLine("\\usepackage{amsfonts}");
-            content.AppendLine("\\usepackage{amssymb}");
-            
-            // (Rest of the method continues as in the previous implementation)
-            // ... (includes all the existing logic for generating original LaTeX content)
+{
+    var content = new System.Text.StringBuilder();
 
-            return content.ToString();
+    // Base LaTeX setup
+    content.AppendLine("\\documentclass{article}");
+    content.AppendLine("\\usepackage[utf8]{inputenc}");
+    content.AppendLine("\\usepackage{graphicx}");
+    content.AppendLine("\\usepackage{amsmath}");
+    content.AppendLine("\\usepackage{xcolor}");
+    content.AppendLine("\\usepackage{hyperref}");
+    content.AppendLine("\\usepackage{amsfonts}");
+    content.AppendLine("\\usepackage{amssymb}");
+    content.AppendLine();
+
+    // Metadata
+    string title = "Untitled Document";
+    string authors = "Unknown Author";
+
+    if (FormatContent.Count > 0 && FormatContent[0].GetNodeType() == "h1")
+    {
+        title = CleanTextForLaTeX(FormatContent[0].GetContent());
+    }
+
+    if (MetadataContent.Count > 0)
+    {
+        foreach (var style in MetadataContent[0].GetStyling())
+        {
+            if (style.ContainsKey("author"))
+            {
+                authors = style["author"].ToString();
+                break;
+            }
         }
+    }
+
+    content.AppendLine($"\\title{{{title}}}");
+    content.AppendLine($"\\author{{{authors}}}");
+    content.AppendLine("\\date{}");
+    content.AppendLine("\\begin{document}");
+    content.AppendLine("\\maketitle");
+    content.AppendLine();
+
+    // Abstract
+    if (ParagraphContent.Count > 0)
+    {
+        content.AppendLine("\\begin{abstract}");
+        string abstractText = CleanTextForLaTeX(ParagraphContent[0].GetContent());
+        content.AppendLine(abstractText);
+        content.AppendLine("\\end{abstract}");
+        content.AppendLine();
+    }
+
+    // Main sections
+    for (int i = 1; i < FormatContent.Count; i++)
+    {
+        string nodeType = FormatContent[i].GetNodeType();
+        string nodeText = CleanTextForLaTeX(FormatContent[i].GetContent());
+
+        if (nodeType == "h2")
+            content.AppendLine($"\\section*{{{nodeText}}}");
+        else if (nodeType == "h3")
+            content.AppendLine($"\\subsection*{{{nodeText}}}");
+
+        if (i - 1 < ParagraphContent.Count)
+        {
+            string paraText = CleanTextForLaTeX(ParagraphContent[i - 1].GetContent());
+            paraText = ApplyNodeStyling(paraText, ParagraphContent[i - 1]);
+            content.AppendLine(paraText);
+            content.AppendLine();
+        }
+    }
+
+    // Math Section
+    if (MathContent.Count > 0)
+    {
+        content.AppendLine("\\section*{Mathematical Content}");
+        foreach (var math in MathContent)
+        {
+            content.AppendLine("\\begin{equation}");
+            content.AppendLine(EnsureBalancedBraces(CleanTextForLaTeX(math.GetContent(), "math")));
+            content.AppendLine("\\end{equation}");
+            content.AppendLine();
+        }
+    }
+
+    // Lists
+    if (ListContent.Count > 0)
+    {
+        content.AppendLine("\\section*{Lists}");
+
+        var bulleted = ListContent.Where(x => x.GetNodeType().Contains("bulleted")).ToList();
+        var numbered = ListContent.Where(x => x.GetNodeType().Contains("numbered")).ToList();
+
+        if (bulleted.Count > 0)
+        {
+            content.AppendLine("\\begin{itemize}");
+            foreach (var item in bulleted)
+            {
+                content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+            }
+            content.AppendLine("\\end{itemize}");
+        }
+
+        if (numbered.Count > 0)
+        {
+            content.AppendLine("\\begin{enumerate}");
+            foreach (var item in numbered)
+            {
+                content.AppendLine($"  \\item {CleanTextForLaTeX(item.GetContent())}");
+            }
+            content.AppendLine("\\end{enumerate}");
+        }
+
+        content.AppendLine();
+    }
+
+    // Bibliography
+    if (BibliographyContent.Count > 0)
+    {
+        content.AppendLine("\\section*{References}");
+        content.AppendLine("\\begin{thebibliography}{99}");
+        foreach (var bib in BibliographyContent)
+        {
+            content.AppendLine($"  \\bibitem{{ref{bib.GetNodeId()}}} {CleanTextForLaTeX(bib.GetContent())}");
+        }
+        content.AppendLine("\\end{thebibliography}");
+    }
+
+    content.AppendLine("\\end{document}");
+
+    return content.ToString();
+}
+
 
         // Helper methods
         private string ApplyNodeStyling(string text, AbstractNode node)

@@ -97,7 +97,7 @@
         }
 
         // --------------------------------- PASS METHOD --------------------------------- //
-        public List<bool> RunPassTests()
+        public bool RunPassTests()
         {
             List<bool> results = new List<bool>();
 
@@ -147,12 +147,13 @@
                 results.Add(testPassed);
             }
 
-            Console.WriteLine(string.Join(", ", results));
-            return results;
+            // Check if all tests passed
+            bool allPassed = !results.Contains(false);
+            return allPassed ? true : false;
         }
 
         // --------------------------------- FAIL METHOD --------------------------------- //
-        public List<bool> RunFailTests()
+        public bool RunFailTests()
         {
             List<bool> results = new List<bool>();
 
@@ -202,8 +203,9 @@
                 results.Add(testPassed);
             }
 
-            Console.WriteLine(string.Join(", ", results));
-            return results;
+            // Check if all tests passed
+            bool allPassed = !results.Contains(false);
+            return allPassed ? true : false;
         }
 
         // --------------------------------- HELPER METHODS --------------------------------- //
@@ -306,9 +308,12 @@
     //    {
     //        // Example of use (i.e: called by scheduler etc)
     //        var test = new mod2testcases();
-    //        List<bool> passResults = test.RunPassTests();
-    //        List<bool> failResults = test.RunFailTests();
+    //        bool passResult = test.RunPassTests();
+    //        bool failResult = test.RunFailTests();
+    //        // Print output
+    //        Console.WriteLine("\nResults:");
+    //        Console.WriteLine($"Pass Tests: {(passResult ? "All tests passed" : "Some tests failed")}");
+    //        Console.WriteLine($"Fail Tests: {(failResult ? "All tests passed" : "Some tests failed")}");
     //    }
     //}
 }
-

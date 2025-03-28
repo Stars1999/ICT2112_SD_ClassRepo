@@ -1,4 +1,5 @@
 using ICT2106WebApp.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,69 +8,85 @@ namespace ICT2106WebApp.mod2grp6.Template
     public class TemplateManager : TemplateSubject, ITemplate
     {
         private Dictionary<string, List<AbstractNode>> templates = new Dictionary<string, List<AbstractNode>>();
-        private readonly TemplateRepository _templateRepository;
+        private readonly TemplateGateway _templateRepository;
 
         public TemplateManager()
         {
-            _templateRepository = new TemplateRepository();
+            _templateRepository = new TemplateGateway();
             LoadTemplatesFromDatabase().Wait(); // Load templates on initialization
         }
 
         private async Task LoadTemplatesFromDatabase()
-{
-    try
-    {
-        var templateDocs = await _templateRepository.GetAllTemplatesAsync();
-        templates.Clear();
-        
-        foreach (var doc in templateDocs)
         {
-            if (doc != null && doc.Id != null && doc.Content != null)
+            try
             {
-                templates[doc.Id] = doc.Content;
-            }
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error loading templates: {ex.Message}");
-        // Continue with empty templates dictionary
-    }
-}
+                var templateDocs = await _templateRepository.GetAllTemplatesAsync();
+                Console.WriteLine($"LoadTemplatesFromDatabase: Found {templateDocs.Count} templates");
+                templates.Clear();
 
-        // Convert the document to the specified template (with 2-column layout)
-        public Template ConvertToTemplate(string id)
-        {
-            // Try to load template if not already loaded
-            if (!templates.ContainsKey(id))
-            {
-                var templateDoc = _templateRepository.GetTemplateAsync(id).Result;
-                if (templateDoc != null)
+                foreach (var doc in templateDocs)
                 {
-                    templates[id] = templateDoc.Content;
+                    if (doc != null && doc.Id != null && doc.Content != null)
+                    {
+                        templates[doc.Id] = doc.AbstractContent;
+                        Console.WriteLine($"Loaded template: {doc.Id} - {doc.TemplateName ?? "Unnamed"} with {doc.Content.Count} nodes");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Skipped invalid template document: {doc?.Id ?? "null"}");
+                    }
+                }
+
+                // Print out all loaded templates
+                Console.WriteLine("All loaded templates:");
+                foreach (var template in templates)
+                {
+                    Console.WriteLine($"Template ID: {template.Key}, Nodes: {template.Value.Count}");
                 }
             }
-
-            if (templates.ContainsKey(id))
+            catch (Exception ex)
             {
-                var templateContent = new List<AbstractNode>(templates[id]); // Create a copy to avoid modifying the original
-                AddTwoColumnLayout(templateContent); // Apply IEEE-style two-column layout
-                NotifyObservers(id); // Notify observers when the template is applied
-                return new Template(id, GetTemplateNameById(id), templateContent);
+                Console.WriteLine($"Error loading templates: {ex.Message}");
+                Console.WriteLine($"Exception details: {ex}");
+                // Continue with empty templates dictionary
             }
-            return null;
+        }
+        // Async version of ConvertToTemplate
+        public Template ConvertToTemplate(TemplateDocument document)
+        {
+            if (document == null)
+                return null;
+
+            return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
 
-        // Retrieve a template by its ID
-        public Template GetTemplate(string id)
+        // Convert the document to the specified template (with 2-column layout)
+         public Template ConvertToTemplate(string id){
+            return null;
+         }
+/*         public Template ConvertToTemplate(string id)
+        {
+            try
+            {
+                return ConvertToTemplateAsync(id).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error converting to template: {ex.Message}");
+                return null;
+            }
+        } */
+
+        // Async version of GetTemplate
+        public async Task<Template> GetTemplateAsync(string id)
         {
             // Try to load template if not already loaded
             if (!templates.ContainsKey(id))
             {
-                var templateDoc = _templateRepository.GetTemplateAsync(id).Result;
+                var templateDoc = await _templateRepository.GetTemplateAsync(id);
                 if (templateDoc != null)
                 {
-                    templates[id] = templateDoc.Content;
+                    templates[id] = templateDoc.AbstractContent;
                 }
             }
 
@@ -81,9 +98,28 @@ namespace ICT2106WebApp.mod2grp6.Template
             return null;
         }
 
-        // Set a template by ID and content
-        public void SetTemplate(string id, List<AbstractNode> content)
+        // Retrieve a template by its ID
+        public Template GetTemplate(string id)
         {
+            try
+            {
+                return GetTemplateAsync(id).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting template: {ex.Message}");
+                return null;
+            }
+        }
+
+        // Set a template by ID and content
+        public async Task SetTemplate(string id, List<AbstractNode> content)
+        {
+            if (content == null)
+            {
+                throw new ArgumentNullException(nameof(content));
+            }
+
             if (templates.ContainsKey(id))
             {
                 templates[id] = content;
@@ -94,8 +130,8 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
 
             // Save to database
-            SaveTemplateToDatabase(id, content);
-            
+            await SaveTemplateToDatabaseAsync(id, content);
+
             NotifyObservers(id); // Notify observers when a template is set
         }
 
@@ -145,23 +181,19 @@ namespace ICT2106WebApp.mod2grp6.Template
         }
 
         // Save template to database
-        private async void SaveTemplateToDatabase(string id, List<AbstractNode> content)
+        private async Task SaveTemplateToDatabaseAsync(string id, List<AbstractNode> content)
         {
             var templateName = GetTemplateNameById(id);
-            var templateDoc = new TemplateDocument
-            {
-                Id = id,
-                TemplateName = templateName,
-                Content = content
-            };
+            var template = new Template(id, templateName, content);
+            //var templateDoc = TemplateDocument.FromTemplate(template);
 
-            await _templateRepository.SaveTemplateAsync(templateDoc);
+            //await _templateRepository.SaveTemplateAsync(templateDoc);
         }
 
         // Helper method to get template name
         private string GetTemplateNameById(string id)
         {
-            switch (id.ToLower())
+            switch (id?.ToLower() ?? "")
             {
                 case "ieee":
                     return "IEEE Conference Template";

@@ -1,4 +1,5 @@
 using ICT2106WebApp.Utilities;
+using System.Collections.Generic;
 
 namespace ICT2106WebApp.mod2grp6.Template
 {
@@ -8,11 +9,17 @@ namespace ICT2106WebApp.mod2grp6.Template
         private string templateName;
         private List<AbstractNode> content;
 
+        // Default constructor for deserialization
+        public Template()
+        {
+            this.content = new List<AbstractNode>();
+        }
+
         public Template(string id, string templateName, List<AbstractNode> content)
         {
             this.id = id;
             this.templateName = templateName;
-            this.content = content;
+            this.content = content ?? new List<AbstractNode>();
         }
 
         public string GetId()
@@ -42,7 +49,7 @@ namespace ICT2106WebApp.mod2grp6.Template
 
         public void SetContent(List<AbstractNode> content)
         {
-            this.content = content;
+            this.content = content ?? new List<AbstractNode>();
         }
     }
 }

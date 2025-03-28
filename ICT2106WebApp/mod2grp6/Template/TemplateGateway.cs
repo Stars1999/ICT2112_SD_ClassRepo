@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace ICT2106WebApp.mod2grp6.Template
 {
-    public class TemplateRepository
+    public class TemplateGateway
     {
         private readonly MongoDbContext _context;
         private readonly IMongoCollection<TemplateDocument> _templates;
 
-        public TemplateRepository()
+        public TemplateGateway()
         {
             _context = new MongoDbContext();
             _templates = _context.Templates;
@@ -117,7 +117,7 @@ namespace ICT2106WebApp.mod2grp6.Template
             if (document == null)
                 return null;
                 
-            return new Template(document.Id, document.TemplateName, document.Content);
+            return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
     }
 }

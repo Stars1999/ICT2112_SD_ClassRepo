@@ -15,7 +15,7 @@ namespace ICT2106WebApp.Pages
     {
         private readonly DocumentManager _documentManager;
         private readonly TemplateManager _templateManager;
-        private readonly TemplateRepository _templateRepository;
+        private readonly TemplateGateway _templateRepository;
         
         // Document content properties
         public bool IsDocumentLoaded { get; private set; }
@@ -44,7 +44,7 @@ namespace ICT2106WebApp.Pages
         [BindProperty]
         public string SelectedTemplateId { get; set; } = "ieee"; // Default to IEEE template
         
-        public TemplateTestModel(DocumentManager documentManager, TemplateManager templateManager, TemplateRepository templateRepository)
+        public TemplateTestModel(DocumentManager documentManager, TemplateManager templateManager, TemplateGateway templateRepository)
         {
             _documentManager = documentManager;
             _templateManager = templateManager;

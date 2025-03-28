@@ -21,33 +21,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddLogging(); // Add logging for testing MongoDB
 
-// // Start of MongoDB setup
-// builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB")); // inside appsettings.json
+// Start of MongoDB setup
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB")); // inside appsettings.json
 
-// // Register MongoDB client as a singleton
-// builder.Services.AddSingleton<IMongoClient>(sp =>
-// {
-// 	var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-// 	return new MongoClient(settings.ConnectionString);
-// });
+// Register MongoDB client as a singleton
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+	var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+	return new MongoClient(settings.ConnectionString);
+});
 
-// // Register IMongoDatabase as a singleton, using the DatabaseName from MongoDbSettings
-// builder.Services.AddSingleton<IMongoDatabase>(sp =>
-// {
-// 	var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-// 	var client = sp.GetRequiredService<IMongoClient>();
-// 	return client.GetDatabase(settings.DatabaseName);
-// });
+// Register IMongoDatabase as a singleton, using the DatabaseName from MongoDbSettings
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+	var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+	var client = sp.GetRequiredService<IMongoClient>();
+	return client.GetDatabase(settings.DatabaseName);
+});
 
-// // END OF MONGODB SETUP
+// END OF MONGODB SETUP
 
-// // Register services for IDocumentRetrieveNotify and IDocumentUpdateNotify
-// builder.Services.AddScoped<IDocumentRetrieveNotify, DocumentFailSafe>(); // DocumentFailSafe Implements IDocumentRetrieveNotify
-// builder.Services.AddScoped<IDocumentUpdateNotify, DocumentParsing>(); // DocumentParsing implemenst IDocumentUpdateNotify
+// Register services for IDocumentRetrieveNotify and IDocumentUpdateNotify
+builder.Services.AddScoped<IDocumentRetrieveNotify, DocumentFailSafe>(); // DocumentFailSafe Implements IDocumentRetrieveNotify
+builder.Services.AddScoped<IDocumentUpdateNotify, DocumentParsing>(); // DocumentParsing implemenst IDocumentUpdateNotify
 
-// // Register DocxRDG for both IDocumentRetrieve and IDocumentUpdate
-// builder.Services.AddScoped<IDocumentRetrieve, DocxRDG>();
-// builder.Services.AddScoped<IDocumentUpdate, DocxRDG>();
+// Register DocxRDG for both IDocumentRetrieve and IDocumentUpdate
+builder.Services.AddScoped<IDocumentRetrieve, DocxRDG>();
+builder.Services.AddScoped<IDocumentUpdate, DocxRDG>();
 
 var app = builder.Build();
 Console.WriteLine("✅ App built successfully");
@@ -55,6 +55,36 @@ Console.WriteLine("✅ App built successfully");
 // // Get logger instance
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
+// MongoDB testing, FYI test pass, able to insert into collection
+// app.Lifetime.ApplicationStarted.Register(async () =>
+// {
+// 	using var scope = app.Services.CreateScope();
+// 	var database = scope.ServiceProvider.GetRequiredService<IMongoDatabase>();
+// 	var collection = database.GetCollection<BsonDocument>("testCollection");
+
+// 	try
+// 	{
+// 		// Insert Data
+// 		var document = new BsonDocument { { "name", "Test User" }, { "email", "test@example.com" } };
+// 		await collection.InsertOneAsync(document);
+// 		logger.LogInformation("✅ Test document inserted into MongoDB.");
+
+// 		// Read Data
+// 		var firstDocument = await collection.Find(new BsonDocument()).FirstOrDefaultAsync();
+// 		if (firstDocument != null)
+// 		{
+// 			logger.LogInformation("📌 Retrieved Document: {Document}", firstDocument.ToJson());
+// 		}
+// 		else
+// 		{
+// 			logger.LogWarning("⚠️ No data found in MongoDB.");
+// 		}
+// 	}
+// 	catch (Exception ex)
+// 	{
+// 		logger.LogError("❌ MongoDB test failed: {ErrorMessage}", ex.Message);
+// 	}
+// });
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -71,59 +101,157 @@ app.MapRazorPages();
 
 DocumentProcessor.RunMyProgram();
 
-// MongoDB + DocumentControl , DocumentFailSafe, DocumentGateway_RDG testing
-// Check if test document flag is provided
+// MongoDB + DocumentParsing , DocumentFailSafe, DocxRDG testing
+// TO TEST, ' dotnet run --test-documen
 if (args.Length > 0 && args[0] == "--test-document")
 {
 	// Get the paths from arguments or use defaults
-	string localDocxPath = args.Length > 1 ? args[1] : "Datarepository_zx_v2.docx";
-	string outputPath = args.Length > 2 ? args[2] : "retrieved-document11.docx";
+	string localDocxPath = args.Length > 1 ? args[1] : "Datarepository_v2.docx";
+	string outputPath = args.Length > 2 ? args[2] : "retrieved-document.docx";
 
 	Console.WriteLine($"Testing document functionality with {localDocxPath}");
+	Console.WriteLine("Creating service scope...");
 
-	try
+	using (var scope = app.Services.CreateScope())
 	{
-		// Create instances of required classes
-		var documentControl = new DocumentControl();
-		var documentGateway = new DocumentGateway_RDG();
-		var documentFailSafe = new DocumentFailSafe();
-		// Step 1: Save document to database
-		Console.WriteLine("Attempting to save document to database...");
-		await documentControl.saveDocumentToDatabase(localDocxPath);
-		Console.WriteLine("Document saved successfully!");
+		var serviceProvider = scope.ServiceProvider;
+		Console.WriteLine("Service Provider created successfully");
 
-		// Step 2: Retrieve all documents
-		Console.WriteLine("Retrieving all documents...");
-		var allDocuments = await documentGateway.GetAllAsync();
-		Console.WriteLine($"Retrieved {allDocuments.Count} documents");
-
-		// Step 3: Get the last (most recently added) document
-		if (allDocuments.Any())
+		try
 		{
-			var latestDocument = allDocuments.Last();
-			Console.WriteLine($"Latest document ID: {latestDocument.Id}");
-			Console.WriteLine($"Latest document Title: {latestDocument.Title}");
-
-			// Optional: Demonstrate retrieval of a specific document
-			var retrievedDocument = await documentGateway.getDocument(latestDocument.Id);
-			if (retrievedDocument != null)
+			// Step 1: Verify file exists
+			Console.WriteLine($"Checking if file exists at path: {localDocxPath}");
+			if (!File.Exists(localDocxPath))
 			{
-				Console.WriteLine("Document retrieved successfully!");
-				Console.WriteLine($"Retrieved Document Title: {retrievedDocument.Title}");
+				Console.WriteLine($"ERROR: File not found at {localDocxPath}");
+				return;
 			}
-			await documentFailSafe.retrieveSavedDocument(latestDocument.Id, outputPath);
+			Console.WriteLine("File exists and is accessible");
+
+			// Step 2: Try to resolve DocumentParsing directly
+			Console.WriteLine("Attempting to resolve DocumentParsing directly...");
+			try
+			{
+				var docParser = serviceProvider.GetRequiredService<DocumentParsing>();
+				Console.WriteLine("DocumentParsing resolved successfully");
+
+				Console.WriteLine("Starting document save operation...");
+				await docParser.saveDocumentToDatabase(localDocxPath);
+				Console.WriteLine("Document saved to database successfully via DocumentParsing");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"ERROR resolving or using DocumentParsing: {ex.Message}");
+				Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+				// Try alternative approach with interface
+				Console.WriteLine("Attempting to resolve via interface instead...");
+				try
+				{
+					var documentUpdateNotify =
+						serviceProvider.GetRequiredService<IDocumentUpdateNotify>();
+					Console.WriteLine(
+						$"Interface resolved successfully. Type: {documentUpdateNotify.GetType().FullName}"
+					);
+
+					if (documentUpdateNotify is DocumentParsing parsing)
+					{
+						Console.WriteLine(
+							"Successfully cast to DocumentParsing, attempting save..."
+						);
+						await parsing.saveDocumentToDatabase(localDocxPath);
+						Console.WriteLine("Document saved to database successfully via interface");
+					}
+					else
+					{
+						Console.WriteLine(
+							$"ERROR: IDocumentUpdateNotify is not DocumentParsing, it's {documentUpdateNotify.GetType().FullName}"
+						);
+					}
+				}
+				catch (Exception innerEx)
+				{
+					Console.WriteLine($"ERROR with interface approach: {innerEx.Message}");
+					Console.WriteLine($"Stack trace: {innerEx.StackTrace}");
+				}
+			}
+
+			// Step 3: Try to resolve DocxRDG
+			Console.WriteLine("Attempting to resolve DocxRDG via IDocumentRetrieve...");
+			try
+			{
+				var documentRetrieve = serviceProvider.GetRequiredService<IDocumentRetrieve>();
+				Console.WriteLine(
+					$"IDocumentRetrieve resolved. Type: {documentRetrieve.GetType().FullName}"
+				);
+
+				if (documentRetrieve is DocxRDG docxRdg)
+				{
+					Console.WriteLine("Successfully cast to DocxRDG");
+					Console.WriteLine("Retrieving all documents...");
+					var allDocuments = await docxRdg.GetAllAsync();
+					Console.WriteLine($"Retrieved {allDocuments.Count()} documents");
+
+					var latestDoc = allDocuments.LastOrDefault();
+					if (latestDoc == null)
+					{
+						Console.WriteLine("No documents found in the database.");
+						return;
+					}
+					Console.WriteLine($"Latest document ID: {latestDoc.Id}");
+
+					// Step 4: Try document retrieval
+					Console.WriteLine("Attempting to resolve DocumentFailSafe...");
+					var documentFailSafe =
+						serviceProvider.GetRequiredService<IDocumentRetrieveNotify>();
+					Console.WriteLine(
+						$"IDocumentRetrieveNotify resolved. Type: {documentFailSafe.GetType().FullName}"
+					);
+
+					if (documentFailSafe is DocumentFailSafe failSafe)
+					{
+						Console.WriteLine("Successfully cast to DocumentFailSafe");
+						Console.WriteLine($"Retrieving document with ID {latestDoc.Id}...");
+						await failSafe.retrieveSavedDocument(latestDoc.Id, outputPath);
+						Console.WriteLine($"Document retrieved and saved to: {outputPath}");
+					}
+					else
+					{
+						Console.WriteLine(
+							$"ERROR: IDocumentRetrieveNotify is not DocumentFailSafe, it's {documentFailSafe.GetType().FullName}"
+						);
+					}
+				}
+				else
+				{
+					Console.WriteLine(
+						$"ERROR: IDocumentRetrieve is not DocxRDG, it's {documentRetrieve.GetType().FullName}"
+					);
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"ERROR resolving or using IDocumentRetrieve: {ex.Message}");
+				Console.WriteLine($"Stack trace: {ex.StackTrace}");
+			}
+
+			Console.WriteLine("Test completed!");
 		}
-		else
+		catch (Exception ex)
 		{
-			Console.WriteLine("No documents found in the database.");
+			Console.WriteLine($"CRITICAL ERROR: {ex.Message}");
+			Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+			if (ex.InnerException != null)
+			{
+				Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+				Console.WriteLine($"Inner stack trace: {ex.InnerException.StackTrace}");
+			}
 		}
 	}
-	catch (Exception ex)
-	{
-		Console.WriteLine($"Error during document testing: {ex.Message}");
-		Console.WriteLine($"Stack trace: {ex.StackTrace}");
-	}
-} // END of MongoDB + DocumentControl , DocumentFailSafe, DocumentGateway_RDG testing
+
+	return; // Exit application after test
+} // End of MongoDB + DocumentParsing , DocumentFailSafe, DocxRDG testing
 
 app.Run();
 

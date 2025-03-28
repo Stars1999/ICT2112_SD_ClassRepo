@@ -84,10 +84,7 @@ namespace Utilities
 			// TODO: Save tree to database
 			await _treeUpdate.saveTree(rootNode);
 		}
-		public async Task<AbstractNode> getTree(int nodeid)
-		{
-			return await _treeUpdate.RetrieveTreeByNodeId(0);
-		}
+
 		public bool ValidateTree(Document document, AbstractNode rootNode)
 		{
 			// TODO: Validate tree
@@ -97,21 +94,10 @@ namespace Utilities
 		// Recursive method to print the tree hierarchy
 		public void PrintTree(AbstractNode node, int level)
 		{
-			// var nodeStyles = node.GetStyling();
-			// foreach (var dict in nodeStyles)
-			// {
-			// 	foreach(var kvp in dict)
-			// 	{
-			// 		Console.WriteLine($"Styling:{kvp.Key},{kvp.Value}\n");
-			// 	}
-			// }
 			// Print the node's content (could be its type or content)
 			Console.WriteLine(
-				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent()
-				
+				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent() + " STYLING: " + node.GetStyling()
 			);
-			// Console.WriteLine($"Raw Styling Data: {Newtonsoft.Json.JsonConvert.SerializeObject(node.GetStyling())}");
-
 
 			if (node is CompositeNode compositeNode)
 			{

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ICT2106WebApp.mod2grp6.Template
 {
-    public class TemplateGateway
+    public class TemplateGateway : ITemplateObserver
     {
         private readonly MongoDbContext _context;
         private readonly IMongoCollection<TemplateDocument> _templates;
@@ -118,6 +118,12 @@ namespace ICT2106WebApp.mod2grp6.Template
                 return null;
                 
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
+        }
+
+        public void UpdateTemplate(string templateId)
+        {
+            // Handle the template update notification
+            Console.WriteLine($"Template {templateId} has been updated.");
         }
     }
 }

@@ -14,6 +14,7 @@ builder.Services.AddScoped<ICT2106WebApp.Interfaces.ILogger, LoggerGateway_TDG>(
 builder.Services.AddScoped<LoggerControl>();
 builder.Services.AddScoped<Dashboard_InputController>();
 builder.Services.AddScoped<Dashboard_PageController>();
+builder.Services.AddScoped<ITaskScheduling, TaskSchedulerController>();
 
 // Register IParser and its implementation
 builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service

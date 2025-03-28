@@ -582,6 +582,35 @@ public static class DocumentProcessor
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 			treeProcessor.PrintTree(rootnodehere, 0);
 
+			//program.cs code 
+
+			//validate tree,, use rootnodehere
+
+			// Flatten the tree
+			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
+
+			// Call validation (pass the document array instead of the entire jsonObject)
+			bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
+
+			// Output validation result
+			if (isContentValid)
+			{
+				Console.WriteLine("✅ Content is valid!");
+			}
+			else
+			{
+				Console.WriteLine("❌ Content mismatch detected!");
+			}
+
+			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
+
+			if (isValidStructure)
+				Console.WriteLine("Tree structure is valid!");
+			else
+				Console.WriteLine("Invalid tree structure detected.");
+			
+
+
 		}
 	}
 

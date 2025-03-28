@@ -9,11 +9,11 @@ namespace ICT2106WebApp.Controllers
 		public bool runModTestCases(int modNumber)
 		{
 			bool result = false;
-
 			switch (modNumber)
 			{
 				case 1:
-					// Implement mod1 test cases
+					var mod1 = new Mod1TestCases();
+					result = mod1.RunPassTests();
 					break;
 
 				case 2:
@@ -22,7 +22,8 @@ namespace ICT2106WebApp.Controllers
 					break;
 
 				case 3:
-					// Implement mod3 test cases
+					var mod3 = new Mod3TestCases(new ConsoleLogger());
+    				result = mod3.RunPassTests().Result;
 					break;
 
 				default:

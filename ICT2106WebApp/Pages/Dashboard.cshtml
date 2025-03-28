@@ -15,12 +15,22 @@
     <button type="button" id="uploadButton" class="upload-button">Upload</button>
 </div>
 
-<!-- Fail Test Case Button (Hanif) -->
+<!-- Fail Test Case 1 Button (Hanif) -->
+<div>
+    <button id="testButton" type="button" onclick="runCitationTest1Fail()" class="test-button">Run Citation Conversion Test (MOD1) Failed</button>
+    <div id="testResult" class="test-result"></div>
+</div>
+<!-- Pass Test Case 1 Button (Hanif)-->
+<div>
+    <button id="testButton" type="button" onclick="runCitationTest1Pass()" class="test-button">Run Citation Conversion Test (MOD1) Passed</button>
+    <div id="testResult" class="test-result"></div>
+</div>
+<!-- Fail Test Case 3 Button (Hanif) -->
 <div>
     <button id="testButton" type="button" onclick="runCitationTest3Fail()" class="test-button">Run Citation Conversion Test (MOD3) Failed</button>
     <div id="testResult" class="test-result"></div>
 </div>
-<!-- Pass Test Case Button (Hanif)-->
+<!-- Pass Test Case 3 Button (Hanif)-->
 <div>
     <button id="testButton" type="button" onclick="runCitationTest3Pass()" class="test-button">Run Citation Conversion Test (MOD3) Passed</button>
     <div id="testResult" class="test-result"></div>
@@ -172,7 +182,74 @@ function logError(message) {
     logMessages.insertBefore(newRow, logMessages.firstChild);
 }
 
-    
+function runCitationTest1Pass() {
+    // Call the backend to run the first set of test cases (MOD1)
+    fetch('/dashboard/runtestmod1pass')
+        .then(response => response.json())
+        .then(data => {
+            // Log the start of the test
+            logError("Test Case Started (MOD1)");
+
+            let progress = 0;
+            let progressInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 20; // Simulate progress
+                    logError("Test Case Progress (MOD1): " + progress + "%");
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                } else {
+                    clearInterval(progressInterval);
+                    if (data.message.includes("Test Passed")) {
+                        logError("Test Case Completed Successfully (MOD1)!");
+                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                    } else {
+                        logError("Test Case Passed (MOD1): " + data.message);
+                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                    }
+                }
+            }, 1000); // Update every 1 second
+        })
+        .catch(error => {
+            // Log any error that occurs
+            logError("Test (MOD1) failed: " + error);
+        });
+}
+
+function runCitationTest1Fail() {
+    // Call the backend to run the second set of test cases (MOD1)
+    fetch('/dashboard/runtestmod1fail')
+        .then(response => response.json())
+        .then(data => {
+            // Log the start of the test
+            logError("Test Case Started (MOD1)");
+
+            let progress = 0;
+            let progressInterval = setInterval(() => {
+                if (progress < 100) {
+                    progress += 20; // Simulate progress
+                    logError("Test Case Progress (MOD1): " + progress + "%");
+                    document.getElementById("statusProgress").style.width = progress + "%";
+                } else {
+                    clearInterval(progressInterval);
+                    if (data.message.includes("Test Passed")) {
+                        logError("Test Case Completed Successfully (MOD1)!");
+                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                    } else {
+                        logError("Test Case Failed (MOD1): " + data.message);
+                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
+                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                    }
+                }
+            }, 1000); // Update every 1 second
+        })
+        .catch(error => {
+            // Log any error that occurs
+            logError("Test (MOD1) failed: " + error);
+        });
+}
+
     // Function to run the citation test and log the results in the error log
 function runCitationTest3Fail() {
     fetch('/dashboard/runtestmod3fail')
@@ -274,7 +351,7 @@ function runCitationTest2Pass() {
         })
         .catch(error => {
             // Log any error that occurs
-            logError("Citation Test (MOD2) failed: " + error);
+            logError("Test (MOD2) failed: " + error);
         });
 }
 
@@ -309,7 +386,7 @@ function runCitationTest2Fail() {
         })
         .catch(error => {
             // Log any error that occurs
-            logError("Citation Test (MOD2) failed: " + error);
+            logError("Test (MOD2) failed: " + error);
         });
 }
 

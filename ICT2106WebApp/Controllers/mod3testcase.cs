@@ -71,7 +71,7 @@ public class CitationValidator
             }
         }
 
-        _logger.InsertLog(DateTime.Now, "Extracted converted citation keys.", "CitationValidator.ExtractConvertedCitations");
+        _logger.InsertLog(DateTime.Now, "Extracted converted citation keys.", "CitationValidator");
         return citations;
     }
 
@@ -114,26 +114,31 @@ public class ConsoleLogger : CustomLogger
     }
 }
 
-public class TestRunner
-{
-    public static async Task Main(string[] args)
+public class Mod3TestCases
     {
-        // Replace these paths with the actual file locations.
-        string jsonFilePath = "wwwroot/bibliography_test.json";
-        string latexFilePathPass = "wwwroot/document.tex";
+        private readonly CitationValidator _validator;
+        private readonly CustomLogger _logger;
+        private readonly string _jsonFilePath = "wwwroot/bibliography_test.json";
+        private readonly string _latexFilePathPass = "wwwroot/document.tex";
 
-        // Create a logger (in production, use DI)
-        CustomLogger logger = new ConsoleLogger();
+        public Mod3TestCases(CustomLogger logger)
+        {
+            _logger = logger;
+            _validator = new CitationValidator(logger);
+        }
 
-        // Create the validator with the logger
-        var validator = new CitationValidator(logger);
+        // Runs the pass test and returns true if citations are correctly converted.
+        public async Task<bool> RunPassTests()
+        {
+            bool isValidPass = await _validator.ValidateCitationConversionAsync(_jsonFilePath, _latexFilePathPass);
+            Console.WriteLine(isValidPass ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+            return isValidPass;
+        }
 
-        // Pass Scenario
-        bool isValidPass = await validator.ValidateCitationConversionAsync(jsonFilePath, latexFilePathPass);
-        Console.WriteLine(isValidPass ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
-
-        // Fail Scenario
-        string latexContentFail = @"\documentclass{article}
+        // Runs the fail test and returns true if the conversion fails
+        public async Task<bool> RunFailTests()
+        {
+            string latexContentFail = @"\documentclass{article}
 \title{The Role of AI in Modern Healthcare}
 \author{Dr. Emily Johnson}
 \date{2024-03-15}
@@ -144,8 +149,16 @@ AI is transforming medical diagnostics. Predictive analytics does not mention th
 Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
 \end{document}";
 
-        // Fail Scenario
-        bool isValidFail = await validator.ValidateCitationConversionAsync(jsonFilePath, latexContentFail, isFileContent: true);
-        Console.WriteLine(isValidFail ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+            bool isValidFail = await _validator.ValidateCitationConversionAsync(_jsonFilePath, latexContentFail, isFileContent: true);
+            Console.WriteLine(isValidFail ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+            return !isValidFail;
+        }
+
+        // Runs all tests for Mod3 and returns true if all tests pass.
+        public async Task<bool> RunAllTests()
+        {
+            bool passResult = await RunPassTests();
+            bool failResult = await RunFailTests();
+            return passResult && failResult;
+        }
     }
-}

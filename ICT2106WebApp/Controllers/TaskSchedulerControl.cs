@@ -1,62 +1,72 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.IO;
+using ICT2106WebApp.Interfaces;
 
-// namespace ICT2106WebApp.Controllers
-// {
-//     [Route("taskscheduler")]
-//     public class TaskSchedulerControl : Controller
-//     {
-//         private readonly BibTeXConverter _bibTeXConverter;
-//         private readonly CitationValidator _citationValidator;
+namespace ICT2106WebApp.Controllers
+{
+    [Route("api/[controller]")]
+    public class TaskSchedulerController : Controller
+    {
+        private readonly IDocument _parser;
 
-//         public TaskSchedulerControl(BibTeXConverter bibTeXConverter, CitationValidator citationValidator)
-//         {
-//             _bibTeXConverter = bibTeXConverter;
-//             _citationValidator = citationValidator;
-//         }
+        public TaskSchedulerController(IDocument parser)
+        {
+            _parser = parser;
+        }
 
-//         // POST: /taskscheduler/process
-//         [HttpPost("process")]
-//         public async Task<IActionResult> ProcessDocument(IFormFile uploadedFile)
-//         {
-//             if (uploadedFile == null || uploadedFile.Length == 0)
-//             {
-//                 return BadRequest(new { message = "No file uploaded.", success = false });
-//             }
+        public async Task<bool> ScheduleMod1Conversion(string fileName)
+        {
+            try
+            {
+                // Simulate scheduler processing Mod1
+                _parser.UpdateConversionStatus(fileName, "TaskScheduler: Queuing Mod1");
+                await Task.Delay(500);
 
-//             try
-//             {
-//                 // Read file content
-//                 using var stream = new MemoryStream();
-//                 await uploadedFile.CopyToAsync(stream);
-//                 string jsonData = System.Text.Encoding.UTF8.GetString(stream.ToArray());
+                // Update progress through stages
+                _parser.UpdateConversionStatus(fileName, "Mod1: Processing Started");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod1: 25% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod1: 50% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod1: 75% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod1: Conversion Complete");
 
-//                 // Convert document to LaTeX format
-//                 string convertedData = _bibTeXConverter.ConvertCitationsAndBibliography(jsonData);
-//                 if (string.IsNullOrEmpty(convertedData))
-//                 {
-//                     return StatusCode(500, new { message = "Conversion failed.", success = false });
-//                 }
+                return true;
+            }
+            catch (Exception)
+            {
+                _parser.UpdateConversionStatus(fileName, "Mod1: Conversion Failed");
+                return false;
+            }
+        }
 
-//                 // Save converted LaTeX content to a temporary file
-//                 string latexFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "converted_document.tex");
-//                 await System.IO.File.WriteAllTextAsync(latexFilePath, convertedData);
+        public async Task<bool> ScheduleMod2Conversion(string fileName)
+        {
+            try
+            {
+                // Simulate scheduler processing Mod2
+                _parser.UpdateConversionStatus(fileName, "TaskScheduler: Queuing Mod2");
+                await Task.Delay(500);
 
-//                 // Validate citations in converted document
-//                 bool isValid = await _citationValidator.ValidateCitationConversionAsync(uploadedFile.FileName, latexFilePath);
+                // Update progress through stages
+                _parser.UpdateConversionStatus(fileName, "Mod2: Processing Started");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: 25% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: 50% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: 75% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: Conversion Complete");
 
-//                 return Ok(new
-//                 {
-//                     message = isValid ? "Document processed successfully and citations validated." : "Document processed, but citations validation failed.",
-//                     success = isValid
-//                 });
-//             }
-//             catch (Exception ex)
-//             {
-//                 return StatusCode(500, new { message = $"Error processing document: {ex.Message}", success = false });
-//             }
-//         }
-//     }
-// }
+                return true;
+            }
+            catch (Exception)
+            {
+                _parser.UpdateConversionStatus(fileName, "Mod2: Conversion Failed");
+                return false;
+            }
+        }
+    }
+}

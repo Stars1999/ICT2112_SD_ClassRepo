@@ -12,10 +12,12 @@ namespace ICT2106WebApp.Controllers
 public class Dashboard_InputController : Controller
 {
     private readonly IDocument _parser;
+    private readonly ITaskScheduling _taskScheduler;
 
-    public Dashboard_InputController(IDocument parser)
+    public Dashboard_InputController(IDocument parser, ITaskScheduling taskScheduler)
     {
         _parser = parser;
+        _taskScheduler = taskScheduler;
     }
 
     // POST: /dashboard/upload
@@ -32,29 +34,36 @@ public class Dashboard_InputController : Controller
             // Store the uploaded document temporarily
             _parser.StoreDocument(uploadedFile);
 
-            // Set the conversion status as "Processing"
-            _parser.UpdateConversionStatus(uploadedFile.FileName, "Processing");
+            // Set initial status
+            _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
 
-            // Simulate conversion progress (can be modified to real logic)
-            await Task.Delay(1000); // Simulate processing delay
-            _parser.UpdateConversionStatus(uploadedFile.FileName, "25% complete");
+            // Schedule Mod1 Conversion through TaskScheduler
+            bool mod1Result = await _taskScheduler.ScheduleMod1Conversion(uploadedFile.FileName);
+            if (!mod1Result)
+            {
+                return StatusCode(500, new { message = "Mod1 conversion failed", success = false });
+            }
 
-            await Task.Delay(1000);
-            _parser.UpdateConversionStatus(uploadedFile.FileName, "50% complete");
+            // Schedule Mod2 Conversion through TaskScheduler
+            bool mod2Result = await _taskScheduler.ScheduleMod2Conversion(uploadedFile.FileName);
+            if (!mod2Result)
+            {
+                return StatusCode(500, new { message = "Mod2 conversion failed", success = false });
+            }
 
-            await Task.Delay(1000);
-            _parser.UpdateConversionStatus(uploadedFile.FileName, "75% complete");
-
-            await Task.Delay(1000);
-            _parser.UpdateConversionStatus(uploadedFile.FileName, "Completed");
-
-            return Ok(new { message = "File uploaded and ready for conversion.", success = true });
+            return Ok(new { 
+                message = "File uploaded and all conversions completed successfully", 
+                success = true 
+            });
         }
         catch (Exception ex)
         {
             // Log the exception for debugging purposes
-            Console.Error.WriteLine($"Error uploading file: {ex.Message}");
-            return StatusCode(500, new { message = $"Error uploading file: {ex.Message}", success = false });
+            Console.Error.WriteLine($"Error in process: {ex.Message}");
+            return StatusCode(500, new { 
+                message = $"Error processing file: {ex.Message}", 
+                success = false 
+            });
         }
     }
 
@@ -190,3 +199,4 @@ public class Dashboard_InputController : Controller
     }
 
 }
+

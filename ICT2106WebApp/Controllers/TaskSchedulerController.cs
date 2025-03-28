@@ -4,7 +4,8 @@ using ICT2106WebApp.Interfaces;
 namespace ICT2106WebApp.Controllers
 {
     [Route("api/[controller]")]
-    public class TaskSchedulerController : Controller
+    public class TaskSchedulerController : Controller, ITaskScheduling
+
     {
         private readonly IDocument _parser;
 

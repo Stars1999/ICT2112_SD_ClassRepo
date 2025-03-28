@@ -39,9 +39,13 @@ string[] testEquations =
     "(1/2)cos2x+ (3/8)sin4x =3x",
     "log_246y ≥ (π/2)",
     "∴ ∞ ≠ ±α",
-    //"∃xPersonx∧∀yTimey→Happyx,y", //doesnt work
+    //"∃x Px ∧ ∀y Ty → Hxy", //doesnt work, ∃x(Person(x))∧∀y(Time(y))→(Happy(x,y))
+    //"exists x (Px) and forall y (Ty) -> Hxy", //doesnt work, ∃x(Person(x))∧∀y(Time(y))→(Happy(x,y))
+    "∃x Px ∧ ∀y Ty → asdf",
     "F=ma",
-    //"limn→∞1+(1/n)^n=e",    //doesnt work
+    //"lim(n→∞)(1+(1/n)^n)=e",    //doesnt work
+    "lim(1+(1/n)^n)=e",
+    "lim(n→∞)",
 
 };
 

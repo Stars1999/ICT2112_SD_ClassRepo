@@ -17,6 +17,8 @@ public class MathProcessor
 
             // ✅ Step 3: Convert to LaTeX format
             string latexOutput = parsedEquation.Latexise();
+            Console.WriteLine("DEBUG RAW LATEX: " + latexOutput);
+
 
             // ✅ Step 4: Remove all unnecessary `\left(...\right)` globally
             latexOutput = latexOutput.Replace(@"\left(", "(").Replace(@"\right)", ")");
@@ -27,12 +29,22 @@ public class MathProcessor
                                     .Replace("NOTEQUAL", @"\neq")
                                     .Replace("PLUSMINUS", @"\pm")
                                     .Replace("ALPHA", @"\alpha");
-            
+
+
             // ✅ Step 5: Replace placeholders with correct LaTeX commands
             latexOutput = latexOutput.Replace("EXISTS", @"\exists")
                                     .Replace("FORALL", @"\forall")
                                     .Replace("AND", @"\land")
                                     .Replace("IMPLIES", @"\rightarrow");
+
+            //latexOutput = latexOutput
+                //.Replace("Px", @"\text{Person}(x)")
+                //.Replace("Ty", @"\text{Time}(y)")
+                //.Replace("Hxy", @"\text{Happy}(x, y)")
+                //.Replace("exists", @"\exists")
+                //.Replace("forall", @"\forall")
+                //.Replace("implies", @"\rightarrow");
+
 
             // ✅ Step 6: Ensure correct `\log_{b} x` format
             latexOutput = Regex.Replace(latexOutput, @"\\log_{(\d+)}\(([^)]+)\)", @"\log_{$1} $2");
@@ -83,12 +95,25 @@ public class MathProcessor
                         .Replace("±", "PLUSMINUS")
                         .Replace("α", "ALPHA");
 
+
         // ✅ Replace logical symbols with placeholders
         equation = equation.Replace("∃", "EXISTS ")
                         .Replace("∀", "FORALL ")
                         .Replace("∧", " AND ")
                         .Replace("→", " IMPLIES ");
-                        
+
+
+
+        // Replace predicate names with safe single-letter function names
+        //equation = equation.Replace("Person", "P")
+                        //.Replace("Time", "T")
+                        //.Replace("Happy", "H");
+
+
+        // Normalize symbols
+        equation = equation.Replace("∞", "infinity");
+
+
 
         return equation;
     }

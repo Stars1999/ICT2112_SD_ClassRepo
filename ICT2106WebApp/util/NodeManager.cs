@@ -1,8 +1,13 @@
+using MongoDB.Driver;
+
 namespace Utilities
 {
-	public class NodeManager
+	public class NodeManager : INodeUpdateNotify
 	{
 
+
+	private readonly IMongoCollection<AbstractNode> _nodeCollection;
+	private readonly Lazy<INodeUpdate> _nodeUpdate;
 		public AbstractNode CreateNode(
 			int id,
 			string nodeType,
@@ -60,7 +65,15 @@ namespace Utilities
 
 		public void InsertNodeToDatabase(AbstractNode node)
 		{
-			// TODO: Insert node to database
+			//     if (node == null)
+    		// {
+        	// throw new ArgumentNullException(nameof(node), "Node cannot be null");
+    		// }
+			// if (node != null)
+			// {
+			// // TODO: Insert node to database
+			// _nodeUpdate.Value.saveTree(node);
+			// }
 		}
 
 		public AbstractNode GetLastSavedNode()
@@ -69,12 +82,16 @@ namespace Utilities
 			return new CompositeNode(0, 0, "root", "root", new List<Dictionary<string, object>>()); // Dummy return
 		}
 
-		public void NotifyUpdatedNode()
+		// INodeUpdateNotify
+		public async Task notifyUpdatedNode(AbstractNode node)
 		{
-			// TODO: Notify updated node??
-		}
+			//TODO: notifyNode
+			Console.WriteLine($"NodeManager -> Notify Node Updated: {node}");
+			await Task.CompletedTask;
 
-		public void NotifyRetrievedNode()
+		}
+		
+		public void notifyRetrievedNode()
 		{
 			// TODO: Notify retrieved node??
 		}

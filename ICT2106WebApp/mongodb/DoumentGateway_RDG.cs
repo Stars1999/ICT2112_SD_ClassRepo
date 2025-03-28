@@ -191,155 +191,109 @@ private BsonDocument ToRecursiveBsonDocument(CompositeNode compositeNode)
 
     return bsonDocument;
 }
-// private BsonDocument ConvertNodeToDetailedBsonDocument(AbstractNode node)
-// {
-// var bsonDocument = new BsonDocument
-// {
-//     { "nodeId", node.GetNodeId() },
-//     { "nodeLevel", node.GetNodeLevel() },
-//     { "nodeType", node.GetNodeType() },
-//     { "content", node.GetContent() },
-//     { "converted", node.IsConverted() },
-//     { "styling", new BsonArray(node.GetStyling().Select(s => 
-//         new BsonDocument(s.Select(kvp => 
-//             new BsonElement(kvp.Key, BsonValue.Create(kvp.Value))
-//         ))
-//     ) )}
-// };  // Added closing parenthesis here
 
-//     // If it's a CompositeNode, add children
-//     if (node is CompositeNode compositeNode)
+//     public BsonDocument ConvertNodeToDetailedBsonDocument(AbstractNode node)
 //     {
-//         var children = compositeNode.GetChildren();
-//         if (children != null && children.Any())
+//         var bsonDocument = new BsonDocument
 //         {
-//             var childrenBsonArray = new BsonArray();
-//             foreach (var child in children)
-//             {
-//                 childrenBsonArray.Add(ConvertNodeToDetailedBsonDocument(child));
-//             }
-//             bsonDocument.Add("children", childrenBsonArray);
-//         }
-//     }
+//             { "nodeId", node.GetNodeId() },
+//             { "nodeLevel", node.GetNodeLevel() },
+//             { "nodeType", node.GetNodeType() },
+//             { "content", node.GetContent() },
+//             { "converted", node.IsConverted() }
+//         };
 
-//     return bsonDocument;
+
+// var styling = node.GetStyling(); // Get the list of dictionaries
+// var stylingBsonArray = new BsonArray();
+// foreach (var dictionary in styling)
+// {
+//     foreach(var kvp in dictionary)
+//     {
+//         var styleBson = new BsonDocument();
+//         styleBson.Add(kvp.Key, (BsonValue)kvp.Value);
+//     }
+//     stylingBsonArray.Add(styleBson);
 // }
-// private BsonDocument ConvertNodeToDetailedBsonDocument(AbstractNode node)
-// {
-//     var bsonDocument = new BsonDocument
-//     {
-//         { "nodeId", node.GetNodeId() },
-//         { "nodeLevel", node.GetNodeLevel() },
-//         { "nodeType", node.GetNodeType() },
-//         { "content", node.GetContent() },
-//         { "converted", node.IsConverted() }
-//     };
+//     bsonDocument.Add("styling", stylingBsonArray); // Add to the final BSON document
 
-//     // Improved styling conversion
-//     var styling = node.GetStyling();
-//     if (styling != null && styling.Count > 0)
-//     {
-//         var stylingBsonArray = new BsonArray();
-//         foreach (var styleDict in styling)
+//         // If it's a CompositeNode, add children
+//         if (node is CompositeNode compositeNode)
 //         {
-//             var styleBsonDocument = new BsonDocument();
-//             foreach (var kvp in styleDict)
+//             var children = compositeNode.GetChildren();
+//             if (children != null && children.Any())
 //             {
-//                 // Explicitly handle different value types
-//                 if (kvp.Value == null)
+//                 var childrenBsonArray = new BsonArray();
+//                 foreach (var child in children)
 //                 {
-//                     styleBsonDocument.Add(kvp.Key, BsonNull.Value);
+//                     childrenBsonArray.Add(ConvertNodeToDetailedBsonDocument(child));
 //                 }
-//                 else
-//                 {
-//                     styleBsonDocument.Add(kvp.Key, BsonValue.Create(kvp.Value));
-//                 }
+//                 bsonDocument.Add("children", childrenBsonArray);
 //             }
-//             stylingBsonArray.Add(styleBsonDocument);
 //         }
-//         bsonDocument.Add("styling", stylingBsonArray);
-//     }
-//     else
-//     {
-//         // Add an empty styling array if no styling is present
-//         bsonDocument.Add("styling", new BsonArray());
-//     }
+//         Console.WriteLine($"Final BSON Document: {bsonDocument.ToJson()}");
 
-//     // If it's a CompositeNode, add children
-//     if (node is CompositeNode compositeNode)
-//     {
-//         var children = compositeNode.GetChildren();
-//         if (children != null && children.Any())
-//         {
-//             var childrenBsonArray = new BsonArray();
-//             foreach (var child in children)
-//             {
-//                 childrenBsonArray.Add(ConvertNodeToDetailedBsonDocument(child));
-//             }
-//             bsonDocument.Add("children", childrenBsonArray);
-//         }
+//         return bsonDocument;
 //     }
-
-//     return bsonDocument;
-// }
-    public BsonDocument ConvertNodeToDetailedBsonDocument(AbstractNode node)
+public BsonDocument ConvertNodeToDetailedBsonDocument(AbstractNode node)
+{
+    var bsonDocument = new BsonDocument
     {
-        var bsonDocument = new BsonDocument
-        {
-            { "nodeId", node.GetNodeId() },
-            { "nodeLevel", node.GetNodeLevel() },
-            { "nodeType", node.GetNodeType() },
-            { "content", node.GetContent() },
-            { "converted", node.IsConverted() }
-        };
+        { "nodeId", node.GetNodeId() },
+        { "nodeLevel", node.GetNodeLevel() },
+        { "nodeType", node.GetNodeType() },
+        { "content", node.GetContent() },
+        { "converted", node.IsConverted() }
+    };
 
-        // Improved styling conversion
-        var styling = node.GetStyling();
-        if (styling != null && styling.Count > 0)
+    // Get the list of dictionaries for styling
+    var styling = node.GetStyling();
+    if (styling != null && styling.Any())
+    {
+        var stylingBsonArray = new BsonArray();
+
+        foreach (var styleDict in styling)
         {
-            var stylingBsonArray = new BsonArray();
-            foreach (var styleDict in styling)
+            var styleBson = new BsonDocument();
+
+            foreach (var kvp in styleDict)
             {
-                var styleBsonDocument = new BsonDocument();
-                foreach (var kvp in styleDict)
+                // Handle null values by adding BsonNull
+                if (kvp.Value == null)
                 {
-                    // Explicitly handle different value types
-                    if (kvp.Value == null)
-                    {
-                        styleBsonDocument.Add(kvp.Key, BsonNull.Value);
-                    }
-                    else
-                    {
-                        styleBsonDocument.Add(kvp.Key, BsonValue.Create(kvp.Value));
-                    }
+                    styleBson.Add(kvp.Key, BsonNull.Value);
                 }
-                stylingBsonArray.Add(styleBsonDocument);
+                else
+                {
+                    styleBson.Add(kvp.Key, BsonValue.Create(kvp.Value));
+                }
             }
-            bsonDocument.Add("styling", stylingBsonArray);
-        }
-        else
-        {
-            // Add an empty styling array if no styling is present
-            bsonDocument.Add("styling", new BsonArray());
+
+            stylingBsonArray.Add(styleBson);
         }
 
-        // If it's a CompositeNode, add children
-        if (node is CompositeNode compositeNode)
-        {
-            var children = compositeNode.GetChildren();
-            if (children != null && children.Any())
-            {
-                var childrenBsonArray = new BsonArray();
-                foreach (var child in children)
-                {
-                    childrenBsonArray.Add(ConvertNodeToDetailedBsonDocument(child));
-                }
-                bsonDocument.Add("children", childrenBsonArray);
-            }
-        }
-
-        return bsonDocument;
+        bsonDocument.Add("styling", stylingBsonArray);
     }
+
+    // If it's a CompositeNode, add children
+    if (node is CompositeNode compositeNode)
+    {
+        var children = compositeNode.GetChildren();
+        if (children != null && children.Any())
+        {
+            var childrenBsonArray = new BsonArray();
+            foreach (var child in children)
+            {
+                childrenBsonArray.Add(ConvertNodeToDetailedBsonDocument(child));
+            }
+            bsonDocument.Add("children", childrenBsonArray);
+        }
+    }
+
+    Console.WriteLine($"Final BSON Document: {bsonDocument.ToJson()}");
+
+    return bsonDocument;
+}
 
 public async Task saveTree(AbstractNode rootNode)
 {
@@ -375,4 +329,231 @@ public async Task saveTree(AbstractNode rootNode)
     {
         await _docxCollection.DeleteOneAsync(d => d.Id == id);
     }
+
+    // retrieve tree
+    public async Task<AbstractNode> RetrieveTree()
+{
+    // Find the root node (assuming the root node has no parent)
+    var rootDocument = await _treeCollection.Find(Builders<BsonDocument>.Filter.Exists("nodeId"))
+                                            .FirstOrDefaultAsync();
+
+    if (rootDocument == null)
+    {
+        return null;
+    }
+
+    return RecursivelyCreateNode(rootDocument);
+}
+// private AbstractNode RecursivelyCreateNode(BsonDocument bsonDocument)
+// {
+//     string nodeType = bsonDocument["nodeType"].AsString;
+
+//     // Validate styling based on node type
+//     List<Dictionary<string, object>> styling;
+
+//     if (nodeType == "root")
+//     {
+//         // For root node, styling is optional or can be empty
+//         styling = new List<Dictionary<string, object>>();
+//     }
+//     else
+//     {
+//         // For all other node types, require non-null, non-empty styling
+//         if (!bsonDocument.Contains("styling") || 
+//             bsonDocument["styling"].IsBsonNull || 
+//             bsonDocument["styling"].AsBsonArray.Count == 0)
+//         {
+//             throw new ArgumentException($"Node of type '{nodeType}' must have non-empty styling");
+//         }
+
+//         // Convert styling to List<Dictionary<string, object>>
+//         styling = bsonDocument["styling"].AsBsonArray
+//             .Select(styleElement =>
+//             {
+//                 // Ensure each style element is a non-null dictionary with non-null values
+//                 var styleDictionary = styleElement.AsBsonDocument
+//                     .Where(kvp => !kvp.Value.IsBsonNull)
+//                     .ToDictionary(
+//                         kvp => kvp.Name, 
+//                         kvp => BsonTypeMapper.MapToDotNetValue(kvp.Value)
+//                     );
+
+//                 // Additional validation to ensure the dictionary is not empty
+//                 if (styleDictionary.Count == 0)
+//                 {
+//                     throw new ArgumentException($"Style element for node type '{nodeType}' cannot be empty");
+//                 }
+
+//                 return styleDictionary;
+//             })
+//             .ToList();
+//     }
+
+//     AbstractNode node;
+//     switch (nodeType)
+//     {
+//         case "CompositeNode":
+//         case "root":
+//             node = new CompositeNode(
+//                 bsonDocument["nodeId"].AsInt32, 
+//                 bsonDocument["nodeLevel"].AsInt32, 
+//                 bsonDocument["nodeType"].AsString,
+//                 bsonDocument["content"].AsString,
+//                 styling
+//             );
+//             break;
+//         default:
+//             node = new SimpleNode(
+//                 bsonDocument["nodeId"].AsInt32, 
+//                 bsonDocument["nodeLevel"].AsInt32, 
+//                 bsonDocument["nodeType"].AsString,
+//                 bsonDocument["content"].AsString,
+//                 styling
+//             );
+//             break;
+//     }
+
+//     // Rest of the method remains the same...
+//     return node;
+// }
+
+
+// // Overload to retrieve by specific criteria if needed
+// public async Task<AbstractNode> RetrieveTreeByNodeId(int specificNodeId)
+// {
+//     var filter = Builders<BsonDocument>.Filter.Eq("nodeId", specificNodeId);
+//     var rootDocument = await _treeCollection.Find(filter).FirstOrDefaultAsync();
+
+//     return rootDocument != null ? RecursivelyCreateNode(rootDocument) : null;
+// }
+// }
+
+private AbstractNode RecursivelyCreateNode(BsonDocument bsonDocument)
+{
+    // Logging the input document
+    Console.WriteLine($"Processing BsonDocument: {bsonDocument.ToJson()}");
+
+    string nodeType = bsonDocument["nodeType"].AsString;
+    Console.WriteLine($"Node Type: {nodeType}");
+
+    // Validate styling based on node type
+    List<Dictionary<string, object>> styling;
+
+    if (nodeType == "root")
+    {
+        // For root node, styling is optional or can be empty
+        styling = new List<Dictionary<string, object>>();
+        Console.WriteLine("Root node: Creating empty styling list");
+    }
+    else
+    {
+        // For all other node types, require non-null, non-empty styling
+        if (!bsonDocument.Contains("styling") || 
+            bsonDocument["styling"].IsBsonNull || 
+            bsonDocument["styling"].AsBsonArray.Count == 0)
+        {
+            Console.WriteLine($"Error: Node of type '{nodeType}' lacks styling");
+            throw new ArgumentException($"Node of type '{nodeType}' must have non-empty styling");
+        }
+
+        // Convert styling to List<Dictionary<string, object>>
+        styling = bsonDocument["styling"].AsBsonArray
+            .Select((styleElement, index) =>
+            {
+                Console.WriteLine($"Processing style element {index}");
+
+                // Ensure each style element is a non-null dictionary with non-null values
+                var styleDictionary = styleElement.AsBsonDocument
+                    .Where(kvp => !kvp.Value.IsBsonNull)
+                    .ToDictionary(
+                        kvp => kvp.Name, 
+                        kvp => BsonTypeMapper.MapToDotNetValue(kvp.Value)
+                    );
+
+                // Log the processed style dictionary
+                Console.WriteLine($"Processed Style Dictionary {index}: {string.Join(", ", styleDictionary.Select(kvp => $"{kvp.Key}:{kvp.Value}"))}");
+
+                // Additional validation to ensure the dictionary is not empty
+                if (styleDictionary.Count == 0)
+                {
+                    Console.WriteLine($"Error: Style element {index} for node type '{nodeType}' is empty");
+                    throw new ArgumentException($"Style element for node type '{nodeType}' cannot be empty");
+                }
+
+                return styleDictionary;
+            })
+            .ToList();
+
+        Console.WriteLine($"Total style elements processed: {styling.Count}");
+    }
+
+    AbstractNode node;
+    try 
+    {
+        switch (nodeType)
+        {
+            case "CompositeNode":
+            case "root":
+                node = new CompositeNode(
+                    bsonDocument["nodeId"].AsInt32, 
+                    bsonDocument["nodeLevel"].AsInt32, 
+                    bsonDocument["nodeType"].AsString,
+                    bsonDocument["content"].AsString,
+                    styling
+                );
+                Console.WriteLine($"Created CompositeNode with ID: {node.GetNodeId()}");
+                break;
+            default:
+                node = new SimpleNode(
+                    bsonDocument["nodeId"].AsInt32, 
+                    bsonDocument["nodeLevel"].AsInt32, 
+                    bsonDocument["nodeType"].AsString,
+                    bsonDocument["content"].AsString,
+                    styling
+                );
+                Console.WriteLine($"Created SimpleNode with ID: {node.GetNodeId()}");
+                break;
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error creating node: {ex.Message}");
+        Console.WriteLine($"Exception Details: {ex}");
+        throw;
+    }
+
+    // Logging node creation
+    Console.WriteLine($"Node created successfully. Type: {nodeType}, NodeId: {node.GetNodeId()}, NodeLevel: {node.GetNodeLevel()}");
+
+    return node;
+}
+
+// Overload with additional logging
+public async Task<AbstractNode> RetrieveTreeByNodeId(int specificNodeId)
+{
+    specificNodeId  = 1;
+    Console.WriteLine($"Retrieving tree for NodeId: {specificNodeId}");
+
+    var filter = Builders<BsonDocument>.Filter.Eq("nodeId", specificNodeId);
+    var rootDocument = await _treeCollection.Find(filter).FirstOrDefaultAsync();
+
+    if (rootDocument == null)
+    {
+        Console.WriteLine($"No document found for NodeId: {specificNodeId}");
+        return null;
+    }
+
+    try 
+    {
+        var node = RecursivelyCreateNode(rootDocument);
+        Console.WriteLine($"Successfully retrieved and created node for NodeId: {specificNodeId}");
+        return node;
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error retrieving tree for NodeId {specificNodeId}: {ex.Message}");
+        Console.WriteLine($"Exception Details: {ex}");
+        throw;
+    }
+}
 }

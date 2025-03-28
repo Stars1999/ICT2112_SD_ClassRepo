@@ -525,7 +525,19 @@ public static class DocumentProcessor
 
 				var thecontenthere = nodeInList.GetContent();
 				Console.WriteLine($"content:{thecontenthere}");
+
+				var thestylinghere = nodeInList.GetStyling();
+				string consolidatedStyling = "";
+				foreach(var dict in thestylinghere)
+				{
+					foreach(var kvp in dict)
+					{
+						consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
+					}
+				}
+				Console.WriteLine($"styling:{consolidatedStyling}");
 				Console.Write("\n");
+
 
 			}
 

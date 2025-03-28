@@ -6,6 +6,9 @@ builder.Services.AddControllersWithViews();
 
 // Register application services
 builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Text.IFormatText, ICT2106WebApp.mod2grp6.Text.TextManager>();
+
+// Register template services
+builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Template.TemplateRepository>();
 builder.Services.AddScoped<ICT2106WebApp.mod2grp6.Template.TemplateManager>();
 builder.Services.AddScoped<ICT2106WebApp.mod2grp6.DocumentManager>();
 

@@ -17,11 +17,8 @@
                     <div class="card-body">
                         <div class="form-group mb-3">
                             <label for="templateSelect">Select Template:</label>
-                            <select asp-for="SelectedTemplateId" class="form-control" id="templateSelect">
-                                <option value="ieee">IEEE</option>
-                                <option value="editorial">Editorial</option>
-                                <option value="acm">ACM Format</option>
-                                <option value="springer">Springer Format</option>
+                            <select asp-for="SelectedTemplateId" asp-items="Model.AvailableTemplates" class="form-control" id="templateSelect">
+                                <!-- Templates loaded from MongoDB -->
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Load Document & Apply Template</button>
@@ -102,7 +99,6 @@
                         <span class="badge @(Model.TemplateResult ? "bg-success" : "")">
                             @* @(Model.TemplateResult ? "Template Applied" : "Template Failed") *@ 
                             @* Don't need conversion success result for applied templates since its not class implementation *@
-
                         </span>
                     </div>
                     <div class="card-body">
@@ -116,10 +112,9 @@
 
 @section Scripts {
     <script>
-        // Add any JavaScript for enhancing the template test page
         $(document).ready(function() {
-            // For example, you could add syntax highlighting for LaTeX
-            // if you include a syntax highlighting library
+            // Enable syntax highlighting if you have a library like highlight.js
+            // hljs.highlightAll();
         });
     </script>
 }

@@ -3,9 +3,20 @@ namespace ICT2106WebApp.Controllers
     using System;
     using System.Collections.Generic;
     using MongoDB.Bson;
+    using CustomLogger = ICT2106WebApp.Interfaces.ILogger;
 
     public class Mod1TestCases
     {
+        private readonly CustomLogger _logger;
+
+        // Constructor to inject logger
+        public Mod1TestCases(CustomLogger logger)
+        {
+            _logger = logger;
+
+            _logger.InsertLog(DateTime.Now, "Initializing Mod1 test cases.", "Mod1TestCases");
+        }
+
         // --------------------------------- To Hold Nodes --------------------------------- //
         private Dictionary<string, BsonDocument> _nodes = new Dictionary<string, BsonDocument>();
         private Dictionary<string, BsonDocument> _latexNodesPass = new Dictionary<string, BsonDocument>();
@@ -110,11 +121,14 @@ namespace ICT2106WebApp.Controllers
             _latexNodesFail["TC05"] = new BsonDocument { 
                 { "Content", "Cleaned special characters" } 
             };
+
+            _logger.InsertLog(DateTime.Now, "Test case nodes initialized successfully.", "Mod1TestCases");
         }
 
         // --------------------------------- PASS METHOD --------------------------------- //
         public bool RunPassTests()
         {
+            _logger.InsertLog(DateTime.Now, "Running tests for Mod1.", "Mod1TestCases");
             List<bool> results = new List<bool>();
 
             foreach (var nodePair in _nodes)
@@ -157,12 +171,15 @@ namespace ICT2106WebApp.Controllers
                 results.Add(testPassed);
             }
 
-            return !results.Contains(false);
+            bool allPassed = !results.Contains(false);
+            _logger.InsertLog(DateTime.Now, allPassed ? "All tests passed." : "Some tests failed.", "Mod1TestCases");
+            return allPassed;
         }
 
         // --------------------------------- FAIL METHOD --------------------------------- //
         public bool RunFailTests()
         {
+            _logger.InsertLog(DateTime.Now, "Running tests for Mod1.", "Mod1TestCases");
             List<bool> results = new List<bool>();
 
             foreach (var nodePair in _nodes)
@@ -200,7 +217,9 @@ namespace ICT2106WebApp.Controllers
                 results.Add(testPassed);
             }
 
-            return !results.Contains(false);
+            bool allFailed = results.Contains(false);
+            _logger.InsertLog(DateTime.Now, allFailed ? "All tests passed." : "Some tests failed.", "Mod1TestCases");
+            return allFailed;
         }
 
         // --------------------------------- HELPER METHODS --------------------------------- //

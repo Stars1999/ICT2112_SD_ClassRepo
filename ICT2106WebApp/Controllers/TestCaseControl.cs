@@ -14,7 +14,7 @@ namespace ICT2106WebApp.Controllers
 			_logger = logger;
 		}
 		
-		public bool runModTestCases(int modNumber)
+		public bool runModTestCases(int modNumber, string citationFormat = null)
 		{
 			bool result = false;
 			switch (modNumber)
@@ -31,7 +31,7 @@ namespace ICT2106WebApp.Controllers
 
 				case 3:
 					var mod3 = new Mod3TestCases(_logger);
-    				result = mod3.RunPassTests().Result;
+    				result = mod3.RunPassTests(citationFormat).Result;
 					break;
 
 				default:

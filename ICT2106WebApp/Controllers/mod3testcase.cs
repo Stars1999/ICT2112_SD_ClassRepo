@@ -118,7 +118,8 @@ public class Mod3TestCases
     {
         private readonly CitationValidator _validator;
         private readonly CustomLogger _logger;
-        private readonly string _jsonFilePath = "wwwroot/bibliography_test.json";
+        private readonly string _apaJsonFilePath = "wwwroot/apa_test.json";
+        private readonly string _mlaJsonFilePath = "wwwroot/mla_test.json";
         private readonly string _latexFilePathPass = "wwwroot/document.tex";
 
         public Mod3TestCases(CustomLogger logger)
@@ -127,38 +128,113 @@ public class Mod3TestCases
             _validator = new CitationValidator(logger);
         }
 
-        // Runs the pass test and returns true if citations are correctly converted.
-        public async Task<bool> RunPassTests()
+        // // Runs the pass test and returns true if citations are correctly converted.
+        // public async Task<bool> RunPassTests()
+        // {
+        //     bool isValidPass = await _validator.ValidateCitationConversionAsync(_jsonFilePath, _latexFilePathPass);
+        //     Console.WriteLine(isValidPass ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+        //     return isValidPass;
+        // }
+        // Runs the pass test for APA or MLA and returns true if citations are correctly converted.
+        public async Task<bool> RunPassTests(string citationFormat)
         {
-            bool isValidPass = await _validator.ValidateCitationConversionAsync(_jsonFilePath, _latexFilePathPass);
-            Console.WriteLine(isValidPass ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+            string jsonFilePath = GetJsonFilePath(citationFormat);
+
+            if (string.IsNullOrEmpty(jsonFilePath))
+            {
+                _logger.InsertLog(DateTime.Now, $"Invalid citation format: {citationFormat}", "Mod3TestCases");
+                return false;
+            }
+
+            _logger.InsertLog(DateTime.Now, $"Running tests for {citationFormat} format.", "Mod3TestCases");
+
+            bool isValidPass = await _validator.ValidateCitationConversionAsync(jsonFilePath, _latexFilePathPass);
+
+            _logger.InsertLog(DateTime.Now, isValidPass
+                ? $"{citationFormat} citation conversion validation passed."
+                : $"{citationFormat} citation conversion validation failed.", "Mod3TestCases");
+
             return isValidPass;
         }
 
-        // Runs the fail test and returns true if the conversion fails
-        public async Task<bool> RunFailTests()
-        {
-            string latexContentFail = @"\documentclass{article}
-\title{The Role of AI in Modern Healthcare}
-\author{Dr. Emily Johnson}
-\date{2024-03-15}
-\begin{document}
-\maketitle
-AI is transforming medical diagnostics. Predictive analytics does not mention the source.
-\section{References}
-Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
-\end{document}";
+//         // Runs the fail test and returns true if the conversion fails
+//         public async Task<bool> RunFailTests()
+//         {
+//             string latexContentFail = @"\documentclass{article}
+// \title{The Role of AI in Modern Healthcare}
+// \author{Dr. Emily Johnson}
+// \date{2024-03-15}
+// \begin{document}
+// \maketitle
+// AI is transforming medical diagnostics. Predictive analytics does not mention the source.
+// \section{References}
+// Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
+// \end{document}";
 
-            bool isValidFail = await _validator.ValidateCitationConversionAsync(_jsonFilePath, latexContentFail, isFileContent: true);
-            Console.WriteLine(isValidFail ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+//             bool isValidFail = await _validator.ValidateCitationConversionAsync(_jsonFilePath, latexContentFail, isFileContent: true);
+//             Console.WriteLine(isValidFail ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
+//             return !isValidFail;
+//         }
+        // Runs the fail test for APA or MLA and returns true if the conversion fails as expected.
+        public async Task<bool> RunFailTests(string citationFormat)
+        {
+            string jsonFilePath = GetJsonFilePath(citationFormat);
+
+            if (string.IsNullOrEmpty(jsonFilePath))
+            {
+                _logger.InsertLog(DateTime.Now, $"Invalid citation format: {citationFormat}", "Mod3TestCases");
+                return false;
+            }
+
+            _logger.InsertLog(DateTime.Now, $"Running tests for {citationFormat} format.", "Mod3TestCases");
+
+            string latexContentFail = @"\documentclass{article}
+            \title{The Role of AI in Modern Healthcare}
+            \author{Dr. Emily Johnson}
+            \date{2024-03-15}
+            \begin{document}
+            \maketitle
+            AI is transforming medical diagnostics. Predictive analytics does not mention the source.
+            \section{References}
+            Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
+            \end{document}";
+
+            bool isValidFail = await _validator.ValidateCitationConversionAsync(jsonFilePath, latexContentFail, isFileContent: true);
+
+            _logger.InsertLog(DateTime.Now, isValidFail
+                ? $"{citationFormat} citation conversion validation passed."
+                : $"{citationFormat} citation conversion validation failed.", "Mod3TestCases");
+
             return !isValidFail;
         }
 
-        // Runs all tests for Mod3 and returns true if all tests pass.
+        // // Runs all tests for Mod3 and returns true if all tests pass.
+        // public async Task<bool> RunAllTests()
+        // {
+        //     bool passResult = await RunPassTests();
+        //     bool failResult = await RunFailTests();
+        //     return passResult && failResult;
+        // }
+        // Runs all tests for both APA and MLA formats and returns true if all tests pass.
         public async Task<bool> RunAllTests()
         {
-            bool passResult = await RunPassTests();
-            bool failResult = await RunFailTests();
-            return passResult && failResult;
+            bool apaPassResult = await RunPassTests("APA");
+            bool apaFailResult = await RunFailTests("APA");
+
+            bool mlaPassResult = await RunPassTests("MLA");
+            bool mlaFailResult = await RunFailTests("MLA");
+
+            return apaPassResult && apaFailResult && mlaPassResult && mlaFailResult;
+        }
+
+        // Helper method to get the correct JSON file path based on the citation format.
+        private string GetJsonFilePath(string citationFormat)
+        {
+            return citationFormat.ToUpper() switch
+            {
+                "APA" => _apaJsonFilePath,
+                "MLA" => _mlaJsonFilePath,
+                _ => null
+            };
         }
     }

@@ -36,6 +36,12 @@ namespace ICT2106WebApp.Controllers
                 // Store the uploaded document temporarily
                 _parser.StoreDocument(uploadedFile);
 
+                // Retrieve the file path of the stored document
+                string tempFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp", uploadedFile.FileName);
+
+                // Determine the citation format (APA or MLA) based on the file name or content
+                string citationFormat = DetermineCitationFormat(tempFilePath);
+
                 // Set initial status
                 _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
 
@@ -76,6 +82,22 @@ namespace ICT2106WebApp.Controllers
             }
         }
 
+        private string DetermineCitationFormat(string filePath)
+        {
+            string fileName = Path.GetFileName(filePath).ToLower();
+
+            // Determine format based on file name
+            if (fileName.Contains("apa"))
+            {
+                return "APA";
+            }
+            else if (fileName.Contains("mla"))
+            {
+                return "MLA";
+            }
+
+            return null;
+        }
 
         // GET: /dashboard/status/{fileName}
         [HttpGet("status/{fileName}")]

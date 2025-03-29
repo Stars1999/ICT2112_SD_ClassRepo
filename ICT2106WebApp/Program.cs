@@ -22,6 +22,9 @@ builder.Services.AddScoped<Dashboard_InputController>();
 builder.Services.AddScoped<Dashboard_PageController>();
 // builder.Services.AddScoped<LoggerControl>();
 
+// Add IDocumentTestCase
+builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
+
 // Register IParser and its implementation
 builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
 

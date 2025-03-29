@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\OJKJ\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj": {}
+    "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\OJKJ\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj": {
+    "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\OJKJ\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
+        "projectUniqueName": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
         "projectName": "ICT2106WebApp",
-        "projectPath": "C:\\Users\\OJKJ\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
-        "packagesPath": "C:\\Users\\OJKJ\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\OJKJ\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\",
+        "projectPath": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\ICT2106WebApp.csproj",
+        "packagesPath": "C:\\Users\\Leon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\OJKJ\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Leon\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"

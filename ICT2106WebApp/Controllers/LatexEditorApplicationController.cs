@@ -67,8 +67,8 @@ public class LatexEditorApplicationController : Controller
 
         await _dbContext.References.InsertOneAsync(reference);
         _logger.InsertLog(DateTime.Now, "Inserted reference into MongoDB.", nameof(LoadFromFileAndInsert));
-
-        return Ok("Loaded and inserted JSON from file.");
+        await Task.Delay(5000); // 5000 milliseconds = 5 seconds
+        return RedirectToAction("convert");
     }
 
 

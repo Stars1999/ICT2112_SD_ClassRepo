@@ -49,12 +49,12 @@ namespace ICT2106WebApp.mod2grp6.Template
         }
 
         // Notify observers when templates are loaded
-        public void notifyTemplateLoaded(TemplateDocument templates)
+        public void notifyTemplateLoaded(TemplateDocument template)
         {
-            if (templates == null) return;
+            if (template == null) return;
 
-            Console.WriteLine($"Notifying {observers.Count} observers about {templates.TemplateName} templates loaded");
-            List<TemplateDocument> templatesList = new List<TemplateDocument> { templates };
+            Console.WriteLine($"Notifying {observers.Count} observers about {template.TemplateName} templates loaded");
+            List<TemplateDocument> templatesList = new List<TemplateDocument> { template };
             foreach (var observer in observers)
             {
                 try

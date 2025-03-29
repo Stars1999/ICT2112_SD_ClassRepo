@@ -1,18 +1,26 @@
 using ICT2106WebApp.Interfaces;
 using ICT2106WebApp.Models;
 using System.Text;
+using CustomLogger = ICT2106WebApp.Interfaces.ILogger;
 
 namespace ICT2106WebApp.Controllers
 {
 	public class TestCaseControl : IDocumentTestCase
 	{
+		private readonly CustomLogger _logger;
+
+		public TestCaseControl(CustomLogger logger)
+		{
+			_logger = logger;
+		}
+		
 		public bool runModTestCases(int modNumber)
 		{
 			bool result = false;
 			switch (modNumber)
 			{
 				case 1:
-					var mod1 = new Mod1TestCases();
+					var mod1 = new Mod1TestCases(_logger);
 					result = mod1.RunPassTests();
 					break;
 
@@ -22,7 +30,7 @@ namespace ICT2106WebApp.Controllers
 					break;
 
 				case 3:
-					var mod3 = new Mod3TestCases(new ConsoleLogger());
+					var mod3 = new Mod3TestCases(_logger);
     				result = mod3.RunPassTests().Result;
 					break;
 

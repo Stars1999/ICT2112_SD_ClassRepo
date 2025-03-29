@@ -65,7 +65,7 @@ namespace ICT2106WebApp.Pages
             LaTeXResult = _documentManager.toLaTeX("sample");
             
             // Test template conversion with a placeholder template ID
-            TemplateResult = _documentManager.convertToLatexTemplate("sample", "template1");
+            //TemplateResult = _documentManager.convertToLatexTemplate("sample", "template1");
             
             return Page();
         }

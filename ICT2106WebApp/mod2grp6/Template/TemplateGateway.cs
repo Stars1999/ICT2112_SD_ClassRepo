@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace ICT2106WebApp.mod2grp6.Template
 {
-    public class TemplateGateway : ITemplateObserver
+    // Changed to inherit from TemplateSubject
+    public class TemplateGateway : TemplateSubject
     {
         private readonly MongoDbContext _context;
         private readonly IMongoCollection<TemplateDocument> _templates;
@@ -16,12 +17,21 @@ namespace ICT2106WebApp.mod2grp6.Template
             _templates = _context.Templates;
         }
 
+        #region MongoDB Operations
+
         public async Task<TemplateDocument> GetTemplateAsync(string id)
         {
             try
             {
                 var filter = Builders<TemplateDocument>.Filter.Eq(t => t.Id, id);
-                return await _templates.Find(filter).FirstOrDefaultAsync();
+                var template = await _templates.Find(filter).FirstOrDefaultAsync();
+                if (template != null)
+                {
+                    // Notify observers that a template has been retrieved
+                    notifyTemplateLoaded(template);
+                }
+                
+                return template;
             }
             catch (Exception ex)
             {
@@ -34,7 +44,15 @@ namespace ICT2106WebApp.mod2grp6.Template
         {
             try
             {
-                return await _templates.Find(_ => true).ToListAsync();
+                var templates = await _templates.Find(_ => true).ToListAsync();
+                
+                // Notify observers that templates have been loaded
+                if (templates != null && templates.Count > 0)
+                {
+                    notifyTemplatesLoaded(templates);
+                }
+                
+                return templates;
             }
             catch (Exception ex)
             {
@@ -53,7 +71,6 @@ namespace ICT2106WebApp.mod2grp6.Template
                 
                 foreach (var template in templates)
                 {
-                    // Directly access the "Id" field, not "_id"
                     if (template.Contains("Id"))
                     {
                         ids.Add(template["Id"].AsString);
@@ -69,21 +86,7 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
         }
 
-        public async Task<bool> DeleteTemplateAsync(string id)
-        {
-            try
-            {
-                var filter = Builders<TemplateDocument>.Filter.Eq(t => t.Id, id);
-                var result = await _templates.DeleteOneAsync(filter);
-                return result.IsAcknowledged && result.DeletedCount > 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting template {id}: {ex.Message}");
-                return false;
-            }
-        }
-
+        #endregion
         // Helper method to convert TemplateDocument to Template
         public Template ConvertToTemplate(TemplateDocument document)
         {
@@ -91,11 +94,6 @@ namespace ICT2106WebApp.mod2grp6.Template
                 return null;
                 
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
-        }
-
-        public Task<bool> UpdateTemplate(TemplateDocument template)
-        {
-            throw new NotImplementedException();
         }
     }
 }

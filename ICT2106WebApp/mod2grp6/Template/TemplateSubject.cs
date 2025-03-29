@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,30 +11,61 @@ namespace ICT2106WebApp.mod2grp6.Template
         // Attach an observer
         public void attach(ITemplateObserver observer)
         {
-            observers.Add(observer);
+            if (observer != null && !observers.Contains(observer))
+            {
+                observers.Add(observer);
+                Console.WriteLine($"Observer attached: {observer.GetType().Name}");
+            }
         }
 
         // Detach an observer
         public void detach(ITemplateObserver observer)
         {
-            observers.Remove(observer);
+            if (observer != null && observers.Contains(observer))
+            {
+                observers.Remove(observer);
+                Console.WriteLine($"Observer detached: {observer.GetType().Name}");
+            }
         }
 
-        // Notify all observers
-        public void notifyObservers(string id)
+        // Notify observers when templates are loaded
+        public void notifyTemplatesLoaded(List<TemplateDocument> templates)
         {
+            if (templates == null || templates.Count == 0) return;
+            
+            Console.WriteLine($"Notifying {observers.Count} observers about {templates.Count} templates loaded");
+            
             foreach (var observer in observers)
             {
-                // Need to get the template and pass it to UpdateTemplate
-                var template = GetTemplateByIdAsync(id).Result;
-                if (template != null)
+                try
                 {
-                    observer.UpdateTemplate(template).Wait();
+                    observer.OnTemplatesLoaded(templates);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error notifying observer {observer.GetType().Name}: {ex.Message}");
                 }
             }
         }
 
-        // Changed to match implementation in TemplateManager
-        protected abstract Task<TemplateDocument> GetTemplateByIdAsync(string id);
+        // Notify observers when templates are loaded
+        public void notifyTemplateLoaded(TemplateDocument templates)
+        {
+            if (templates == null) return;
+
+            Console.WriteLine($"Notifying {observers.Count} observers about {templates.TemplateName} templates loaded");
+            List<TemplateDocument> templatesList = new List<TemplateDocument> { templates };
+            foreach (var observer in observers)
+            {
+                try
+                {
+                    observer.OnTemplatesLoaded(templatesList);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error notifying observer {observer.GetType().Name}: {ex.Message}");
+                }
+            }
+        }
     }
 }

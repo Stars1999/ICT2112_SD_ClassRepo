@@ -5,7 +5,8 @@ namespace ICT2106WebApp.mod2grp6.Template
 {
     public interface ITemplateObserver
     {
-        Task<List<TemplateDocument>> GetAllTemplatesAsync();
-        Task<bool> UpdateTemplate(TemplateDocument template);
+        // Methods for the observer pattern
+        void OnTemplateUpdated(TemplateDocument template);
+        void OnTemplatesLoaded(List<TemplateDocument> templates);
     }
 }

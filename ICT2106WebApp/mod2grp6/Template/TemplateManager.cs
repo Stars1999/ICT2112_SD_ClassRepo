@@ -13,10 +13,10 @@ namespace ICT2106WebApp.mod2grp6.Template
         public TemplateManager()
         {
             _templateRepository = new TemplateGateway();
-            LoadTemplatesFromDatabase().Wait(); // Load templates on initialization
+            getAllTemplates().Wait(); // Load templates on initialization
         }
 
-        private async Task LoadTemplatesFromDatabase()
+        private async Task getAllTemplates()
         {
             try
             {
@@ -61,8 +61,8 @@ namespace ICT2106WebApp.mod2grp6.Template
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
 
-        // Changed to match ITemplate interface (capital G)
-        public async Task<Template> GetTemplate(string id)
+        // Keep lowercase getTemplate for backward compatibility 
+        public async Task<Template> getTemplate(string id)
         {
             try
             {
@@ -88,12 +88,6 @@ namespace ICT2106WebApp.mod2grp6.Template
                 Console.WriteLine($"Error getting template: {ex.Message}");
                 return null;
             }
-        }
-
-        // Keep lowercase getTemplate for backward compatibility 
-        public async Task<Template> getTemplate(string id)
-        {
-            return await GetTemplate(id);
         }
 
 
@@ -137,56 +131,6 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
         }
 
-        // Set a template by ID and content
-        public async Task setTemplate(string id, List<AbstractNode> content)
-        {
-            if (content == null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
-            if (templates.ContainsKey(id))
-            {
-                templates[id] = content;
-            }
-            else
-            {
-                templates.Add(id, content);
-            }
-
-            // Save to database
-            await SaveTemplateToDatabaseAsync(id, content);
-
-            // Notify observers when a template is set
-            notifyObservers(id);
-        }
-
-        // Get all available template IDs
-        public async Task<List<string>> GetAllTemplateIdsAsync()
-        {
-            return await _templateRepository.GetTemplateIdsAsync();
-        }
-
-        // Save template to database
-        private async Task SaveTemplateToDatabaseAsync(string id, List<AbstractNode> content)
-        {
-            try
-            {
-                var templateName = GetTemplateNameById(id);
-                var template = new Template(id, templateName, content);
-                
-                // Convert to TemplateDocument
-                var templateDoc = TemplateDocument.FromTemplate(template);
-
-                // Save to database
-                await _templateRepository.UpdateTemplate(templateDoc);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving template: {ex.Message}");
-            }
-        }
-
         // Helper method to get template name
         private string GetTemplateNameById(string id)
         {
@@ -205,10 +149,5 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
         }
 
-        // Fixed to match the base class method in TemplateSubject
-        protected override async Task<TemplateDocument> GetTemplateByIdAsync(string id)
-        {
-            return await _templateRepository.GetTemplateAsync(id);
-        }
     }
 }

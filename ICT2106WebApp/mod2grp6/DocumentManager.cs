@@ -133,7 +133,7 @@ namespace ICT2106WebApp.mod2grp6
                 allContent.AddRange(GetContentByType("images"));
 
                 // Step 2: Retrieve the template by templateId
-                var templateTask = templateManager.GetTemplate(templateId);
+                var templateTask = templateManager.getTemplate(templateId);
                 templateTask.Wait(); // Wait for the async task to complete
                 Template.Template template = templateTask.Result;
                 if (template != null)

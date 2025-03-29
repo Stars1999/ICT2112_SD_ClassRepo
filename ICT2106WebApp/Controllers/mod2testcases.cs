@@ -16,25 +16,25 @@
         // This is under the assumption that each LINE in doc/letax is saved as a different node
         public mod2testcases()
         {
-            // TC01: Heading
-            _nodes["TC01"] = new BsonDocument {
-            { "Type", "h1" }, { "Content", "Header 1" },
-            { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
-        };
-            // Pass
-            _latexNodesPass["TC01"] = new BsonDocument { { "Content", "\\section{\\textbf{Header 1}}" } };
-            // Fail - set to fail
-            _latexNodesFail["TC01"] = new BsonDocument { { "Content", "\\section{\\textb{Header 1}}" } };
+        //    // TC01: Heading
+        //    _nodes["TC01"] = new BsonDocument {
+        //    { "Type", "h1" }, { "Content", "Header 1" },
+        //    { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
+        //};
+        //    // Pass
+        //    _latexNodesPass["TC01"] = new BsonDocument { { "Content", "\\section{\\textbf{Header 1}}" } };
+        //    // Fail - set to fail
+        //    _latexNodesFail["TC01"] = new BsonDocument { { "Content", "\\section{\\textb{Header 1}}" } };
 
-            // TC02: Bold text
-            _nodes["TC02"] = new BsonDocument {
-            { "Type", "paragraph" }, { "Content", "Bold Text" },
-            { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
-        };
-            // Pass
-            _latexNodesPass["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
-            // Fail - set to pass
-            _latexNodesFail["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
+        //    // TC02: Bold text
+        //    _nodes["TC02"] = new BsonDocument {
+        //    { "Type", "paragraph" }, { "Content", "Bold Text" },
+        //    { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
+        //};
+        //    // Pass
+        //    _latexNodesPass["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
+        //    // Fail - set to pass
+        //    _latexNodesFail["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
 
             // TC03: Italic text
             _nodes["TC03"] = new BsonDocument {

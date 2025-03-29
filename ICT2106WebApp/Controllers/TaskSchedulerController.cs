@@ -69,5 +69,33 @@ namespace ICT2106WebApp.Controllers
                 return false;
             }
         }
+
+               public async Task<bool> ScheduleMod3Conversion(string fileName)
+        {
+            try
+            {
+                // Simulate scheduler processing Mod2
+                _parser.UpdateConversionStatus(fileName, "TaskScheduler: Queuing Mod2");
+                await Task.Delay(500);
+
+                // Update progress through stages
+                _parser.UpdateConversionStatus(fileName, "Mod2: Processing Started");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: 25% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: 50% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: 75% complete");
+                await Task.Delay(1000);
+                _parser.UpdateConversionStatus(fileName, "Mod2: Conversion Complete");
+
+                return true;
+            }
+            catch (Exception)
+            {
+                _parser.UpdateConversionStatus(fileName, "Mod2: Conversion Failed");
+                return false;
+            }
+        }
     }
 }

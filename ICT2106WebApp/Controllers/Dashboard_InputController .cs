@@ -20,7 +20,6 @@ namespace ICT2106WebApp.Controllers
             _taskScheduler = taskScheduler;
         }
 
-        // POST: /dashboard/upload
         [HttpPost("upload")]
         public async Task<IActionResult> UploadDocument(IFormFile uploadedFile)
         {
@@ -51,6 +50,13 @@ namespace ICT2106WebApp.Controllers
                     return StatusCode(500, new { message = "Mod2 conversion failed", success = false });
                 }
 
+                // Schedule Mod3 Conversion through TaskScheduler
+                bool mod3Result = await _taskScheduler.ScheduleMod3Conversion(uploadedFile.FileName);
+                if (!mod3Result)
+                {
+                    return StatusCode(500, new { message = "Mod3 conversion failed", success = false });
+                }
+
                 return Ok(new { 
                     message = "File uploaded and all conversions completed successfully", 
                     success = true 
@@ -66,6 +72,7 @@ namespace ICT2106WebApp.Controllers
                 });
             }
         }
+
 
         // GET: /dashboard/status/{fileName}
         [HttpGet("status/{fileName}")]

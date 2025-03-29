@@ -48,7 +48,7 @@
 
 <!-- Conversion Status Tracker -->
 <div id="statusTracker" class="status-tracker">
-    <p id="statusMessage">Status: Waiting for test case execution...</p>
+    <p id="statusMessage">Status: NIL</p>
     <div id="statusBar" class="status-bar">
         <div id="statusProgress" class="status-progress"></div>
     </div>
@@ -86,75 +86,90 @@
     </table>
 </div>
 
+
+
 <script>
     document.getElementById("uploadButton").addEventListener("click", function (event) {
-        event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); // Prevent default form submission
 
-        let formData = new FormData();
-        let fileInput = document.getElementById("fileInput").files[0];
+    let formData = new FormData();
+    let fileInput = document.getElementById("fileInput").files[0];
 
-        // Check if no file is selected
-        if (!fileInput) {
-            logError("No file selected for upload.");
-            alert("Please select a file to upload.");
-            return;
+    // Check if no file is selected
+    if (!fileInput) {
+        logError("No file selected for upload.");
+        alert("Please select a file to upload.");
+        return;
+    }
+
+    // Update file name
+    document.getElementById("fileInput").innerText = fileInput.name;
+
+    // Check if the file is a .docx
+    let fileExtension = fileInput.name.split('.').pop().toLowerCase();
+    if (fileExtension !== "docx") {
+        logError("Invalid file type. Only .docx files are allowed.");
+        alert("Only .docx files are allowed. Please upload a valid .docx file.");
+        document.getElementById("fileInput").value = ""; // Clear the file input
+        return;
+    }
+
+    formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
+
+    fetch("/dashboard/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("statusMessage").innerText = "Status: Converting...";
+
+            // Update progress dynamically
+            let progress = 0;
+            let totalSteps = 6;
+            let progressInterval = setInterval(() => {
+                if (progress < totalSteps) {
+                    progress++;
+                    let progressMessage = `Progress: ${progress}/6 (${getProgressText(progress)})`;
+                    logError(progressMessage);
+                    document.getElementById("statusProgress").style.width = (progress / totalSteps) * 100 + "%";
+                    document.getElementById("statusMessage").innerText = progressMessage;
+                } else {
+                    clearInterval(progressInterval);
+                    logError("All Conversions Completed");
+                    document.getElementById("statusMessage").innerText = "All Conversions Completed";
+                    document.getElementById("statusProgress").style.backgroundColor = 'green';
+                }
+            }, 1000); // Update every second
+        } else {
+            logError(data.message);
+            alert("Error: " + data.message);
         }
-
-        // Update file name
-        document.getElementById("fileInput").innerText = fileInput.name;
-
-        // Check if the file is a .docx
-        let fileExtension = fileInput.name.split('.').pop().toLowerCase();
-        if (fileExtension !== "docx") {
-            logError("Invalid file type. Only .docx files are allowed.");
-            alert("Only .docx files are allowed. Please upload a valid .docx file.");
-            document.getElementById("fileInput").value = ""; // Clear the file input
-            return;
-        }
-
-        formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
-
-        fetch("/dashboard/upload", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById("statusMessage").innerText = "Status: Converting...";
-                updateProgress();
-            } else {
-                logError(data.message);
-                alert("Error: " + data.message);
-            }
-        })
-        .catch(error => {
-            logError("Upload failed: " + error.message);
-            alert("Upload failed. " + error.message);
-            console.error("Upload error:", error);
-        });
-
-        // Clear the file input after the form submission
-        document.getElementById("fileInput").value = "";
+    })
+    .catch(error => {
+        logError("Upload failed: " + error.message);
+        alert("Upload failed. " + error.message);
+        console.error("Upload error:", error);
     });
 
-    // Function to update progress dynamically
-function updateProgress(progress) {
-    document.getElementById("statusProgress").style.width = progress + "%";
-    document.getElementById("statusMessage").innerText = "Test Case Progress: " + progress + "%";
+    // Clear the file input after the form submission
+    document.getElementById("fileInput").value = "";
+});
 
-    // Log progress dynamically in the log section
-    logError("Test Case Progress: " + progress + "%");
-
-
-        // Reset the progress bar after completion
-        document.getElementById("statusProgress").style.width = "0%";
-        document.getElementById("statusMessage").innerText = "Status: Waiting for file upload...";
-        document.getElementById("fileInput").value = "";  // Clear the file input after completion
-    
+// Function to get the progress text for each step
+function getProgressText(step) {
+    switch (step) {
+        case 1: return "Mod 1 Conversion";
+        case 2: return "Mod 1 Test Case";
+        case 3: return "Mod 2 Conversion";
+        case 4: return "Mod 2 Test Case";
+        case 5: return "Mod 3 Conversion";
+        case 6: return "Mod 3 Test Case";
+        default: return "";
+    }
 }
 
-    // Function to log errors in the log table
 function logError(message) {
     const logMessages = document.getElementById("logMessages");
 

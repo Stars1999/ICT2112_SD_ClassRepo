@@ -1,0 +1,10 @@
+{
+    "documents": [
+      {
+        "Title": "Technology and Literary Imagination",
+        "Author": "Dr. Anna Carter",
+        "Date": "2023-11-30",
+        "LatexContent": "\\documentclass{article}\n\\title{Technology and Literary Imagination}\n\\author{Dr. Anna Carter}\n\\date{2023-11-30}\n\\begin{document}\n\\maketitle\nDigital storytelling transforms the modern novel (Thompson 77). Hypertext alters reader engagement (Miller 103).\n\n\\section{References}\nThompson, Laura. \"The Narrative Web: Digital Fiction in the 21st Century.\" Media & Literature, 2020, P77.\nMiller, Jane. \"Hypertext and Reading Paths.\" Literary Interfaces Journal, 2021, P103.\n\\end{document}"
+      }
+    ]
+  }

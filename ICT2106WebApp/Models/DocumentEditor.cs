@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 public class EditorDoc: iUpdateEditorDoc
 {
     private readonly EditorDocumentMapper _mapper;
+    private readonly iGetGeneratedLatex _latexProvider;
 
-    public EditorDoc(EditorDocumentMapper mapper)
+    public EditorDoc(EditorDocumentMapper mapper, iGetGeneratedLatex latexProvider)
     {
         _mapper = mapper;
+        _latexProvider = latexProvider;
     }
 
 
@@ -25,6 +27,14 @@ public class EditorDoc: iUpdateEditorDoc
 
         await _mapper.UpsertAsync(doc);
     }
+
+    // Pipeline-based update using internal latex provider
+    public async Task UpdateLatexContentAsync()
+    {
+        string latex = _latexProvider.GetLatexContent();
+        await UpdateLatexContentAsync(latex); // Reuse logic
+    }
+
 
     public async Task<string> GetLatexContentAsync()
     {

@@ -1,39 +1,45 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
-public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Implements the interface
+public class BibTeXConverter : iConversionStatus //Implements the interface
 {
+    private string _updatedJson;
     private readonly IScannerFactory _citationFactory;
     private readonly IScannerFactory _bibliographyFactory;
     private string _preferredStyle; // Default APA, can be changed
-    private readonly iConversionStatus _latexCompiler; //Reference to LatexCompiler
     private readonly IInsertBibTex _bibtexMapper;
-
-    private readonly iStartBibtexConversion _startBibtexConversion;
 
     /// <summary>
     /// Constructor for BibTeXConverter
     /// </summary>
-    public BibTeXConverter(IScannerFactory citationFactory, IScannerFactory bibliographyFactory, iConversionStatus latexCompiler, IInsertBibTex bibtexMapper, string preferredStyle = "apa")
+    public BibTeXConverter(IScannerFactory citationFactory, IScannerFactory bibliographyFactory, IInsertBibTex bibtexMapper, string preferredStyle = "apa")
     {
         _citationFactory = citationFactory;
         _bibliographyFactory = bibliographyFactory;
         _preferredStyle = preferredStyle.ToLower(); // Ensure lowercase for consistency
-        _latexCompiler = latexCompiler; // Initialize LatexCompiler
         _bibtexMapper = bibtexMapper;
 
-        if (_preferredStyle != "apa" && _preferredStyle != "mla")
-        {
-            Console.WriteLine($"[WARNING] Invalid preferred style '{_preferredStyle}', defaulting to APA.");
-            _preferredStyle = "apa";
-        }
+    }
+
+    private string DetectCitationStyle(string latexContent)
+    {
+        if (string.IsNullOrWhiteSpace(latexContent)) return "apa"; // Default fallback
+
+        // APA Example: (Smith, 2019)
+        if (Regex.IsMatch(latexContent, @"\([A-Z][a-z]+, \d{4}\)")) return "apa";
+
+        // MLA Example: (Smith 45)
+        if (Regex.IsMatch(latexContent, @"\([A-Z][a-z]+ \d+\)")) return "mla";
+
+        return "apa"; // Fallback
     }
 
     /// <summary>
     /// Converts citations and bibliography based on the preferred style.
     /// </summary>
-    public string ConvertCitationsAndBibliography(string jsonData)
+    public string ConvertCitationsAndBibliography(string jsonData, string overrideStyle = null)
     {
         Console.WriteLine($"[DEBUG] Received JSON: {jsonData}");
 
@@ -62,7 +68,18 @@ public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Imple
             {
                 try
                 {
-                    string latexContent = doc.LatexContent?.Trim() ?? "";
+                    string latexContent = doc.OriginalLatexContent?.Trim() ?? doc.LatexContent?.Trim() ?? "";
+
+                    if (!string.IsNullOrWhiteSpace(overrideStyle))
+                    {
+                        _preferredStyle = overrideStyle.ToLower();
+                        Console.WriteLine($"[INFO] Using override style: {_preferredStyle}");
+                    }
+                    else
+                    {
+                        _preferredStyle = DetectCitationStyle(latexContent);
+                        Console.WriteLine($"[INFO] Detected citation style: {_preferredStyle}");
+                    }
 
                     // Apply citation formatting
                     if (_preferredStyle == "apa")
@@ -87,13 +104,7 @@ public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Imple
                     }
 
                     // Clean LaTeX content formatting
-                    latexContent = latexContent
-                        .Replace(@"\documentclass{article}", "\\documentclass{article}") 
-                        .Replace(@"\title{", "\n\\title{")  
-                        .Replace(@"\author{", "\n\\author{") 
-                        .Replace(@"\date{", "\n\\date{") 
-                        .Replace(@"\begin{document}", "\n\\begin{document}")
-                        .Replace("\n\n", "\n");
+                    latexContent = SanitizeLatexContent(latexContent);
 
                     updatedDocuments.Add(new BibliographyDocument
                     {
@@ -111,9 +122,6 @@ public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Imple
 
             string updatedJson = JsonSerializer.Serialize(new Reference { Documents = updatedDocuments }, new JsonSerializerOptions { WriteIndented = true });
 
-            // Store JSON via interface
-            _latexCompiler.SetUpdatedJson(updatedJson);
-
             if (_bibtexMapper == null)
                 {
                     Console.WriteLine("[FATAL] BibTeXConverter received a NULL bibtexMapper!");
@@ -122,9 +130,10 @@ public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Imple
                 {
                     Console.WriteLine("[DEBUG] Preparing to insert converted JSON into MongoDB...");
                     _bibtexMapper.SetUpdatedJson(updatedJson);
+                    SetUpdatedJson(updatedJson);
                     Console.WriteLine("[DEBUG] Called SetUpdatedJson successfully.");
                 }
-
+            
 
             return updatedJson;
         }
@@ -134,27 +143,42 @@ public class BibTeXConverter : iConversionStatus, iStartBibtexConversion //Imple
             return null;
         }
     }
+    
+    private string SanitizeLatexContent(string content)
+    {
+        // Fix common broken LaTeX syntax issues
+        content = content.Replace(@"{article)", "{article}");
+        content = content.Replace(@"\title{", "\\title{");
+        content = content.Replace(@"\author{", "\\author{");
+        content = content.Replace(@"\date{", "\\date{");
+        content = content.Replace(@"\begin{document)", "\\begin{document}");
+        content = content.Replace(@"\end{document)", "\\end{document}");
+        content = content.Replace(@"\section{References)", "\\section{References}");
+
+        // Remove extra closing braces if too many
+        content = Regex.Replace(content, @"\}{2,}", "}");
+
+        return content;
+    }
+
+
 
     /// <summary>
     /// ✅ Fetches the conversion status.
     /// Returns true if the converted JSON has been updated in memory.
     /// </summary>
-    public bool fetchConversionStatus()
+     public void SetUpdatedJson(string convertedJson)
     {
-        return _latexCompiler.fetchConversionStatus();
-    }
-    
-    public void SetUpdatedJson(string convertedJson)
-    {
-        _latexCompiler.SetUpdatedJson(convertedJson);
+        _updatedJson = convertedJson;
     }
 
     public string GetUpdatedJson()
     {
-        return _latexCompiler.GetUpdatedJson();
+        return _updatedJson;
     }
 
-    public void startBibtexConversion(string mod2)
+    public bool fetchConversionStatus()
     {
+        return !string.IsNullOrEmpty(_updatedJson);
     }
 }

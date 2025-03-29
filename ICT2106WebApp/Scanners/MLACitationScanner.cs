@@ -7,13 +7,13 @@ public class MLACitationScanner : IMLA
     {
         Console.WriteLine("[DEBUG] Formatting MLA citations...");
 
-        // ✅ Match inline citations like (Smith, 2019) or (Brown, 45) 
+        // Match inline citations like (Smith, 2019) or (Brown, 45) 
         latexContent = Regex.Replace(latexContent, @"\((\w+),\s*(\d{4}|\d+)\)", match =>
         {
             string author = match.Groups[1].Value;  // Extract author name
             string number = match.Groups[2].Value;  // Extract number (could be a year or page)
 
-            // ✅ Ensure it is a **page number**, not a year
+            // Ensure it is a **page number**, not a year
             if (int.TryParse(number, out int num) && num >= 1000)  
             {
                 Console.WriteLine($"[WARNING] Detected a **year** ({number}) instead of a page number for {author}.");

@@ -1,9 +1,11 @@
+using System.Text.RegularExpressions;
 public class APABibliographyScanner : IAPA
 {
     public string FormatCitations(string latexContent)
     {
         Console.WriteLine("[DEBUG] Formatting APA citations...");
-        return latexContent.Replace(@"\cite{", "(").Replace("}", ")");
+        return Regex.Replace(latexContent, @"\cite\{(.*?)\}", "($1)");
+
     }
 
     public string FormatBibliographies(string latexContent)

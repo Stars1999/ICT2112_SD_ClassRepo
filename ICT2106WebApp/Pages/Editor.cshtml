@@ -157,6 +157,12 @@
             color: #dc3545;
             margin-bottom: 5px;
         }
+        
+        /* Add styling for the active button state */
+        .btn-group .btn.active {
+            background-color: #0d6efd;
+            color: white;
+        }
     </style>
 }
 
@@ -173,11 +179,11 @@
 <div class="bg-light d-flex align-items-center p-2 border-bottom mb-2">
     <button id="compile-btn" class="btn btn-primary me-2">Compile</button>
     <button id="save-btn" class="btn btn-primary me-2">Save</button>
-    <select id="bibliography-style" class="form-select me-2" style="width: auto;">
-        <option value="apa">APA</option>
-        <option value="mla">MLA</option>
-    </select>
-    <label for="bibliography-style">Bibliography Style</label>
+    <div class="btn-group me-2" role="group" aria-label="Citation Style">
+        <a id="style-apa" href="/understem/load-apa-latex" class="btn btn-outline-primary">APA</a>
+        <a id="style-mla" href="/understem/load-mla-latex" class="btn btn-outline-primary">MLA</a>
+    </div>
+    <span id="style-status" class="me-2">Style: <span id="current-style">APA</span></span>
 </div>
 
 <!-- Editor and Preview -->
@@ -186,20 +192,7 @@
     <div class="col-md-6 px-0 border-end">
         <div class="section-header">LaTeX Editor</div>
         <div class="content-area">
-            <textarea id="latex-editor" class="form-control border-0 p-2">\documentclass{article}
-\title{Sample Document}
-\author{User}
-\date{\today}
-
-\begin{document}
-\maketitle
-
-\section{Introduction}
-This is a sample LaTeX document with \alpha outside math mode.
-
-We can cite this reference \cite{unknown} here.
-
-\end{document</textarea>
+            <textarea id="latex-editor" class="form-control border-0 p-2"></textarea>
         </div>
     </div>
     
@@ -259,71 +252,63 @@ We can cite this reference \cite{unknown} here.
             const compileBtn = document.getElementById('compile-btn');
             const downloadPdfBtn = document.getElementById('download-pdf-btn');
             const testErrorBtn = document.getElementById('test-error-btn');
-            const bibliographyDropdown = document.getElementById('bibliography-style');
+            const styleApaBtn = document.getElementById('style-apa');
+            const styleMlaBtn = document.getElementById('style-mla');
+            const currentStyleSpan = document.getElementById('current-style');
             const errorList = document.getElementById('error-list');
             const compilationStatus = document.getElementById('compilation-status');
+            const saveBtn = document.getElementById('save-btn');
             
-            // ✅ Load citation style from a session cookie (default to APA)
+            // Function to update UI to reflect current style
+            function updateStyleUI(style) {
+                currentStyleSpan.textContent = style.toUpperCase();
+                
+                // Reset all buttons
+                styleApaBtn.classList.remove('active');
+                styleMlaBtn.classList.remove('active');
+                
+                // Highlight the current style button
+                if (style.toLowerCase() === 'apa') {
+                    styleApaBtn.classList.add('active');
+                } else if (style.toLowerCase() === 'mla') {
+                    styleMlaBtn.classList.add('active');
+                }
+            }
+            
+            // Get the current style from cookie (default to APA)
             function getCookie(name) {
                 let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
                 return match ? decodeURIComponent(match[2]) : 'apa'; // Default to APA
             }
 
-            function setCookie(name, value, days) {
-                let expires = "";
-                if (days) {
-                    let date = new Date();
-                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                    expires = "; expires=" + date.toUTCString();
-                }
-                document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
-            }
-
-            let savedStyle = getCookie("selectedCitationStyle");
-            bibliographyDropdown.value = savedStyle; // Ensure correct option is selected
-
+            // Load the saved style from cookie
+            const savedStyle = getCookie("selectedCitationStyle");
+            updateStyleUI(savedStyle);
+            
             console.log(`[INFO] Loaded citation style: ${savedStyle}`);
-
-            // ✅ Load LaTeX content into editor AFTER applying the selected style
-            fetch(`/understem/load-latex?style=${savedStyle}`)
-                .then(response => response.text())
+            
+            // Set up save button
+            saveBtn.addEventListener('click', function() {
+                let latexContent = editor ? editor.getValue() : latexEditor.value;
+                
+                fetch('/understem/save-latex', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ latexContent: latexContent })
+                })
+                .then(response => response.json())
                 .then(data => {
-                    if (data.trim() !== '') {
-                        latexEditor.value = data;
+                    if (data.success) {
+                        compilationStatus.textContent = "Saved successfully!";
+                    } else {
+                        compilationStatus.textContent = "Error saving: " + data.error;
                     }
                 })
-                .catch(error => console.error('Error loading LaTeX:', error));
-
-            // ✅ Handle citation style change and persist selection in cookies
-            bibliographyDropdown.addEventListener('change', function() {
-                if (currentErrors.length > 0) {
-                    alert("⚠️ You have errors in your document. Fix them before changing citation styles.");
-                    bibliographyDropdown.value = savedStyle; // Reset dropdown to previous selection
-                    return;
-                }
-                const selectedStyle = bibliographyDropdown.value;
-                setCookie("selectedCitationStyle", selectedStyle, 30); // Save selection for 30 days
-
-                console.log(`[DEBUG] User selected: ${selectedStyle}`);
-
-                fetch(`/understem/convert?style=${selectedStyle}`, { method: 'GET' })
-                .then(response => {
-                    console.log(`[INFO] Style updated to ${selectedStyle}, reloading editor.`);
-                    setTimeout(() => {
-                        window.location.href = '/understem/editor';
-                    }, 500);// ✅ Reload editor with new citation style
-                })
-                .catch(error => console.error('Error changing citation style:', error));
+                .catch(error => {
+                    console.error('Error saving:', error);
+                    compilationStatus.textContent = "Error: Could not save the document.";
+                });
             });
-            function checkForErrorsAndDisableDropdown() {
-                if (currentErrors.length > 0) {
-                    bibliographyDropdown.disabled = true;
-                    console.log("[WARNING] Errors detected, disabling citation style dropdown.");
-                } else {
-                    bibliographyDropdown.disabled = false;
-                    console.log("[INFO] No errors, citation style dropdown is enabled.");
-                }
-            }
 
             function autoSaveToDatabase(content) {
                 fetch('/understem/save-latex', {
@@ -400,7 +385,7 @@ We can cite this reference \cite{unknown} here.
                     });
                 }
                 
-                // ✅ Load LaTeX content using savedStyle during initialization
+                // Load LaTeX content using savedStyle during initialization
                 fetch(`/understem/load-latex?style=${savedStyle}`)
                     .then(response => response.text())
                     .then(content => {
@@ -623,9 +608,6 @@ We can cite this reference \cite{unknown} here.
             /**
              * Highlights errors in the editor
              */
-            /**
-            * Highlights errors in the editor
-            */
             function highlightErrors(errors) {
                 console.log("Highlighting errors in editor");
 
@@ -947,7 +929,7 @@ We can cite this reference \cite{unknown} here.
                         console.error('Error checking quality:', error);
                     });
             }
-
+            
             // Set up the download button
             downloadPdfBtn.addEventListener('click', function() {
                 console.log("Download button clicked");

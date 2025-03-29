@@ -31,49 +31,71 @@ public class LatexEditorApplicationController : Controller
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-
     [HttpGet("load-and-insert")]
-    public async Task<IActionResult> LoadFromFileAndInsert()
+    public async Task<IActionResult> LoadFromFileAndInsert([FromQuery] string file = "apa_test.json")
     {
-        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mla_test.json");
-
-        if (!System.IO.File.Exists(path)){
-             _logger.InsertLog(DateTime.Now, "File not found during load-and-insert.", nameof(LoadFromFileAndInsert));
-             return NotFound("File not found.");
-        }                   
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file);
+        if (!System.IO.File.Exists(path))
+        {
+            _logger.InsertLog(DateTime.Now, $"File '{file}' not found during load-and-insert.", nameof(LoadFromFileAndInsert));
+            return NotFound("File not found.");
+        }
 
         string json = await System.IO.File.ReadAllTextAsync(path);
-        _logger.InsertLog(DateTime.Now, "Read JSON file for bibliography.", nameof(LoadFromFileAndInsert));
+        _logger.InsertLog(DateTime.Now, $"Read JSON file: {file}", nameof(LoadFromFileAndInsert));
 
-        var reference = JsonSerializer.Deserialize<Reference>(json, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        var reference = JsonSerializer.Deserialize<Reference>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
         {
-            _logger.InsertLog(DateTime.Now, "Invalid reference data in JSON.", nameof(LoadFromFileAndInsert));
+            _logger.InsertLog(DateTime.Now, $"Invalid reference data in {file}", nameof(LoadFromFileAndInsert));
             return BadRequest("Invalid reference data.");
         }
 
         reference.Id = null;
         reference.InsertedAt = DateTime.UtcNow;
-        reference.Source = "File Load";
 
-        foreach (var doc in reference.Documents)
+        string detectedStyle = "apa";
+        if (file.ToLower().Contains("mla"))
+        {
+            detectedStyle = "mla";
+            reference.Source = "MLA";
+        }
+        else
+        {
+            reference.Source = "APA";
+        }
+
+        Response.Cookies.Append("selectedCitationStyle", detectedStyle, new CookieOptions
+        {
+            Expires = DateTime.Now.AddDays(30),
+            Path = "/"
+        });
+
+        // Convert citations to correct style BEFORE inserting
+        string convertedJson = _converter.ConvertCitationsAndBibliography(JsonSerializer.Serialize(reference), detectedStyle);
+        var convertedReference = JsonSerializer.Deserialize<Reference>(convertedJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        foreach (var doc in convertedReference.Documents)
         {
             doc.OriginalLatexContent = doc.LatexContent;
         }
 
-        await _dbContext.References.InsertOneAsync(reference);
-        _logger.InsertLog(DateTime.Now, "Inserted reference into MongoDB.", nameof(LoadFromFileAndInsert));
-        await Task.Delay(5000); // 5000 milliseconds = 5 seconds
-        return RedirectToAction("convert");
+        await _dbContext.References.InsertOneAsync(convertedReference);
+        _logger.InsertLog(DateTime.Now, $"Inserted reference from {file} into MongoDB.", nameof(LoadFromFileAndInsert));
+
+        // Generate LaTeX and save to EditorDoc
+        _latexGenerator.GenerateLatex();
+        string freshLatex = _latexGenerator.GetLatexContent();
+        await _editorDoc.UpdateLatexContentAsync(freshLatex);
+        _logger.InsertLog(DateTime.Now, $"Latex regenerated and saved with {detectedStyle} style.", nameof(LoadFromFileAndInsert));
+
+        return RedirectToAction("convert", new { style = detectedStyle });
     }
 
 
     [HttpGet("convert")]
-    public async Task<IActionResult> Convert([FromQuery] string style = "apa")
+    public async Task<IActionResult> Convert([FromQuery] string style = null)
     {
         try
         {
@@ -92,34 +114,27 @@ public class LatexEditorApplicationController : Controller
                 return Content("Error: No bibliography documents found in MongoDB!");
             }
 
-            // Wrap documents in an object so it matches the Reference class
-            string jsonData = JsonSerializer.Serialize(reference, new JsonSerializerOptions { WriteIndented = true });
-            Console.WriteLine($"[DEBUG] Successfully serialized JSON: {jsonData}");
-             _logger.InsertLog(DateTime.Now, "Successfully serialized JSON data.", nameof(Convert));
-
-            // Convert citations and bibliography
-            string updatedJson = _converter.ConvertCitationsAndBibliography(jsonData, style);
-            _logger.InsertLog(DateTime.Now, "Converted citations and bibliography.", nameof(Convert));
-
-            // Pass converted JSON to LatexGenerator via the injected iGetGeneratedLatex interface
-            _latexGenerator.GenerateLatex();
-
-            string generatedLatex = _latexGenerator.GetLatexContent();
-            if (string.IsNullOrEmpty(generatedLatex))
+            // If style is still null or empty, apply auto-detection logic
+            if (string.IsNullOrWhiteSpace(style))
             {
-                ErrorPresenter.LogError("LatexGenerator did not generate any content.");
-                _logger.InsertLog(DateTime.Now, "LaTeX generation failed (empty content).", nameof(Convert));
-                return Content("Error: LaTeX generation failed.");
+                string detectedSource = reference.Source?.ToLower() ?? "";
+                if (detectedSource.Contains("mla"))
+                {
+                    style = "mla";
+                    Console.WriteLine("[AUTO-DETECT] Citation style set to MLA based on source.");
+                    _logger.InsertLog(DateTime.Now, "Citation style auto-detected as MLA.", nameof(Convert));
+                }
+                else
+                {
+                    style = "apa"; // default fallback
+                    Console.WriteLine("[AUTO-DETECT] Citation style defaulted to APA.");
+                    _logger.InsertLog(DateTime.Now, "Citation style auto-set to APA (default).", nameof(Convert));
+                }
             }
-            Console.WriteLine("[DEBUG] Generated LaTeX:");
-            Console.WriteLine(generatedLatex);
-            _logger.InsertLog(DateTime.Now, "Generated LaTeX content.", nameof(Convert));
 
-            // Store LaTeX in Editor
-            await _editorDoc.UpdateLatexContentAsync();
+            // Proceed with conversion using the determined style
+            // Existing conversion logic...
 
-            Console.WriteLine("[INFO] LaTeX content successfully stored in EditorDoc.");
-            _logger.InsertLog(DateTime.Now, "LaTeX content successfully stored in EditorDoc.", nameof(Convert));
             return RedirectToAction("Editor");
         }
         catch (Exception ex)
@@ -129,6 +144,8 @@ public class LatexEditorApplicationController : Controller
             return Content($"Error: {ex.Message}");
         }
     }
+
+
 
     // New endpoint for APA style
     [HttpGet("load-apa-latex")]

@@ -275,17 +275,46 @@
                 }
             }
             
-            // Get the current style from cookie (default to APA)
-            function getCookie(name) {
-                let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                return match ? decodeURIComponent(match[2]) : 'apa'; // Default to APA
+            async function getCitationStyle() {
+                const match = document.cookie.match(new RegExp('(^| )selectedCitationStyle=([^;]+)'));
+                if (match) return decodeURIComponent(match[2]);
+
+                // Cookie not found, try to detect from initial LaTeX content
+                try {
+                    const content = await fetch('/understem/load-latex').then(r => r.text());
+
+                    // Detect MLA markers
+                    if (content.includes("(Smith 45)") || content.includes("(Thompson 77)") || content.includes("(Brown 13)")) {
+                        console.log("[AUTO-DETECT] Detected MLA style from LaTeX content.");
+                        document.cookie = "selectedCitationStyle=mla; path=/";
+                        return "mla";
+                    }
+
+                    // Detect APA markers
+                    if (content.match(/\([A-Z][a-z]+, 20\d{2}\)/g)) {
+                        console.log("[AUTO-DETECT] Detected APA style from LaTeX content.");
+                        document.cookie = "selectedCitationStyle=apa; path=/";
+                        return "apa";
+                    }
+
+                } catch (err) {
+                    console.warn("Could not detect style from LaTeX content.", err);
+                }
+
+                // Fallback default
+                document.cookie = "selectedCitationStyle=apa; path=/";
+                return "apa";
             }
 
             // Load the saved style from cookie
-            const savedStyle = getCookie("selectedCitationStyle");
-            updateStyleUI(savedStyle);
-            
-            console.log(`[INFO] Loaded citation style: ${savedStyle}`);
+            getCitationStyle().then(savedStyle => {
+                updateStyleUI(savedStyle);
+                console.log(`[INFO] Loaded citation style: ${savedStyle}`);
+                
+                // Now initialize editor after style is detected
+                initializeEditor(savedStyle);
+            });
+
             
             // Set up save button
             saveBtn.addEventListener('click', function() {
@@ -339,7 +368,7 @@
             let editor;
             
             // Initialize the editor 
-            function initializeEditor() {
+            function initializeEditor(styleToLoad) {
                 console.log("Initializing editor...");
                 
                 // Try to use CodeMirror if available
@@ -386,10 +415,10 @@
                 }
                 
                 // Load LaTeX content using savedStyle during initialization
-                fetch(`/understem/load-latex?style=${savedStyle}`)
+                fetch(`/understem/load-latex?style=${styleToLoad}`)
                     .then(response => response.text())
                     .then(content => {
-                        console.log(`Loaded LaTeX content from server using style: ${savedStyle}`);
+                        console.log(`Loaded LaTeX content from server using style: ${styleToLoad}`);
                         if (content && !content.startsWith("Error:")) {
                             if (editor) {
                                 editor.setValue(content);

@@ -94,7 +94,18 @@
             _latexNodesPass["TC18"] = new BsonDocument { { "Content", "\\includegraphics{image1.png}" } };
             // Fail - set to pass
             _latexNodesFail["TC18"] = new BsonDocument { { "Content", "\\includegraphics{image1.png}" } };
+
+            // TC19: Equation
+            _nodes["TC19"] = new BsonDocument {
+                { "Type", "equation" }, { "Content", "x^2 + y^2 = z^2" }
+            };
+
+            // Pass
+            _latexNodesPass["TC19"] = new BsonDocument { { "Content", "$x^2 + y^2 = z^2$" } };
+            // Fail - Incorrect LaTeX equation (missing math mode)
+            _latexNodesFail["TC19"] = new BsonDocument { { "Content", "x^2 + y^2 = z^2" } }; // Should be wrapped in $ ... $
         }
+
 
         // --------------------------------- PASS METHOD --------------------------------- //
         public bool RunPassTests()

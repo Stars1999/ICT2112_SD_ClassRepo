@@ -19,6 +19,8 @@ builder.Services.AddScoped<ITaskScheduling, TaskSchedulerController>();
 // Register IParser and its implementation
 builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
 
+builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
+
 // Register PDFQualityChecker directly
 builder.Services.AddSingleton<IPDFQualityChecker, PDFQualityChecker>();
 builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();

@@ -32,7 +32,7 @@ public class LatexEditorApplicationController : Controller
     }
 
     [HttpGet("load-and-insert")]
-    public async Task<IActionResult> LoadFromFileAndInsert([FromQuery] string file = "mla_test.json")
+    public async Task<IActionResult> LoadFromFileAndInsert([FromQuery] string file = "apa_test.json")
     {
         string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file);
         if (!System.IO.File.Exists(path))
@@ -89,6 +89,68 @@ public class LatexEditorApplicationController : Controller
         string freshLatex = _latexGenerator.GetLatexContent();
         await _editorDoc.UpdateLatexContentAsync(freshLatex);
         _logger.InsertLog(DateTime.Now, $"Latex regenerated and saved with {detectedStyle} style.", nameof(LoadFromFileAndInsert));
+
+        return RedirectToAction("convert", new { style = detectedStyle });
+    }
+
+    [HttpGet("load-and-insert2")]
+    public async Task<IActionResult> LoadFromFileAndInsert2([FromQuery] string file = "mla_test.json")
+    {
+        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file);
+        if (!System.IO.File.Exists(path))
+        {
+            _logger.InsertLog(DateTime.Now, $"File '{file}' not found during load-and-insert.", nameof(LoadFromFileAndInsert2));
+            return NotFound("File not found.");
+        }
+
+        string json = await System.IO.File.ReadAllTextAsync(path);
+        _logger.InsertLog(DateTime.Now, $"Read JSON file: {file}", nameof(LoadFromFileAndInsert2));
+
+        var reference = JsonSerializer.Deserialize<Reference>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        if (reference == null || reference.Documents == null || reference.Documents.Count == 0)
+        {
+            _logger.InsertLog(DateTime.Now, $"Invalid reference data in {file}", nameof(LoadFromFileAndInsert2));
+            return BadRequest("Invalid reference data.");
+        }
+
+        reference.Id = null;
+        reference.InsertedAt = DateTime.UtcNow;
+
+        string detectedStyle = "apa";
+        if (file.ToLower().Contains("mla"))
+        {
+            detectedStyle = "mla";
+            reference.Source = "MLA";
+        }
+        else
+        {
+            reference.Source = "APA";
+        }
+
+        Response.Cookies.Append("selectedCitationStyle", detectedStyle, new CookieOptions
+        {
+            Expires = DateTime.Now.AddDays(30),
+            Path = "/"
+        });
+
+        // Convert citations to correct style BEFORE inserting
+        string convertedJson = _converter.ConvertCitationsAndBibliography(JsonSerializer.Serialize(reference), detectedStyle);
+        var convertedReference = JsonSerializer.Deserialize<Reference>(convertedJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        foreach (var doc in convertedReference.Documents)
+        {
+            doc.OriginalLatexContent = doc.LatexContent;
+        }
+
+        await _dbContext.References.InsertOneAsync(convertedReference);
+        _logger.InsertLog(DateTime.Now, $"Inserted reference from {file} into MongoDB.", nameof(LoadFromFileAndInsert2));
+
+        // Generate LaTeX and save to EditorDoc
+        _latexGenerator.GenerateLatex();
+        string freshLatex = _latexGenerator.GetLatexContent();
+        await _editorDoc.UpdateLatexContentAsync(freshLatex);
+        _logger.InsertLog(DateTime.Now, $"Latex regenerated and saved with {detectedStyle} style.", nameof(LoadFromFileAndInsert2));
 
         return RedirectToAction("convert", new { style = detectedStyle });
     }

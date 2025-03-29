@@ -138,23 +138,32 @@ namespace ICT2106WebApp.Pages
             // Generate Template-Applied Content
             TemplateAppliedContent = GenerateTemplateAppliedContent();
         }
-        
+
         private async Task<Template> GetSelectedTemplateAsync()
         {
-            // Get the template from MongoDB via TemplateManager
-            var template = _templateManager.GetTemplate(SelectedTemplateId);
-            
-            // If template not found in TemplateManager, try to get it directly from repository
-            if (template == null)
+            try
             {
-                var templateDoc = await _templateRepository.GetTemplateAsync(SelectedTemplateId);
-                if (templateDoc != null)
+                // Get the template from MongoDB via TemplateManager
+                // Use await to get the actual Template from the Task
+                var template = await _templateManager.GetTemplate(SelectedTemplateId);
+
+                // If template not found in TemplateManager, try to get it directly from repository
+                if (template == null)
                 {
-                    template = _templateRepository.ConvertToTemplate(templateDoc);
+                    var templateDoc = await _templateRepository.GetTemplateAsync(SelectedTemplateId);
+                    if (templateDoc != null)
+                    {
+                        template = _templateRepository.ConvertToTemplate(templateDoc);
+                    }
                 }
+
+                return template;
             }
-            
-            return template;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving template: {ex.Message}");
+                return null;
+            }
         }
 
         private string GenerateTemplateAppliedContent()

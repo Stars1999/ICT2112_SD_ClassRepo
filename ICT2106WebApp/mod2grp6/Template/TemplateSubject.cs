@@ -19,11 +19,11 @@ namespace ICT2106WebApp.mod2grp6.Template
         }
 
         // Notify all observers
-        public void NotifyObservers(string templateId)
+        public void NotifyObservers(TemplateDocument template)
         {
             foreach (var observer in observers)
             {
-                observer.UpdateTemplate(templateId);
+                observer.UpdateTemplate(template);
             }
         }
     }

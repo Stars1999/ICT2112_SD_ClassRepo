@@ -131,9 +131,11 @@ namespace ICT2106WebApp.mod2grp6
                 allContent.AddRange(GetContentByType("math"));
                 allContent.AddRange(GetContentByType("lists"));
                 allContent.AddRange(GetContentByType("images"));
-                
+
                 // Step 2: Retrieve the template by templateId
-                Template.Template template = templateManager.ConvertToTemplate(templateId);
+                var templateTask = templateManager.GetTemplate(templateId);
+                templateTask.Wait(); // Wait for the async task to complete
+                Template.Template template = templateTask.Result;
                 if (template != null)
                 {
                     // Step 3: Merge template content with the document content

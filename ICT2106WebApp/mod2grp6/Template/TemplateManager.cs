@@ -60,50 +60,27 @@ namespace ICT2106WebApp.mod2grp6.Template
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
 
-        // Convert the document to the specified template (with 2-column layout)
-         public Template ConvertToTemplate(string id){
-            return null;
-         }
-/*         public Template ConvertToTemplate(string id)
-        {
-            try
-            {
-                return ConvertToTemplateAsync(id).GetAwaiter().GetResult();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error converting to template: {ex.Message}");
-                return null;
-            }
-        } */
-
-        // Async version of GetTemplate
-        public async Task<Template> GetTemplateAsync(string id)
-        {
-            // Try to load template if not already loaded
-            if (!templates.ContainsKey(id))
-            {
-                var templateDoc = await _templateRepository.GetTemplateAsync(id);
-                if (templateDoc != null)
-                {
-                    templates[id] = templateDoc.AbstractContent;
-                }
-            }
-
-            if (templates.ContainsKey(id))
-            {
-                var templateContent = templates[id];
-                return new Template(id, GetTemplateNameById(id), templateContent);
-            }
-            return null;
-        }
-
         // Retrieve a template by its ID
-        public Template GetTemplate(string id)
+        public async Task<Template> GetTemplate(string id)
         {
             try
             {
-                return GetTemplateAsync(id).GetAwaiter().GetResult();
+                // Try to load template if not already loaded
+                if (!templates.ContainsKey(id))
+                {
+                    var templateDoc = await _templateRepository.GetTemplateAsync(id);
+                    if (templateDoc != null)
+                    {
+                        templates[id] = templateDoc.AbstractContent;
+                    }
+                }
+
+                if (templates.ContainsKey(id))
+                {
+                    var templateContent = templates[id];
+                    return new Template(id, GetTemplateNameById(id), templateContent);
+                }
+                return null;
             }
             catch (Exception ex)
             {
@@ -132,7 +109,7 @@ namespace ICT2106WebApp.mod2grp6.Template
             // Save to database
             await SaveTemplateToDatabaseAsync(id, content);
 
-            NotifyObservers(id); // Notify observers when a template is set
+            //NotifyObservers(id); // Notify observers when a template is set
         }
 
         // Helper method to apply a two-column layout (IEEE format)

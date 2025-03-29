@@ -69,33 +69,6 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
         }
 
-        public async Task<bool> UpdateTemplate(TemplateDocument template)
-        {
-            try
-            {
-                var filter = Builders<TemplateDocument>.Filter.Eq(t => t.Id, template.Id);
-                var existingTemplate = await _templates.Find(filter).FirstOrDefaultAsync();
-
-                if (existingTemplate != null)
-                {
-                    // Update existing template
-                    var result = await _templates.ReplaceOneAsync(filter, template);
-                    return result.IsAcknowledged && result.ModifiedCount > 0;
-                }
-                else
-                {
-                    // Insert new template
-                    await _templates.InsertOneAsync(template);
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving template: {ex.Message}");
-                return false;
-            }
-        }
-
         public async Task<bool> DeleteTemplateAsync(string id)
         {
             try
@@ -120,6 +93,9 @@ namespace ICT2106WebApp.mod2grp6.Template
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
 
-
+        public Task<bool> UpdateTemplate(TemplateDocument template)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

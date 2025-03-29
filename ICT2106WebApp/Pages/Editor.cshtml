@@ -362,7 +362,7 @@
             let currentErrors = [];
             let errorMarkers = [];
             let typingTimer;
-            const doneTypingInterval = 1000; // Wait for 1 second after typing stops
+            const doneTypingInterval = 100; // Wait for 1 second after typing stops
             
             // CodeMirror editor setup
             let editor;
@@ -384,21 +384,39 @@
                         matchBrackets: true,
                         lineWrapping: true
                     });
+
+                    // Restore from localStorage if available and editor is empty
+                    const unsaved = localStorage.getItem("unsavedLatex");
+                    if (unsaved && !editor.getValue().trim()) {
+                        editor.setValue(unsaved);
+                        console.log("[RECOVERY] Unsaved content restored from localStorage.");
+                    }
+
+                    // Watch for changes and auto-save to both localStorage + MongoDB
+                    editor.on('change', function() {
+                        const currentContent = editor.getValue();
+
+                        // Local recovery save
+                        localStorage.setItem("unsavedLatex", currentContent);
+
+                        // Auto-save to DB
+                        clearTimeout(typingTimer);
+                        typingTimer = setTimeout(() => {
+                            autoSaveToDatabase(currentContent);
+                            console.log("[AUTO-SAVE] Saved to DB and localStorage.");
+                        }, doneTypingInterval);
+                    });
+
                     
                     // Set up event listener for changes
                     editor.on('change', function() {
-                        console.log("CodeMirror content changed");
-
-                        // Clear the timeout if it's already set
-                        clearTimeout(typingTimer);
-
-                        // Set a new timeout for both error detection and autosave
-                        typingTimer = setTimeout(() => {
-                            const currentContent = editor.getValue();
-                            detectErrors(); // Run your error detection
-                            autoSaveToDatabase(currentContent);// Save the current LaTeX to DB
-                        }, doneTypingInterval);
-                    });
+                    const currentContent = editor.getValue();
+                    autoSaveToDatabase(currentContent); // 🔥 Save on every change
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => {
+                        detectErrors(); // keep detection debounced
+                    }, doneTypingInterval);
+                });
 
                 } else {
                     console.log("Using plain textarea editor");

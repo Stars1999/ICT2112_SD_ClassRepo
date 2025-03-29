@@ -9,6 +9,23 @@ using ICT2106WebApp.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IRetrieveLog, LoggerGateway_TDG>();
+builder.Services.AddScoped<ICT2106WebApp.Interfaces.ILogger, LoggerGateway_TDG>(); // Ensure ILogger is also registered
+builder.Services.AddScoped<LoggerControl>();
+builder.Services.AddScoped<Dashboard_InputController>();
+builder.Services.AddScoped<Dashboard_PageController>();
+builder.Services.AddScoped<ITaskScheduling, TaskSchedulerController>();
+
+// Register IParser and its implementation
+builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
+
+builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
+
+// Register PDFQualityChecker directly
+builder.Services.AddSingleton<IPDFQualityChecker, PDFQualityChecker>();
+builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();
+
+// Add services to the container.
 builder.Services.AddControllers(); // <-- Ensure this line is here
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<MongoDbContext>();

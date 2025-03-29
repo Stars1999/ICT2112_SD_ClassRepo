@@ -3,8 +3,11 @@
     ViewData["Title"] = "Dashboard - Upload Document";
 }
 
-<h2>Upload a Document</h2>
 
+<!-- Editor Header - Full Width -->
+<div class="editor-header">
+    <h1>Upload a Document</h1>
+</div>
 <!-- File upload section -->
 <div class="file-upload-container">
     <input type="file" id="fileInput" name="UploadedFile" required class="file-input" />
@@ -15,40 +18,41 @@
     <button type="button" id="uploadButton" class="upload-button">Upload</button>
 </div>
 
-<!-- Fail Test Case 1 Button (Hanif) -->
-<div>
-    <button id="testButton" type="button" onclick="runCitationTest1Fail()" class="test-button">Run Citation Conversion Test (MOD1) Failed</button>
-    <div id="testResult" class="test-result"></div>
+<!-- Test Case Buttons -->
+<!-- Test Case Table in the Center -->
+<div class="test-table-container">
+    <table id="testCaseTable" class="test-case-table">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Pass Case</th>
+                <th>Fail Case</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>MOD1</td>
+                <td><button type="button" onclick="runCitationTest1Pass()" class="test-button success">Pass</button></td>
+                <td><button type="button" onclick="runCitationTest1Fail()" class="test-button fail">Fail</button></td>
+            </tr>
+            <tr>
+                <td>MOD2</td>
+                <td><button type="button" onclick="runCitationTest2Pass()" class="test-button success">Pass</button></td>
+                <td><button type="button" onclick="runCitationTest2Fail()" class="test-button fail">Fail</button></td>
+            </tr>
+            <tr>
+                <td>MOD3</td>
+                <td><button type="button" onclick="runCitationTest3Pass()" class="test-button success">Pass</button></td>
+                <td><button type="button" onclick="runCitationTest3Fail()" class="test-button fail">Fail</button></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
-<!-- Pass Test Case 1 Button (Hanif)-->
-<div>
-    <button id="testButton" type="button" onclick="runCitationTest1Pass()" class="test-button">Run Citation Conversion Test (MOD1) Passed</button>
-    <div id="testResult" class="test-result"></div>
-</div>
-<!-- Fail Test Case 3 Button (Hanif) -->
-<div>
-    <button id="testButton" type="button" onclick="runCitationTest3Fail()" class="test-button">Run Citation Conversion Test (MOD3) Failed</button>
-    <div id="testResult" class="test-result"></div>
-</div>
-<!-- Pass Test Case 3 Button (Hanif)-->
-<div>
-    <button id="testButton" type="button" onclick="runCitationTest3Pass()" class="test-button">Run Citation Conversion Test (MOD3) Passed</button>
-    <div id="testResult" class="test-result"></div>
-</div>
-<!-- Fail Test Case Button (Yolanda)-->
-<div>
-    <button id="testButton" type="button" onclick="runCitationTest2Fail()" class="test-button">Run Citation Conversion Test (MOD2) Failed</button>
-    <div id="testResult" class="test-result"></div>
-</div>
-<!-- Pass Test Case Button (Yolanda) -->
-<div>
-    <button id="testButton" type="button" onclick="runCitationTest2Pass()" class="test-button">Run Citation Conversion Test (MOD2) Passed </button>
-    <div id="testResult" class="test-result"></div>
-</div>
+
 
 <!-- Conversion Status Tracker -->
 <div id="statusTracker" class="status-tracker">
-    <p id="statusMessage">Status: NIL</p>
+    <p id="statusMessage">Status: </p>
     <div id="statusBar" class="status-bar">
         <div id="statusProgress" class="status-progress"></div>
     </div>
@@ -107,12 +111,14 @@
 
     // Check if the file is a .docx
     let fileExtension = fileInput.name.split('.').pop().toLowerCase();
-    if (fileExtension !== "docx") {
+
+    //UNCOMMENT THIS IF CLASS DECIDE TO ACCEPT DOCX FILE ONLY
+    @* if (fileExtension !== "docx") {
         logError("Invalid file type. Only .docx files are allowed.");
         alert("Only .docx files are allowed. Please upload a valid .docx file.");
         document.getElementById("fileInput").value = ""; // Clear the file input
         return;
-    }
+    } *@
 
     formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
 
@@ -123,6 +129,8 @@
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
             document.getElementById("statusMessage").innerText = "Status: Converting...";
 
             // Update progress dynamically
@@ -170,6 +178,17 @@ function getProgressText(step) {
     }
 }
 
+// Function to reset the progress bar
+function resetProgressBar() {
+    // Reset progress bar width
+    document.getElementById("statusProgress").style.width = '0%';
+    document.getElementById("statusProgress").style.backgroundColor = '#007bff'; // Optional: Reset color to the default
+
+    // Reset status message
+    document.getElementById("statusMessage").innerText = "Status: NIL";
+}
+
+
 function logError(message) {
     const logMessages = document.getElementById("logMessages");
 
@@ -204,7 +223,8 @@ function runCitationTest1Pass() {
         .then(data => {
             // Log the start of the test
             logError("Test Case Started (MOD1)");
-
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
             let progress = 0;
             let progressInterval = setInterval(() => {
                 if (progress < 100) {
@@ -238,6 +258,8 @@ function runCitationTest1Fail() {
         .then(data => {
             // Log the start of the test
             logError("Test Case Started (MOD1)");
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
 
             let progress = 0;
             let progressInterval = setInterval(() => {
@@ -272,6 +294,8 @@ function runCitationTest3Fail() {
         .then(data => {
             // Log each progress update into the error log table
             logError("Test Case Progress: 0%");
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
             let progress = 0;
             let progressInterval = setInterval(() => {
                 if (progress < 100) {
@@ -307,6 +331,8 @@ function runCitationTest3Pass() {
         .then(data => {
             // Log each progress update into the error log table
             logError("Test Case Progress: 0%");
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
             let progress = 0;
             let progressInterval = setInterval(() => {
                 if (progress < 100) {
@@ -343,6 +369,8 @@ function runCitationTest2Pass() {
         .then(data => {
             // Log the start of the test
             logError("Test Case Started (MOD2)");
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
 
             let progress = 0;
             let progressInterval = setInterval(() => {
@@ -378,6 +406,8 @@ function runCitationTest2Fail() {
         .then(data => {
             // Log the start of the test
             logError("Test Case Started (MOD2)");
+            // Reset progress bar and status message before starting a new progress
+            resetProgressBar();
 
             let progress = 0;
             let progressInterval = setInterval(() => {
@@ -404,8 +434,6 @@ function runCitationTest2Fail() {
             logError("Test (MOD2) failed: " + error);
         });
 }
-
-
 </script>
 
 <!-- Styles for the page -->
@@ -415,6 +443,7 @@ function runCitationTest2Fail() {
         display: flex;
         align-items: center;
         margin-bottom: 15px;
+        padding-top: 15px;
     }
 
     .file-input {
@@ -439,6 +468,7 @@ function runCitationTest2Fail() {
         border-radius: 5px;
         cursor: pointer;
         font-size: 16px;
+
     }
 
     .test-button {
@@ -545,4 +575,112 @@ function runCitationTest2Fail() {
         margin-top: 20px;
         color: #333;
     }
+
+
+    .test-buttons-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+        /* Custom header with dark background */
+    .editor-header {
+        background-color: #2c3e50;
+        color: white;
+        padding: 1rem;
+        margin-left: -15px;
+        margin-right: -15px;
+        margin-top: -16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    /* Fail Test Case Button Styles */
+    .test-button-fail {
+        background-color: #f44336; /* Light Red */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .test-button-fail:hover {
+        background-color: #d32f2f; /* Darker Red for hover effect */
+    }
+
+    /* Success Test Case Button Styles */
+    .test-button-pass {
+        background-color: #28a745; /* Green for Passed */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .test-button-pass:hover {
+        background-color: #218838; /* Darker Green for hover effect */
+    }
+    /* Centered Table Container */
+    .test-table-container {
+        width: 60%;
+        margin: 30px auto;
+        padding: 10px;
+        border-radius: 5px;
+        @* background-color: #dc0f0f; *@
+    }
+
+    /* Table Styling */
+    .test-case-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .test-case-table th,
+    .test-case-table td {
+        padding: 15px;
+        border: 1px solid #e1d9d9;
+    }
+
+    .test-case-table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Button Styling for Success and Fail */
+    .test-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .test-button.success {
+        background-color: #28a745; /* Green */
+        color: white;
+    }
+
+    .test-button.success:hover {
+        background-color: #218838;
+    }
+
+    .test-button.fail {
+        background-color: #f44336; /* Red */
+        color: white;
+    }
+
+    .test-button.fail:hover {
+        background-color: #d32f2f;
+    }
+
+
 </style>

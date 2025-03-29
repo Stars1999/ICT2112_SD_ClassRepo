@@ -106,7 +106,7 @@ namespace ICT2106WebApp.Controllers
             var passResults = mod1Test.RunPassTests(); // RunPassTests() or RunFailTests()
 
             // return the test results as success/failure message
-            var resultMessage = $"{(passResults ? "All tests passed" : "Some tests failed")}";
+            var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
 
             return Ok(new { message = resultMessage });
         }
@@ -121,7 +121,7 @@ namespace ICT2106WebApp.Controllers
             bool passResults = mod1Test.RunFailTests(); // RunPassTests() or RunFailTests()
 
             // return the test results as success/failure message
-            var resultMessage = $"{(passResults ? "All tests passed" : "Some tests failed")}";
+            var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
 
             return Ok(new { message = resultMessage });
         }
@@ -136,7 +136,7 @@ namespace ICT2106WebApp.Controllers
             var passResults = mod2Test.RunPassTests(); // RunPassTests() or RunFailTests()
 
             // return the test results as success/failure message
-            var resultMessage = $"{(passResults ? "All tests passed" : "Some tests failed")}";
+            var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
 
             return Ok(new { message = resultMessage });
         }
@@ -151,7 +151,7 @@ namespace ICT2106WebApp.Controllers
             bool passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()
 
             // return the test results as success/failure message
-            var resultMessage = $"{(passResults ? "All tests passed" : "Some tests failed")}";
+            var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
 
             return Ok(new { message = resultMessage });
         }

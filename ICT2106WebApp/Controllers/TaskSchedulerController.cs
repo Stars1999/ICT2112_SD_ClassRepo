@@ -20,7 +20,7 @@ namespace ICT2106WebApp.Controllers
             {
                 // Simulate scheduler processing Mod1
                 _parser.UpdateConversionStatus(fileName, "TaskScheduler: Queuing Mod1");
-                await Task.Delay(500);
+                //await Task.Delay(500);
 
                 // Update progress through stages
                 _parser.UpdateConversionStatus(fileName, "Mod1: Processing Started");

@@ -21,7 +21,6 @@ namespace ICT2106WebApp.mod2grp6
         public DocumentManager()
         {
             formatConversionManager = new FormatConversionManager();
-            templateManager = new TemplateManager();
 
 
             // all these to be removed when submitting as a zip
@@ -118,6 +117,9 @@ namespace ICT2106WebApp.mod2grp6
         /// <summary>
         public bool convertToLatexTemplate(string id, string templateId)
         {
+            if(templateManager == null)
+                templateManager = new TemplateManager();
+        
             try
             {
                 // Step 1: Retrieve document content

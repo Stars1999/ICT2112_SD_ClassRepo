@@ -69,7 +69,7 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
         }
 
-        public async Task<bool> SaveTemplateAsync(TemplateDocument template)
+        public async Task<bool> UpdateTemplate(TemplateDocument template)
         {
             try
             {
@@ -120,10 +120,6 @@ namespace ICT2106WebApp.mod2grp6.Template
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
 
-        public void UpdateTemplate(string templateId)
-        {
-            // Handle the template update notification
-            Console.WriteLine($"Template {templateId} has been updated.");
-        }
+
     }
 }

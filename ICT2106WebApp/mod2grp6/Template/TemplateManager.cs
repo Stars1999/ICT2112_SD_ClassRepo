@@ -1,7 +1,7 @@
-using ICT2106WebApp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ICT2106WebApp.Utilities;
 
 namespace ICT2106WebApp.mod2grp6.Template
 {
@@ -51,8 +51,9 @@ namespace ICT2106WebApp.mod2grp6.Template
                 // Continue with empty templates dictionary
             }
         }
-        // Async version of ConvertToTemplate
-        public Template ConvertToTemplate(TemplateDocument document)
+
+        // Changed to match ITemplate interface (capital C)
+        public Template convertToTemplate(TemplateDocument document)
         {
             if (document == null)
                 return null;
@@ -60,7 +61,7 @@ namespace ICT2106WebApp.mod2grp6.Template
             return new Template(document.Id, document.TemplateName, document.AbstractContent);
         }
 
-        // Retrieve a template by its ID
+        // Changed to match ITemplate interface (capital G)
         public async Task<Template> GetTemplate(string id)
         {
             try
@@ -89,8 +90,55 @@ namespace ICT2106WebApp.mod2grp6.Template
             }
         }
 
+        // Keep lowercase getTemplate for backward compatibility 
+        public async Task<Template> getTemplate(string id)
+        {
+            return await GetTemplate(id);
+        }
+
+
+
+        // Added to match class diagram
+        public Template applyTemplateConversion(string id)
+        {
+            try
+            {
+                // Check if the template exists in memory
+                if (!templates.ContainsKey(id))
+                {
+                    var templateTask = _templateRepository.GetTemplateAsync(id);
+                    templateTask.Wait();
+                    var templateDoc = templateTask.Result;
+                    
+                    if (templateDoc != null)
+                    {
+                        templates[id] = templateDoc.AbstractContent;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                // Get the template content
+                var content = templates[id];
+                
+                // Apply IEEE format if it's an IEEE template
+                if (id.ToLower() == "ieee")
+                {
+                }
+                
+                return new Template(id, GetTemplateNameById(id), content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error applying template conversion: {ex.Message}");
+                return null;
+            }
+        }
+
         // Set a template by ID and content
-        public async Task SetTemplate(string id, List<AbstractNode> content)
+        public async Task setTemplate(string id, List<AbstractNode> content)
         {
             if (content == null)
             {
@@ -109,46 +157,8 @@ namespace ICT2106WebApp.mod2grp6.Template
             // Save to database
             await SaveTemplateToDatabaseAsync(id, content);
 
-            //NotifyObservers(id); // Notify observers when a template is set
-        }
-
-        // Helper method to apply a two-column layout (IEEE format)
-        private void AddTwoColumnLayout(List<AbstractNode> templateContent)
-        {
-            // Check if the template already has a column layout node
-            bool hasColumnFormat = false;
-            bool hasColumnEnd = false;
-            
-            foreach (var node in templateContent)
-            {
-                if (node.GetNodeType() == "columnFormat")
-                    hasColumnFormat = true;
-                if (node.GetNodeType() == "columnEnd")
-                    hasColumnEnd = true;
-            }
-
-            // Add LaTeX commands for two-column layout if not already present
-            if (!hasColumnFormat)
-            {
-                var columnLayoutNode = new SimpleNode(
-                    1,
-                    "columnFormat",
-                    @"\usepackage{multicol} \begin{multicols}{2}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-                );
-                templateContent.Insert(0, columnLayoutNode);
-            }
-
-            if (!hasColumnEnd)
-            {
-                var columnEndNode = new SimpleNode(
-                    templateContent.Count + 1,
-                    "columnEnd",
-                    @"\end{multicols}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-                );
-                templateContent.Add(columnEndNode);
-            }
+            // Notify observers when a template is set
+            notifyObservers(id);
         }
 
         // Get all available template IDs
@@ -160,11 +170,21 @@ namespace ICT2106WebApp.mod2grp6.Template
         // Save template to database
         private async Task SaveTemplateToDatabaseAsync(string id, List<AbstractNode> content)
         {
-            var templateName = GetTemplateNameById(id);
-            var template = new Template(id, templateName, content);
-            //var templateDoc = TemplateDocument.FromTemplate(template);
+            try
+            {
+                var templateName = GetTemplateNameById(id);
+                var template = new Template(id, templateName, content);
+                
+                // Convert to TemplateDocument
+                var templateDoc = TemplateDocument.FromTemplate(template);
 
-            //await _templateRepository.SaveTemplateAsync(templateDoc);
+                // Save to database
+                await _templateRepository.UpdateTemplate(templateDoc);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving template: {ex.Message}");
+            }
         }
 
         // Helper method to get template name
@@ -183,6 +203,12 @@ namespace ICT2106WebApp.mod2grp6.Template
                 default:
                     return "Custom Template";
             }
+        }
+
+        // Fixed to match the base class method in TemplateSubject
+        protected override async Task<TemplateDocument> GetTemplateByIdAsync(string id)
+        {
+            return await _templateRepository.GetTemplateAsync(id);
         }
     }
 }

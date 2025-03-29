@@ -145,7 +145,7 @@ namespace ICT2106WebApp.Pages
             {
                 // Get the template from MongoDB via TemplateManager
                 // Use await to get the actual Template from the Task
-                var template = await _templateManager.GetTemplate(SelectedTemplateId);
+                var template = await _templateManager.getTemplate(SelectedTemplateId);
 
                 // If template not found in TemplateManager, try to get it directly from repository
                 if (template == null)
@@ -202,11 +202,11 @@ namespace ICT2106WebApp.Pages
                 var content = new StringBuilder();
                 
                 // Add base LaTeX document structure
-                content.AppendLine("% Template loaded from MongoDB: " + template.GetTemplateName());
+                content.AppendLine("% Template loaded from MongoDB: " + template.getTemplateName());
                 content.AppendLine("\\documentclass{article}");
                 
                 // Process template nodes
-                foreach (var node in template.GetContent())
+                foreach (var node in template.getContent())
                 {
                     var nodeType = node.GetNodeType();
                     var nodeContent = node.GetContent();

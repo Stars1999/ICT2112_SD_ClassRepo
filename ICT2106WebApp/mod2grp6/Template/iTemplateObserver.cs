@@ -1,10 +1,11 @@
-using ICT2106WebApp.Utilities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ICT2106WebApp.mod2grp6.Template
 {
     public interface ITemplateObserver
     {
-        Task<bool> UpdateTemplate(TemplateDocument template);
         Task<List<TemplateDocument>> GetAllTemplatesAsync();
+        Task<bool> UpdateTemplate(TemplateDocument template);
     }
 }

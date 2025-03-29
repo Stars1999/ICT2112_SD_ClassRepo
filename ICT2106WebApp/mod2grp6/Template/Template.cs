@@ -22,32 +22,38 @@ namespace ICT2106WebApp.mod2grp6.Template
             this.content = content ?? new List<AbstractNode>();
         }
 
-        public string GetId()
+        // Changed to match class diagram
+        public string getId()
         {
             return id;
         }
 
-        public string GetTemplateName()
+        // Changed to match class diagram
+        public string getTemplateName()
         {
             return templateName;
         }
 
-        public List<AbstractNode> GetContent()
+        // Changed to match class diagram
+        public List<AbstractNode> getContent()
         {
             return content;
         }
 
-        public void SetId(string id)
+        // Changed to match class diagram
+        public void setId(string id)
         {
             this.id = id;
         }
 
-        public void SetTemplateName(string name)
+        // Changed to match class diagram
+        public void setTemplateName(string name)
         {
             this.templateName = name;
         }
 
-        public void SetContent(List<AbstractNode> content)
+        // Changed to match class diagram
+        public void setContent(List<AbstractNode> content)
         {
             this.content = content ?? new List<AbstractNode>();
         }

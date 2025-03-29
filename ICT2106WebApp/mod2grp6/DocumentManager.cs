@@ -139,7 +139,7 @@ namespace ICT2106WebApp.mod2grp6
                 if (template != null)
                 {
                     // Step 3: Merge template content with the document content
-                    List<AbstractNode> templateContent = template.GetContent();
+                    List<AbstractNode> templateContent = template.getContent();
                     allContent.AddRange(templateContent);
                     
                     // Step 4: Apply conversions for the format, text, and layout

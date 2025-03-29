@@ -43,7 +43,7 @@ namespace ICT2106WebApp.mod2grp6.Template
             if (template == null) return null;
 
             // Create a list of NodeDocuments
-            var nodeDocuments = template.GetContent()
+            var nodeDocuments = template.getContent()
                 .Select(node => new NodeDocument
                 {
                     NodeId = node.GetNodeId(),
@@ -55,8 +55,8 @@ namespace ICT2106WebApp.mod2grp6.Template
 
             return new TemplateDocument
             {
-                Id = template.GetId(),
-                TemplateName = template.GetTemplateName(),
+                Id = template.getId(),
+                TemplateName = template.getTemplateName(),
                 Content = nodeDocuments
             };
         }

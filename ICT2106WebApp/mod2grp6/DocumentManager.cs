@@ -108,19 +108,20 @@ namespace ICT2106WebApp.mod2grp6
                 bool layoutSuccess = formatConversionManager.convertLayout(layoutContent);
 
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
-
-                // MOD2GRP2 ADVANCED CONTENT (Math, List, Image)
                 
-            var processorRegistry = new Dictionary<string, IProcessor>
-            {
-                { "math", new MathContentProcessor() },
-                { "images", new ImageProcessor() },
-                { "special", new SpecialElementProcessor() },
-                // Add more without changing the manager!
-            };
+                // MOD2GRP2 Registry to store type, processor. (eg. math , mathprocessor)
+                var processorRegistry = new Dictionary<string, IProcessor>
+                {
+                    { "math", new MathContentProcessor() },
+                    { "special", new SpecialElementProcessor() },
+                    { "images", new ImageProcessor() },
+                    // Add more without changing the manager!
+                };
+
+                 // MOD2GRP2 Advanced Conversion 
                 var advancedManager = new AdvancedConversionManager(documentContent, processorRegistry);
                 advancedManager.getContent();
-
+                // MOD2GRP2 End
                 return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }
             catch (Exception ex)

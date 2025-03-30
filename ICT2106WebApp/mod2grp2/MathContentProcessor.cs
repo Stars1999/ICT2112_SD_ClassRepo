@@ -21,43 +21,48 @@ public class MathContentProcessor : IProcessor
         return ProcessMathContent(mathContent);
     }
 
-    private List<AbstractNode> ProcessMathContent(List<AbstractNode> nodes)
+  private List<AbstractNode> ProcessMathContent(List<AbstractNode> nodes)
+{
+    foreach (var node in nodes)
     {
-        foreach (var node in nodes)
+        try
         {
-            try
+            if (node is SimpleNode simpleNode)
             {
-                // 👇 Safely cast to SimpleNode to access .Content
-                if (node is SimpleNode simpleNode)
-                {
-                    string raw = PreprocessEquation(simpleNode.GetContent());  // .Content is the actual math expression
-                    var parsed = MathS.FromString(raw);
-                    string latex = parsed.Latexise();
+                string raw = PreprocessEquation(simpleNode.GetContent());
+                var parsed = MathS.FromString(raw);
+                string latex = parsed.Latexise();
 
-                    // Clean up LaTeX
-                    latex = latex.Replace(@"\left(", "(").Replace(@"\right)", ")");
-                    latex = latex.Replace("THEREFORE", @"\therefore")
-                                 .Replace("INFINITY", @"\infty")
-                                 .Replace("NOTEQUAL", @"\neq")
-                                 .Replace("PLUSMINUS", @"\pm")
-                                 .Replace("ALPHA", @"\alpha")
-                                 .Replace("EXISTS", @"\exists")
-                                 .Replace("FORALL", @"\forall")
-                                 .Replace("AND", @"\land")
-                                 .Replace("IMPLIES", @"\rightarrow")
-                                 .Replace(@"\geqslant", @"\geq")
-                                 .Replace(@"\cdot", @"\times");
+                // Clean up LaTeX
+                latex = latex.Replace(@"\left(", "(").Replace(@"\right)", ")");
+                latex = latex.Replace("THEREFORE", @"\therefore")
+                             .Replace("INFINITY", @"\infty")
+                             .Replace("NOTEQUAL", @"\neq")
+                             .Replace("PLUSMINUS", @"\pm")
+                             .Replace("ALPHA", @"\alpha")
+                             .Replace("EXISTS", @"\exists")
+                             .Replace("FORALL", @"\forall")
+                             .Replace("AND", @"\land")
+                             .Replace("IMPLIES", @"\rightarrow")
+                             .Replace(@"\geqslant", @"\geq")
+                             .Replace(@"\cdot", @"\times");
 
-                    latex = Regex.Replace(latex, @"\\log_{(\d+)}\(([^)]+)\)", @"\log_{$1} $2");
-                }
+                latex = Regex.Replace(latex, @"\\log_{(\d+)}\(([^)]+)\)", @"\log_{$1} $2");
+
+             node.SetContent(latex);
             }
-            catch (Exception ex)
+        }
+        catch (Exception ex)
+        {
+            if (node is SimpleNode simpleNode)
             {
             }
         }
-
-        return nodes;
     }
+
+    return nodes;
+}
+
 
     private string PreprocessEquation(string equation)
     {

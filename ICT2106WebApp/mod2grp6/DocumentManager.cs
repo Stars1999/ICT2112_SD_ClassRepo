@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using ICT2106WebApp.Utilities;
 using ICT2106WebApp.mod2grp6.Template;
 using ICT2106WebApp.mod2grp6.TestCase;
+using System.Diagnostics;
+
 
 namespace ICT2106WebApp.mod2grp6
 {
@@ -104,8 +106,9 @@ namespace ICT2106WebApp.mod2grp6
                 bool layoutSuccess = formatConversionManager.convertLayout(layoutContent);
 
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
-                
+
                 // MOD2GRP2 ADVANCED CONTENT (Math, List, Image)
+                Debugger.Break();  // 🔥 This triggers the debugger at runtime
                 var advancedProcessors = new Dictionary<ContentType, IProcessor>
                 {
                     { ContentType.Math, new MathContentProcessor(documentContent["math"]) },

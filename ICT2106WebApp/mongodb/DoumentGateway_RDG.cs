@@ -91,7 +91,7 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, INodeUpda
     private readonly MongoDbService _mongoDbService;
     private readonly IMongoCollection<Docx> _docxCollection;
     // private readonly IMongoCollection<AbstractNode> _treeCollection;
-    private readonly IMongoCollection<BsonDocument> _treeCollection;
+    private readonly IMongoCollection<AbstractNode> _treeCollection;
 
 
     // Nullable properties with null checks
@@ -122,7 +122,7 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, INodeUpda
         _mongoDbService = new MongoDbService();
         _docxCollection = _mongoDbService.GetCollection<Docx>("wordox");
         // _treeCollection = _mongoDbService.GetCollection<AbstractNode>("trees");
-        _treeCollection = _mongoDbService.GetCollection<BsonDocument>("trees");
+        _treeCollection = _mongoDbService.GetCollection<AbstractNode>("zxTrees");
 
 
     }
@@ -341,6 +341,18 @@ private BsonDocument ToRecursiveBsonDocument(CompositeNode compositeNode)
         return bsonDocument;
     }
 
+// public async Task saveTree(AbstractNode rootNode)
+// {
+//     Console.WriteLine("DocxRDG -> saveTree");
+    
+//     // var bsonDocument = rootNode is CompositeNode compositeNode 
+//     //     ? ToRecursiveBsonDocument(compositeNode) 
+//     //     : rootNode.ToBsonDocument();
+//     var bsonDocument = ConvertNodeToDetailedBsonDocument(rootNode);
+
+//     await _treeCollection.InsertOneAsync(bsonDocument);
+//     Console.WriteLine("added rootNode into MongoDB!");
+// }
 public async Task saveTree(AbstractNode rootNode)
 {
     Console.WriteLine("DocxRDG -> saveTree");
@@ -348,10 +360,22 @@ public async Task saveTree(AbstractNode rootNode)
     // var bsonDocument = rootNode is CompositeNode compositeNode 
     //     ? ToRecursiveBsonDocument(compositeNode) 
     //     : rootNode.ToBsonDocument();
-    var bsonDocument = ConvertNodeToDetailedBsonDocument(rootNode);
+    var bsonDocument = rootNode.ToBsonDocument(); 
 
-    await _treeCollection.InsertOneAsync(bsonDocument);
+	// string jsonDoc = Newtonsoft.Json.JsonConvert.SerializeObject(rootNode, Newtonsoft.Json.Formatting.Indented);
+    // await _treeCollection.InsertOneAsync(bsonDocument);
+    await _treeCollection.InsertOneAsync(rootNode);
+
     Console.WriteLine("added rootNode into MongoDB!");
+}
+
+
+public async Task<AbstractNode> loadTree()
+{
+    Console.WriteLine("Loading tree from MongoDB...");
+    
+    var node = await _treeCollection.Find(_ => true).FirstOrDefaultAsync();
+    return node ?? throw new Exception("No tree found in database.");
 }
 
     // public async Task saveTree(AbstractNode rootNode)

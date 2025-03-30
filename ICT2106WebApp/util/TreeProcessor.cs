@@ -277,9 +277,25 @@ namespace Utilities
 		public void PrintTree(AbstractNode node, int level)
 		{
 			// Print the node's content (could be its type or content)
+			// var nodeStyles = node.GetStyling();
+			var result = node.GetStyling(); // This returns List<Dictionary<string, object>>
+			string consolidatedStyling = "";
+
+			// Loop through each dictionary in the list
+			foreach (var dict in result)
+			{
+				// Loop through each key-value pair in the dictionary
+				foreach (var kvp in dict)
+				{
+        		consolidatedStyling += $"{kvp.Key}: {kvp.Value}, ";
+				}
+			}
+
 			Console.WriteLine(
-				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent() + " STYLING: " + node.GetStyling()
+				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent() + " | styling: " + consolidatedStyling
+				
 			);
+
 
 			if (node is CompositeNode compositeNode)
 			{
@@ -296,5 +312,28 @@ namespace Utilities
         {
 			return Task.CompletedTask;
         }
+
+		// public async Task retrieveTree()
+		// {
+		// 	// await _treeUpdate.loadTree();
+		// 	await CompositeNode compNode = (CompositeNode) _treeUpdate.loadTree()
+		// }
+		public async Task<AbstractNode> retrieveTree()
+		{
+			AbstractNode rootNode = await _treeUpdate.loadTree();
+			
+			if (rootNode is CompositeNode compositeNode)
+			{
+				Console.WriteLine("Loaded tree is a CompositeNode!");
+				// Console.WriteLine("printing tree FROM DB\n");
+				// PrintTree(rootNode,0);
+				// Process the tree
+			}
+			else
+			{
+				Console.WriteLine("Loaded tree is not a CompositeNode!");
+			}
+			return rootNode;
+		}
     }
 }

@@ -1,7 +1,13 @@
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
+
 namespace Utilities
 {
 	public class CompositeNode : AbstractNode
 	{
+
+        // [JsonProperty("children")]  // Add JsonProperty to ensure it's serialized
+		[BsonElement("children")]
 		private List<AbstractNode> children;
 
 		public CompositeNode(int id, int nl, string nt, string c, List<Dictionary<string, object>> s)

@@ -86,12 +86,12 @@ namespace Utilities
 			await _treeUpdate.saveTree(rootNode);
 		}
 
-		// public bool ValidateTree(Document document, AbstractNode rootNode)
-		// {
-		// 	// TODO: Validate tree
-		// 	return true; // Dummy return
-		// }
-
+		// TREE VALIDATION CODES 
+		public bool ValidateContent(List<AbstractNode> treeNodes, JArray documentArray)
+		{
+			return ValidateContentRecursive(treeNodes, documentArray, 0);
+		}
+		
 		public List<AbstractNode> FlattenTree(AbstractNode root)
 		{
 			List<AbstractNode> flatList = new List<AbstractNode>();
@@ -118,11 +118,6 @@ namespace Utilities
 			// 	count++;
 			// }
 			return flatList;
-		}
-
-		public bool ValidateContent(List<AbstractNode> treeNodes, JArray documentArray)
-		{
-			return ValidateContentRecursive(treeNodes, documentArray, 0);
 		}
 
 		private bool ValidateContentRecursive(List<AbstractNode> treeNodes, JArray documentArray, int startIndex)
@@ -246,6 +241,7 @@ namespace Utilities
 			return jsonItem["content"]?.ToString() ?? "";
 		}
 		
+		// validate the hierarchical structure of the tree
 		public bool ValidateNodeStructure(AbstractNode node, int parentLevel)
 		{
 			int nodeLevel = node.GetNodeLevel(); // Get the level of the current node

@@ -114,8 +114,6 @@ namespace ICT2106WebApp.mod2grp6
             var processorRegistry = new Dictionary<string, IProcessor>
             {
                 { "math", new MathContentProcessor() },
-                //{ "lists", new SpecialElementProcessor() },
-                //{ "images", new ImageProcessor() },
                 { "special", new SpecialElementProcessor() },
                 // Add more without changing the manager!
             };

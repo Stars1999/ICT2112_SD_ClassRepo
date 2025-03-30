@@ -1,9 +1,10 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using ICT2106WebApp.mod1Grp3;
 
 namespace Utilities
 {
-	public class CompositeNode : AbstractNode
+	public class CompositeNode : AbstractNode, INodeCollection
 	{
 
         // [JsonProperty("children")]  // Add JsonProperty to ensure it's serialized
@@ -84,6 +85,11 @@ namespace Utilities
 		public override void SetConverted(bool c)
 		{
 			converted = c;
+		}
+
+		public INodeIterator CreateIterator()
+		{
+			return new NodeIterator(children);
 		}
 	}
 }

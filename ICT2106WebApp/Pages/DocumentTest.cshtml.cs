@@ -21,6 +21,8 @@ namespace ICT2106WebApp.Pages
         public List<AbstractNode> ImageContent { get; private set; }
         public List<AbstractNode> BibliographyContent { get; private set; }
         
+        public List<AbstractNode> SpecialElementContent { get; private set; }
+        
         public bool LaTeXResult { get; private set; }
         public bool TemplateResult { get; private set; }
         
@@ -38,6 +40,7 @@ namespace ICT2106WebApp.Pages
             ListContent = new List<AbstractNode>();
             ImageContent = new List<AbstractNode>();
             BibliographyContent = new List<AbstractNode>();
+            SpecialElementContent = new List<AbstractNode>(); 
             
             IsDocumentLoaded = false;
         }
@@ -58,6 +61,8 @@ namespace ICT2106WebApp.Pages
             MathContent = _documentManager.GetContentByType("math");
             ListContent = _documentManager.GetContentByType("lists");
             ImageContent = _documentManager.GetContentByType("images");
+            
+            SpecialElementContent = _documentManager.GetContentByType("special");
             
             IsDocumentLoaded = true;
             

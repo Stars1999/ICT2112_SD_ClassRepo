@@ -113,6 +113,107 @@ namespace ICT2106WebApp.mod2grp6.TestCase
             new SimpleNode(6, "image", "Image_rId14.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Justify (Ctrl + J)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 0, Vertical Offset: 0" }, { "WidthEMU", 3840480 }, { "HeightEMU", 2560320 } } })
         };
 
+        public List<AbstractNode> SpecialContent = new List<AbstractNode>
+        {
+            // Header node
+            new SimpleNode(101, "header", "This is a header Text", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", true },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Footer node
+            new SimpleNode(102, "footer", "This is a footer text", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Footnote node
+            new SimpleNode(103, "footnote", "This is the footnote text.", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 10 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Textbox node
+            new SimpleNode(104, "textbox", "This is a simple textbox. You can adjust the width and content as needed. This textbox can contain multiple lines of text and will automatically wrap.", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" },
+                        { "Border", "solid" },
+                        { "BorderColor", "000000" }
+                    }
+                }
+            ),
+            // Pagebreak node
+            new SimpleNode(105, "pagebreak", "New page", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "center" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Endnote node
+            new SimpleNode(106, "endnote", "This is the endnote text.", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 10 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            )};    
+
         // public List<AbstractNode> TableContent = new List<AbstractNode>
         // {
         //     new SimpleNode(1, "table", "", new List<Dictionary<string, object>> { new Dictionary<string, object> { 

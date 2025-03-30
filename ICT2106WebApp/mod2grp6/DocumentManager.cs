@@ -108,17 +108,17 @@ namespace ICT2106WebApp.mod2grp6
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
 
                 // MOD2GRP2 ADVANCED CONTENT (Math, List, Image)
-                
-            var processorRegistry = new Dictionary<string, IProcessor>
-            {
-                { "math", new MathContentProcessor() },
-                //{ "lists", new SpecialElementProcessor() },
-                //{ "images", new ImageProcessor() },
-                // Add more without changing the manager!
-            };
 
-            var advancedManager = new AdvancedConversionManager(documentContent, processorRegistry);
-            advancedManager.getContent();
+                var processorRegistry = new Dictionary<string, IProcessor>
+                {
+                    { "math", new MathContentProcessor() },
+                    //{ "lists", new SpecialElementProcessor() },
+                    //{ "images", new ImageProcessor() },
+                    // Add more without changing the manager!
+                };
+
+                var advancedManager = new AdvancedConversionManager(documentContent, processorRegistry);
+                advancedManager.getContent();
 
                 return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }

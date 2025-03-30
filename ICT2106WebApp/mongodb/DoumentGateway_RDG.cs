@@ -4,7 +4,8 @@ using MongoDB.Driver;
 using Utilities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, INodeUpdate
+using ICT2106WebApp.mod1Grp3;
+public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, ITreeUpdate, INodeRetrieve, IQueryUpdate, IQueryRetrieve
 // {
 //     private readonly MongoDbService _mongoDbService;
 //     private readonly IMongoCollection<Docx> _docxCollection;
@@ -99,6 +100,11 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, INodeUpda
     private IDocumentRetrieveNotify _docxRetrieve;
 
     private ITreeUpdateNotify _treeUpdate;
+    
+    private IQueryUpdateNotify _queryUpdate;
+
+    private IQueryRetrieveNotify _queryRetrieve;
+
     public IDocumentUpdateNotify docxUpdate
     {
         get => _docxUpdate;
@@ -117,14 +123,24 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, INodeUpda
         set => _treeUpdate = value;
     }
 
+    public IQueryUpdateNotify queryUpdate
+    {
+        get => _queryUpdate;
+        set => _queryUpdate = value;
+    }
+
+        public IQueryRetrieveNotify queryRetrieve
+    {
+        get => _queryRetrieve;
+        set => _queryRetrieve = value;
+    }
+
     public DocumentGateway_RDG()
     {
         _mongoDbService = new MongoDbService();
         _docxCollection = _mongoDbService.GetCollection<Docx>("wordox");
         // _treeCollection = _mongoDbService.GetCollection<AbstractNode>("trees");
         _treeCollection = _mongoDbService.GetCollection<AbstractNode>("zxTrees");
-
-
     }
 
     public async Task saveDocument(Docx docx)
@@ -370,7 +386,7 @@ public async Task saveTree(AbstractNode rootNode)
 }
 
 
-public async Task<AbstractNode> loadTree()
+public async Task<AbstractNode> getTree()
 {
     Console.WriteLine("Loading tree from MongoDB...");
     

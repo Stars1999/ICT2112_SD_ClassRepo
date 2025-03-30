@@ -2,13 +2,16 @@ using Utilities;
 
 namespace ICT2106WebApp.mod1Grp3
 {
-    public class NodeTraverser : INodeTraverser 
+    public class NodeTraverser : INodeTraverser, IQueryUpdateNotify
     {
         private  CompositeNode _rootNode;
+        private readonly IQueryUpdate _QueryUpdate;
         
         public NodeTraverser(CompositeNode rootNode) 
         {
             _rootNode = rootNode;
+            _QueryUpdate = (IQueryUpdate) new DocumentGateway_RDG(); //idk
+            _QueryUpdate.queryUpdate = this; //idk
         }
 
         // Define grouped node types
@@ -78,55 +81,20 @@ namespace ICT2106WebApp.mod1Grp3
             return matchingNodesList;
         }
 
-        public Boolean UpdateLatexDocument(List<AbstractNode> nodes)
+        public async Task UpdateLatexDocument(AbstractNode rootNode)
         {
-            return true;
-            // Update Latex Document in Database
-            // try
-            // {
-            //     // Convert local tree into a format suitable for MongoDB (e.g., BSON, Dictionary, JSON)
-            //     var updatedTree = ConvertTreeToBson(rootNode);
-
-            //     // Assuming you have a DatabaseService with an Update method
-            //     var databaseService = new DatabaseService();
-            //     databaseService.UpdateTree(updatedTree);
-
-            //     return true;
-            // }
-            // catch (Exception ex)
-            // {
-            //     Console.WriteLine($"Error updating LaTeX document: {ex.Message}");
-            //     return false;
-            // }
+            Console.WriteLine("LATEX DOCUMENT UPDATING...");
+			// TODO: Save tree to database
+			await _QueryUpdate.saveTree(rootNode);
         }
 
-        // Recursive method to convert tree to a format for MongoDB
-        // private BsonDocument ConvertTreeToBson(AbstractNode node)
-        // {
-        //     var bson = new BsonDocument
-        //     {
-        //         { "NodeId", node.GetNodeId() },
-        //         { "NodeType", node.GetNodeType() },
-        //         { "Content", node.GetContent() },
-        //         { "Styling", BsonDocument.Parse(JsonConvert.SerializeObject(node.GetStyling())) },
-        //         { "Converted", node.IsConverted() }
-        //     };
-
-        //     if (node is CompositeNode compositeNode)
-        //     {
-        //         var childrenArray = new BsonArray();
-        //         foreach (var child in compositeNode.GetChildren())
-        //         {
-        //             childrenArray.Add(ConvertTreeToBson(child));
-        //         }
-        //         bson.Add("Children", childrenArray);
-        //     }
-
-        //     return bson;
-        // }
+        public void notifyUpdatedTree(){
+            //TODO
+        }
 
 
-/*======================================================================================*/
+
+/*============================ NOT PART OF METHODS ==========================================================*/
         // Method to traverse all node types (For printing for mod 2)
         public List<AbstractNode> TraverseAllNodeTypes()
         {

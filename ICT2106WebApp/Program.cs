@@ -585,25 +585,25 @@ public static class DocumentProcessor
 			treeProcessor.PrintTree(rootnodehere, 0);
 
 			// SAVE TREE TO MONGODB
-			await treeProcessor.SaveTreeToDatabase(rootnodehere);
-			// RETRIEVE TEE FROM MONGODB
-			AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
-			CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
+			// await treeProcessor.SaveTreeToDatabase(rootnodehere);
+			// // RETRIEVE TEE FROM MONGODB
+			// AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
+			// CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
 
-			if (mongoRootNode is CompositeNode compnode) // Use pattern matching
-			{
-				Console.WriteLine("mongoRootNode is a CompositeNode!");
-				mongoCompNode = compnode; // Assign to compNode
-				Console.WriteLine("Typecasted mongoRootNode from AbstractNode to CompositeNode!");
-			}
-			else
-			{
-				Console.WriteLine("mongoRootNode is not a CompositeNode!");
-			}
-			if (mongoCompNode != null)
-			{
-				treeProcessor.PrintTree(mongoCompNode,0);
-			}
+			// if (mongoRootNode is CompositeNode compnode) // Use pattern matching
+			// {
+			// 	Console.WriteLine("mongoRootNode is a CompositeNode!");
+			// 	mongoCompNode = compnode; // Assign to compNode
+			// 	Console.WriteLine("Typecasted mongoRootNode from AbstractNode to CompositeNode!");
+			// }
+			// else
+			// {
+			// 	Console.WriteLine("mongoRootNode is not a CompositeNode!");
+			// }
+			// if (mongoCompNode != null)
+			// {
+			// 	treeProcessor.PrintTree(mongoCompNode,0);
+			// }
 			// END TREE
 
 

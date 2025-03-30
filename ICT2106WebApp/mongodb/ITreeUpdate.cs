@@ -1,9 +1,9 @@
 using Utilities;
 
-public interface INodeUpdate{
+public interface ITreeUpdate{
 	ITreeUpdateNotify treeUpdate { get; set; }
 	// Task LoadTree();
-	Task<AbstractNode> loadTree();
+	Task<AbstractNode> getTree();
 
 	Task saveTree(AbstractNode rootNode);
 }

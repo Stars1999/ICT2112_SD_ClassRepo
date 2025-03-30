@@ -20,12 +20,12 @@ namespace Utilities
 		// 	"runsParagraph",
 		// };
 		// Save Tree to Database 
-		private readonly INodeUpdate _treeUpdate;
+		private readonly ITreeUpdate _treeUpdate;
 
 		public TreeProcessor()
 		{
 			// _docxRetrieve = (IDocumentRetrieve) new DocumentGateway_RDG();
-			_treeUpdate = (INodeUpdate) new DocumentGateway_RDG();
+			_treeUpdate = (ITreeUpdate) new DocumentGateway_RDG();
 			_treeUpdate.treeUpdate = this;
 			// _docxRetrieve.docxRetrieve = this;
 		}
@@ -320,7 +320,7 @@ namespace Utilities
 		// }
 		public async Task<AbstractNode> retrieveTree()
 		{
-			AbstractNode rootNode = await _treeUpdate.loadTree();
+			AbstractNode rootNode = await _treeUpdate.getTree();
 			
 			if (rootNode is CompositeNode compositeNode)
 			{

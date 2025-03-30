@@ -215,16 +215,31 @@ namespace Utilities
 			var imageInfo = new Dictionary<string, object>
 			{
 				{ "type", "image" },
-				{ "filename", fileName },
-				{ "widthEMU", cx },
-				{ "heightEMU", cy },
-				{ "widthPixels", widthPixels },
-				{ "heightPixels", heightPixels },
-				{ "horizontalResolution", horizontalResolution },
-				{ "verticalResolution", verticalResolution },
-				{ "format", imageFormat },
-				{ "alignment", alignment },
-				{ "position", imagePosition },
+				{ "content", fileName },
+				{ "styling", new Dictionary<string, object>
+					{
+						{ "widthEMU", cx },
+						{ "heightEMU", cy },
+						{ "widthPixels", widthPixels },
+						{ "heightPixels", heightPixels },
+						{ "horizontalResolution", horizontalResolution },
+						{ "verticalResolution", verticalResolution },
+						{ "format", imageFormat },
+						{ "alignment", alignment },
+						{ "position", imagePosition }
+					}
+				}
+				// { "type", "image" },
+				// { "filename", fileName },
+				// { "widthEMU", cx },
+				// { "heightEMU", cy },
+				// { "widthPixels", widthPixels },
+				// { "heightPixels", heightPixels },
+				// { "horizontalResolution", horizontalResolution },
+				// { "verticalResolution", verticalResolution },
+				// { "format", imageFormat },
+				// { "alignment", alignment },
+				// { "position", imagePosition },
 			};
 
 			imageList.Add(imageInfo);

@@ -36,12 +36,6 @@ namespace ICT2106WebApp.Controllers
                 // Store the uploaded document temporarily
                 _parser.StoreDocument(uploadedFile);
 
-                // Retrieve the file path of the stored document
-                string tempFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp", uploadedFile.FileName);
-
-                // Determine the citation format (APA or MLA) based on the file name or content
-                string citationFormat = DetermineCitationFormat(tempFilePath);
-
                 // Set initial status
                 _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
 
@@ -82,23 +76,6 @@ namespace ICT2106WebApp.Controllers
             }
         }
 
-        private string DetermineCitationFormat(string filePath)
-        {
-            string fileName = Path.GetFileName(filePath).ToLower();
-
-            // Determine format based on file name
-            if (fileName.Contains("apa"))
-            {
-                return "APA";
-            }
-            else if (fileName.Contains("mla"))
-            {
-                return "MLA";
-            }
-
-            return null;
-        }
-
         // GET: /dashboard/status/{fileName}
         [HttpGet("status/{fileName}")]
         public IActionResult GetConversionStatus(string fileName)
@@ -132,135 +109,57 @@ namespace ICT2106WebApp.Controllers
             return Ok(new { message });
         }
 
-        [HttpGet("runtestmod{modNumber}fail")]
-        public IActionResult RunTestFail(int modNumber)
+        // GET: /dashboard/runtestmod1
+        [HttpGet("runtestmod1fail")]
+        public async Task<IActionResult> runCitationTest1Fail()
         {
-            // Call the interface method to run the fail test
-            bool result = !_testCaseControl.runModTestCases(modNumber); // Assuming fail test is the inverse
+            CustomLogger logger = new LoggerGateway_TDG();
+            
+            var mod1Test = new Mod1TestCases(logger);
 
-            // Return the result as a response
-            string message = result ? $"Module {modNumber}: Test Failed as Expected" : $"Module {modNumber}: Unexpected Pass";
-            return Ok(new { message });
+            // Call the RunPassTests() or RunFailTests()
+            bool passResults = mod1Test.RunFailTests(); // RunPassTests() or RunFailTests()
+
+            // return the test results as success/failure message
+            var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
+
+            return Ok(new { message = resultMessage });
         }
 
-        // // GET: /dashboard/runtestmod1
-        // [HttpGet("runtestmod1pass")]
-        // public async Task<IActionResult> runCitationTest1Pass()
-        // {
-        //     CustomLogger logger = new LoggerGateway_TDG();
+        // GET: /dashboard/runtestmod2
+        [HttpGet("runtestmod2fail")]
+        public async Task<IActionResult> runCitationTest2Fail()
+        {
+            var mod2Test = new mod2testcases();
+
+            // Call the RunPassTests() or RunFailTests()
+            bool passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()
+
+            // return the test results as success/failure message
+            var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
+
+            return Ok(new { message = resultMessage });
+        }
+
+        // GET: /dashboard/runtestruntestmod3fail
+        [HttpGet("runtestmod3fail")]
+        public async Task<IActionResult> RunCitationTest3Fail()
+        {
+            CustomLogger logger = new LoggerGateway_TDG();
+            var mod3 = new Mod3TestCases(logger);
             
-        //     var mod1Test = new Mod1TestCases(logger);
+            // Run the fail test with APA format
+            bool result = await mod3.RunFailTests("APA");
 
-        //     // Call the RunPassTests() or RunFailTests()
-        //     var passResults = mod1Test.RunPassTests(); // RunPassTests() or RunFailTests()
+            string resultMessage = result 
+                ? "Test Failed: Some citations were not converted correctly." 
+                : "Test Passed: All citations were correctly converted.";
 
-        //     // return the test results as success/failure message
-        //     var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
-
-        //     return Ok(new { message = resultMessage });
-        // }
-
-        // // GET: /dashboard/runtestmod1
-        // [HttpGet("runtestmod1fail")]
-        // public async Task<IActionResult> runCitationTest1Fail()
-        // {
-        //     CustomLogger logger = new LoggerGateway_TDG();
-            
-        //     var mod1Test = new Mod1TestCases(logger);
-
-        //     // Call the RunPassTests() or RunFailTests()
-        //     bool passResults = mod1Test.RunFailTests(); // RunPassTests() or RunFailTests()
-
-        //     // return the test results as success/failure message
-        //     var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
-
-        //     return Ok(new { message = resultMessage });
-        // }
-
-        // // GET: /dashboard/runtestmod2
-        // [HttpGet("runtestmod2pass")]
-        // public async Task<IActionResult> runCitationTest2Pass()
-        // {
-        //     var mod2Test = new mod2testcases();
-
-        //     // Call the RunPassTests() or RunFailTests()
-        //     var passResults = mod2Test.RunPassTests(); // RunPassTests() or RunFailTests()
-
-        //     // return the test results as success/failure message
-        //     var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
-
-        //     return Ok(new { message = resultMessage });
-        // }
-
-        // // GET: /dashboard/runtestmod2
-        // [HttpGet("runtestmod2fail")]
-        // public async Task<IActionResult> runCitationTest2Fail()
-        // {
-        //     var mod2Test = new mod2testcases();
-
-        //     // Call the RunPassTests() or RunFailTests()
-        //     bool passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()
-
-        //     // return the test results as success/failure message
-        //     var resultMessage = $"{(passResults ? "Test Passed:" : "Some tests failed")}";
-
-        //     return Ok(new { message = resultMessage });
-        // }
-
-        // // GET: /dashboard/runtestruntestmod3fail
-        // [HttpGet("runtestmod3fail")]
-        // public async Task<IActionResult> RunCitationTest3Fail()
-        // {
-        //     string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
-
-        //     // Fail scenario LaTeX content
-        //     string latexContentFail = @"\documentclass{article}
-        // \title{The Role of AI in Modern Healthcare}
-        // \author{Dr. Emily Johnson}
-        // \date{2024-03-15}
-        // \begin{document}
-        // \maketitle
-        // AI is transforming medical diagnostics. Predictive analytics does not mention the source.
-        // \section{References}
-        // Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
-        // \end{document}";
-
-        //     CustomLogger logger = new LoggerGateway_TDG();
-
-        //     var validator = new CitationValidator(logger);
-
-        //     // Pass isFileContent: true to use the string content directly
-        //     bool isValid = await validator.ValidateCitationConversionAsync(jsonFilePath, latexContentFail, isFileContent: true);
-
-        //     string resultMessage = isValid 
-        //         ? "Test Passed: All citations were correctly converted." 
-        //         : "Test Failed: Some citations were not converted correctly.";
-
-        //     return Ok(new { 
-        //         message = resultMessage, 
-        //         isValid = isValid,
-        //         scenarioType = "Failure"
-        //     });
-        // }
-
-        // // GET: /dashboard/runtestruntestmod3pass
-        // [HttpGet("runtestmod3pass")]
-        // public async Task<IActionResult> runCitationTest3Pass()
-        // {
-        //     string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bibliography_test.json");
-        //     string latexFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "document.tex");
-
-        //     CustomLogger logger = new LoggerGateway_TDG();
-
-        //     var validator = new CitationValidator(logger);
-
-        //     bool isValid = await validator.ValidateCitationConversionAsync(jsonFilePath, latexFilePath);
-
-        //     string resultMessage = isValid 
-        //         ? "Test Passed: All citations were correctly converted." 
-        //         : "Test Failed: Some citations were not converted correctly.";
-
-        //     return Ok(new { message = resultMessage });
-        // }
+            return Ok(new { 
+                message = resultMessage, 
+                isValid = !result, // Invert the result since this is a fail test
+                scenarioType = "Failure"
+            });
+        }
     }
 }

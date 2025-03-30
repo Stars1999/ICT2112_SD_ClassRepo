@@ -14,7 +14,7 @@ namespace ICT2106WebApp.Controllers
 			_logger = logger;
 		}
 		
-		public bool runModTestCases(int modNumber, string citationFormat = null)
+		public bool runModTestCases(int modNumber)
 		{
 			bool result = false;
 			switch (modNumber)
@@ -30,8 +30,15 @@ namespace ICT2106WebApp.Controllers
 					break;
 
 				case 3:
+					// Handle citation format specifically for Mod3
+					string citationFormat = DetermineCitationFormat();
+					if (string.IsNullOrEmpty(citationFormat))
+					{
+						return false;
+					}
+
 					var mod3 = new Mod3TestCases(_logger);
-    				result = mod3.RunPassTests(citationFormat).Result;
+					result = mod3.RunPassTests(citationFormat).Result;
 					break;
 
 				default:
@@ -40,6 +47,23 @@ namespace ICT2106WebApp.Controllers
 			}
 
 			return result;
+		}
+
+		// Helper method to determine the citation format for Mod3
+		private string DetermineCitationFormat()
+		{
+			// Logic to determine citation format (e.g., APA, MLA, etc.)
+			string fileName = "apa_test.json";
+			if (fileName.Contains("apa"))
+			{
+				return "APA";
+			}
+			else if (fileName.Contains("mla"))
+			{
+				return "MLA";
+			}
+
+			return null;
 		}
 
 		public string getTestStatus(int modNumber)

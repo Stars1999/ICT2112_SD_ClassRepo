@@ -47,7 +47,7 @@ public class CitationValidator
                 }
             }
         }
-        _logger.InsertLog(DateTime.Now, "Extracted original citation keys.", "CitationValidator");
+        _logger.InsertLog(DateTime.Now, "Extracted original citation keys.", "Mod3TestCases");
         return citations;
     }
 
@@ -71,7 +71,7 @@ public class CitationValidator
             }
         }
 
-        _logger.InsertLog(DateTime.Now, "Extracted converted citation keys.", "CitationValidator");
+        _logger.InsertLog(DateTime.Now, "Extracted converted citation keys.", "Mod3TestCases");
         return citations;
     }
 
@@ -89,18 +89,18 @@ public class CitationValidator
 
         List<string> convertedCitations = ExtractConvertedCitations(finalLatex);
 
-        _logger.InsertLog(DateTime.Now, $"Original Citations: {string.Join(", ", originalCitations)}", "CitationValidator");
-        _logger.InsertLog(DateTime.Now, $"Converted Citations: {string.Join(", ", convertedCitations)}", "CitationValidator");
+        _logger.InsertLog(DateTime.Now, $"Original Citations: {string.Join(", ", originalCitations)}", "Mod3TestCases");
+        _logger.InsertLog(DateTime.Now, $"Converted Citations: {string.Join(", ", convertedCitations)}", "Mod3TestCases");
 
         foreach (var expected in originalCitations)
         {
             if (!convertedCitations.Contains(expected))
             {
-                _logger.InsertLog(DateTime.Now, $"Citation key '{expected}' not found in the converted output.", "CitationValidator");
+                _logger.InsertLog(DateTime.Now, $"Citation key '{expected}' not found in the converted output.", "Mod3TestCases");
                 return false;
             }
         }
-        _logger.InsertLog(DateTime.Now, "All expected citations have been converted correctly.", "CitationValidator");
+        _logger.InsertLog(DateTime.Now, "All expected citations have been converted correctly.", "Mod3TestCases");
         return true;
     }
 }
@@ -128,13 +128,6 @@ public class Mod3TestCases
             _validator = new CitationValidator(logger);
         }
 
-        // // Runs the pass test and returns true if citations are correctly converted.
-        // public async Task<bool> RunPassTests()
-        // {
-        //     bool isValidPass = await _validator.ValidateCitationConversionAsync(_jsonFilePath, _latexFilePathPass);
-        //     Console.WriteLine(isValidPass ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
-        //     return isValidPass;
-        // }
         // Runs the pass test for APA or MLA and returns true if citations are correctly converted.
         public async Task<bool> RunPassTests(string citationFormat)
         {
@@ -142,7 +135,6 @@ public class Mod3TestCases
 
             if (string.IsNullOrEmpty(jsonFilePath))
             {
-                _logger.InsertLog(DateTime.Now, $"Invalid citation format: {citationFormat}", "Mod3TestCases");
                 return false;
             }
 
@@ -157,24 +149,6 @@ public class Mod3TestCases
             return isValidPass;
         }
 
-//         // Runs the fail test and returns true if the conversion fails
-//         public async Task<bool> RunFailTests()
-//         {
-//             string latexContentFail = @"\documentclass{article}
-// \title{The Role of AI in Modern Healthcare}
-// \author{Dr. Emily Johnson}
-// \date{2024-03-15}
-// \begin{document}
-// \maketitle
-// AI is transforming medical diagnostics. Predictive analytics does not mention the source.
-// \section{References}
-// Smith, John. ""Artificial Intelligence in Medical Diagnostics."" AI \& Healthcare Journal, 2019.
-// \end{document}";
-
-//             bool isValidFail = await _validator.ValidateCitationConversionAsync(_jsonFilePath, latexContentFail, isFileContent: true);
-//             Console.WriteLine(isValidFail ? "Citation Conversion Validation Passed" : "Citation Conversion Validation Failed");
-//             return !isValidFail;
-//         }
         // Runs the fail test for APA or MLA and returns true if the conversion fails as expected.
         public async Task<bool> RunFailTests(string citationFormat)
         {
@@ -182,7 +156,6 @@ public class Mod3TestCases
 
             if (string.IsNullOrEmpty(jsonFilePath))
             {
-                _logger.InsertLog(DateTime.Now, $"Invalid citation format: {citationFormat}", "Mod3TestCases");
                 return false;
             }
 
@@ -208,14 +181,6 @@ public class Mod3TestCases
             return !isValidFail;
         }
 
-        // // Runs all tests for Mod3 and returns true if all tests pass.
-        // public async Task<bool> RunAllTests()
-        // {
-        //     bool passResult = await RunPassTests();
-        //     bool failResult = await RunFailTests();
-        //     return passResult && failResult;
-        // }
-        // Runs all tests for both APA and MLA formats and returns true if all tests pass.
         public async Task<bool> RunAllTests()
         {
             bool apaPassResult = await RunPassTests("APA");

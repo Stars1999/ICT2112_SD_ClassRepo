@@ -3,5 +3,6 @@ using ICT2106WebApp.Utilities;
 
 public interface IProcessor
 {
-    List<AbstractNode> convertContent(ContentType type);
+    string Type { get; } // The type it handles, e.g., "math", "text"
+    void convertContent(List<AbstractNode> nodes);
 }

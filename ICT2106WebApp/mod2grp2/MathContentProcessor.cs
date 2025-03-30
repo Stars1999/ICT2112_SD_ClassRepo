@@ -6,63 +6,48 @@ using ICT2106WebApp.Utilities;
 
 public class MathContentProcessor : IProcessor
 {
-    private List<AbstractNode> mathContent;
+    public string Type => "math";
 
-    public MathContentProcessor(List<AbstractNode> content)
+    public void convertContent(List<AbstractNode> nodes)
     {
-        mathContent = content;
-    }
-
-    public List<AbstractNode> convertContent(ContentType type)
-    {
-        if (type != ContentType.Math)
-            return new List<AbstractNode>();
-
-        return ProcessMathContent(mathContent);
-    }
-
-  private List<AbstractNode> ProcessMathContent(List<AbstractNode> nodes)
-{
-    foreach (var node in nodes)
-    {
-        try
+        foreach (var node in nodes)
         {
-            if (node is SimpleNode simpleNode)
+            try
             {
-                string raw = PreprocessEquation(simpleNode.GetContent());
-                var parsed = MathS.FromString(raw);
-                string latex = parsed.Latexise();
+                if (node is SimpleNode simpleNode)
+                {
+                    string raw = PreprocessEquation(simpleNode.GetContent());
+                    var parsed = MathS.FromString(raw);
+                    string latex = parsed.Latexise();
 
-                // Clean up LaTeX
-                latex = latex.Replace(@"\left(", "(").Replace(@"\right)", ")");
-                latex = latex.Replace("THEREFORE", @"\therefore")
-                             .Replace("INFINITY", @"\infty")
-                             .Replace("NOTEQUAL", @"\neq")
-                             .Replace("PLUSMINUS", @"\pm")
-                             .Replace("ALPHA", @"\alpha")
-                             .Replace("EXISTS", @"\exists")
-                             .Replace("FORALL", @"\forall")
-                             .Replace("AND", @"\land")
-                             .Replace("IMPLIES", @"\rightarrow")
-                             .Replace(@"\geqslant", @"\geq")
-                             .Replace(@"\cdot", @"\times");
+                    // Clean-up and replace
+                    latex = latex.Replace(@"\left(", "(").Replace(@"\right)", ")");
+                    latex = latex.Replace("THEREFORE", @"\therefore")
+                                 .Replace("INFINITY", @"\infty")
+                                 .Replace("NOTEQUAL", @"\neq")
+                                 .Replace("PLUSMINUS", @"\pm")
+                                 .Replace("ALPHA", @"\alpha")
+                                 .Replace("EXISTS", @"\exists")
+                                 .Replace("FORALL", @"\forall")
+                                 .Replace("AND", @"\land")
+                                 .Replace("IMPLIES", @"\rightarrow")
+                                 .Replace(@"\geqslant", @"\geq")
+                                 .Replace(@"\cdot", @"\times");
 
-                latex = Regex.Replace(latex, @"\\log_{(\d+)}\(([^)]+)\)", @"\log_{$1} $2");
+                    latex = Regex.Replace(latex, @"\\log_{(\d+)}\(([^)]+)\)", @"\log_{$1} $2");
 
-             node.SetContent(latex);
+                    simpleNode.SetContent($"${latex}$"); // ✅ Set converted LaTeX
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            if (node is SimpleNode simpleNode)
+            catch (Exception ex)
             {
+                if (node is SimpleNode simpleNode)
+                {
+                    simpleNode.SetContent($"\\text{{Error: {ex.Message}}}");
+                }
             }
         }
     }
-
-    return nodes;
-}
-
 
     private string PreprocessEquation(string equation)
     {
@@ -83,7 +68,6 @@ public class MathContentProcessor : IProcessor
                            .Replace("∀", "FORALL ")
                            .Replace("∧", " AND ")
                            .Replace("→", " IMPLIES ");
-
         return equation;
     }
 }

@@ -108,20 +108,18 @@ namespace ICT2106WebApp.mod2grp6
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
 
                 // MOD2GRP2 ADVANCED CONTENT (Math, List, Image)
-                Debugger.Break();  // 🔥 This triggers the debugger at runtime
-                var advancedProcessors = new Dictionary<ContentType, IProcessor>
-                {
-                    { ContentType.Math, new MathContentProcessor(documentContent["math"]) },
-                    // { ContentType.List, new SpecialElementProcessor(documentContent["lists"]) },
-                    //{ ContentType.Image, new ImageProcessor(documentContent["images"]) }
-                };
-
-                foreach (var entry in advancedProcessors)
-                {
-                    var manager = new AdvancedConversionManager(entry.Value);
-                    manager.getContent(); // This mutates content in-place (via Attributes or other fields)
-                }
                 
+            var processorRegistry = new Dictionary<string, IProcessor>
+            {
+                { "math", new MathContentProcessor() },
+                //{ "lists", new SpecialElementProcessor() },
+                //{ "images", new ImageProcessor() },
+                // Add more without changing the manager!
+            };
+
+            var advancedManager = new AdvancedConversionManager(documentContent, processorRegistry);
+            advancedManager.getContent();
+
                 return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }
             catch (Exception ex)

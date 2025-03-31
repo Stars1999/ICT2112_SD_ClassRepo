@@ -7,7 +7,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
 {
     class TestCases
     {
-        public List<AbstractNode> HeadingsAndParagraphs = new List<AbstractNode> { 
+        public List<AbstractNode> HeadingsAndParagraphs = new List<AbstractNode> {
             new SimpleNode(1, "h1", "Header 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
             new SimpleNode(2, "h2", "Header 2", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
             new SimpleNode(3, "h3", "Header 3", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "434343" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
@@ -82,8 +82,9 @@ namespace ICT2106WebApp.mod2grp6.TestCase
 
         public List<AbstractNode> Lists = new List<AbstractNode>();
 
-        public TestCases() {
-            // Parent CompositeNode for the entire list
+        public TestCases()
+        {
+            // numbered list to demo nested lists
             CompositeNode listNode = new CompositeNode(0, "list", "", new List<Dictionary<string, object>> {
                 new Dictionary<string, object> {
                     { "bold", false },
@@ -119,7 +120,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 }
             });
 
-                        // Nested item 1 for numbered list
+            // Nested item 1 for numbered list
             CompositeNode nestedItem2 = new CompositeNode(3, "lowercase_lettered_list", "Nested item 2", new List<Dictionary<string, object>> {
                 new Dictionary<string, object> {
                     { "bold", false },
@@ -168,6 +169,441 @@ namespace ICT2106WebApp.mod2grp6.TestCase
 
             // Add the entire listNode (parent node) to the global Lists collection
             Lists.Add(listNode);
+
+            // bulleted list, bulleted type 1
+            CompositeNode listNode1 = new CompositeNode(1, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode bulletedList = new CompositeNode(7, "bulleted_list", "bulleted type 1", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode bulletedList2 = new CompositeNode(8, "bulleted_list", "bulleted type 1 again", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode1.AddChild(bulletedList);
+            listNode1.AddChild(bulletedList2);
+            Lists.Add(listNode1);
+
+            // hollow bulleted, bulleted type 2
+            CompositeNode listNode2 = new CompositeNode(2, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode hollowBulletedList = new CompositeNode(10, "hollow_bulleted_list", "bulleted type 2", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode2.AddChild(hollowBulletedList);
+            Lists.Add(listNode2);
+
+            // square bulleted, bulleted type 3
+            CompositeNode listNode3 = new CompositeNode(3, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode squareBulletedList = new CompositeNode(12, "square_bulleted_list", "bulleted type 3", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode3.AddChild(squareBulletedList);
+            Lists.Add(listNode3);
+
+            // diamond bulleted, bulleted type 4
+            CompositeNode listNode4 = new CompositeNode(4, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode diamondBulletedList = new CompositeNode(14, "diamond_bulleted_list", "bulleted type 4", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode4.AddChild(diamondBulletedList);
+            Lists.Add(listNode4);
+
+            // arrow bulleted, bulleted type 5
+            CompositeNode listNode5 = new CompositeNode(5, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode arrowBulletedList = new CompositeNode(16, "arrow_bulleted_list", "bulleted type 5", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode5.AddChild(arrowBulletedList);
+            Lists.Add(listNode5);
+
+            // checkmark bulleted, bulleted type 6
+            CompositeNode listNode6 = new CompositeNode(6, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode checkMarkBulletedList = new CompositeNode(16, "checkmark_bulleted_list", "bulleted type 6", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode6.AddChild(checkMarkBulletedList);
+            Lists.Add(listNode6);
+
+
+            // dash bulleted, bulleted type 7
+            CompositeNode listNode7 = new CompositeNode(7, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode dashBulletedList = new CompositeNode(16, "dash_bulleted_list", "bulleted type 7", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode7.AddChild(dashBulletedList);
+            Lists.Add(listNode7);
+
+            // numbered list, numbered list
+            CompositeNode listNode8 = new CompositeNode(8, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode numberedListSolo = new CompositeNode(16, "numbered_list", "numbered list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode8.AddChild(numberedListSolo);
+            Lists.Add(listNode8);
+
+            // numbered parenthesis list, numbered list with bracket
+            CompositeNode listNode9 = new CompositeNode(9, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode numberedParenthesisList = new CompositeNode(16, "numbered_parenthesis_list", "numbered list with bracket", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode9.AddChild(numberedParenthesisList);
+            Lists.Add(listNode9);
+
+            // roman numeral list, roman numeral list
+            CompositeNode listNode10 = new CompositeNode(10, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode romanNumeralList = new CompositeNode(16, "roman_numeral_list", "roman numeral list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode10.AddChild(romanNumeralList);
+            Lists.Add(listNode10);
+
+            // lowercase roman numeral list, lowercase roman numeral list
+            CompositeNode listNode11 = new CompositeNode(11, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode lowercaseRomanNumeralList = new CompositeNode(16, "lowercase_roman_numeral_list", "lowercase roman numeral list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode11.AddChild(lowercaseRomanNumeralList);
+            Lists.Add(listNode11);
+
+            // Demo nested lists
+            CompositeNode listNode12 = new CompositeNode(12, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // uppercase lettered list
+            CompositeNode uppercaseLetteredList1 = new CompositeNode(1, "uppercase_lettered_list", "uppercase lettered list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // uppercase lettered list 2
+            CompositeNode uppercaseLetteredList2 = new CompositeNode(1, "uppercase_lettered_list", "uppercase lettered list 2", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // uppercase lettered list 2.1 nested
+            CompositeNode uppercaseNested1 = new CompositeNode(2, "lowercase_lettered_list", "uppercase lettered list 2.1 nested", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // uppercase lettered list 2.2 nested
+            CompositeNode uppercaseNested2 = new CompositeNode(2, "lowercase_lettered_list", "uppercase lettered list 2.2 nested", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+             // uppercase lettered list 2.2.1 nested
+            CompositeNode uppercaseNested2_2 = new CompositeNode(2, "lowercase_roman_numeral_list", "uppercase lettered list 2.2.1 nested", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+
+            uppercaseNested2.AddChild(uppercaseNested2_2);  // Add "uppercase lettered list 2.2.1 nested" to "uppercase lettered list 2.2 nested"
+            uppercaseLetteredList2.AddChild(uppercaseNested1);  
+            uppercaseLetteredList2.AddChild(uppercaseNested2);   
+
+            // Add the numbered list to listNode
+            listNode12.AddChild(uppercaseLetteredList1);
+            listNode12.AddChild(uppercaseLetteredList2);
+
+            // Add the entire listNode (parent node) to the global Lists collection
+            Lists.Add(listNode12);
+
+            // lowercase lettered list
+            CompositeNode listNode13 = new CompositeNode(13, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode lowercaseLetteredList = new CompositeNode(16, "lowercase_lettered_list", "lowercase lettered list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode13.AddChild(lowercaseLetteredList);
+            Lists.Add(listNode13);
+
+            // lowercase lettered list with bracket
+            CompositeNode listNode14 = new CompositeNode(14, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            CompositeNode lowercaseLetteredParenthesisList = new CompositeNode(16, "lowercase_lettered_parenthesis_list", "lowercase lettered with bracket list ", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            listNode14.AddChild(lowercaseLetteredParenthesisList);
+            Lists.Add(listNode14);
         }
 
         public List<AbstractNode> Images = new List<AbstractNode>
@@ -183,7 +619,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
         public List<AbstractNode> SpecialContent = new List<AbstractNode>
         {
             // Header node
-            new SimpleNode(101, "header", "This is a header Text", 
+            new SimpleNode(101, "header", "This is a header Text",
                 new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>
@@ -199,7 +635,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 }
             ),
             // Footer node
-            new SimpleNode(102, "footer", "This is a footer text", 
+            new SimpleNode(102, "footer", "This is a footer text",
                 new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>
@@ -215,7 +651,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 }
             ),
             // Footnote node
-            new SimpleNode(103, "footnote", "This is the footnote text.", 
+            new SimpleNode(103, "footnote", "This is the footnote text.",
                 new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>
@@ -231,7 +667,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 }
             ),
             // Textbox node
-            new SimpleNode(104, "textbox", "This is a simple textbox. You can adjust the width and content as needed. This textbox can contain multiple lines of text and will automatically wrap.", 
+            new SimpleNode(104, "textbox", "This is a simple textbox. You can adjust the width and content as needed. This textbox can contain multiple lines of text and will automatically wrap.",
                 new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>
@@ -249,7 +685,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 }
             ),
             // Pagebreak node
-            new SimpleNode(105, "pagebreak", "New page", 
+            new SimpleNode(105, "pagebreak", "New page",
                 new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>
@@ -265,7 +701,7 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                 }
             ),
             // Endnote node
-            new SimpleNode(106, "endnote", "This is the endnote text.", 
+            new SimpleNode(106, "endnote", "This is the endnote text.",
                 new List<Dictionary<string, object>>
                 {
                     new Dictionary<string, object>
@@ -279,6 +715,6 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                         { "Highlight", "none" }
                     }
                 }
-            )};    
-        }
+            )};
+    }
 }

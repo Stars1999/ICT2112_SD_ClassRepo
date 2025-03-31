@@ -27,8 +27,11 @@ namespace ICT2106WebApp.mod1grp4
                         }
                     }
 
+                    // Prepare to store background colour
+                    string predefinedColours = "";
+
                     // Start building the LaTeX table
-                    string latexTable = "\\begin{tabular}{|" + new string('c', columns).Replace("c", "c|") + "}";
+                    string latexTable = "\\begin{tabular}{|" + string.Join("|", table.rows[0].cells.Select(cell => $"m{{{cell.styling.size["cellwidth"]}cm}}")) + "|}";
                     latexTable += "\n\\hline\n";
 
                     foreach (var row in table.rows)
@@ -80,10 +83,34 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 latexCell = $"\\underline{{{latexCell}}}";
                             }
+                            if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
+                            {
+                                if (!predefinedColours.Contains(cell.styling.highlight))
+                                {
+                                    predefinedColours += $"\\definecolor{{{cell.styling.highlight}}}{{HTML}}{{{cell.styling.highlight}}}\n";
+                                }
+                                latexCell = $"\\hl{{{latexCell}}}";
+                            }
+                            if (!string.IsNullOrEmpty(cell.styling.textcolor))
+                            {
+                                if (!predefinedColours.Contains(cell.styling.textcolor))
+                                {
+                                    predefinedColours += $"\\definecolor{{{cell.styling.textcolor}}}{{HTML}}{{{cell.styling.textcolor}}}\n";
+                                }
+                                latexCell = $"\\textcolor{{{cell.styling.textcolor}}}{{{latexCell}}}";
+                            }
                             if (cell.styling.fontsize != 0)
                             {
                                 int fontSize = cell.styling.fontsize;
                                 latexCell = $"{{\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+                            }
+                            if (!string.IsNullOrEmpty(cell.styling.backgroundcolor) && cell.styling.backgroundcolor != "auto")
+                            {
+                                if (!predefinedColours.Contains(cell.styling.backgroundcolor))
+                                {
+                                    predefinedColours += $"\\definecolor{{{cell.styling.backgroundcolor}}}{{HTML}}{{{cell.styling.backgroundcolor}}}\n";
+                                }
+                                latexCell = $"\\cellcolor{{{cell.styling.backgroundcolor}}}{{{latexCell}}}";
                             }
                             if (!string.IsNullOrEmpty(cell.styling.horizontalalignment))
                             {
@@ -92,6 +119,10 @@ namespace ICT2106WebApp.mod1grp4
                                 latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
                             }
 
+                            if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
+                            {
+                                latexCell = $"\\sethlcolor {cell.styling.highlight}";
+                            }
                             latexTable += latexCell + " & ";
                             iterator.next(); // Advance the iterator
                         }
@@ -100,6 +131,7 @@ namespace ICT2106WebApp.mod1grp4
                     latexTable = latexTable.TrimEnd(' ', '&') + " \\\\\n"; // Finalize the last row
                     latexTable += "\\hline\n"; // Add a horizontal line
                     latexTable += "\\end{tabular}"; // Close the LaTeX table
+                    latexTable = predefinedColours + latexTable;
                     table.latexOutput = latexTable;
                     table.tableCompletionState = true;
                     if (await updateLatexCheckpointAsync(table))

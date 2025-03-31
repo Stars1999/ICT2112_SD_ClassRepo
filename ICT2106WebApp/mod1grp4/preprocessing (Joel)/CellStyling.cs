@@ -13,6 +13,13 @@ namespace ICT2106WebApp.mod1grp4 {
         [BsonElement("underline")]
         public bool underline { get; set; }
 
+        [BsonElement("highlight")]
+        public string highlight { get; set; }
+
+        [BsonElement("textcolor")]
+        public string textcolor { get; set; }
+
+
         [BsonElement("fontsize")]
         public int fontsize { get; set; }
 

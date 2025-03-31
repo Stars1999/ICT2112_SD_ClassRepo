@@ -624,9 +624,7 @@ public static class DocumentProcessor
 			// END TREE
 
 
-			//program.cs code 
-
-			//validate tree,, use rootnodehere
+			//TREE VALIDAITON
 
 			// Flatten the tree
 			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
@@ -636,16 +634,13 @@ public static class DocumentProcessor
 
 			// Output validation result
 			if (isContentValid)
-			{
-				Console.WriteLine("✅ Content is valid!");
-			}
+				Console.WriteLine("Content is valid!");
 			else
-			{
-				Console.WriteLine("❌ Content mismatch detected!");
-			}
+				Console.WriteLine("Content mismatch detected!");
 
 			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
-
+			
+			// Output validation result
 			if (isValidStructure)
 				Console.WriteLine("Tree structure is valid!");
 			else

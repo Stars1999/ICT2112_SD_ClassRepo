@@ -140,7 +140,7 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, ITreeUpda
         _mongoDbService = new MongoDbService();
         _docxCollection = _mongoDbService.GetCollection<Docx>("wordox");
         // _treeCollection = _mongoDbService.GetCollection<AbstractNode>("trees");
-        _treeCollection = _mongoDbService.GetCollection<AbstractNode>("zxTrees");
+        _treeCollection = _mongoDbService.GetCollection<AbstractNode>("mergewithcommentedcode");
     }
 
     public async Task saveDocument(Docx docx)

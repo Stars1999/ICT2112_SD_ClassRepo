@@ -688,6 +688,17 @@ public static class DocumentProcessor
 			processedTableManager.logProcessingStatus(validationStatus);
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
+
+
+
+			// foreach (var tableNode in tableAbstractNodes)
+			// {
+			// 	if (tableNode.GetNodeType() == "table")
+			// 	{
+			// 		Console.WriteLine($"Table Node Content: {tableNode.GetContent()}");
+			// 	}
+			// }
+
 			// Print tablesFromNode
 			// foreach (var table in tablesFromNode)
 			// {

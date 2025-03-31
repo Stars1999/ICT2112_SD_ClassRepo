@@ -23,6 +23,8 @@ namespace ICT2106WebApp.mod1grp4
         // Use group 3 function to slot processed tables to tree (Siti - COMPLETED)
         public async Task<bool> slotProcessedTableToTree(List<Table> processedTables, List<AbstractNode> abstractNodes)
         {
+            Console.WriteLine("MODULE 1 GROUP 4: START");
+
             // Iterate through the processed tables
             foreach (var processedTable in processedTables)
             {
@@ -35,7 +37,25 @@ namespace ICT2106WebApp.mod1grp4
                 {
                     // Set the LaTeX content for the table node
                     tableNode.SetContent(processedTable.latexOutput);
+                    tableNode.SetConverted(true); // Mark the table as converted
                     Console.WriteLine($"Updated group 3 table node {tableNode.GetNodeId()} with LaTeX content of {processedTable.latexOutput}.");
+
+                    // Traverse rows and cells to mark them as converted
+                    foreach (var rowNode in tableNode.GetChildren())
+                    {
+                        if (rowNode is CompositeNode rowCompositeNode && rowCompositeNode.GetNodeType() == "row")
+                        {
+                            rowCompositeNode.SetConverted(true); // Mark the row as converted
+
+                            foreach (var cellNode in rowCompositeNode.GetChildren())
+                            {
+                                if (cellNode is AbstractNode cellAbstractNode && cellAbstractNode.GetNodeType() == "cell")
+                                {
+                                    cellAbstractNode.SetConverted(true); // Mark the cell as converted
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {

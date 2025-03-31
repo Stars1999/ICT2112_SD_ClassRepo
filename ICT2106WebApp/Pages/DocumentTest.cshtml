@@ -45,6 +45,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Images</button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="special-tab" data-bs-toggle="tab" data-bs-target="#special" type="button" role="tab" aria-controls="special" aria-selected="false">Special Elements</button>
+                            </li>
                         </ul>
                         
                         <div class="tab-content mt-3" id="contentTabsContent">
@@ -327,6 +330,42 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div class="tab-pane fade" id="special" role="tabpanel" aria-labelledby="special-tab">
+                                <h3>Special Elements Content</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Type</th>
+                                            <th>Content</th>
+                                            <th>Styling</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var node in Model.SpecialElementContent)
+                                        {
+                                            <tr>
+                                                <td>@node.GetNodeId()</td>
+                                                <td>@node.GetNodeType()</td>
+                                                <td>@node.GetContent()</td>
+                                                <td>
+                                                    @foreach (var style in node.GetStyling())
+                                                    {
+                                                        <ul class="list-unstyled">
+                                                            @foreach (var prop in style)
+                                                            {
+                                                                <li><strong>@prop.Key:</strong> @prop.Value</li>
+                                                            }
+                                                        </ul>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
                             
                         </div>
                         

@@ -48,7 +48,10 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 					string fontType = cellTextStyle?.RunFonts?.Ascii?.ToString() ?? "Arial";
 					//Get Text Alignment
 					string horizontalalignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.ToString() ?? "left";
-					
+					//Get Text Color
+					string textcolor = cellTextStyle?.Color?.Val ?? "auto";
+					//Get Text Highlight Color
+					string texthighlight = cellTextStyle?.Highlight?.Val ?? "none";
 					//Dump
 					// var tester = cell.Descendants<FontSize>().FirstOrDefault();
 					// string test = tester?.Val?.ToString() ?? "11";
@@ -101,6 +104,8 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 								{ "fontType", fontType },
 								{ "fontsize", fontSize },
 								{ "horizontalalignment", horizontalalignment },
+								{ "textcolor", textcolor },
+								{ "highlightcolor", texthighlight },
 								{ "bordertopstyle", bordertopstyle },
 								{ "borderbottomstyle", borderbottomstyle },
 								{ "borderleftstyle", borderleftstyle },
@@ -124,16 +129,16 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 				}
 
 				// // You can also adjust the row styling as needed.
-				var rowStyling = new Dictionary<string, object>
-				{
-					{ "bold", false },
-					{ "italic", true },
-					{ "alignment", "right" },
-					{ "fontsize", 12 },
-					{ "fonttype", "Aptos" },
-					{ "fontcolor", "0E2841" },
-					{ "highlight", "none" },
-				};
+				// var rowStyling = new Dictionary<string, object>
+				// {
+				// 	{ "bold", false },
+				// 	{ "italic", true },
+				// 	{ "alignment", "right" },
+				// 	{ "fontsize", 12 },
+				// 	{ "fonttype", "Aptos" },
+				// 	{ "fontcolor", "0E2841" },
+				// 	{ "highlight", "none" },
+				// };
 
 				// Create a row dictionary matching the desired structure.
 				var rowDict = new Dictionary<string, object>
@@ -141,7 +146,7 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 					{ "type", "row" },
 					{ "content", "" },
 					{ "runs", cellList },
-					{ "styling", rowStyling },
+					// { "styling", rowStyling },
 				};
 
 				tableRows.Add(rowDict);

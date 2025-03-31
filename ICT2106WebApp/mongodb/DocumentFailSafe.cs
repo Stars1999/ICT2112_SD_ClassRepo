@@ -96,6 +96,8 @@
 //     }
 // }
 
+using System.Reflection;
+
 public class DocumentFailSafe : IDocumentRetrieveNotify
 {
 	// private readonly Lazy<IDocumentRetrieve> _docxRetrieve;
@@ -134,4 +136,18 @@ public class DocumentFailSafe : IDocumentRetrieveNotify
 		Console.WriteLine($"DocumentFailSafe -> Notify Document retrieved: {docx.Title}");
 		await Task.CompletedTask;
 	}
+
+	// IDocumentRetrieveNotify
+	public async Task notifyRetrievedJson()
+	{
+		Console.WriteLine("DocumentFailSafe -> Received json from RDG");
+		await Task.CompletedTask;
+
+	}
+	
+	public async Task retrieveSavedJson()
+	{
+		await _docxRetrieve.getJsonFile();
+	}
+
 }

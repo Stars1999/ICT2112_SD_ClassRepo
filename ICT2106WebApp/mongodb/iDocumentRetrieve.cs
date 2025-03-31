@@ -6,4 +6,6 @@ public interface IDocumentRetrieve
 	IDocumentRetrieveNotify docxRetrieve { get; set; }
 
 	Task<Docx> getDocument(string id);
+
+	Task getJsonFile();
 }

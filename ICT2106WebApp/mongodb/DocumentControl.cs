@@ -80,4 +80,10 @@ public class DocumentControl : IDocumentUpdateNotify
 			throw;
 		}
 	}
+
+	public async Task saveJsonToDatabase(string filePath)
+	{
+		Console.WriteLine("DocumentControl -> saving json");
+		await _dbGateway.saveJsonFile(filePath);
+	}
 }

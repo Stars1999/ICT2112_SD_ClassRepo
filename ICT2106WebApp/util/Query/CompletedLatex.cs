@@ -48,10 +48,12 @@ namespace ICT2106WebApp.mod1Grp3
 			return rootNode;
         }
 
-        public void notifyRetrieveTree()
+        public async Task notifyRetrieveTree()
         {
-            // TODO: Implement this method
-            
+			Console.WriteLine($" CompletedLaTeX -> Tree Retrieved!");
+		// Additional async operations if necessary
+			await Task.CompletedTask; // Keeps method async-compatible
+        
         }
     }
 }

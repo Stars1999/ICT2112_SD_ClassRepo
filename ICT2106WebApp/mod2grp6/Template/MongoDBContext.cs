@@ -5,6 +5,7 @@ using ICT2106WebApp.Utilities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Serializers;
 
+//class used to connect to MongoDB
 namespace ICT2106WebApp.mod2grp6.Template
 {
     public class MongoDbContext

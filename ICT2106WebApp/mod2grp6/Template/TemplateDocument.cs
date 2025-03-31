@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ICT2106WebApp.Utilities;
 
+//used to map mongodb json to template entity class due to abstractnode being weird
 namespace ICT2106WebApp.mod2grp6.Template
 {
     [BsonIgnoreExtraElements]

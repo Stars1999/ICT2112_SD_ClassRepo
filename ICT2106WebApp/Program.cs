@@ -660,26 +660,29 @@ public static class DocumentProcessor
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 			// WriteToFile("traverseNodes.cs", traverseList);
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
+			
+			// GROUP 4 STUFF
+			// Step 1: Get abstract nodes of table from group 3
 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
 
-		    // Step 1: Convert abstract node to custom table entity
+		    // Step 2: Convert abstract node to custom table entity
 			var tableOrganiser = new TableOrganiserManager();
 			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
 
-			// Step 2: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
+			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
 			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
 			var tablePreprocessingManager = new TablePreprocessingManager();
 			tablePreprocessingManager.attach(rowTabularGateway_RDG);
 			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
 			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
 
-			// Step 3: Convert tables to LaTeX
+			// Step 4: Convert tables to LaTeX
 			var latexConversionManager = new TableLatexConversionManager();
 			latexConversionManager.attach(rowTabularGateway_RDG);
 			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
 
-			// Step 4: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
+			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
 			var tableValidationManager = new TableValidationManager();
 			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
 
@@ -687,6 +690,9 @@ public static class DocumentProcessor
 			processedTableManager.attach(rowTabularGateway_RDG);
 			processedTableManager.logProcessingStatus(validationStatus);
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+
+
+			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 
 

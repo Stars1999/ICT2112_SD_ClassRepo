@@ -86,11 +86,12 @@ namespace Utilities
 			await _treeUpdate.saveTree(rootNode);
 		}
 
-		// public bool ValidateTree(Document document, AbstractNode rootNode)
-		// {
-		// 	// TODO: Validate tree
-		// 	return true; // Dummy return
-		// }
+
+		//Tree Validation HERE! 
+		public bool ValidateContent(List<AbstractNode> treeNodes, JArray documentArray)
+		{
+			return ValidateContentRecursive(treeNodes, documentArray, 0);
+		}
 
 		public List<AbstractNode> FlattenTree(AbstractNode root)
 		{
@@ -118,11 +119,6 @@ namespace Utilities
 			// 	count++;
 			// }
 			return flatList;
-		}
-
-		public bool ValidateContent(List<AbstractNode> treeNodes, JArray documentArray)
-		{
-			return ValidateContentRecursive(treeNodes, documentArray, 0);
 		}
 
 		private bool ValidateContentRecursive(List<AbstractNode> treeNodes, JArray documentArray, int startIndex)
@@ -246,6 +242,7 @@ namespace Utilities
 			return jsonItem["content"]?.ToString() ?? "";
 		}
 		
+		//validate the hierarchical structure of the tree 
 		public bool ValidateNodeStructure(AbstractNode node, int parentLevel)
 		{
 			int nodeLevel = node.GetNodeLevel(); // Get the level of the current node
@@ -258,9 +255,7 @@ namespace Utilities
 			}
 
 			// Check children if the node is composite
-			// if(nodeLevel != -1 ) 
-			// {
-				if (node is CompositeNode compositeNode)
+			if (node is CompositeNode compositeNode)
 			{
 				foreach (var child in compositeNode.GetChildren()) 
 				{
@@ -268,8 +263,6 @@ namespace Utilities
 						return false;
 				}
 			}
-			// }
-
 			return true;
 		}
 

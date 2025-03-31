@@ -866,4 +866,39 @@ public static class DocumentProcessor
 		}
 		return elements;
 	}
+
+	// Because my code broke , will shift this to some other class 
+	private static Dictionary<string, object> ConvertJsonElements(Dictionary<string, object> input)
+	{
+		var result = new Dictionary<string, object>();
+		foreach (var kvp in input)
+		{
+			if (kvp.Value is JsonElement jsonElement)
+			{
+				switch (jsonElement.ValueKind)
+				{
+					case JsonValueKind.String:
+						result[kvp.Key] = jsonElement.GetString();
+						break;
+					case JsonValueKind.Number:
+						result[kvp.Key] = jsonElement.GetDouble(); // or GetInt32() depending
+						break;
+					case JsonValueKind.True:
+					case JsonValueKind.False:
+						result[kvp.Key] = jsonElement.GetBoolean();
+						break;
+					case JsonValueKind.Object:
+					case JsonValueKind.Array:
+						result[kvp.Key] = jsonElement.ToString(); // fallback as string
+						break;
+					default:
+					result[kvp.Key] = null;
+						break;
+				}
+			} else {
+				result[kvp.Key] = kvp.Value;
+			}
+		}
+		return result;
+	}
 }

@@ -277,35 +277,20 @@ public static class DocumentProcessor
 						{
 							Console.WriteLine("Styling L1:");
 
-							// Check if kvp.Value is a List<object>
 							if (kvp.Value is List<object> objectList)
 							{
 								List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
 
-								// Now iterate through the List<object> and check each item
 								foreach (var itemhere in objectList)
 								{
-									// Check if each item is a Dictionary<string, object>
 									if (itemhere is Dictionary<string, object> stylingDictionary)
 									{
-										// Add the dictionary to the stylingList
 										stylingList.Add(stylingDictionary);
-
-										// Process the dictionary (just printing the contents for now)
-										Console.WriteLine("Found a dictionary in styling:");
-										foreach (var styleKvp in stylingDictionary)
-										{
-											string styleKey = styleKvp.Key;
-											object styleValue = styleKvp.Value;
-											Console.WriteLine($"Key: {styleKey}, Value: {styleValue}");
-										}
-									}
-									else
-									{
-										Console.WriteLine("Item in styling list is not a dictionary.");
 									}
 								}
-								Console.WriteLine("Finished processing styling list.");
+
+								// Assign the processed styling list to the styling variable
+								styling = stylingList;
 							}
 							else
 							{
@@ -345,34 +330,20 @@ public static class DocumentProcessor
 									}
 									if (runKvp.Key == "styling")
 									{
-										if (kvp.Value is List<object> objectList)
+										if (runKvp.Value is List<object> objectList)
 										{
 											List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
 
-											// Now iterate through the List<object> and check each item
 											foreach (var itemhere in objectList)
 											{
-												// Check if each item is a Dictionary<string, object>
 												if (itemhere is Dictionary<string, object> stylingDictionary)
 												{
-													// Add the dictionary to the stylingList
 													stylingList.Add(stylingDictionary);
-
-													// Process the dictionary (just printing the contents for now)
-													Console.WriteLine("Found a dictionary in styling:");
-													foreach (var styleKvp in stylingDictionary)
-													{
-														string styleKey = styleKvp.Key;
-														object styleValue = styleKvp.Value;
-														Console.WriteLine($"Key: {styleKey}, Value: {styleValue}");
-													}
-												}
-												else
-												{
-													Console.WriteLine("Item in styling list is not a dictionary.");
 												}
 											}
-											Console.WriteLine("Finished processing styling list.");
+
+											// Assign the processed styling list to the runStyling variable
+											runStyling = stylingList.FirstOrDefault(); // Assuming only one styling dictionary per run
 										}
 										else
 										{
@@ -483,11 +454,7 @@ public static class DocumentProcessor
 					if (nodeType != "" || content != "")
 					{
 						var node = nodeManager.CreateNode(id++, nodeType, content, styling);
-						numberofMainNode = numberofMainNode + 1;
 						nodesList.Add(node);
-						nodeType = "";
-						content = "";
-						styling = null;
 					}
 					else
 					{

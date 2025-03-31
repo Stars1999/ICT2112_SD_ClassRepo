@@ -74,11 +74,31 @@ namespace ICT2106WebApp.mod1Grp3
 
             foreach (var node in matchingNodesList)
             {
-                Console.WriteLine($"Matching Node: ID={node.GetNodeId()}, Type={node.GetNodeType()}, Content={node.GetContent()}");
+                string formattedStyling = FormatStyling(node.GetStyling());
+                Console.WriteLine($"Matching Node: ID={node.GetNodeId()}, Type={node.GetNodeType()}, Content={node.GetContent()}, Style={formattedStyling}");
             }
             Console.WriteLine(matchingNodesList.Count + " nodes found of type " + nodeType);
             
             return matchingNodesList;
+        }
+
+        private static string FormatStyling(List<Dictionary<string, object>> styling)
+        {
+            if (styling == null || styling.Count == 0)
+                return "No styling";
+
+            var formattedStyling = new List<string>();
+            foreach (var styleDict in styling)
+            {
+                var styleEntries = new List<string>();
+                foreach (var kvp in styleDict)
+                {
+                    styleEntries.Add($"{kvp.Key}: {kvp.Value}");
+                }
+                formattedStyling.Add("{" + string.Join(", ", styleEntries) + "}");
+            }
+
+            return "[" + string.Join(", ", formattedStyling) + "]";
         }
 
         public async Task UpdateLatexDocument(AbstractNode rootNode)

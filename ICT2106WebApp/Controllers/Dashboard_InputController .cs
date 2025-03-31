@@ -23,6 +23,8 @@ namespace ICT2106WebApp.Controllers
             _testCaseControl = new TestCaseControl(_logger); // Pass the logger to TestCaseControl
         }
 
+
+
         [HttpPost("upload")]
         public async Task<IActionResult> UploadDocument(IFormFile uploadedFile)
         {
@@ -35,46 +37,104 @@ namespace ICT2106WebApp.Controllers
             {
                 // Store the uploaded document temporarily
                 _parser.StoreDocument(uploadedFile);
+                _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
 
-                // Set initial status
-               _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
-
-                // Schedule Mod1 Conversion through TaskScheduler
-                bool mod1Result = await _taskScheduler.ScheduleMod1Conversion(uploadedFile.FileName);
-                if (!mod1Result)
+                // Run all conversions and tests
+                if (!await RunAllConversionsAndTests(uploadedFile.FileName))
                 {
-                    return StatusCode(500, new { message = "Mod1 conversion failed", success = false });
+                    return StatusCode(500, new { message = "Conversion or test failed", success = false });
                 }
 
-                // Schedule Mod2 Conversion through TaskScheduler
-                bool mod2Result = await _taskScheduler.ScheduleMod2Conversion(uploadedFile.FileName);
-                if (!mod2Result)
-                {
-                    return StatusCode(500, new { message = "Mod2 conversion failed", success = false });
-                }
+                // Get the test status to determine format
+                string testStatus = _testCaseControl.getTestStatus(3);
 
-                // Schedule Mod3 Conversion through TaskScheduler
-                bool mod3Result = await _taskScheduler.ScheduleMod3Conversion(uploadedFile.FileName);
-                if (!mod3Result)
-                {
-                    return StatusCode(500, new { message = "Mod3 conversion failed", success = false });
-                }
+                // Update frontend about completion
+                _parser.UpdateConversionStatus(uploadedFile.FileName, "All conversions and tests completed successfully");
 
-                return Ok(new { 
-                    message = "File uploaded and all conversions completed successfully", 
-                    success = true 
-                });
+                // Create the redirect result
+                var redirectResult = testStatus.ToLower().Contains("mla")
+                    ? RedirectToAction("LoadFromFileAndInsert", "LatexEditorApplication", new { file = "mla_test.json" })
+                    : RedirectToAction("LoadFromFileAndInsert", "LatexEditorApplication", new { file = "apa_test.json" });
+
+                // Set no-cache headers to ensure redirect works
+                Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+                Response.Headers.Add("Pragma", "no-cache");
+                Response.Headers.Add("Expires", "0");
+
+                return redirectResult;
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging purposes
                 Console.Error.WriteLine($"Error in process: {ex.Message}");
-                return StatusCode(500, new { 
-                    message = $"Error processing file: {ex.Message}", 
-                    success = false 
-                });
+                return StatusCode(500, new { message = $"Error processing file: {ex.Message}", success = false });
             }
         }
+
+        private async Task<bool> RunAllConversionsAndTests(string fileName)
+        {
+            try
+            {
+                // Mod1
+                _parser.UpdateConversionStatus(fileName, "Starting Mod1 conversion");
+                bool mod1Result = await _taskScheduler.ScheduleMod1Conversion(fileName);
+                if (!mod1Result)
+                {
+                    _parser.UpdateConversionStatus(fileName, "Mod1 conversion failed");
+                    return false;
+                }
+
+                _parser.UpdateConversionStatus(fileName, "Starting Mod1 test case");
+                bool mod1TestResult = await _taskScheduler.ScheduleMod1TestCase();
+                if (!mod1TestResult)
+                {
+                    _parser.UpdateConversionStatus(fileName, "Mod1 test case failed");
+                    return false;
+                }
+
+                // Mod2
+                _parser.UpdateConversionStatus(fileName, "Starting Mod2 conversion");
+                bool mod2Result = await _taskScheduler.ScheduleMod2Conversion(fileName);
+                if (!mod2Result)
+                {
+                    _parser.UpdateConversionStatus(fileName, "Mod2 conversion failed");
+                    return false;
+                }
+
+                _parser.UpdateConversionStatus(fileName, "Starting Mod2 test case");
+                bool mod2TestResult = await _taskScheduler.ScheduleMod2TestCase();
+                if (!mod2TestResult)
+                {
+                    _parser.UpdateConversionStatus(fileName, "Mod2 test case failed");
+                    return false;
+                }
+
+                // Mod3
+                _parser.UpdateConversionStatus(fileName, "Starting Mod3 conversion");
+                bool mod3Result = await _taskScheduler.ScheduleMod3Conversion(fileName);
+                if (!mod3Result)
+                {
+                    _parser.UpdateConversionStatus(fileName, "Mod3 conversion failed");
+                    return false;
+                }
+
+                _parser.UpdateConversionStatus(fileName, "Starting Mod3 test case");
+                bool mod3TestResult = await _taskScheduler.ScheduleMod3TestCase();
+                if (!mod3TestResult)
+                {
+                    _parser.UpdateConversionStatus(fileName, "Mod3 test case failed");
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _parser.UpdateConversionStatus(fileName, $"Error in conversions: {ex.Message}");
+                return false;
+            }
+        }
+
+
 
         // GET: /dashboard/status/{fileName}
         [HttpGet("status/{fileName}")]
@@ -114,7 +174,7 @@ namespace ICT2106WebApp.Controllers
         public async Task<IActionResult> runCitationTest1Fail()
         {
             CustomLogger logger = new LoggerGateway_TDG();
-            
+
             var mod1Test = new Mod1TestCases(logger);
 
             // Call the RunPassTests() or RunFailTests()
@@ -147,16 +207,17 @@ namespace ICT2106WebApp.Controllers
         {
             CustomLogger logger = new LoggerGateway_TDG();
             var mod3 = new Mod3TestCases(logger);
-            
+
             // Run the fail test with APA format
             bool result = await mod3.RunFailTests("APA");
 
-            string resultMessage = result 
-                ? "Test Failed: Some citations were not converted correctly." 
+            string resultMessage = result
+                ? "Test Failed: Some citations were not converted correctly."
                 : "Test Passed: All citations were correctly converted.";
 
-            return Ok(new { 
-                message = resultMessage, 
+            return Ok(new
+            {
+                message = resultMessage,
                 isValid = !result, // Invert the result since this is a fail test
                 scenarioType = "Failure"
             });

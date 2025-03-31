@@ -16,7 +16,7 @@
 
 <!-- Upload Button -->
 <div>
-    
+
 </div>
 
 <!-- Test Case Buttons -->
@@ -33,17 +33,20 @@
         <tbody>
             <tr>
                 <td>MOD1</td>
-                <td><button type="button" onclick="runCitationTest1Pass()" class="test-button success">Pass</button></td>
+                <td><button type="button" onclick="runCitationTest1Pass()" class="test-button success">Pass</button>
+                </td>
                 <td><button type="button" onclick="runCitationTest1Fail()" class="test-button fail">Fail</button></td>
             </tr>
             <tr>
                 <td>MOD2</td>
-                <td><button type="button" onclick="runCitationTest2Pass()" class="test-button success">Pass</button></td>
+                <td><button type="button" onclick="runCitationTest2Pass()" class="test-button success">Pass</button>
+                </td>
                 <td><button type="button" onclick="runCitationTest2Fail()" class="test-button fail">Fail</button></td>
             </tr>
             <tr>
                 <td>MOD3</td>
-                <td><button type="button" onclick="runCitationTest3Pass()" class="test-button success">Pass</button></td>
+                <td><button type="button" onclick="runCitationTest3Pass()" class="test-button success">Pass</button>
+                </td>
                 <td><button type="button" onclick="runCitationTest3Fail()" class="test-button fail">Fail</button></td>
             </tr>
         </tbody>
@@ -95,352 +98,359 @@
 
 <script>
     document.getElementById("uploadButton").addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent default form submission
+        event.preventDefault(); // Prevent default form submission
 
-    let formData = new FormData();
-    let fileInput = document.getElementById("fileInput").files[0];
+        let formData = new FormData();
+        let fileInput = document.getElementById("fileInput").files[0];
 
-    // Check if no file is selected
-    if (!fileInput) {
-        logError("No file selected for upload.");
-        alert("Please select a file to upload.");
-        return;
-    }
+        // Check if no file is selected
+        if (!fileInput) {
+            logError("No file selected for upload.");
+            alert("Please select a file to upload.");
+            return;
+        }
 
-    // Update file name
-    document.getElementById("fileInput").innerText = fileInput.name;
+        // Update file name
+        document.getElementById("fileInput").innerText = fileInput.name;
 
-    // Check if the file is a .docx
-    //let fileExtension = fileInput.name.split('.').pop().toLowerCase();
+        // Check if the file is a .docx
+        //let fileExtension = fileInput.name.split('.').pop().toLowerCase();
 
-    //UNCOMMENT THIS IF CLASS DECIDE TO ACCEPT DOCX FILE ONLY
-    @* if (fileExtension !== "docx") {
+        //UNCOMMENT THIS IF CLASS DECIDE TO ACCEPT DOCX FILE ONLY
+        @* if (fileExtension !== "docx") {
         logError("Invalid file type. Only .docx files are allowed.");
         alert("Only .docx files are allowed. Please upload a valid .docx file.");
         document.getElementById("fileInput").value = ""; // Clear the file input
         return;
     } *@
 
-    formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
+            formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
 
-    fetch("/dashboard/upload", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
-            document.getElementById("statusMessage").innerText = "Status: Converting...";
-
-            // Update progress dynamically
-            let progress = 0;
-            let totalSteps = 6;
-            let progressInterval = setInterval(() => {
-                if (progress < totalSteps) {
-                    progress++;
-                    let progressMessage = `Progress: ${progress}/6 (${getProgressText(progress)})`;
-                    logError(progressMessage);
-                    document.getElementById("statusProgress").style.width = (progress / totalSteps) * 100 + "%";
-                    document.getElementById("statusMessage").innerText = progressMessage;
-                } else {
-                    clearInterval(progressInterval);
-                    logError("All Conversions Completed");
-                    document.getElementById("statusMessage").innerText = "All Conversions Completed";
-                    document.getElementById("statusProgress").style.backgroundColor = 'green';
+        fetch("/dashboard/upload", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => {
+                if (response.redirected) {
+                    // If server returns a redirect, follow it
+                    window.location.href = response.url;
+                    return;
                 }
-            }, 1000); // Update every second
-        } else {
-            logError(data.message);
-            alert("Error: " + data.message);
-        }
-    })
-    .catch(error => {
-        @* logError("Upload failed: " + error.message);
-        alert("Upload failed. " + error.message);
-        console.error("Upload error:", error); *@
-    });
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    // Reset progress bar and status message
+                    resetProgressBar();
+                    document.getElementById("statusMessage").innerText = "Status: Converting...";
 
-    // Clear the file input after the form submission
-    document.getElementById("fileInput").value = "";
+                    // Update progress dynamically
+                    let progress = 0;
+                    let totalSteps = 6;
+                    let progressInterval = setInterval(() => {
+                        if (progress < totalSteps) {
+                            progress++;
+                            let progressMessage = `Progress: ${progress}/6 (${getProgressText(progress)})`;
+                            logError(progressMessage);
+                            document.getElementById("statusProgress").style.width = (progress / totalSteps) * 100 + "%";
+                            document.getElementById("statusMessage").innerText = progressMessage;
+                        } else {
+                            clearInterval(progressInterval);
+                            logError("All Conversions Completed");
+                            document.getElementById("statusMessage").innerText = "All Conversions Completed";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        }
+                    }, 1000);
+                } else if (data) {
+                    logError(data.message);
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(error => {
+                @* logError("Upload failed: " + error.message);
+    alert("Upload failed. " + error.message);
+    console.error("Upload error:", error); *@
 });
 
-// Function to get the progress text for each step
-function getProgressText(step) {
-    switch (step) {
-        case 1: return "Mod 1 Conversion";
-        case 2: return "Mod 1 Test Case";
-        case 3: return "Mod 2 Conversion";
-        case 4: return "Mod 2 Test Case";
-        case 5: return "Mod 3 Conversion";
-        case 6: return "Mod 3 Test Case";
-        default: return "";
+        // Clear the file input after the form submission
+        document.getElementById("fileInput").value = "";
+    });
+
+    // Function to get the progress text for each step
+    function getProgressText(step) {
+        switch (step) {
+            case 1: return "Mod 1 Conversion";
+            case 2: return "Mod 1 Test Case";
+            case 3: return "Mod 2 Conversion";
+            case 4: return "Mod 2 Test Case";
+            case 5: return "Mod 3 Conversion";
+            case 6: return "Mod 3 Test Case";
+            default: return "";
+        }
     }
-}
 
-// Function to reset the progress bar
-function resetProgressBar() {
-    // Reset progress bar width
-    document.getElementById("statusProgress").style.width = '0%';
-    document.getElementById("statusProgress").style.backgroundColor = '#007bff'; // Optional: Reset color to the default
+    // Function to reset the progress bar
+    function resetProgressBar() {
+        // Reset progress bar width
+        document.getElementById("statusProgress").style.width = '0%';
+        document.getElementById("statusProgress").style.backgroundColor = '#007bff'; // Optional: Reset color to the default
 
-    // Reset status message
-    document.getElementById("statusMessage").innerText = "Status: ";
-}
+        // Reset status message
+        document.getElementById("statusMessage").innerText = "Status: ";
+    }
 
 
-function logError(message) {
-    const logMessages = document.getElementById("logMessages");
+    function logError(message) {
+        const logMessages = document.getElementById("logMessages");
 
-    // Get the current timestamp
-    const timestamp = new Date().toLocaleString();
+        // Get the current timestamp
+        const timestamp = new Date().toLocaleString();
 
-    // Create a new row for the table
-    const newRow = document.createElement("tr");
+        // Create a new row for the table
+        const newRow = document.createElement("tr");
 
-    // Add cells with error details
-    const indexCell = document.createElement("td");
-    const timestampCell = document.createElement("td");
-    const messageCell = document.createElement("td");
+        // Add cells with error details
+        const indexCell = document.createElement("td");
+        const timestampCell = document.createElement("td");
+        const messageCell = document.createElement("td");
 
-    indexCell.innerText = logMessages.children.length + 1; // Incrementing index for each new log
-    timestampCell.innerText = timestamp;
-    messageCell.innerText = message;
+        indexCell.innerText = logMessages.children.length + 1; // Incrementing index for each new log
+        timestampCell.innerText = timestamp;
+        messageCell.innerText = message;
 
-    // Append the cells to the row
-    newRow.appendChild(indexCell);
-    newRow.appendChild(timestampCell);
-    newRow.appendChild(messageCell);
+        // Append the cells to the row
+        newRow.appendChild(indexCell);
+        newRow.appendChild(timestampCell);
+        newRow.appendChild(messageCell);
 
-    // Insert the row at the top for latest logs
-    logMessages.insertBefore(newRow, logMessages.firstChild);
-}
+        // Insert the row at the top for latest logs
+        logMessages.insertBefore(newRow, logMessages.firstChild);
+    }
 
-function runCitationTest1Pass() {
-    // Call the backend to run the first set of test cases (MOD1)
-    fetch('/dashboard/runtestmod1pass')
-        .then(response => response.json())
-        .then(data => {
-            // Log the start of the test
-            logError("Test Case Started (MOD1)");
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
-            let progress = 0;
-            let progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 20; // Simulate progress
-                    logError("Test Case Progress (MOD1): " + progress + "%");
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
-                } else {
-                    clearInterval(progressInterval);
-                    if (data.message.includes("Test Passed")) {
-                        logError("Test Case Completed Successfully (MOD1)!");
-                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+    function runCitationTest1Pass() {
+        // Call the backend to run the first set of test cases (MOD1)
+        fetch('/dashboard/runtestmod1pass')
+            .then(response => response.json())
+            .then(data => {
+                // Log the start of the test
+                logError("Test Case Started (MOD1)");
+                // Reset progress bar and status message before starting a new progress
+                resetProgressBar();
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 20; // Simulate progress
+                        logError("Test Case Progress (MOD1): " + progress + "%");
+                        document.getElementById("statusProgress").style.width = progress + "%";
+                        document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
-                        logError("Test Case Passed (MOD1): " + data.message);
-                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        clearInterval(progressInterval);
+                        if (data.message.includes("Test Passed")) {
+                            logError("Test Case Completed Successfully (MOD1)!");
+                            document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        } else {
+                            logError("Test Case Passed (MOD1): " + data.message);
+                            document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        }
                     }
-                }
-            }, 1000); // Update every 1 second
-        })
-        .catch(error => {
-            // Log any error that occurs
-            logError("Test (MOD1) failed: " + error);
-        });
-}
+                }, 1000); // Update every 1 second
+            })
+            .catch(error => {
+                // Log any error that occurs
+                logError("Test (MOD1) failed: " + error);
+            });
+    }
 
-function runCitationTest1Fail() {
-    // Call the backend to run the second set of test cases (MOD1)
-    fetch('/dashboard/runtestmod1fail')
-        .then(response => response.json())
-        .then(data => {
-            // Log the start of the test
-            logError("Test Case Started (MOD1)");
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
+    function runCitationTest1Fail() {
+        // Call the backend to run the second set of test cases (MOD1)
+        fetch('/dashboard/runtestmod1fail')
+            .then(response => response.json())
+            .then(data => {
+                // Log the start of the test
+                logError("Test Case Started (MOD1)");
+                // Reset progress bar and status message before starting a new progress
+                resetProgressBar();
 
-            let progress = 0;
-            let progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 20; // Simulate progress
-                    logError("Test Case Progress (MOD1): " + progress + "%");
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
-                } else {
-                    clearInterval(progressInterval);
-                    if (data.message.includes("Test Passed")) {
-                        logError("Test Case Completed Successfully (MOD1)!");
-                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 20; // Simulate progress
+                        logError("Test Case Progress (MOD1): " + progress + "%");
+                        document.getElementById("statusProgress").style.width = progress + "%";
+                        document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
-                        logError("Test Case Failed (MOD1): " + data.message);
-                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        clearInterval(progressInterval);
+                        if (data.message.includes("Test Passed")) {
+                            logError("Test Case Completed Successfully (MOD1)!");
+                            document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        } else {
+                            logError("Test Case Failed (MOD1): " + data.message);
+                            document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        }
                     }
-                }
-            }, 1000); // Update every 1 second
-        })
-        .catch(error => {
-            // Log any error that occurs
-            logError("Test (MOD1) failed: " + error);
-        });
-}
+                }, 1000); // Update every 1 second
+            })
+            .catch(error => {
+                // Log any error that occurs
+                logError("Test (MOD1) failed: " + error);
+            });
+    }
 
     // Function to run the citation test and log the results in the error log
-function runCitationTest3Fail() {
-    fetch('/dashboard/runtestmod3fail')
-        .then(response => response.json())
-        .then(data => {
-            // Log each progress update into the error log table
-            logError("Test Case Progress: 0%");
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
-            let progress = 0;
-            let progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 20; // Simulating progress in 20% increments
-                    logError("Test Case Progress: " + progress + "%");
-                    // Update the progress bar width based on the current progress
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
-                } else {
-                    clearInterval(progressInterval);
-                    if (data.message.includes('Test Passed')) {
-                        logError("Test Case Completed Successfully!");
-                        document.getElementById("statusMessage").innerText = "Test Case Completed!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+    function runCitationTest3Fail() {
+        fetch('/dashboard/runtestmod3fail')
+            .then(response => response.json())
+            .then(data => {
+                // Log each progress update into the error log table
+                logError("Test Case Progress: 0%");
+                // Reset progress bar and status message before starting a new progress
+                resetProgressBar();
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 20; // Simulating progress in 20% increments
+                        logError("Test Case Progress: " + progress + "%");
+                        // Update the progress bar width based on the current progress
+                        document.getElementById("statusProgress").style.width = progress + "%";
+                        document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
-                        logError("Test Case Failed: " + data.message); // Log final result as failure
-                        document.getElementById("statusMessage").innerText = "Test Case Failed!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        clearInterval(progressInterval);
+                        if (data.message.includes('Test Passed')) {
+                            logError("Test Case Completed Successfully!");
+                            document.getElementById("statusMessage").innerText = "Test Case Completed!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        } else {
+                            logError("Test Case Failed: " + data.message); // Log final result as failure
+                            document.getElementById("statusMessage").innerText = "Test Case Failed!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        }
                     }
-                }
-            }, 1000); // Update progress every 1 second
-        })
-        .catch(error => {
-            // Handle error
-            logError("Citation Test failed: " + error);  // Log the error in the log section
-        });
-}
+                }, 1000); // Update progress every 1 second
+            })
+            .catch(error => {
+                // Handle error
+                logError("Citation Test failed: " + error);  // Log the error in the log section
+            });
+    }
 
 
- // Function to run the citation test and log the results in the error log
-function runCitationTest3Pass() {
-    fetch('/dashboard/runtestmod3pass')
-        .then(response => response.json())
-        .then(data => {
-            // Log each progress update into the error log table
-            logError("Test Case Progress: 0%");
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
-            let progress = 0;
-            let progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 20; // Simulating progress in 20% increments
-                    logError("Test Case Progress: " + progress + "%");
-                    // Update the progress bar width based on the current progress
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
-                } else {
-                    clearInterval(progressInterval);
-                    if (data.message.includes('Test Passed')) {
-                        logError("Test Case Completed Successfully!");
-                        document.getElementById("statusMessage").innerText = "Test Case Completed!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+    // Function to run the citation test and log the results in the error log
+    function runCitationTest3Pass() {
+        fetch('/dashboard/runtestmod3pass')
+            .then(response => response.json())
+            .then(data => {
+                // Log each progress update into the error log table
+                logError("Test Case Progress: 0%");
+                // Reset progress bar and status message before starting a new progress
+                resetProgressBar();
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 20; // Simulating progress in 20% increments
+                        logError("Test Case Progress: " + progress + "%");
+                        // Update the progress bar width based on the current progress
+                        document.getElementById("statusProgress").style.width = progress + "%";
+                        document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
-                        logError("Test Case Failed: " + data.message); // Log final result as failure
-                        document.getElementById("statusMessage").innerText = "Test Case Failed!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        clearInterval(progressInterval);
+                        if (data.message.includes('Test Passed')) {
+                            logError("Test Case Completed Successfully!");
+                            document.getElementById("statusMessage").innerText = "Test Case Completed!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        } else {
+                            logError("Test Case Failed: " + data.message); // Log final result as failure
+                            document.getElementById("statusMessage").innerText = "Test Case Failed!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        }
                     }
-                }
-            }, 1000); // Update progress every 1 second
-        })
-        .catch(error => {
-            // Handle error
-            logError("Citation Test failed: " + error);  // Log the error in the log section
-        });
-}
+                }, 1000); // Update progress every 1 second
+            })
+            .catch(error => {
+                // Handle error
+                logError("Citation Test failed: " + error);  // Log the error in the log section
+            });
+    }
 
 
 
-function runCitationTest2Pass() {
-    // Call the backend to run the second set of test cases (MOD2)
-    fetch('/dashboard/runtestmod2pass')
-        .then(response => response.json())
-        .then(data => {
-            // Log the start of the test
-            logError("Test Case Started (MOD2)");
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
+    function runCitationTest2Pass() {
+        // Call the backend to run the second set of test cases (MOD2)
+        fetch('/dashboard/runtestmod2pass')
+            .then(response => response.json())
+            .then(data => {
+                // Log the start of the test
+                logError("Test Case Started (MOD2)");
+                // Reset progress bar and status message before starting a new progress
+                resetProgressBar();
 
-            let progress = 0;
-            let progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 20; // Simulate progress
-                    logError("Test Case Progress (MOD2): " + progress + "%");
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
-                } else {
-                    clearInterval(progressInterval);
-                    if (data.message.includes("Test Passed")) {
-                        logError("Test Case Completed Successfully (MOD2)!");
-                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD2)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 20; // Simulate progress
+                        logError("Test Case Progress (MOD2): " + progress + "%");
+                        document.getElementById("statusProgress").style.width = progress + "%";
+                        document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
-                        logError("Test Case Passed (MOD2): " + data.message);
-                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD2)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        clearInterval(progressInterval);
+                        if (data.message.includes("Test Passed")) {
+                            logError("Test Case Completed Successfully (MOD2)!");
+                            document.getElementById("statusMessage").innerText = "Test Case Completed (MOD2)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        } else {
+                            logError("Test Case Passed (MOD2): " + data.message);
+                            document.getElementById("statusMessage").innerText = "Test Case Failed (MOD2)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        }
                     }
-                }
-            }, 1000); // Update every 1 second
-        })
-        .catch(error => {
-            // Log any error that occurs
-            logError("Test (MOD2) failed: " + error);
-        });
-}
+                }, 1000); // Update every 1 second
+            })
+            .catch(error => {
+                // Log any error that occurs
+                logError("Test (MOD2) failed: " + error);
+            });
+    }
 
 
-function runCitationTest2Fail() {
-    // Call the backend to run the second set of test cases (MOD2)
-    fetch('/dashboard/runtestmod2fail')
-        .then(response => response.json())
-        .then(data => {
-            // Log the start of the test
-            logError("Test Case Started (MOD2)");
-            // Reset progress bar and status message before starting a new progress
-            resetProgressBar();
+    function runCitationTest2Fail() {
+        // Call the backend to run the second set of test cases (MOD2)
+        fetch('/dashboard/runtestmod2fail')
+            .then(response => response.json())
+            .then(data => {
+                // Log the start of the test
+                logError("Test Case Started (MOD2)");
+                // Reset progress bar and status message before starting a new progress
+                resetProgressBar();
 
-            let progress = 0;
-            let progressInterval = setInterval(() => {
-                if (progress < 100) {
-                    progress += 20; // Simulate progress
-                    logError("Test Case Progress (MOD2): " + progress + "%");
-                    document.getElementById("statusProgress").style.width = progress + "%";
-                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
-                } else {
-                    clearInterval(progressInterval);
-                    if (data.message.includes("Test Passed")) {
-                        logError("Test Case Completed Successfully (MOD2)!");
-                        document.getElementById("statusMessage").innerText = "Test Case Completed (MOD2)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+                let progress = 0;
+                let progressInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 20; // Simulate progress
+                        logError("Test Case Progress (MOD2): " + progress + "%");
+                        document.getElementById("statusProgress").style.width = progress + "%";
+                        document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
-                        logError("Test Case Failed (MOD2): " + data.message);
-                        document.getElementById("statusMessage").innerText = "Test Case Failed (MOD2)!";
-                        document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        clearInterval(progressInterval);
+                        if (data.message.includes("Test Passed")) {
+                            logError("Test Case Completed Successfully (MOD2)!");
+                            document.getElementById("statusMessage").innerText = "Test Case Completed (MOD2)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                        } else {
+                            logError("Test Case Failed (MOD2): " + data.message);
+                            document.getElementById("statusMessage").innerText = "Test Case Failed (MOD2)!";
+                            document.getElementById("statusProgress").style.backgroundColor = 'red';
+                        }
                     }
-                }
-            }, 1000); // Update every 1 second
-        })
-        .catch(error => {
-            // Log any error that occurs
-            logError("Test (MOD2) failed: " + error);
-        });
-}
+                }, 1000); // Update every 1 second
+            })
+            .catch(error => {
+                // Log any error that occurs
+                logError("Test (MOD2) failed: " + error);
+            });
+    }
 </script>
 
 <!-- Styles for the page -->
@@ -542,7 +552,8 @@ function runCitationTest2Fail() {
         border-collapse: collapse;
     }
 
-    .log-table th, .log-table td {
+    .log-table th,
+    .log-table td {
         padding: 10px;
         border: 1px solid #ccc;
         text-align: left;
@@ -590,7 +601,7 @@ function runCitationTest2Fail() {
         margin-top: 20px;
     }
 
-        /* Custom header with dark background */
+    /* Custom header with dark background */
     .editor-header {
         background-color: #2c3e50;
         color: white;
@@ -606,7 +617,8 @@ function runCitationTest2Fail() {
 
     /* Fail Test Case Button Styles */
     .test-button-fail {
-        background-color: #f44336; /* Light Red */
+        background-color: #f44336;
+        /* Light Red */
         color: white;
         border: none;
         border-radius: 5px;
@@ -617,12 +629,14 @@ function runCitationTest2Fail() {
     }
 
     .test-button-fail:hover {
-        background-color: #d32f2f; /* Darker Red for hover effect */
+        background-color: #d32f2f;
+        /* Darker Red for hover effect */
     }
 
     /* Success Test Case Button Styles */
     .test-button-pass {
-        background-color: #28a745; /* Green for Passed */
+        background-color: #28a745;
+        /* Green for Passed */
         color: white;
         border: none;
         border-radius: 5px;
@@ -633,8 +647,10 @@ function runCitationTest2Fail() {
     }
 
     .test-button-pass:hover {
-        background-color: #218838; /* Darker Green for hover effect */
+        background-color: #218838;
+        /* Darker Green for hover effect */
     }
+
     /* Centered Table Container */
     .test-table-container {
         width: 60%;
@@ -672,7 +688,8 @@ function runCitationTest2Fail() {
     }
 
     .test-button.success {
-        background-color: #28a745; /* Green */
+        background-color: #28a745;
+        /* Green */
         color: white;
     }
 
@@ -681,7 +698,8 @@ function runCitationTest2Fail() {
     }
 
     .test-button.fail {
-        background-color: #f44336; /* Red */
+        background-color: #f44336;
+        /* Red */
         color: white;
     }
 
@@ -689,37 +707,41 @@ function runCitationTest2Fail() {
         background-color: #d32f2f;
     }
 
-/* Add these styles to center the file upload section */
-.file-upload-container {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Center horizontally */
-    margin: 15px auto; /* Add auto margin for horizontal centering */
-    padding-top: 15px;
-    width: 60%; /* Set width to match the test table container */
-}
+    /* Add these styles to center the file upload section */
+    .file-upload-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* Center horizontally */
+        margin: 15px auto;
+        /* Add auto margin for horizontal centering */
+        padding-top: 15px;
+        width: 60%;
+        /* Set width to match the test table container */
+    }
 
-/* Center the upload button */
-div:has(> #uploadButton) {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    width: 60%;
-}
+    /* Center the upload button */
+    div:has(> #uploadButton) {
+        display: flex;
+        justify-content: center;
+        margin: 0 auto;
+        width: 60%;
+    }
 
-/* Make sure the file input has enough width */
-.file-input {
-    padding: 10px;
-    margin-right: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 70%; /* Adjusted width */
-}
+    /* Make sure the file input has enough width */
+    .file-input {
+        padding: 10px;
+        margin-right: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 70%;
+        /* Adjusted width */
+    }
 
-/* Optional: Center the status tracker as well */
-.status-tracker {
-    margin: 20px auto;
-    width: 60%;
-}
+    /* Optional: Center the status tracker as well */
+    .status-tracker {
+        margin: 20px auto;
+        width: 60%;
+    }
 </style>

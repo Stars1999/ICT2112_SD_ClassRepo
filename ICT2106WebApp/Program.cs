@@ -16,12 +16,29 @@ using Utilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq; // Bson - Binary JSON
 using ICT2106WebApp.mod1Grp3;
+using ICT2106WebApp.mod1grp4;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddLogging(); // Add logging for testing MongoDB
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+{
+var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+return mongoClient;
+});
+builder.Services.AddSingleton(serviceProvider =>
+{
+var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+var mongoClient = serviceProvider.GetRequiredService<IMongoClient>();
+return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
+});
+
+var serviceProvider = builder.Services.BuildServiceProvider();
+var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
 // // Start of MongoDB setup
 // builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB")); // inside appsettings.json
@@ -71,7 +88,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-DocumentProcessor.RunMyProgram();
+DocumentProcessor.RunMyProgram(database);
 
 // MongoDB + DocumentControl , DocumentFailSafe, DocumentGateway_RDG testing
 // Check if test document flag is provided
@@ -161,7 +178,7 @@ public static class DocumentProcessor
 		return metadata;
 	}
 
-	public async static void RunMyProgram()
+	public async static void RunMyProgram(IMongoDatabase database)
 	{
 		string filePath = "Datarepository_zx_v3.docx"; // Change this to your actual file path
 		string jsonOutputPath = "output.json"; // File where JSON will be saved
@@ -643,6 +660,48 @@ public static class DocumentProcessor
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 			// WriteToFile("traverseNodes.cs", traverseList);
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
+			INodeTraverser traverser = new NodeTraverser(rootnodehere);
+			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
+
+		    // Step 1: Convert abstract node to custom table entity
+			var tableOrganiser = new TableOrganiserManager();
+			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
+
+			// Step 2: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
+			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+			var tablePreprocessingManager = new TablePreprocessingManager();
+			tablePreprocessingManager.attach(rowTabularGateway_RDG);
+			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
+			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
+
+			// Step 3: Convert tables to LaTeX
+			var latexConversionManager = new TableLatexConversionManager();
+			latexConversionManager.attach(rowTabularGateway_RDG);
+			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
+
+			// Step 4: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
+			var tableValidationManager = new TableValidationManager();
+			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
+
+			var processedTableManager = new ProcessedTableManager();
+			processedTableManager.attach(rowTabularGateway_RDG);
+			processedTableManager.logProcessingStatus(validationStatus);
+			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+
+			// Print tablesFromNode
+			// foreach (var table in tablesFromNode)
+			// {
+			// 	Console.WriteLine($"{table.tableId}");
+			// 	Console.WriteLine($"{table.latexOutput}");
+			// 	foreach (var row in table.rows)
+			// 	{
+			// 		foreach (var cell in row.cells)
+			// 		{
+			// 			Console.WriteLine($"Cell content: {cell.content}");
+			// 			Console.WriteLine($"Cell Styling: {cell.styling}");
+			// 		}
+			// 	}
+			// }
 		}
 	}
 
@@ -837,7 +896,7 @@ public static class DocumentProcessor
 				// ✅ Extract Paragraphs
 				elements.Add(ExtractContent.ExtractParagraph(paragraph, doc, ref haveBibliography));
 			}
-			else if (element is Table table)
+			else if (element is DocumentFormat.OpenXml.Wordprocessing.Table table)
 			{
 				Console.WriteLine("📝 Extracting Table");
 				elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables

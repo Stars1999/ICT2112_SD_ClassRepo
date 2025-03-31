@@ -37,7 +37,7 @@ namespace ICT2106WebApp.Controllers
                 _parser.StoreDocument(uploadedFile);
 
                 // Set initial status
-                _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
+               _parser.UpdateConversionStatus(uploadedFile.FileName, "File uploaded, starting conversions");
 
                 // Schedule Mod1 Conversion through TaskScheduler
                 bool mod1Result = await _taskScheduler.ScheduleMod1Conversion(uploadedFile.FileName);

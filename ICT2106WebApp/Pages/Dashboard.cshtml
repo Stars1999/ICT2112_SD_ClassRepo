@@ -11,11 +11,12 @@
 <!-- File upload section -->
 <div class="file-upload-container">
     <input type="file" id="fileInput" name="UploadedFile" required class="file-input" />
+    <button type="button" id="uploadButton" class="upload-button">Upload</button>
 </div>
 
 <!-- Upload Button -->
 <div>
-    <button type="button" id="uploadButton" class="upload-button">Upload</button>
+    
 </div>
 
 <!-- Test Case Buttons -->
@@ -110,7 +111,7 @@
     document.getElementById("fileInput").innerText = fileInput.name;
 
     // Check if the file is a .docx
-    let fileExtension = fileInput.name.split('.').pop().toLowerCase();
+    //let fileExtension = fileInput.name.split('.').pop().toLowerCase();
 
     //UNCOMMENT THIS IF CLASS DECIDE TO ACCEPT DOCX FILE ONLY
     @* if (fileExtension !== "docx") {
@@ -156,9 +157,9 @@
         }
     })
     .catch(error => {
-        logError("Upload failed: " + error.message);
+        @* logError("Upload failed: " + error.message);
         alert("Upload failed. " + error.message);
-        console.error("Upload error:", error);
+        console.error("Upload error:", error); *@
     });
 
     // Clear the file input after the form submission
@@ -185,7 +186,7 @@ function resetProgressBar() {
     document.getElementById("statusProgress").style.backgroundColor = '#007bff'; // Optional: Reset color to the default
 
     // Reset status message
-    document.getElementById("statusMessage").innerText = "Status: NIL";
+    document.getElementById("statusMessage").innerText = "Status: ";
 }
 
 
@@ -231,6 +232,7 @@ function runCitationTest1Pass() {
                     progress += 20; // Simulate progress
                     logError("Test Case Progress (MOD1): " + progress + "%");
                     document.getElementById("statusProgress").style.width = progress + "%";
+                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
                 } else {
                     clearInterval(progressInterval);
                     if (data.message.includes("Test Passed")) {
@@ -267,6 +269,7 @@ function runCitationTest1Fail() {
                     progress += 20; // Simulate progress
                     logError("Test Case Progress (MOD1): " + progress + "%");
                     document.getElementById("statusProgress").style.width = progress + "%";
+                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
                 } else {
                     clearInterval(progressInterval);
                     if (data.message.includes("Test Passed")) {
@@ -303,6 +306,7 @@ function runCitationTest3Fail() {
                     logError("Test Case Progress: " + progress + "%");
                     // Update the progress bar width based on the current progress
                     document.getElementById("statusProgress").style.width = progress + "%";
+                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
                 } else {
                     clearInterval(progressInterval);
                     if (data.message.includes('Test Passed')) {
@@ -340,6 +344,7 @@ function runCitationTest3Pass() {
                     logError("Test Case Progress: " + progress + "%");
                     // Update the progress bar width based on the current progress
                     document.getElementById("statusProgress").style.width = progress + "%";
+                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
                 } else {
                     clearInterval(progressInterval);
                     if (data.message.includes('Test Passed')) {
@@ -378,6 +383,7 @@ function runCitationTest2Pass() {
                     progress += 20; // Simulate progress
                     logError("Test Case Progress (MOD2): " + progress + "%");
                     document.getElementById("statusProgress").style.width = progress + "%";
+                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
                 } else {
                     clearInterval(progressInterval);
                     if (data.message.includes("Test Passed")) {
@@ -415,6 +421,7 @@ function runCitationTest2Fail() {
                     progress += 20; // Simulate progress
                     logError("Test Case Progress (MOD2): " + progress + "%");
                     document.getElementById("statusProgress").style.width = progress + "%";
+                    document.getElementById("statusMessage").innerText ="Status: " + progress + "%";
                 } else {
                     clearInterval(progressInterval);
                     if (data.message.includes("Test Passed")) {
@@ -682,5 +689,37 @@ function runCitationTest2Fail() {
         background-color: #d32f2f;
     }
 
+/* Add these styles to center the file upload section */
+.file-upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center horizontally */
+    margin: 15px auto; /* Add auto margin for horizontal centering */
+    padding-top: 15px;
+    width: 60%; /* Set width to match the test table container */
+}
 
+/* Center the upload button */
+div:has(> #uploadButton) {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    width: 60%;
+}
+
+/* Make sure the file input has enough width */
+.file-input {
+    padding: 10px;
+    margin-right: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 70%; /* Adjusted width */
+}
+
+/* Optional: Center the status tracker as well */
+.status-tracker {
+    margin: 20px auto;
+    width: 60%;
+}
 </style>

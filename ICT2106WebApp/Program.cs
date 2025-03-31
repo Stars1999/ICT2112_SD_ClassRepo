@@ -285,7 +285,7 @@ public static class DocumentProcessor
 								{
 									if (itemhere is Dictionary<string, object> stylingDictionary)
 									{
-										stylingList.Add(stylingDictionary);
+										stylingList.Add(ConvertJsonElements(stylingDictionary));
 									}
 								}
 
@@ -338,7 +338,7 @@ public static class DocumentProcessor
 											{
 												if (itemhere is Dictionary<string, object> stylingDictionary)
 												{
-													stylingList.Add(stylingDictionary);
+													stylingList.Add(ConvertJsonElements(stylingDictionary));
 												}
 											}
 
@@ -542,11 +542,11 @@ public static class DocumentProcessor
 
 			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
-			treeProcessor.PrintTree(rootnodehere, 0);
+			// treeProcessor.PrintTree(rootnodehere, 0);
 
 			// SAVE TREE TO MONGODB
-			// await treeProcessor.SaveTreeToDatabase(rootnodehere);
-			// // RETRIEVE TEE FROM MONGODB
+			await treeProcessor.SaveTreeToDatabase(rootnodehere);
+			// // // RETRIEVE TEE FROM MONGODB
 			// AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
 			// CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
 
@@ -567,78 +567,78 @@ public static class DocumentProcessor
 			// END TREE
 
 
-			//TREE VALIDAITON
+// 			//TREE VALIDAITON
 
-			// Flatten the tree
-			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
+// 			// Flatten the tree
+// 			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
 
-			// Call validation (pass the document array instead of the entire jsonObject)
-			bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
+// 			// Call validation (pass the document array instead of the entire jsonObject)
+// 			bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
 
-			// Output validation result
-			if (isContentValid)
-				Console.WriteLine("Content is valid!");
-			else
-				Console.WriteLine("Content mismatch detected!");
+// 			// Output validation result
+// 			if (isContentValid)
+// 				Console.WriteLine("Content is valid!");
+// 			else
+// 				Console.WriteLine("Content mismatch detected!");
 
-			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
+// 			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
 			
-			// Output validation result
-			if (isValidStructure)
-				Console.WriteLine("Tree structure is valid!");
-			else
-				Console.WriteLine("Invalid tree structure detected.");
+// 			// Output validation result
+// 			if (isValidStructure)
+// 				Console.WriteLine("Tree structure is valid!");
+// 			else
+// 				Console.WriteLine("Invalid tree structure detected.");
 
-			// DO NOT REMOVE FOR TESTING PURPOSES
-			// INodeTraverser traverser = new NodeTraverser(rootnodehere);
-			// List<AbstractNode> traverseList = traverser.TraverseNode("image");
+// 			// DO NOT REMOVE FOR TESTING PURPOSES
+// 			// INodeTraverser traverser = new NodeTraverser(rootnodehere);
+// 			// List<AbstractNode> traverseList = traverser.TraverseNode("image");
 
-//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
-			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
-			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
-			// WriteToFile("traverseNodes.cs", traverseList);
-			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
+// //=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+// 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
+// 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
+// 			// WriteToFile("traverseNodes.cs", traverseList);
+// 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
 			
-			// GROUP 4 STUFF
-			// Step 1: Get abstract nodes of table from group 3
-			INodeTraverser traverser = new NodeTraverser(rootnodehere);
-			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
+// 			// GROUP 4 STUFF
+// 			// Step 1: Get abstract nodes of table from group 3
+// 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
+// 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
 
-		    // Step 2: Convert abstract node to custom table entity
-			var tableOrganiser = new TableOrganiserManager();
-			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
+// 		    // Step 2: Convert abstract node to custom table entity
+// 			var tableOrganiser = new TableOrganiserManager();
+// 			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
 
-			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
-			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
-			var tablePreprocessingManager = new TablePreprocessingManager();
-			tablePreprocessingManager.attach(rowTabularGateway_RDG);
-			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
-			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
+// 			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
+// 			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+// 			var tablePreprocessingManager = new TablePreprocessingManager();
+// 			tablePreprocessingManager.attach(rowTabularGateway_RDG);
+// 			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
+// 			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
 
-			// Step 4: Convert tables to LaTeX
-			var latexConversionManager = new TableLatexConversionManager();
-			latexConversionManager.attach(rowTabularGateway_RDG);
+// 			// Step 4: Convert tables to LaTeX
+// 			var latexConversionManager = new TableLatexConversionManager();
+// 			latexConversionManager.attach(rowTabularGateway_RDG);
 
-			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
-			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
+// 			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
+// 			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
 
-			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
-			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
-			// Environment.Exit(0);
+// 			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
+// 			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
+// 			// Environment.Exit(0);
 
-			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
+// 			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
 
-			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
-			var tableValidationManager = new TableValidationManager();
-			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
+// 			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
+// 			var tableValidationManager = new TableValidationManager();
+// 			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
 
-			var processedTableManager = new ProcessedTableManager();
-			processedTableManager.attach(rowTabularGateway_RDG);
-			processedTableManager.logProcessingStatus(validationStatus);
-			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+// 			var processedTableManager = new ProcessedTableManager();
+// 			processedTableManager.attach(rowTabularGateway_RDG);
+// 			processedTableManager.logProcessingStatus(validationStatus);
+// 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
-			// Will prove for Siti as we traverse the nodes again after updating
-			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+// 			// Will prove for Siti as we traverse the nodes again after updating
+// 			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 
 
@@ -958,4 +958,42 @@ public static class DocumentProcessor
 
 		return formattedStyling.TrimEnd(new char[] { ',', ' ' }) + " }";
 	}
+
+
+// Because my code broke , will shift this to some other class 
+private static Dictionary<string, object> ConvertJsonElements(Dictionary<string, object> input)
+{
+ var result = new Dictionary<string, object>();
+ foreach (var kvp in input)
+ {
+  if (kvp.Value is JsonElement jsonElement)
+  {
+   switch (jsonElement.ValueKind)
+   {
+    case JsonValueKind.String:
+     result[kvp.Key] = jsonElement.GetString();
+     break;
+    case JsonValueKind.Number:
+     result[kvp.Key] = jsonElement.GetDouble(); // or GetInt32() depending
+     break;
+    case JsonValueKind.True:
+    case JsonValueKind.False:
+     result[kvp.Key] = jsonElement.GetBoolean();
+     break;
+    case JsonValueKind.Object:
+    case JsonValueKind.Array:
+     result[kvp.Key] = jsonElement.ToString(); // fallback as string
+     break;
+    default:
+     result[kvp.Key] = null;
+     break;
+   }
+  }
+  else
+  {
+   result[kvp.Key] = kvp.Value;
+  }
+ }
+ return result;
+}
 }

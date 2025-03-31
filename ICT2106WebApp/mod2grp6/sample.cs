@@ -80,28 +80,95 @@ namespace ICT2106WebApp.mod2grp6.TestCase
             new SimpleNode(7, "math", "lim(1+(1/n)^n)=e", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
         };
 
-        public List<AbstractNode> Lists = new List<AbstractNode>
-        {
-            new SimpleNode(1, "bulleted_list", "bulleted type 1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(2, "bulleted_list", "bulleted type 1 again", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(3, "hollow_bulleted_list", "bulleted type 2", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(4, "square_bulleted_list", "bulleted type 3", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(5, "diamond_bulleted_list", "bulleted type 4", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(6, "arrow_bulleted_list", "bulleted type 5", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(7, "checkmark_bulleted_list", "bulleted type 6", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(8, "dash_bulleted_list", "bulleted type 7", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "ListParagraph" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(9, "numbered_list", "numbered list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(10, "numbered_parenthesis_list", "numbered list with bracket", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(11, "roman_numeral_list", "roman numeral list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(12, "lowercase_roman_numeral_list", "lowercase roman numeral list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "ListParagraph" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(13, "uppercase_lettered_list", "uppercase lettered list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(14, "uppercase_lettered_list", "uppercase lettered list 2", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(15, "uppercase_lettered_list", "uppercase lettered list 2.1 nested", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(16, "uppercase_lettered_list", "uppercase lettered list 2.2 nested", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(17, "uppercase_lettered_list", "uppercase lettered list 2.2.1 nested", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(18, "lowercase_lettered_list", "lowercase lettered list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "ListParagraph" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(19, "lowercase_lettered_parenthesis_list", "lowercase lettered with bracket list", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "ListParagraph" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
-        };
+        public List<AbstractNode> Lists = new List<AbstractNode>();
+
+        public TestCases() {
+            // Parent CompositeNode for the entire list
+            CompositeNode listNode = new CompositeNode(0, "list", "", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // Numbered list with nested items
+            CompositeNode numberedList = new CompositeNode(1, "numbered_list", "First item in the list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // Nested item 1 for numbered list
+            CompositeNode nestedItem1 = new CompositeNode(2, "lowercase_lettered_list", "Nested item 1", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+                        // Nested item 1 for numbered list
+            CompositeNode nestedItem2 = new CompositeNode(3, "lowercase_lettered_list", "Nested item 2", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // Nested item 1.1 for nested item 1
+            CompositeNode nestedItem1_1 = new CompositeNode(4, "bulleted_list", "Nested item 1.1", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            nestedItem1.AddChild(nestedItem1_1);  // Add nested item 1.1 to nested item 1
+            numberedList.AddChild(nestedItem1);   // Add nested item 1 to the numbered list
+            numberedList.AddChild(nestedItem2);   // Add nested item 1 to the numbered list
+
+
+            // Add the numbered list to listNode
+            listNode.AddChild(numberedList);
+
+            // Second numbered list item (without nested items)
+            CompositeNode numberedList2 = new CompositeNode(5, "numbered_list", "Second item in the list", new List<Dictionary<string, object>> {
+                new Dictionary<string, object> {
+                    { "bold", false },
+                    { "italic", false },
+                    { "fontsize", 12 },
+                    { "fonttype", "Default Font" },
+                    { "fontcolor", "000000" },
+                    { "highlight", "none" }
+                }
+            });
+
+            // Add the second numbered list to listNode
+            listNode.AddChild(numberedList2);
+
+            // Add the entire listNode (parent node) to the global Lists collection
+            Lists.Add(listNode);
+        }
 
         public List<AbstractNode> Images = new List<AbstractNode>
         {
@@ -213,71 +280,5 @@ namespace ICT2106WebApp.mod2grp6.TestCase
                     }
                 }
             )};    
-
-        // public List<AbstractNode> TableContent = new List<AbstractNode>
-        // {
-        //     new SimpleNode(1, "table", "", new List<Dictionary<string, object>> { new Dictionary<string, object> { 
-        //         { "Rows", new List<Dictionary<string, object>> {
-        //             new Dictionary<string, object> {
-        //                 { "Cells", new List<Dictionary<string, object>> {
-        //                     new Dictionary<string, object> { { "Content", "Hi" }, { "Underline", false }, { "Bold", false }, { "Italic", false }, { "FontType", "Arial" }, { "FontSize", 11 }, { "HorizontalAlignment", "left" } },
-        //                     new Dictionary<string, object> { { "Content", "i" }, { "Underline", false }, { "Bold", false }, { "Italic", false }, { "FontType", "Arial" }, { "FontSize", 11 }, { "HorizontalAlignment", "left" } },
-        //                     new Dictionary<string, object> { { "Content", "Am" }, { "Underline", false }, { "Bold", false }, { "Italic", false }, { "FontType", "Arial" }, { "FontSize", 11 }, { "HorizontalAlignment", "left" } }
-        //                 }}
-        //             },
-        //             new Dictionary<string, object> {
-        //                 { "Cells", new List<Dictionary<string, object>> {
-        //                     new Dictionary<string, object> { { "Content", "Going" }, { "Underline", false }, { "Bold", false }, { "Italic", false }, { "FontType", "Arial" }, { "FontSize", 11 }, { "HorizontalAlignment", "left" } },
-        //                     new Dictionary<string, object> { { "Content", "To" }, { "Underline", false }, { "Bold", false }, { "Italic", false }, { "FontType", "Arial" }, { "FontSize", 11 }, { "HorizontalAlignment", "left" } },
-        //                     new Dictionary<string, object> { { "Content", "Remod" }, { "Underline", false }, { "Bold", false }, { "Italic", false }, { "FontType", "Arial" }, { "FontSize", 11 }, { "HorizontalAlignment", "left" } }
-        //                 }}
-        //             }
-        //         }}
-        //     }})
-        // };
-
-    //     public List<AbstractNode> CitationContent = new List<AbstractNode>
-    //     {
-    //         new SimpleNode(1, "intext-citation", "(Cole, 1998)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-    //         new SimpleNode(2, "intext-citation", "(Wdadwa, 1990)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-    //         new SimpleNode(3, "intext-citation", "(Chan, n.d.)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } })
-    //     };
-
-    //     public List<AbstractNode> BibliographyContent = new List<AbstractNode>
-    //     {
-    //         new SimpleNode(1, "bibliography", "Reference (IEE)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", true }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-    //         new SimpleNode(2, "citation_run", "[1] J. Cole, \"I love pigs,\" *Dr. J.*, vol. 20, 1998.", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-    //         new SimpleNode(3, "citation_run", "[2] Wdadwa, \"I love Germany,\" *Sit.*, 1990.", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-    //         new SimpleNode(4, "citation_run", "[3] D. Chan, \"I love black people,\" *White Man*, vol. 20, n.d.", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 10 }, { "FontType", "Times New Roman" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-    //         new SimpleNode(5, "paragraph_run?", "This is citation/references", new List<Dictionary<string, object>> { new Dictionary<string, object>() })
-    //     };
-
-    //     public List<AbstractNode> ComplexParagraphs = new List<AbstractNode>
-    //     {
-    //         new SimpleNode(1, "paragraph", "Many farmers focus on raising pigs (Cole, 1998).", new List<Dictionary<string, object>> { new Dictionary<string, object> { 
-    //             { "Runs", new List<Dictionary<string, object>> {
-    //                 new Dictionary<string, object> { { "Type", "text_run" }, { "Content", "Many farmers focus on raising pigs " } },
-    //                 new Dictionary<string, object> { { "Type", "intext-citation" }, { "Content", "(Cole, 1998)" } },
-    //                 new Dictionary<string, object> { { "Type", "text_run" }, { "Content", "." } }
-    //             }}
-    //         }}),
-    //         new SimpleNode(2, "paragraph", "Germany played a crucial role in the study (Wdadwa, 1990).", new List<Dictionary<string, object>> { new Dictionary<string, object> { 
-    //             { "Runs", new List<Dictionary<string, object>> {
-    //                 new Dictionary<string, object> { { "Type", "text_run" }, { "Content", "Germany played a crucial role in the study" } },
-    //                 new Dictionary<string, object> { { "Type", "intext-citation" }, { "Content", " (" } },
-    //                 new Dictionary<string, object> { { "Type", "intext-citation" }, { "Content", "Wdadwa" } },
-    //                 new Dictionary<string, object> { { "Type", "intext-citation" }, { "Content", ", 1990)" } },
-    //                 new Dictionary<string, object> { { "Type", "text_run" }, { "Content", "." } }
-    //             }}
-    //         }}),
-    //         new SimpleNode(3, "paragraph", "Some argue that love crosses all boundaries (Chan, n.d.).", new List<Dictionary<string, object>> { new Dictionary<string, object> { 
-    //             { "Runs", new List<Dictionary<string, object>> {
-    //                 new Dictionary<string, object> { { "Type", "text_run" }, { "Content", "Some argue that love crosses all boundaries" } },
-    //                 new Dictionary<string, object> { { "Type", "intext-citation" }, { "Content", "(Chan, n.d.)" } },
-    //                 new Dictionary<string, object> { { "Type", "text_run" }, { "Content", "." } }
-    //             }}
-    //         }})
-    //     };
-    // }
-}
+        }
 }

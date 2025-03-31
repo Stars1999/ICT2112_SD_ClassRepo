@@ -115,6 +115,7 @@ namespace ICT2106WebApp.mod2grp6
                     { "math", new MathContentProcessor() },
                     { "special", new SpecialElementProcessor() },
                     { "images", new ImageProcessor() },
+                    { "lists", new ListProcessor()}
                     // Add more without changing the manager!
                 };
 

@@ -10,9 +10,7 @@ namespace ICT2106WebApp.mod2grp6
 {
     public class DocumentManager : IProcessDocument, IProcessTemplate
     {
-        // Services and components needed for document operations
-        private FormatConversionManager formatConversionManager;
-        private TemplateManager templateManager;
+
 
         // Sample document data from sample.cs
         //remove when submitting
@@ -22,9 +20,6 @@ namespace ICT2106WebApp.mod2grp6
         // Constructor for DocumentManager
         public DocumentManager()
         {
-            formatConversionManager = new FormatConversionManager();
-
-
             // all these to be removed when submitting as a zip
             //get nodes from sample.cs in class integration it would be pulled from mod1 
             TestCases sample = new TestCases();
@@ -84,6 +79,8 @@ namespace ICT2106WebApp.mod2grp6
         /// Converts document to LaTeX format
         public bool toLaTeX(string id)
         {
+            FormatConversionManager formatConversionManager = new FormatConversionManager();
+            
             try
             {
                 // Convert format content
@@ -108,7 +105,6 @@ namespace ICT2106WebApp.mod2grp6
                 bool layoutSuccess = formatConversionManager.convertLayout(layoutContent);
 
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
-
                 return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }
             catch (Exception ex)
@@ -121,7 +117,10 @@ namespace ICT2106WebApp.mod2grp6
         /// <summary>
         public bool convertToLatexTemplate(string id, string templateId)
         {
-            if(templateManager == null)
+            FormatConversionManager formatConversionManager = new FormatConversionManager();
+            TemplateManager templateManager = new TemplateManager();
+
+            if (templateManager == null)
                 templateManager = new TemplateManager();
         
             try

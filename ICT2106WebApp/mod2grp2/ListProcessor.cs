@@ -154,7 +154,7 @@ namespace ICT2106WebApp.Utilities
         {
             return listStyle switch
             {
-                "roman_numeral_list" => @"\renewcommand{\labelenumi}{\roman{enumi}.}",
+                "roman_numeral_list" => @"\renewcommand{\labelenumi}{\Roman{enumi}.}",
                 "lowercase_roman_numeral_list" => @"\renewcommand{\labelenumi}{\roman{enumi}.}",
                 "uppercase_lettered_list" => @"\renewcommand{\labelenumi}{\Alph{enumi}.}",
                 "lowercase_lettered_list" => @"\renewcommand{\labelenumi}{\alph{enumi}.}",
@@ -170,8 +170,8 @@ namespace ICT2106WebApp.Utilities
             return listStyle switch
             {
                 "hollow_bulleted_list" => @"\renewcommand{\labelitemi}{\ensuremath{\circ}}",   // Hollow circle
-                "square_bulleted_list" => @"\renewcommand{\labelitemi}{$\square$}",               // Square bullet
-                "diamond_bulleted_list" => @"\renewcommand{\labelitemi}{\ding{110}}",             // Diamond bullet (requires \usepackage{pifont})
+                "square_bulleted_list" => @"\renewcommand{\labelitemi}{$\blacksquare$}",               // Square bullet
+                "diamond_bulleted_list" => @"\renewcommand{\labelitemi}{$\lozenge$}",             // Diamond bullet
                 "arrow_bulleted_list" => @"\renewcommand{\labelitemi}{$\rightarrow$}",             // Arrow bullet
                 "checkmark_bulleted_list" => @"\renewcommand{\labelitemi}{$\checkmark$}",         // Checkmark bullet (requires \usepackage{amssymb})
                 "dash_bulleted_list" => @"\renewcommand{\labelitemi}{$\textendash$}",              // Dash bullet

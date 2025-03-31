@@ -180,7 +180,7 @@ public static class DocumentProcessor
 
 	public async static void RunMyProgram(IMongoDatabase database)
 	{
-		string filePath = "Datarepository_zx_v3.docx"; // Change this to your actual file path
+		string filePath = "Datarepository_zx_v4.docx"; // Change this to your actual file path
 		string jsonOutputPath = "output.json"; // File where JSON will be saved
 
 		string currentDir = Directory.GetCurrentDirectory();
@@ -675,7 +675,15 @@ public static class DocumentProcessor
 			// Step 4: Convert tables to LaTeX
 			var latexConversionManager = new TableLatexConversionManager();
 			latexConversionManager.attach(rowTabularGateway_RDG);
+
+			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
 			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
+
+			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
+			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
+			// Environment.Exit(0);
+
+			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
 
 			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
 			var tableValidationManager = new TableValidationManager();
@@ -686,9 +694,8 @@ public static class DocumentProcessor
 			processedTableManager.logProcessingStatus(validationStatus);
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
-
+			// Will prove for Siti as we traverse the nodes again after updating
 			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
-
 
 
 

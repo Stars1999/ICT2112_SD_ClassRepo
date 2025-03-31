@@ -44,8 +44,6 @@ namespace ICT2106WebApp.mod1grp4
 
                         while (!iterator.isDone())
                         {
-
-
                             TableCell cell = iterator.current(); // Get current cell
                             string cellContent = cell.content;
                             Dictionary<string, string> latexEscapes = new Dictionary<string, string>
@@ -103,6 +101,7 @@ namespace ICT2106WebApp.mod1grp4
                     latexTable += "\\hline\n"; // Add a horizontal line
                     latexTable += "\\end{tabular}"; // Close the LaTeX table
                     table.latexOutput = latexTable;
+                    table.tableCompletionState = true;
                     if (await updateLatexCheckpointAsync(table))
                     {
                         Console.WriteLine("Latex output:");
@@ -111,7 +110,134 @@ namespace ICT2106WebApp.mod1grp4
                 }
                 else
                 {
-                    Console.WriteLine($"Table with id ${table.tableId}has already been converted before the crash.");
+                    Console.WriteLine($"Table with id {table.tableId} has already been converted before the crash.");
+                    if (table == tableList[^1]) // Check if it's the last table in the list
+                    {
+                        Console.WriteLine($"All tables have been processed.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Moving on to process the next table.");
+                    }
+                }
+
+            }
+
+            return tableList;
+        }
+
+        // FOR JOEL CRASH RECOVERY SIMULATION
+        public async Task<List<Table>> convertToLatexWithLimitAsync(List<Table> tableList, int limit)
+        {
+            int processedCount = 0;
+
+            foreach (var table in tableList)
+            {
+                // Stop processing after hitting limit
+                if (processedCount >= limit)
+                {
+                    Console.WriteLine($"Stopping after processing {limit} tables out of a total of {tableList.Count}.");
+                    break;
+                }
+
+
+                if (table.tableCompletionState == false)
+                {
+                    int columns = 0;
+                    foreach (var row in table.rows)
+                    {
+                        if (row.cells.Count > columns)
+                        {
+                            columns = row.cells.Count;
+                        }
+                    }
+
+                    // Start building the LaTeX table
+                    string latexTable = "\\begin{tabular}{|" + new string('c', columns).Replace("c", "c|") + "}";
+                    latexTable += "\n\\hline\n";
+
+                    foreach (var row in table.rows)
+                    {
+                        iTableCellCollection cellCollection = new TableCellCollection(row.cells);
+                        iTableCellIterator iterator = cellCollection.createIterator();
+
+                        if (table.rows.IndexOf(row) != 0) // Check if it's not the first row
+                        {
+                            latexTable = latexTable.TrimEnd(' ', '&') + " \\\\"; // End the previous row
+                            latexTable += "\n\\hline\n"; // Add a horizontal line
+                        }
+
+                        while (!iterator.isDone())
+                        {
+                            TableCell cell = iterator.current(); // Get current cell
+                            string cellContent = cell.content;
+                            Dictionary<string, string> latexEscapes = new Dictionary<string, string>
+                    {
+                        { "&", "\\&" },
+                        { "%", "\\%" },
+                        { "$", "\\$" },
+                        { "#", "\\#" },
+                        { "_", "\\_" },
+                        { "{", "\\{" },
+                        { "}", "\\}" },
+                        { "~", "\\~" },
+                        { "^", "\\^" },
+                        { "\\", "\\\\" }
+                    };
+
+                            foreach (var pair in latexEscapes)
+                            {
+                                cellContent = cellContent.Replace(pair.Key, pair.Value); // Escape special characters
+                            }
+                            string latexCell = cellContent; // Convert cell to LaTeX
+
+
+
+                            if (cell.styling.bold)
+                            {
+                                latexCell = $"\\textbf{{{latexCell}}}";
+                            }
+                            if (cell.styling.italic)
+                            {
+                                latexCell = $"\\textit{{{latexCell}}}";
+                            }
+                            if (cell.styling.underline)
+                            {
+                                latexCell = $"\\underline{{{latexCell}}}";
+                            }
+                            if (cell.styling.fontsize != 0)
+                            {
+                                int fontSize = cell.styling.fontsize;
+                                latexCell = $"{{\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+                            }
+                            if (!string.IsNullOrEmpty(cell.styling.horizontalalignment))
+                            {
+                                string alignment = cell.styling.horizontalalignment;
+                                string alignmentChar = alignment == "right" ? "r" : alignment == "left" ? "l" : "c";
+                                latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
+                            }
+
+                            latexTable += latexCell + " & ";
+                            iterator.next(); // Advance the iterator
+                        }
+                    }
+
+                    latexTable = latexTable.TrimEnd(' ', '&') + " \\\\\n"; // Finalize the last row
+                    latexTable += "\\hline\n"; // Add a horizontal line
+                    latexTable += "\\end{tabular}"; // Close the LaTeX table
+                    table.latexOutput = latexTable;
+                    table.tableCompletionState = true;
+                    if (await updateLatexCheckpointAsync(table))
+                    {
+                        Console.WriteLine("Latex output:");
+                        Console.WriteLine(latexTable);
+                    }
+
+                    processedCount++;
+                }
+                else
+                {
+                    Console.WriteLine($"Table with id {table.tableId} has already been converted before the crash.");
                     if (table == tableList[^1]) // Check if it's the last table in the list
                     {
                         Console.WriteLine($"All tables have been processed.");

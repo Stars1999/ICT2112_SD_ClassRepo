@@ -23,8 +23,6 @@ namespace ICT2106WebApp.mod1grp4
         // Use group 3 function to slot processed tables to tree (Siti - COMPLETED)
         public async Task<bool> slotProcessedTableToTree(List<Table> processedTables, List<AbstractNode> abstractNodes)
         {
-            Console.WriteLine("MODULE 1 GROUP 4: START");
-
             // Iterate through the processed tables
             foreach (var processedTable in processedTables)
             {

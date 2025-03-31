@@ -1,4 +1,5 @@
 using Utilities;
+using Newtonsoft.Json;
 
 namespace ICT2106WebApp.mod1Grp3
 {
@@ -15,7 +16,7 @@ namespace ICT2106WebApp.mod1Grp3
         }
 
         // Define grouped node types
-        private Dictionary<string, HashSet<string>> nodeTypeGroups = new Dictionary<string, HashSet<string>>
+        private static Dictionary<string, HashSet<string>> nodeTypeGroups = new Dictionary<string, HashSet<string>>
         {
             { "headers", new HashSet<string> { "h1", "h2", "h3" } },
             { "layouts", new HashSet<string> { "layout", "page_break" } },
@@ -74,14 +75,13 @@ namespace ICT2106WebApp.mod1Grp3
 
             foreach (var node in matchingNodesList)
             {
-                Console.WriteLine($"Matching Node: ID={node.GetNodeId()}, Type={node.GetNodeType()}, Content={node.GetContent()}");
+                Console.WriteLine($"Matching Node: ID={node.GetNodeId()}, Type={node.GetNodeType()}, Content={node.GetContent()}, styling={JsonConvert.SerializeObject(node.GetStyling())}, converted={node.IsConverted()}");
             }
             Console.WriteLine(matchingNodesList.Count + " nodes found of type " + nodeType);
             
             return matchingNodesList;
         }
 
-        
         public async Task UpdateLatexDocument(AbstractNode rootNode)
         {
             Console.WriteLine("LATEX DOCUMENT UPDATING...");
@@ -96,10 +96,10 @@ namespace ICT2106WebApp.mod1Grp3
 
 
 /*============================ NOT PART OF METHODS ==========================================================*/
-        // Method to traverse all node types (For printing for mod 2)
+        // Method to traverse all node types (F)
         public List<AbstractNode> TraverseAllNodeTypes()
         {
-            List<AbstractNode> matchingNodesList = new List<AbstractNode>();
+            List<AbstractNode> allNodesList = new List<AbstractNode>();
 
             void TraverseWithIteratorForAll(AbstractNode node, List<AbstractNode> matchingNodes)
             {
@@ -129,9 +129,73 @@ namespace ICT2106WebApp.mod1Grp3
             }
 
             // Start traversing the tree from the root node using the iterator method
-            TraverseWithIteratorForAll(_rootNode, matchingNodesList);
+            TraverseWithIteratorForAll(_rootNode, allNodesList);
 
-            return matchingNodesList;
+            WriteToFile("traverseNodes.cs", allNodesList);
+
+            return allNodesList;
+        }
+    
+        public static void WriteToFile(string filePath, List<AbstractNode> nodes)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                writer.WriteLine("using System.Collections.Generic;");
+                writer.WriteLine("using Utilities;\n");
+                writer.WriteLine("public class AllNodesList");
+                writer.WriteLine("{");
+
+                Dictionary<string, List<AbstractNode>> groupedNodes = new Dictionary<string, List<AbstractNode>>();
+
+                // Group nodes by their corresponding group name
+                foreach (var node in nodes)
+                {
+                    string nodeType = node.GetNodeType();
+                    string groupKey = nodeTypeGroups.FirstOrDefault(g => g.Value.Contains(nodeType)).Key;
+
+                    if (groupKey == null)
+                    {
+                        groupKey = nodeType; // If the node type doesn't belong to any group, use the node type as the key
+                    }
+
+                    if (!groupedNodes.ContainsKey(groupKey))
+                    {
+                        groupedNodes[groupKey] = new List<AbstractNode>();
+                    }
+
+                    groupedNodes[groupKey].Add(node);
+                }
+
+                // Write grouped nodes
+                foreach (var entry in groupedNodes)
+                {
+                    string groupName = entry.Key;
+                    List<AbstractNode> nodeList = entry.Value;
+
+                    writer.WriteLine($"    // Node Type: {groupName}");
+                    writer.WriteLine($"    public List<AbstractNode> {groupName} = new List<AbstractNode>");
+                    writer.WriteLine("    {");
+
+                    foreach (var node in nodeList)
+                    {
+                        var nodeId = node.GetNodeId();
+                        var nodeLevel = node.GetNodeLevel();
+                        var nodeType = node.GetNodeType();
+                        var nodeContent = node.GetContent();
+                        var nodeStyling = JsonConvert.SerializeObject(node.GetStyling());
+
+                        if (nodeType == "image")
+                        {
+                            writer.WriteLine($"      //  new CompositeNode({nodeId}, {nodeLevel}, \"{nodeType}\", @\"{nodeContent}\", {nodeStyling}),");
+                        } else {
+                            writer.WriteLine($"      //  new CompositeNode({nodeId}, {nodeLevel}, \"{nodeType}\", \"{nodeContent}\", \"{nodeStyling}\"),");
+                        }
+                    }
+
+                    writer.WriteLine("    };");
+                }
+                writer.WriteLine("}");
+            }
         }
     }
 }

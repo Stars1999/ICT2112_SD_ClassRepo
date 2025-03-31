@@ -15,6 +15,7 @@ using MongoDB.Driver;
 using Utilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq; // Bson - Binary JSON
+using Newtonsoft.Json; // For JsonConvert
 using ICT2106WebApp.mod1Grp3;
 using ICT2106WebApp.mod1grp4;
 
@@ -448,7 +449,7 @@ public static class DocumentProcessor
 				// end of checking dictionary
 
 				// Convert to JSON format with UTF-8 encoding fix (preserves emojis, math, and Chinese)
-				jsonOutput = JsonSerializer.Serialize(
+				jsonOutput = System.Text.Json.JsonSerializer.Serialize(
 					documentData,
 					new JsonSerializerOptions
 					{
@@ -546,7 +547,7 @@ public static class DocumentProcessor
 
 			// SAVE TREE TO MONGODB
 			// await treeProcessor.SaveTreeToDatabase(rootnodehere);
-			// // RETRIEVE TEE FROM MONGODB
+			// RETRIEVE TEE FROM MONGODB
 			// AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
 			// CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
 
@@ -596,7 +597,6 @@ public static class DocumentProcessor
 //=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
-			// WriteToFile("traverseNodes.cs", traverseList);
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
 			
 			// GROUP 4 STUFF
@@ -865,97 +865,5 @@ public static class DocumentProcessor
 			}
 		}
 		return elements;
-	}
-// ============================ FOR PRTINTING TRAVERSE NODES ==================================
-	private static Dictionary<string, HashSet<string>> nodeTypeGroups = new Dictionary<string, HashSet<string>>
-	{
-		{ "headers", new HashSet<string> { "h1", "h2", "h3" } },
-		{ "layouts", new HashSet<string> { "layout", "page_break" } },
-		{ "lists", new HashSet<string> { "bulleted_list", "hollow_bulleted_list", "square_bulleted_list", "diamond_bulleted_list", "arrow_bulleted_list", "checkmark_bulleted_list", "dash_bulleted_list", "numbered_list", "numbered_parenthesis_list", "roman_numeral_list", "lowercase_roman_numeral_list", "uppercase_lettered_list", "lowercase_lettered_list", "lowercase_lettered_parenthesis_list" } },
-		{ "paragraphs", new HashSet<string> { "paragraph", "paragraph_run?", "empty_paragraph1" } },
-		{ "tables", new HashSet<string> { "table", "cell", "row" } },
-		{ "citationAndbibliographys", new HashSet<string> { "bibliography", "citation_run", "intext-citation" } }
-	};
-
-	public static void WriteToFile(string filePath, List<AbstractNode> nodes)
-	{
-		using (StreamWriter writer = new StreamWriter(filePath))
-		{
-			writer.WriteLine("using System.Collections.Generic;");
-			writer.WriteLine("using Utilities;\n");
-			writer.WriteLine("public class AllNodesList");
-			writer.WriteLine("{");
-
-			Dictionary<string, List<AbstractNode>> groupedNodes = new Dictionary<string, List<AbstractNode>>();
-
-			// Group nodes by their corresponding group name
-			foreach (var node in nodes)
-			{
-				string nodeType = node.GetNodeType();
-				string groupKey = nodeTypeGroups.FirstOrDefault(g => g.Value.Contains(nodeType)).Key;
-
-				if (groupKey == null)
-				{
-					groupKey = nodeType; // If the node type doesn't belong to any group, use the node type as the key
-				}
-
-				if (!groupedNodes.ContainsKey(groupKey))
-				{
-					groupedNodes[groupKey] = new List<AbstractNode>();
-				}
-
-				groupedNodes[groupKey].Add(node);
-			}
-
-			// Write grouped nodes
-			foreach (var entry in groupedNodes)
-			{
-				string groupName = entry.Key;
-				List<AbstractNode> nodeList = entry.Value;
-
-				writer.WriteLine($"    // Node Type: {groupName}");
-				writer.WriteLine($"    public List<AbstractNode> {groupName} = new List<AbstractNode>");
-				writer.WriteLine("    {");
-
-				foreach (var node in nodeList)
-				{
-					var nodeId = node.GetNodeId();
-					var nodeLevel = node.GetNodeLevel();
-					var nodeType = node.GetNodeType();
-					var nodeContent = node.GetContent();
-					var nodeStyling = new List<Dictionary<string, object>>();
-
-					if (nodeType == "image")
-					{
-						writer.WriteLine($"        new CompositeNode({nodeId}, {nodeLevel}, \"{nodeType}\", @\"{nodeContent}\", {FormatStyling(nodeStyling)}),");
-					} else {
-						writer.WriteLine($"        new CompositeNode({nodeId}, {nodeLevel}, \"{nodeType}\", \"{nodeContent}\", {FormatStyling(nodeStyling)}),");
-					}
-				}
-
-				writer.WriteLine("    };");
-			}
-			writer.WriteLine("}");
-		}
-	}
-
-	// Helper method to format the styling list for output
-	private static string FormatStyling(List<Dictionary<string, object>> styling)
-	{
-		if (styling.Count == 0)
-			return "new List<Dictionary<string, object>> { }";
-
-		var formattedStyling = "new List<Dictionary<string, object>> { ";
-		foreach (var style in styling)
-		{
-			formattedStyling += "new Dictionary<string, object> { ";
-			foreach (var kvp in style)
-			{
-				formattedStyling += $"{{ \"{kvp.Key}\", {kvp.Value} }}, ";
-			}
-			formattedStyling = formattedStyling.TrimEnd(new char[] { ',', ' ' }) + " }, ";
-		}
-
-		return formattedStyling.TrimEnd(new char[] { ',', ' ' }) + " }";
 	}
 }

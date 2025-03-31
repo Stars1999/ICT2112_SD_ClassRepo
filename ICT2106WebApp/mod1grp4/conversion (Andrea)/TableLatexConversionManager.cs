@@ -31,7 +31,7 @@ namespace ICT2106WebApp.mod1grp4
                     string predefinedColours = "";
 
                     // Start building the LaTeX table
-                    string latexTable = "\\begin{tabular}{|" + string.Join("|", table.rows[0].cells.Select(cell => $"m{{{cell.styling.size["cellwidth"]}cm}}")) + "|}";
+                    string latexTable = "\\begin{tabular}{|" + string.Join("|", table.rows[0].cells.Select(cell => $"m{{{cell.styling.cellWidth}cm}}")) + "|}";
                     latexTable += "\n\\hline\n";
 
                     foreach (var row in table.rows)
@@ -116,7 +116,9 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 string alignment = cell.styling.horizontalalignment;
                                 string alignmentChar = alignment == "right" ? "r" : alignment == "left" ? "l" : "c";
-                                latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
+                                string alignmentRagged = alignment == "right" ? "raggedright" : alignment == "left" ? "raggedleft" : alignment == "both" ? "justifying" : "centering";
+                                // latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
+                                latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
                             }
 
                             if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")

@@ -71,16 +71,13 @@ namespace ICT2106WebApp.mod2grp6.TestCase
 
         public List<AbstractNode> MathContent = new List<AbstractNode>
         {
-            new SimpleNode(1, "math", "(1/2) × √(4)  <- math", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(2, "math", "∫", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(3, "math", "(1/2) × √(4)=1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
-            new SimpleNode(4, "math", "s=√(([i=1,N](x^2)/N-1))", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
-            new SimpleNode(5, "math", "(1/2)cos2x+ (3/8)sin4x =3x", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
-            new SimpleNode(6, "math", "log_24y ≥ (π/2)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
-            new SimpleNode(7, "math", "∴ ∞ ≠ ±α", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
-            new SimpleNode(8, "math", "∃xPersonx∧∀yTimey→Happyx,y", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
-            new SimpleNode(9, "math", "F=ma", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
-            new SimpleNode(10, "math", "limn→∞1+(1/n)^n=e", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } })
+            new SimpleNode(1, "math", "(1/2) × √(4)=1", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+            new SimpleNode(2, "math", "(1/2)cos2x+ (3/8)sin4x =3x", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+            new SimpleNode(3, "math", "log_24y ≥ (π/2)", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "center" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
+            new SimpleNode(4, "math", "∴ ∞ ≠ ±α", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.15x)" }, { "LineSpacingValue", 13.8 } } }),
+            new SimpleNode(5, "math", "∃xPersonx∧∀yTimey→Happyxy", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
+            new SimpleNode(6, "math", "F=ma", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", true }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
+            new SimpleNode(7, "math", "lim(1+(1/n)^n)=e", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Bold", false }, { "Italic", false }, { "Alignment", "left" }, { "FontSize", 12 }, { "FontType", "Default Font" }, { "FontColor", "000000" }, { "Highlight", "none" }, { "LineSpacingType", "Multiple (1.1x)" }, { "LineSpacingValue", 12.95 } } }),
         };
 
         public List<AbstractNode> Lists = new List<AbstractNode>
@@ -108,13 +105,114 @@ namespace ICT2106WebApp.mod2grp6.TestCase
 
         public List<AbstractNode> Images = new List<AbstractNode>
         {
-            new SimpleNode(1, "image", "Image_rId9.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 2500550 }, { "HeightEMU", 2500550 } } }),
-            new SimpleNode(2, "image", "Image_rId10.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Center Align (Ctrl + E)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 2786063 }, { "HeightEMU", 1567160 } } }),
-            new SimpleNode(3, "image", "Image_rId11.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 3205163 }, { "HeightEMU", 2136775 } } }),
-            new SimpleNode(4, "image", "Image_rId12.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 4259713 }, { "HeightEMU", 3195021 } } }),
-            new SimpleNode(5, "image", "Image_rId13.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Right Align (Ctrl + R)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 2264485, Vertical Offset: 1046" }, { "WidthEMU", 3469535 }, { "HeightEMU", 2312895 } } }),
-            new SimpleNode(6, "image", "Image_rId14.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Justify (Ctrl + J)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 0, Vertical Offset: 0" }, { "WidthEMU", 3840480 }, { "HeightEMU", 2560320 } } })
+            new SimpleNode(1, "image", "Image_rId9.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 25005 }, { "HeightEMU", 25005 } } }),
+            new SimpleNode(2, "image", "Image_rId10.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Center Align (Ctrl + E)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 27860 }, { "HeightEMU", 15671 } } }),
+            new SimpleNode(3, "image", "Image_rId11.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 32051 }, { "HeightEMU", 21367 } } }),
+            new SimpleNode(4, "image", "Image_rId12.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Left Align (Ctrl + L)" }, { "Format", "PNG" }, { "Position", "Inline (position determined by text flow)" }, { "WidthEMU", 42597 }, { "HeightEMU", 31950 } } }),
+            new SimpleNode(5, "image", "Image_rId13.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Right Align (Ctrl + R)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 2264, Vertical Offset: 1046" }, { "WidthEMU", 34695 }, { "HeightEMU", 23128 } } }),
+            new SimpleNode(6, "image", "Image_rId14.png", new List<Dictionary<string, object>> { new Dictionary<string, object> { { "Alignment", "Justify (Ctrl + J)" }, { "Format", "JPG" }, { "Position", "Horizontal Offset: 0, Vertical Offset: 0" }, { "WidthEMU", 38404 }, { "HeightEMU", 25603 } } })
         };
+
+        public List<AbstractNode> SpecialContent = new List<AbstractNode>
+        {
+            // Header node
+            new SimpleNode(101, "header", "This is a header Text", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", true },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Footer node
+            new SimpleNode(102, "footer", "This is a footer text", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Footnote node
+            new SimpleNode(103, "footnote", "This is the footnote text.", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 10 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Textbox node
+            new SimpleNode(104, "textbox", "This is a simple textbox. You can adjust the width and content as needed. This textbox can contain multiple lines of text and will automatically wrap.", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" },
+                        { "Border", "solid" },
+                        { "BorderColor", "000000" }
+                    }
+                }
+            ),
+            // Pagebreak node
+            new SimpleNode(105, "pagebreak", "New page", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "center" },
+                        { "FontSize", 12 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            ),
+            // Endnote node
+            new SimpleNode(106, "endnote", "This is the endnote text.", 
+                new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "Bold", false },
+                        { "Italic", false },
+                        { "Alignment", "left" },
+                        { "FontSize", 10 },
+                        { "FontType", "Default Font" },
+                        { "FontColor", "000000" },
+                        { "Highlight", "none" }
+                    }
+                }
+            )};    
 
         // public List<AbstractNode> TableContent = new List<AbstractNode>
         // {

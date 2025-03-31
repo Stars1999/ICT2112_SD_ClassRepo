@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using ICT2106WebApp.Utilities;
 using ICT2106WebApp.mod2grp6.Template;
 using ICT2106WebApp.mod2grp6.TestCase;
+using System.Diagnostics;
+
 
 namespace ICT2106WebApp.mod2grp6
 {
@@ -37,6 +39,7 @@ namespace ICT2106WebApp.mod2grp6
             documentContent["math"] = sample.MathContent;
             documentContent["lists"] = sample.Lists;
             documentContent["images"] = sample.Images;
+            documentContent["special"] = sample.SpecialContent;
 
             TestCases templateSample = new TestCases();
             templateDocumentContent = new Dictionary<string, List<AbstractNode>>();
@@ -50,6 +53,7 @@ namespace ICT2106WebApp.mod2grp6
             templateDocumentContent["math"] = templateSample.MathContent;
             templateDocumentContent["lists"] = templateSample.Lists;
             templateDocumentContent["images"] = templateSample.Images;
+            templateDocumentContent["special"] = templateSample.SpecialContent;
         }
 
         /// <summary>
@@ -105,20 +109,19 @@ namespace ICT2106WebApp.mod2grp6
 
                 // We'd also handle math content, lists, images, and bibliography in a real implementation
                 
-                // MOD2GRP2 ADVANCED CONTENT (Math, List, Image)
-                var advancedProcessors = new Dictionary<ContentType, IProcessor>
+                // MOD2GRP2 Registry to store type, processor. (eg. math , mathprocessor)
+                var processorRegistry = new Dictionary<string, IProcessor>
                 {
-                    { ContentType.Math, new MathContentProcessor(documentContent["math"]) },
-                    // { ContentType.List, new SpecialElementProcessor(documentContent["lists"]) },
-                    //{ ContentType.Image, new ImageProcessor(documentContent["images"]) }
+                    { "math", new MathContentProcessor() },
+                    { "special", new SpecialElementProcessor() },
+                    { "images", new ImageProcessor() },
+                    // Add more without changing the manager!
                 };
 
-                foreach (var entry in advancedProcessors)
-                {
-                    var manager = new AdvancedConversionManager(entry.Value);
-                    manager.getContent(); // This mutates content in-place (via Attributes or other fields)
-                }
-                
+                 // MOD2GRP2 Advanced Conversion 
+                var advancedManager = new AdvancedConversionManager(documentContent, processorRegistry);
+                advancedManager.getContent();
+                // MOD2GRP2 End
                 return formatSuccess && textSuccess && paragraphSuccess && layoutSuccess;
             }
             catch (Exception ex)
@@ -147,6 +150,7 @@ namespace ICT2106WebApp.mod2grp6
                 allContent.AddRange(GetContentByType("math"));
                 allContent.AddRange(GetContentByType("lists"));
                 allContent.AddRange(GetContentByType("images"));
+                allContent.AddRange(GetContentByType("special"));
 
                 // Step 2: Retrieve the template by templateId
                 var templateTask = templateManager.getTemplate(templateId);

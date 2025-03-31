@@ -6,35 +6,21 @@ using ICT2106WebApp.Utilities;
 
 public class MathContentProcessor : IProcessor
 {
-    private List<AbstractNode> mathContent;
+    public string Type => "math";
 
-    public MathContentProcessor(List<AbstractNode> content)
-    {
-        mathContent = content;
-    }
-
-    public List<AbstractNode> convertContent(ContentType type)
-    {
-        if (type != ContentType.Math)
-            return new List<AbstractNode>();
-
-        return ProcessMathContent(mathContent);
-    }
-
-    private List<AbstractNode> ProcessMathContent(List<AbstractNode> nodes)
+    public void convertContent(List<AbstractNode> nodes)
     {
         foreach (var node in nodes)
         {
             try
             {
-                // 👇 Safely cast to SimpleNode to access .Content
                 if (node is SimpleNode simpleNode)
                 {
-                    string raw = PreprocessEquation(simpleNode.GetContent());  // .Content is the actual math expression
+                    string raw = PreprocessEquation(simpleNode.GetContent());
                     var parsed = MathS.FromString(raw);
                     string latex = parsed.Latexise();
 
-                    // Clean up LaTeX
+                    // Clean-up and replace
                     latex = latex.Replace(@"\left(", "(").Replace(@"\right)", ")");
                     latex = latex.Replace("THEREFORE", @"\therefore")
                                  .Replace("INFINITY", @"\infty")
@@ -49,14 +35,18 @@ public class MathContentProcessor : IProcessor
                                  .Replace(@"\cdot", @"\times");
 
                     latex = Regex.Replace(latex, @"\\log_{(\d+)}\(([^)]+)\)", @"\log_{$1} $2");
+
+                    simpleNode.SetContent($"${latex}$"); // ✅ Set converted LaTeX
                 }
             }
             catch (Exception ex)
             {
+                if (node is SimpleNode simpleNode)
+                {
+                    simpleNode.SetContent($"\\text{{Error: {ex.Message}}}");
+                }
             }
         }
-
-        return nodes;
     }
 
     private string PreprocessEquation(string equation)
@@ -78,7 +68,6 @@ public class MathContentProcessor : IProcessor
                            .Replace("∀", "FORALL ")
                            .Replace("∧", " AND ")
                            .Replace("→", " IMPLIES ");
-
         return equation;
     }
 }

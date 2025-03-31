@@ -2,5 +2,6 @@ public enum ContentType
 {
     Math,
     List,
-    Image
+    Image,
+    SpecialElement
 }

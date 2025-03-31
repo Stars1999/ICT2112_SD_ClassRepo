@@ -134,7 +134,6 @@ namespace ICT2106WebApp.mod1grp4
                                                     cellStyling.backgroundcolor = kvp.Value?.ToString();
                                                     break;
                                                 default:
-                                                    Console.WriteLine($"Unknown styling key: {kvp.Key}");
                                                     break;
                                             }
                                         }

@@ -91,7 +91,7 @@ namespace ICT2106WebApp.mod1grp4
                                 }
                                 latexCell = $"\\hl{{{latexCell}}}";
                             }
-                            if (!string.IsNullOrEmpty(cell.styling.textcolor))
+                            if (!string.IsNullOrEmpty(cell.styling.textcolor) && cell.styling.textcolor != "auto")
                             {
                                 if (!predefinedColours.Contains(cell.styling.textcolor))
                                 {
@@ -102,7 +102,10 @@ namespace ICT2106WebApp.mod1grp4
                             if (cell.styling.fontsize != 0)
                             {
                                 int fontSize = cell.styling.fontsize;
-                                latexCell = $"{{\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+                                string rowHeightLatex = string.IsNullOrEmpty(cell.styling.rowHeight) || cell.styling.rowHeight == "auto" 
+                                    ? string.Empty 
+                                    : $"\\rule{{0pt}}{{{cell.styling.rowHeight}cm}}";
+                                latexCell = $"{{{rowHeightLatex}\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
                             }
                             if (!string.IsNullOrEmpty(cell.styling.backgroundcolor) && cell.styling.backgroundcolor != "auto")
                             {
@@ -116,7 +119,7 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 string alignment = cell.styling.horizontalalignment;
                                 string alignmentChar = alignment == "right" ? "r" : alignment == "left" ? "l" : "c";
-                                string alignmentRagged = alignment == "right" ? "raggedright" : alignment == "left" ? "raggedleft" : alignment == "both" ? "justifying" : "centering";
+                                string alignmentRagged = alignment == "right" ? "raggedleft" : alignment == "left" ? "raggedright" : alignment == "both" ? "justifying" : "centering";
                                 // latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
                                 latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
                             }
@@ -125,7 +128,7 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 latexCell = $"\\sethlcolor {cell.styling.highlight}";
                             }
-                            latexTable += latexCell + " & ";
+                            latexTable += latexCell + " & \n";
                             iterator.next(); // Advance the iterator
                         }
                     }

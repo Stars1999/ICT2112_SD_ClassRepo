@@ -249,7 +249,7 @@ public static class DocumentProcessor
 			List<AbstractNode> runListNodes = new List<AbstractNode>();
 			List<AbstractNode> runRunListNodes = new List<AbstractNode>();
 
-			foreach (var item in documentContents)
+			foreach (var item in documentContents) //Go through doc content
 			{
 				// Going through each item's key-value pair of the object
 				if (item is Dictionary<string, object> dictionary)
@@ -351,7 +351,7 @@ public static class DocumentProcessor
 										}
 									}
 									
-									if(runKvp.Key == "runs") {
+									if(runKvp.Key == "runs") { //If Table Go To Cell Level
 										var runRunsList = (List<Dictionary<string, object>>)runKvp.Value;
 										// Loop through each text_run in runs
 										foreach (var runRun in runRunsList)
@@ -377,40 +377,16 @@ public static class DocumentProcessor
 													Console.WriteLine($"runContent: {runRunKvp.Value}");
 													Console.WriteLine($"runContent: {runRunContent}");
 												}
-												if (runRunKvp.Key == "styling")
+												if (runRunKvp.Key == "styling") //This is where we get Cell Style
 												{
-													if (kvp.Value is List<object> objectList)
-													{
+													if (runRunKvp.Value is Dictionary<string, object> stylingDictionary) {
 														List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
-
-														// Now iterate through the List<object> and check each item
-														foreach (var itemhere in objectList)
-														{
-															// Check if each item is a Dictionary<string, object>
-															if (itemhere is Dictionary<string, object> stylingDictionary)
-															{
-																// Add the dictionary to the stylingList
-																stylingList.Add(stylingDictionary);
-
-																// Process the dictionary (just printing the contents for now)
-																Console.WriteLine("Found a dictionary in styling:");
-																foreach (var styleKvp in stylingDictionary)
-																{
-																	string styleKey = styleKvp.Key;
-																	object styleValue = styleKvp.Value;
-																	Console.WriteLine($"Key: {styleKey}, Value: {styleValue}");
-																}
-															}
-															else
-															{
-																Console.WriteLine("Item in styling list is not a dictionary.");
-															}
-														}
-														Console.WriteLine("Finished processing styling list.");
+														stylingList.Add(stylingDictionary);
+														runRunStyling = stylingList.FirstOrDefault();
 													}
 													else
 													{
-														Console.WriteLine("The 'styling' value is not a List<object>.");
+														Console.WriteLine("The 'styling' value is not a Dictionary<string, object>.");
 													}
 												}
 											}

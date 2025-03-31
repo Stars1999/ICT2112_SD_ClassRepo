@@ -55,41 +55,25 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 
 					// Extract cell borders details
 					var borders = cell.Descendants<TableCellBorders>().FirstOrDefault();
-					var cellBorderDetails = new Dictionary<string, object>
-					{
+
+					//Extract Border Style
+					string bordertopstyle = borders?.TopBorder?.Val?.ToString() ?? "default";
+					string borderbottomstyle = borders?.BottomBorder?.Val?.ToString() ?? "default";
+					string borderleftstyle = borders?.LeftBorder?.Val?.ToString() ?? "default";
+					string borderrightstyle = borders?.RightBorder?.Val?.ToString() ?? "default";
+
+					//Extract Cell Border Width	
+					string bordertopwidth = (float.Parse(borders?.TopBorder?.Size ?? 8)/8).ToString();
+					string borderbottomwidth = (float.Parse(borders?.BottomBorder?.Size ?? 8)/8).ToString();
+					string borderleftwidth = (float.Parse(borders?.LeftBorder?.Size ?? 8)/8).ToString();
+					string borderrightwidth = (float.Parse(borders?.RightBorder?.Size ?? 8)/8).ToString();
+
+					//Extract Cell Border Colors
+					string bordertopcolor = borders?.TopBorder?.Color?.Value ?? "auto";
+					string borderbottomcolor = borders?.BottomBorder?.Color?.Value ?? "auto";
+					string borderleftcolor = borders?.LeftBorder?.Color?.Value ?? "auto";
+					string borderrightcolor = borders?.RightBorder?.Color?.Value ?? "auto";
 						
-						//Extract Cell Border Styles
-						{ "topstyle", borders?.TopBorder?.Val?.ToString() ?? "default" },
-						{ "bottomstyle", borders?.BottomBorder?.Val?.ToString() ?? "default" },
-						{ "leftstyle", borders?.LeftBorder?.Val?.ToString() ?? "default" },
-						{ "rightstyle", borders?.RightBorder?.Val?.ToString() ?? "default" },
-
-						//Extract Cell Border Width	
-						{ "topwidth", (float.Parse(borders?.TopBorder?.Size ?? 8)/8).ToString() },
-						{ "bottomwidth", (float.Parse(borders?.BottomBorder?.Size ?? 8)/8).ToString() },
-						{ "leftwidth", (float.Parse(borders?.LeftBorder?.Size ?? 8)/8).ToString() },
-						{ "rightwidth", (float.Parse(borders?.RightBorder?.Size ?? 8)/8).ToString() },
-
-						//Extract Cell Border Colors
-						{ "topcolor", borders?.TopBorder?.Color?.Value ?? "auto" },
-						{ "bottomcolor", borders?.BottomBorder?.Color?.Value ?? "auto" },
-						{ "leftcolor", borders?.LeftBorder?.Color?.Value ?? "auto" },
-						{ "rightcolor", borders?.RightBorder?.Color?.Value ?? "auto" },
-
-						//Any other border values to extract?
-					};
-
-					// Extract cell padding details (Not working yet)
-					// var cellPadding = cell.Descendants<TableCellMargin>().FirstOrDefault();
-					// var cellPaddingDetails = new Dictionary<string, object>
-					// {
-					// 	{ "toppadding", cellPadding?.TopMargin?.Val.ToString() },
-					// 	// { "bottompadding", cellPadding?.BottomMargin?.Width?.ToString() },
-					// 	// { "leftpadding", cellPadding?.LeftMargin?.Width?.ToString() },
-					// 	// { "rightpadding", cellPadding?.RightMargin?.Width?.ToString() },
-					// };
-
-
 					// // Extract cell width and height
 					string cellWidth = cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value != null
 					? ((float.Parse(cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value)*2.54)/1440).ToString("#.##")
@@ -98,20 +82,10 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 					? ((float.Parse(row.Descendants<TableRowHeight>().FirstOrDefault().Val)*2.54)/1440).ToString("#.##")
 					: "auto";
 
-					var cellSizeDetails = new Dictionary<string, object>
-					{
-						//width and height originally given in twips, to convert to cm need (twip*2.54)/1440
-						// { "cellwidth", ((float.Parse(cellWidth?.Width?.Value)*2.54)/1440).ToString("#.##") },
-						// { "cellheight", ((float.Parse(rowHeight?.Val ?? 1)*2.54)/1440).ToString("#.##")},
-						{ "cellwidth", cellWidth },
-						{ "cellheight", rowHeight }
-					};
-
 					// Extract cell background color
 					var cellShading = cell.Descendants<Shading>().FirstOrDefault();
 					string cellColor = cellShading?.Fill?.Value;
 					
-
 					// Create the cell dictionary in the desired format. (Details of cell)
 					var cellDict = new Dictionary<string, object>
 					{
@@ -121,18 +95,27 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 							"styling",
 							new Dictionary<string, object>
 							{
-								{ "underline", underline},
-								{ "bold", bold},
-								{ "italic", italic},
+								{ "underline", underline },
+								{ "bold", bold },
+								{ "italic", italic },
 								{ "fontType", fontType },
 								{ "fontsize", fontSize },
-								{ "horizontalalignment", horizontalalignment},
-								//GPT Start
-								{ "border", cellBorderDetails },
-								// { "padding", cellPaddingDetails },
-								{ "size", cellSizeDetails },
+								{ "horizontalalignment", horizontalalignment },
+								{ "bordertopstyle", bordertopstyle },
+								{ "borderbottomstyle", borderbottomstyle },
+								{ "borderleftstyle", borderleftstyle },
+								{ "borderrightstyle", borderrightstyle },
+								{ "bordertopwidth", bordertopwidth },
+								{ "borderbottomwidth", borderbottomwidth },
+								{ "borderleftwidth", borderleftwidth },
+								{ "borderrightwidth", borderrightwidth },
+								{ "bordertopcolor", bordertopcolor },
+								{ "borderbottomcolor", borderbottomcolor },
+								{ "borderleftcolor", borderleftcolor },
+								{ "borderrightcolor", borderrightcolor },
+								{ "cellWidth", cellWidth },
+								{ "rowHeight", rowHeight },
 								{ "backgroundcolor", cellColor },
-								// { "test", test },
 							}
 						},
 					};
@@ -141,16 +124,16 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 				}
 
 				// // You can also adjust the row styling as needed.
-				// var rowStyling = new Dictionary<string, object>
-				// {
-				// 	{ "bold", false },
-				// 	{ "italic", true },
-				// 	{ "alignment", "right" },
-				// 	{ "fontsize", 12 },
-				// 	{ "fonttype", "Aptos" },
-				// 	{ "fontcolor", "0E2841" },
-				// 	{ "highlight", "none" },
-				// };
+				var rowStyling = new Dictionary<string, object>
+				{
+					{ "bold", false },
+					{ "italic", true },
+					{ "alignment", "right" },
+					{ "fontsize", 12 },
+					{ "fonttype", "Aptos" },
+					{ "fontcolor", "0E2841" },
+					{ "highlight", "none" },
+				};
 
 				// Create a row dictionary matching the desired structure.
 				var rowDict = new Dictionary<string, object>
@@ -158,7 +141,7 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 					{ "type", "row" },
 					{ "content", "" },
 					{ "runs", cellList },
-					// { "styling", rowStyling },
+					{ "styling", rowStyling },
 				};
 
 				tableRows.Add(rowDict);
@@ -170,6 +153,11 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 				{ "type", "table" },
 				{ "content", "" },
 				{ "runs", tableRows },
+				{ "styling", new Dictionary<string, object>
+					{
+						{ "TableTestH", "Test1" },
+						{ "TableTestW", "Test2" },
+					} }
 			};
 
 			return tableDict;

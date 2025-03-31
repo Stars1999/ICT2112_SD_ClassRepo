@@ -692,7 +692,7 @@ public static class DocumentProcessor
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
 
-			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 
 

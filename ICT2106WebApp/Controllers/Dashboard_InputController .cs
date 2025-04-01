@@ -190,7 +190,8 @@ namespace ICT2106WebApp.Controllers
         [HttpGet("runtestmod2fail")]
         public async Task<IActionResult> runCitationTest2Fail()
         {
-            var mod2Test = new mod2testcases();
+            CustomLogger logger = new LoggerGateway_TDG();
+            var mod2Test = new mod2testcases(logger);
 
             // Call the RunPassTests() or RunFailTests()
             bool passResults = mod2Test.RunFailTests(); // RunPassTests() or RunFailTests()

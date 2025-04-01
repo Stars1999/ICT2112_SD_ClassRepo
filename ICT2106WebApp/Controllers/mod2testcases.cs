@@ -3,9 +3,20 @@
     using System;
     using System.Collections.Generic;
     using MongoDB.Bson;
+    using CustomLogger = ICT2106WebApp.Interfaces.ILogger;
 
     public class mod2testcases
     {
+        private readonly CustomLogger _logger;
+
+        // Constructor to inject logger
+        public mod2testcases(CustomLogger logger)
+        {
+            _logger = logger;
+
+            _logger.InsertLog(DateTime.Now, "Initializing Mod2 test cases.", "Mod2TestCases");
+        }
+
         // --------------------------------- To Hold Nodes --------------------------------- //
         private Dictionary<string, BsonDocument> _nodes = new Dictionary<string, BsonDocument>();
         private Dictionary<string, BsonDocument> _latexNodesPass = new Dictionary<string, BsonDocument>();

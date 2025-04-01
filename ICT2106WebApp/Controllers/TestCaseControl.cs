@@ -25,7 +25,7 @@ namespace ICT2106WebApp.Controllers
 					break;
 
 				case 2:
-					var mod2 = new mod2testcases();
+					var mod2 = new mod2testcases(_logger);
 					result = mod2.RunPassTests();
 					break;
 

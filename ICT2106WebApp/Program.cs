@@ -62,10 +62,10 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-// DocumentProcessor.RunMyProgram(database);
+DocumentProcessor.RunMyProgram(database);
 
 // GRP3 JOHNATHAN CRASH RECOVERY TESTING
-await DocumentProcessor.RunCrashRecovery(database);
+// await DocumentProcessor.RunCrashRecovery(database);
 
 
 app.Run();
@@ -984,136 +984,41 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 		}
 		return elements;
 	}
-// ============================ FOR PRTINTING TRAVERSE NODES ==================================
-	private static Dictionary<string, HashSet<string>> nodeTypeGroups = new Dictionary<string, HashSet<string>>
-	{
-		{ "headers", new HashSet<string> { "h1", "h2", "h3" } },
-		{ "layouts", new HashSet<string> { "layout", "page_break" } },
-		{ "lists", new HashSet<string> { "bulleted_list", "hollow_bulleted_list", "square_bulleted_list", "diamond_bulleted_list", "arrow_bulleted_list", "checkmark_bulleted_list", "dash_bulleted_list", "numbered_list", "numbered_parenthesis_list", "roman_numeral_list", "lowercase_roman_numeral_list", "uppercase_lettered_list", "lowercase_lettered_list", "lowercase_lettered_parenthesis_list" } },
-		{ "paragraphs", new HashSet<string> { "paragraph", "paragraph_run?", "empty_paragraph1" } },
-		{ "tables", new HashSet<string> { "table", "cell", "row" } },
-		{ "citationAndbibliographys", new HashSet<string> { "bibliography", "citation_run", "intext-citation" } }
-	};
 
-	public static void WriteToFile(string filePath, List<AbstractNode> nodes)
+	// Because my code broke , will shift this to some other class 
+	private static Dictionary<string, object> ConvertJsonElements(Dictionary<string, object> input)
 	{
-		using (StreamWriter writer = new StreamWriter(filePath))
+		var result = new Dictionary<string, object>();
+		foreach (var kvp in input)
 		{
-			writer.WriteLine("using System.Collections.Generic;");
-			writer.WriteLine("using Utilities;\n");
-			writer.WriteLine("public class AllNodesList");
-			writer.WriteLine("{");
-
-			Dictionary<string, List<AbstractNode>> groupedNodes = new Dictionary<string, List<AbstractNode>>();
-
-			// Group nodes by their corresponding group name
-			foreach (var node in nodes)
+			if (kvp.Value is JsonElement jsonElement)
 			{
-				string nodeType = node.GetNodeType();
-				string groupKey = nodeTypeGroups.FirstOrDefault(g => g.Value.Contains(nodeType)).Key;
-
-				if (groupKey == null)
+				switch (jsonElement.ValueKind)
 				{
-					groupKey = nodeType; // If the node type doesn't belong to any group, use the node type as the key
+					case JsonValueKind.String:
+						result[kvp.Key] = jsonElement.GetString();
+						break;
+					case JsonValueKind.Number:
+						result[kvp.Key] = jsonElement.GetDouble(); // or GetInt32() depending
+						break;
+					case JsonValueKind.True:
+					case JsonValueKind.False:
+						result[kvp.Key] = jsonElement.GetBoolean();
+						break;
+					case JsonValueKind.Object:
+					case JsonValueKind.Array:
+						result[kvp.Key] = jsonElement.ToString(); // fallback as string
+						break;
+					default:
+						result[kvp.Key] = null;
+						break;
 				}
-
-				if (!groupedNodes.ContainsKey(groupKey))
-				{
-					groupedNodes[groupKey] = new List<AbstractNode>();
-				}
-
-				groupedNodes[groupKey].Add(node);
+			} else {
+				result[kvp.Key] = kvp.Value;
 			}
-
-			// Write grouped nodes
-			foreach (var entry in groupedNodes)
-			{
-				string groupName = entry.Key;
-				List<AbstractNode> nodeList = entry.Value;
-
-				writer.WriteLine($"    // Node Type: {groupName}");
-				writer.WriteLine($"    public List<AbstractNode> {groupName} = new List<AbstractNode>");
-				writer.WriteLine("    {");
-
-				foreach (var node in nodeList)
-				{
-					var nodeId = node.GetNodeId();
-					var nodeLevel = node.GetNodeLevel();
-					var nodeType = node.GetNodeType();
-					var nodeContent = node.GetContent();
-					var nodeStyling = new List<Dictionary<string, object>>();
-
-					if (nodeType == "image")
-					{
-						writer.WriteLine($"        new CompositeNode({nodeId}, {nodeLevel}, \"{nodeType}\", @\"{nodeContent}\", {FormatStyling(nodeStyling)}),");
-					} else {
-						writer.WriteLine($"        new CompositeNode({nodeId}, {nodeLevel}, \"{nodeType}\", \"{nodeContent}\", {FormatStyling(nodeStyling)}),");
-					}
-				}
-
-				writer.WriteLine("    };");
-			}
-			writer.WriteLine("}");
 		}
+		return result;
 	}
-
-	// Helper method to format the styling list for output
-	private static string FormatStyling(List<Dictionary<string, object>> styling)
-	{
-		if (styling.Count == 0)
-			return "new List<Dictionary<string, object>> { }";
-
-		var formattedStyling = "new List<Dictionary<string, object>> { ";
-		foreach (var style in styling)
-		{
-			formattedStyling += "new Dictionary<string, object> { ";
-			foreach (var kvp in style)
-			{
-				formattedStyling += $"{{ \"{kvp.Key}\", {kvp.Value} }}, ";
-			}
-			formattedStyling = formattedStyling.TrimEnd(new char[] { ',', ' ' }) + " }, ";
-		}
-
-		return formattedStyling.TrimEnd(new char[] { ',', ' ' }) + " }";
-	}
-
-
-// Because my code broke , will shift this to some other class 
-private static Dictionary<string, object> ConvertJsonElements(Dictionary<string, object> input)
-{
- var result = new Dictionary<string, object>();
- foreach (var kvp in input)
- {
-  if (kvp.Value is JsonElement jsonElement)
-  {
-   switch (jsonElement.ValueKind)
-   {
-    case JsonValueKind.String:
-     result[kvp.Key] = jsonElement.GetString();
-     break;
-    case JsonValueKind.Number:
-     result[kvp.Key] = jsonElement.GetDouble(); // or GetInt32() depending
-     break;
-    case JsonValueKind.True:
-    case JsonValueKind.False:
-     result[kvp.Key] = jsonElement.GetBoolean();
-     break;
-    case JsonValueKind.Object:
-    case JsonValueKind.Array:
-     result[kvp.Key] = jsonElement.ToString(); // fallback as string
-     break;
-    default:
-     result[kvp.Key] = null;
-     break;
-   }
-  }
-  else
-  {
-   result[kvp.Key] = kvp.Value;
-  }
- }
- return result;
-}
 
 
     public static async Task ToSaveJson(DocumentControl documentControl, string filePath, string jsonOutputPath)
@@ -1153,7 +1058,7 @@ private static Dictionary<string, object> ConvertJsonElements(Dictionary<string,
             };
 
             // Convert to JSON format with UTF-8 encoding fix
-            string jsonOutput = JsonSerializer.Serialize(
+			string jsonOutput = System.Text.Json.JsonSerializer.Serialize(
                 documentData,
                 new JsonSerializerOptions
                 {
@@ -1173,345 +1078,345 @@ private static Dictionary<string, object> ConvertJsonElements(Dictionary<string,
 
 
 
-public static async Task toSaveTree(string filePath, string jsonOutputPath)
-{
-    using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
-    {
-        // Get layout information
-        var layoutInfo = GetDocumentLayout(wordDoc);
+	public static async Task toSaveTree(string filePath, string jsonOutputPath)
+	{
+		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+		{
+			// Get layout information
+			var layoutInfo = GetDocumentLayout(wordDoc);
 
-        // Extract document contents
-        var documentContents = ExtractDocumentContents(wordDoc);
+			// Extract document contents
+			var documentContents = ExtractDocumentContents(wordDoc);
 
-        // Create layout element
-        var layoutElement = new Dictionary<string, object>
-        {
-            { "type", "layout" },
-            { "content", "" },
-            {
-                "styling",
-                new List<object> { layoutInfo }
-            },
-        };
+			// Create layout element
+			var layoutElement = new Dictionary<string, object>
+			{
+				{ "type", "layout" },
+				{ "content", "" },
+				{
+					"styling",
+					new List<object> { layoutInfo }
+				},
+			};
 
-        // Insert layout as the first element in document contents
-        documentContents.Insert(0, layoutElement);
+			// Insert layout as the first element in document contents
+			documentContents.Insert(0, layoutElement);
 
-        // // to create rootnode
-        var layoutElementRoot = new Dictionary<string, object>
-        {
-            { "id", 0 },
-            { "type", "root" },
-            { "content", "" },
-        };
-        documentContents.Insert(0, layoutElementRoot);
-    string currentDir = Directory.GetCurrentDirectory();
-    string filePath_full = Path.Combine(currentDir, filePath);
-        var documentData = new
-        {
-            // metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-            metadata = GetDocumentMetadata(wordDoc, filePath_full),
-            // headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
-            // !!footer still exists issues. Commented for now
-            // footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
+			// // to create rootnode
+			var layoutElementRoot = new Dictionary<string, object>
+			{
+				{ "id", 0 },
+				{ "type", "root" },
+				{ "content", "" },
+			};
+			documentContents.Insert(0, layoutElementRoot);
+			string currentDir = Directory.GetCurrentDirectory();
+			string filePath_full = Path.Combine(currentDir, filePath);
+			var documentData = new
+			{
+				// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
+				metadata = GetDocumentMetadata(wordDoc, filePath_full),
+				// headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
+				// !!footer still exists issues. Commented for now
+				// footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
 
-            // documentContents is what i need
-            document = documentContents,
-        };
+				// documentContents is what i need
+				document = documentContents,
+			};
 
-        Console.WriteLine("\ndocumentContents");
-        Console.WriteLine(documentContents);
+			Console.WriteLine("\ndocumentContents");
+			Console.WriteLine(documentContents);
 
-        NodeManager nodeManager = new NodeManager(); // Create instance of NodeMa
-        TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
+			NodeManager nodeManager = new NodeManager(); // Create instance of NodeMa
+			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
 
-        int id = 1;
-        List<AbstractNode> nodesList = new List<AbstractNode>();
-        string jsonOutput = string.Empty;
+			int id = 1;
+			List<AbstractNode> nodesList = new List<AbstractNode>();
+			string jsonOutput = string.Empty;
 
-        var numberofRunNode = 0;
-        var numberofMainNode = 0;
+			var numberofRunNode = 0;
+			var numberofMainNode = 0;
 
-        // Going through each object in the document list
-        List<AbstractNode> runListNodes = new List<AbstractNode>();
-        List<AbstractNode> runRunListNodes = new List<AbstractNode>();
+			// Going through each object in the document list
+			List<AbstractNode> runListNodes = new List<AbstractNode>();
+			List<AbstractNode> runRunListNodes = new List<AbstractNode>();
 
-        foreach (var item in documentContents) //Go through doc content
-        {
-            // Going through each item's key-value pair of the object
-            if (item is Dictionary<string, object> dictionary)
-            {
-                Console.WriteLine("Dictionary contents:");
-                string nodeType = "";
-                string content = "";
-                List<Dictionary<string, object>> styling = new List<Dictionary<string, object>>();
+			foreach (var item in documentContents) //Go through doc content
+			{
+				// Going through each item's key-value pair of the object
+				if (item is Dictionary<string, object> dictionary)
+				{
+					Console.WriteLine("Dictionary contents:");
+					string nodeType = "";
+					string content = "";
+					List<Dictionary<string, object>> styling = new List<Dictionary<string, object>>();
 
-                // Loop through the dictionary and print the key-value pairs
-                foreach (var kvp in dictionary)
-                {
-                    if (kvp.Key == "type")
-                    {
-                        nodeType = (string)kvp.Value;
-                        Console.WriteLine($"type: {nodeType}");
-                    }
-                    if (kvp.Key == "content")
-                    {
-                        content = (string)kvp.Value;
-                        Console.WriteLine($"content {content}");
-                    }
-                    if (kvp.Key == "styling")
-                    {
-                        Console.WriteLine("Styling L1:");
+					// Loop through the dictionary and print the key-value pairs
+					foreach (var kvp in dictionary)
+					{
+						if (kvp.Key == "type")
+						{
+							nodeType = (string)kvp.Value;
+							Console.WriteLine($"type: {nodeType}");
+						}
+						if (kvp.Key == "content")
+						{
+							content = (string)kvp.Value;
+							Console.WriteLine($"content {content}");
+						}
+						if (kvp.Key == "styling")
+						{
+							Console.WriteLine("Styling L1:");
 
-                        if (kvp.Value is List<object> objectList)
-                        {
-                            List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+							if (kvp.Value is List<object> objectList)
+							{
+								List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
 
-                            foreach (var itemhere in objectList)
-                            {
-                                if (itemhere is Dictionary<string, object> stylingDictionary)
-                                {
-                                    stylingList.Add(ConvertJsonElements(stylingDictionary));
-                                }
-                            }
+								foreach (var itemhere in objectList)
+								{
+									if (itemhere is Dictionary<string, object> stylingDictionary)
+									{
+										stylingList.Add(ConvertJsonElements(stylingDictionary));
+									}
+								}
 
-                            // Assign the processed styling list to the styling variable
-                            styling = stylingList;
-                        }
-                        else
-                        {
-                            Console.WriteLine("The 'styling' value is not a List<object>.");
-                        }
-                    }
+								// Assign the processed styling list to the styling variable
+								styling = stylingList;
+							}
+							else
+							{
+								Console.WriteLine("The 'styling' value is not a List<object>.");
+							}
+						}
 
-                    // run nodes below and i need to create it
-                    // check for run
-                    // Check for 'runs' key
-                    if (kvp.Key == "runs")
-                    {
-                        var runsList = (List<Dictionary<string, object>>)kvp.Value;
-                        // Loop through each text_run in runs
-                        foreach (var run in runsList)
-                        {
-                            string runType = "";
-                            string runContent = "";
-                            Dictionary<string, object> runStyling = new Dictionary<string, object>();
+						// run nodes below and i need to create it
+						// check for run
+						// Check for 'runs' key
+						if (kvp.Key == "runs")
+						{
+							var runsList = (List<Dictionary<string, object>>)kvp.Value;
+							// Loop through each text_run in runs
+							foreach (var run in runsList)
+							{
+								string runType = "";
+								string runContent = "";
+								Dictionary<string, object> runStyling = new Dictionary<string, object>();
 
-                            Console.WriteLine("JSONBUILDINGrun");
-                            Console.WriteLine(run);
-                            // Process the 'type' and 'content' for each run
-                            foreach (var runKvp in run)
-                            {
-                                if (runKvp.Key == "type")
-                                {
-                                    runType = (string)runKvp.Value;
-                                    Console.WriteLine($"runType: {runKvp.Value}");
-                                    Console.WriteLine($"runType: {runType}");
-                                }
-                                if (runKvp.Key == "content")
-                                {
-                                    runContent = (string)runKvp.Value;
-                                    Console.WriteLine($"runContent: {runKvp.Value}");
-                                    Console.WriteLine($"runContent: {runContent}");
-                                }
-                                if (runKvp.Key == "styling")
-                                {
-                                    if (runKvp.Value is List<object> objectList)
-                                    {
-                                        List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+								Console.WriteLine("JSONBUILDINGrun");
+								Console.WriteLine(run);
+								// Process the 'type' and 'content' for each run
+								foreach (var runKvp in run)
+								{
+									if (runKvp.Key == "type")
+									{
+										runType = (string)runKvp.Value;
+										Console.WriteLine($"runType: {runKvp.Value}");
+										Console.WriteLine($"runType: {runType}");
+									}
+									if (runKvp.Key == "content")
+									{
+										runContent = (string)runKvp.Value;
+										Console.WriteLine($"runContent: {runKvp.Value}");
+										Console.WriteLine($"runContent: {runContent}");
+									}
+									if (runKvp.Key == "styling")
+									{
+										if (runKvp.Value is List<object> objectList)
+										{
+											List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
 
-                                        foreach (var itemhere in objectList)
-                                        {
-                                            if (itemhere is Dictionary<string, object> stylingDictionary)
-                                            {
-                                                stylingList.Add(ConvertJsonElements(stylingDictionary));
-                                            }
-                                        }
+											foreach (var itemhere in objectList)
+											{
+												if (itemhere is Dictionary<string, object> stylingDictionary)
+												{
+													stylingList.Add(ConvertJsonElements(stylingDictionary));
+												}
+											}
 
-                                        // Assign the processed styling list to the runStyling variable
-                                        runStyling = stylingList.FirstOrDefault(); // Assuming only one styling dictionary per run
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("The 'styling' value is not a List<object>.");
-                                    }
-                                }
-                                
-                                if(runKvp.Key == "runs") { //If Table Go To Cell Level
-                                    var runRunsList = (List<Dictionary<string, object>>)runKvp.Value;
-                                    // Loop through each text_run in runs
-                                    foreach (var runRun in runRunsList)
-                                    {
-                                        string runRunType = "";
-                                        string runRunContent = "";
-                                        Dictionary<string, object> runRunStyling = new Dictionary<string, object>();
+											// Assign the processed styling list to the runStyling variable
+											runStyling = stylingList.FirstOrDefault(); // Assuming only one styling dictionary per run
+										}
+										else
+										{
+											Console.WriteLine("The 'styling' value is not a List<object>.");
+										}
+									}
+									
+									if(runKvp.Key == "runs") { //If Table Go To Cell Level
+										var runRunsList = (List<Dictionary<string, object>>)runKvp.Value;
+										// Loop through each text_run in runs
+										foreach (var runRun in runRunsList)
+										{
+											string runRunType = "";
+											string runRunContent = "";
+											Dictionary<string, object> runRunStyling = new Dictionary<string, object>();
 
-                                        Console.WriteLine("JSONBUILDINGrunrun");
-                                        Console.WriteLine(runRun);
-                                        // Process the 'type' and 'content' for each run
-                                        foreach (var runRunKvp in runRun)
-                                        {
-                                            if (runRunKvp.Key == "type")
-                                            {
-                                                runRunType = (string)runRunKvp.Value;
-                                                Console.WriteLine($"runType: {runRunKvp.Value}");
-                                                Console.WriteLine($"runType: {runRunType}");
-                                            }
-                                            if (runRunKvp.Key == "content")
-                                            {
-                                                runRunContent = (string)runRunKvp.Value;
-                                                Console.WriteLine($"runContent: {runRunKvp.Value}");
-                                                Console.WriteLine($"runContent: {runRunContent}");
-                                            }
-                                            if (runRunKvp.Key == "styling") //This is where we get Cell Style
-                                            {
-                                                if (runRunKvp.Value is Dictionary<string, object> stylingDictionary) {
-                                                    List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
-                                                    stylingList.Add(stylingDictionary);
-                                                    runRunStyling = stylingList.FirstOrDefault();
-                                                }
-                                                else
-                                                {
-                                                    Console.WriteLine("The 'styling' value is not a Dictionary<string, object>.");
-                                                }
-                                            }
-                                        }
+											Console.WriteLine("JSONBUILDINGrunrun");
+											Console.WriteLine(runRun);
+											// Process the 'type' and 'content' for each run
+											foreach (var runRunKvp in runRun)
+											{
+												if (runRunKvp.Key == "type")
+												{
+													runRunType = (string)runRunKvp.Value;
+													Console.WriteLine($"runType: {runRunKvp.Value}");
+													Console.WriteLine($"runType: {runRunType}");
+												}
+												if (runRunKvp.Key == "content")
+												{
+													runRunContent = (string)runRunKvp.Value;
+													Console.WriteLine($"runContent: {runRunKvp.Value}");
+													Console.WriteLine($"runContent: {runRunContent}");
+												}
+												if (runRunKvp.Key == "styling") //This is where we get Cell Style
+												{
+													if (runRunKvp.Value is Dictionary<string, object> stylingDictionary) {
+														List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+														stylingList.Add(stylingDictionary);
+														runRunStyling = stylingList.FirstOrDefault();
+													}
+													else
+													{
+														Console.WriteLine("The 'styling' value is not a Dictionary<string, object>.");
+													}
+												}
+											}
 
-                                        // Create a node for each run (assuming it's a "text_run")
-                                        if (runRunType != "")
-                                        {
-                                            var runRunNode = nodeManager.CreateNode(id++, runRunType, runRunContent, new List<Dictionary<string, object>> { runRunStyling });
-                                            numberofRunNode = numberofRunNode + 1;
-                                            Console.WriteLine($"run myid:{id} {runRunType}: {runRunContent}\n");
-                                            // nodesList.Add(runNode);
-                                            runRunListNodes.Add(runRunNode);
-                                        }
-                                        // nodesList.Add(runNode);
-                                    }
-                                }
-                            }
+											// Create a node for each run (assuming it's a "text_run")
+											if (runRunType != "")
+											{
+												var runRunNode = nodeManager.CreateNode(id++, runRunType, runRunContent, new List<Dictionary<string, object>> { runRunStyling });
+												numberofRunNode = numberofRunNode + 1;
+												Console.WriteLine($"run myid:{id} {runRunType}: {runRunContent}\n");
+												// nodesList.Add(runNode);
+												runRunListNodes.Add(runRunNode);
+											}
+											// nodesList.Add(runNode);
+										}
+									}
+								}
 
-                            // Create a node for each run (assuming it's a "text_run")
-                            if (runType != "")
-                            {
-                                var runNode = nodeManager.CreateNode(id++, runType, runContent, new List<Dictionary<string, object>> { runStyling });
-                                numberofRunNode = numberofRunNode + 1;
-                                Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
-                                // nodesList.Add(runNode);
-                                runListNodes.Add(runNode);
-                                foreach (var runrunnodeitem in runRunListNodes)
-                                {
-                                    runListNodes.Add(runrunnodeitem);
-                                }
-                                runRunListNodes.Clear();
-                            }
-                            // nodesList.Add(runNode);
-                        }
-                        // end of run nodes
-                    }
+								// Create a node for each run (assuming it's a "text_run")
+								if (runType != "")
+								{
+									var runNode = nodeManager.CreateNode(id++, runType, runContent, new List<Dictionary<string, object>> { runStyling });
+									numberofRunNode = numberofRunNode + 1;
+									Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
+									// nodesList.Add(runNode);
+									runListNodes.Add(runNode);
+									foreach (var runrunnodeitem in runRunListNodes)
+									{
+										runListNodes.Add(runrunnodeitem);
+									}
+									runRunListNodes.Clear();
+								}
+								// nodesList.Add(runNode);
+							}
+							// end of run nodes
+						}
 
-                    // end of an object / Parent node
-                }
+						// end of an object / Parent node
+					}
 
-                if (nodeType != "" || content != "")
-                {
-                    var node = nodeManager.CreateNode(id++, nodeType, content, styling);
-                    nodesList.Add(node);
-                }
-                else
-                {
-                    Console.WriteLine($"Weird its null\n type: {nodeType}\ncontent: {content}\n");
-                }
+					if (nodeType != "" || content != "")
+					{
+						var node = nodeManager.CreateNode(id++, nodeType, content, styling);
+						nodesList.Add(node);
+					}
+					else
+					{
+						Console.WriteLine($"Weird its null\n type: {nodeType}\ncontent: {content}\n");
+					}
 
-                foreach (var runnodeitem in runListNodes)
-                {
-                    nodesList.Add(runnodeitem);
-                }
-                runListNodes.Clear();
-            }
-            // end of checking dictionary
-        }
-        
-        Console.WriteLine($"number of Main node: {numberofMainNode}\n");
-        Console.WriteLine($"number of Run node: {numberofRunNode}\n");
+					foreach (var runnodeitem in runListNodes)
+					{
+						nodesList.Add(runnodeitem);
+					}
+					runListNodes.Clear();
+				}
+				// end of checking dictionary
+			}
+			
+			Console.WriteLine($"number of Main node: {numberofMainNode}\n");
+			Console.WriteLine($"number of Run node: {numberofRunNode}\n");
 
-        /* Checking my json & nodes*/
+			/* Checking my json & nodes*/
 
-        //Check nodelist and count the number of nodes
-        Console.WriteLine("\n\n\n\n\n\n\n\n\n nodesList.Count");
-        Console.WriteLine(nodesList.Count);
-        int nodeNum = 0;
-        foreach (var nodeInList in nodesList)
-        {
-            nodeNum = nodeNum + 1;
-            Console.Write("nodeNum:");
-            Console.Write(nodeNum);
-            Console.Write("\n");
+			//Check nodelist and count the number of nodes
+			Console.WriteLine("\n\n\n\n\n\n\n\n\n nodesList.Count");
+			Console.WriteLine(nodesList.Count);
+			int nodeNum = 0;
+			foreach (var nodeInList in nodesList)
+			{
+				nodeNum = nodeNum + 1;
+				Console.Write("nodeNum:");
+				Console.Write(nodeNum);
+				Console.Write("\n");
 
-            var thetypehere = nodeInList.GetNodeType();
-            Console.WriteLine($"type:{thetypehere}");
+				var thetypehere = nodeInList.GetNodeType();
+				Console.WriteLine($"type:{thetypehere}");
 
-            var thelevelhere = nodeInList.GetNodeLevel();
-            Console.WriteLine($"level:{thelevelhere}");
+				var thelevelhere = nodeInList.GetNodeLevel();
+				Console.WriteLine($"level:{thelevelhere}");
 
-            var thecontenthere = nodeInList.GetContent();
-            Console.WriteLine($"content:{thecontenthere}");
+				var thecontenthere = nodeInList.GetContent();
+				Console.WriteLine($"content:{thecontenthere}");
 
-            var thestylinghere = nodeInList.GetStyling();
-            string consolidatedStyling = "";
-            foreach(var dict in thestylinghere)
-            {
-                foreach(var kvp in dict)
-                {
-                    consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
-                }
-            }
-            Console.WriteLine($"styling:{consolidatedStyling}");
-            Console.Write("\n");
-        }
-        jsonOutput = File.ReadAllText(jsonOutputPath);
-        // Parse the JSON string
-        JObject jsonObject = JObject.Parse(jsonOutput);
-        // Count the number of items in the "document" array
-        JArray documentArray = (JArray)jsonObject["document"];
-        int documentCount = documentArray.Count;
-        Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
+				var thestylinghere = nodeInList.GetStyling();
+				string consolidatedStyling = "";
+				foreach(var dict in thestylinghere)
+				{
+					foreach(var kvp in dict)
+					{
+						consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
+					}
+				}
+				Console.WriteLine($"styling:{consolidatedStyling}");
+				Console.Write("\n");
+			}
+			jsonOutput = File.ReadAllText(jsonOutputPath);
+			// Parse the JSON string
+			JObject jsonObject = JObject.Parse(jsonOutput);
+			// Count the number of items in the "document" array
+			JArray documentArray = (JArray)jsonObject["document"];
+			int documentCount = documentArray.Count;
+			Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
 
-        // Check if there are "runs" in any of the document items
-        var totalCounts = 0;
-        var i = 0;
-        foreach (var itemhere in documentArray)
-        {
-            var runs = itemhere["runs"];
+			// Check if there are "runs" in any of the document items
+			var totalCounts = 0;
+			var i = 0;
+			foreach (var itemhere in documentArray)
+			{
+				var runs = itemhere["runs"];
 
-            Console.WriteLine(i);
+				Console.WriteLine(i);
 
-            if (runs != null)
-            {
-                totalCounts = totalCounts + runs.Count();
-                // Console.WriteLine($"This item has {runs.Count()} runs.");
-            }
-            else
-            {
-                // Console.WriteLine("This item has no runs.");
-            }
+				if (runs != null)
+				{
+					totalCounts = totalCounts + runs.Count();
+					// Console.WriteLine($"This item has {runs.Count()} runs.");
+				}
+				else
+				{
+					// Console.WriteLine("This item has no runs.");
+				}
 
-            i = i + 1;
-        }
+				i = i + 1;
+			}
 
-        Console.WriteLine("total run count");
-        Console.WriteLine(totalCounts);
-        Console.WriteLine("\n");
+			Console.WriteLine("total run count");
+			Console.WriteLine(totalCounts);
+			Console.WriteLine("\n");
 
-        totalCounts = totalCounts + i;
-        Console.WriteLine("total = ");
-        Console.WriteLine(totalCounts);
+			totalCounts = totalCounts + i;
+			Console.WriteLine("total = ");
+			Console.WriteLine(totalCounts);
 
-        // CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
-		await treeProcessor.SaveTreeToDatabase(rootnodehere);
-    } // Added missing closing brace for using block
-} // Added missing closing brace for method
+			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
+			await treeProcessor.SaveTreeToDatabase(rootnodehere);
+		} // Added missing closing brace for using block
+	} // Added missing closing brace for method
 
 
 }

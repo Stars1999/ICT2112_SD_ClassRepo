@@ -211,12 +211,12 @@
                     testPassed = false;
                 }
 
-                results.Add(testPassed);
+                results.Add(!testPassed);
             }
 
             // Check if all tests passed
-            bool allPassed = !results.Contains(false);
-            return allPassed ? true : false;
+            bool allFailed = !results.Contains(false);
+            return allFailed;
         }
 
         // --------------------------------- HELPER METHODS --------------------------------- //

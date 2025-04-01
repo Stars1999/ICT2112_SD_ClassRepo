@@ -618,38 +618,6 @@ namespace ICT2106WebApp.mod2grp6.TestCase
 
         public List<AbstractNode> SpecialContent = new List<AbstractNode>
         {
-            // Header node
-            new SimpleNode(101, "header", "This is a header Text",
-                new List<Dictionary<string, object>>
-                {
-                    new Dictionary<string, object>
-                    {
-                        { "Bold", true },
-                        { "Italic", false },
-                        { "Alignment", "left" },
-                        { "FontSize", 12 },
-                        { "FontType", "Default Font" },
-                        { "FontColor", "000000" },
-                        { "Highlight", "none" }
-                    }
-                }
-            ),
-            // Footer node
-            new SimpleNode(102, "footer", "This is a footer text",
-                new List<Dictionary<string, object>>
-                {
-                    new Dictionary<string, object>
-                    {
-                        { "Bold", false },
-                        { "Italic", false },
-                        { "Alignment", "left" },
-                        { "FontSize", 12 },
-                        { "FontType", "Default Font" },
-                        { "FontColor", "000000" },
-                        { "Highlight", "none" }
-                    }
-                }
-            ),
             // Footnote node
             new SimpleNode(103, "footnote", "This is the footnote text.",
                 new List<Dictionary<string, object>>

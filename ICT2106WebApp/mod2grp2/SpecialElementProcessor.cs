@@ -43,12 +43,7 @@ public class SpecialElementProcessor : IProcessor
                 if (lower.Contains("new page"))
                     return "\\newpage";
 
-                string fancyStyle = "\\pagestyle{fancy}\n";
-                if (lower.Contains("header"))
-                    return fancyStyle + $"\\fancyhead[L]{{{strContent}}}";
-                else if (lower.Contains("footer"))
-                    return fancyStyle + $"\\fancyfoot[L]{{{strContent}}}";
-                else if (lower.Contains("footnote"))
+                if (lower.Contains("footnote"))
                     return $"\\footnote{{{strContent}}}";
                 else if (lower.Contains("textbox"))
                     return $"\\fbox{{\\parbox{{\\linewidth}}{{{strContent}}}}}";
@@ -76,13 +71,10 @@ public class SpecialElementProcessor : IProcessor
 
                 leftContent = FormatContent(leftContent, styling, 0);
 
-                string fancyStyle = (jsonType == "header" || jsonType == "footer") ? "\\pagestyle{fancy}\n" : "";
                 string endnoteSection = (jsonType == "endnote") ? "\\theendnotes\n" : "";
 
                 string latexOutput = jsonType switch
                 {
-                    "header" => fancyStyle + $"\\fancyhead[L]{{{leftContent}}}",
-                    "footer" => fancyStyle + $"\\fancyfoot[L]{{{leftContent}}}",
                     "footnote" => $"\\footnote{{{leftContent}}}",
                     "textbox" => $"\\fbox{{\\parbox{{\\linewidth}}{{{leftContent}}}}}",
                     "pagebreak" => "\\newpage",

@@ -131,46 +131,65 @@
             body: formData
         })
             .then(response => {
-                if (response.redirected) {
-                    // If server returns a redirect, follow it
-                    window.location.href = response.url;
-                    return;
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data && data.success) {
-                    // Reset progress bar and status message
-                    resetProgressBar();
-                    document.getElementById("statusMessage").innerText = "Status: Converting...";
+                // First store the response status
+                const isRedirect = response.redirected;
+                const redirectUrl = response.url;
 
-                    // Update progress dynamically
-                    let progress = 0;
-                    let totalSteps = 6;
-                    let progressInterval = setInterval(() => {
-                        if (progress < totalSteps) {
-                            progress++;
-                            let progressMessage = `Progress: ${progress}/6 (${getProgressText(progress)})`;
-                            logError(progressMessage);
-                            document.getElementById("statusProgress").style.width = (progress / totalSteps) * 100 + "%";
-                            document.getElementById("statusMessage").innerText = progressMessage;
-                        } else {
-                            clearInterval(progressInterval);
-                            logError("All Conversions Completed");
-                            document.getElementById("statusMessage").innerText = "All Conversions Completed";
-                            document.getElementById("statusProgress").style.backgroundColor = 'green';
+                // Try to parse response as JSON first
+                return response.text().then(text => {
+                    try {
+                        return {
+                            data: text ? JSON.parse(text) : null,
+                            isRedirect: isRedirect,
+                            redirectUrl: redirectUrl
+                        };
+                    } catch (e) {
+                        return {
+                            data: null,
+                            isRedirect: isRedirect,
+                            redirectUrl: redirectUrl
+                        };
+                    }
+                });
+            })
+            .then(({ data, isRedirect, redirectUrl }) => {
+                // Show progress first
+                resetProgressBar();
+                document.getElementById("statusMessage").innerText = "Status: Converting...";
+
+                let progress = 0;
+                let totalSteps = 6;
+                const progressInterval = setInterval(() => {
+                    if (progress < totalSteps) {
+                        progress++;
+                        let progressMessage = `Progress: ${progress}/6 (${getProgressText(progress)})`;
+                        logError(progressMessage);
+                        document.getElementById("statusProgress").style.width = (progress / totalSteps) * 100 + "%";
+                        document.getElementById("statusMessage").innerText = progressMessage;
+                    } else {
+                        clearInterval(progressInterval);
+                        logError("All Conversions Completed");
+                        document.getElementById("statusMessage").innerText = "All Conversions Completed";
+                        document.getElementById("statusProgress").style.backgroundColor = 'green';
+
+                        // Only redirect after showing completion
+                        if (isRedirect) {
+                            window.location.href = redirectUrl;
                         }
-                    }, 1000);
-                } else if (data) {
-                    logError(data.message);
-                    alert("Error: " + data.message);
+                    }
+                }, 1000);
+
+                if (!isRedirect && data) {
+                    if (!data.success) {
+                        logError(data.message);
+                        alert("Error: " + data.message);
+                    }
                 }
             })
             .catch(error => {
-                @* logError("Upload failed: " + error.message);
-    alert("Upload failed. " + error.message);
-    console.error("Upload error:", error); *@
-});
+                logError("Upload failed: " + error.message);
+                console.error("Upload error:", error);
+            });
 
         // Clear the file input after the form submission
         document.getElementById("fileInput").value = "";

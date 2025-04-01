@@ -52,7 +52,7 @@ namespace ICT2106WebApp.Controllers
                 _parser.UpdateConversionStatus(uploadedFile.FileName, "All conversions and tests completed successfully");
 
                 // Create the redirect result
-                var redirectResult = testStatus.ToLower().Contains("mla")
+                var redirectResult = uploadedFile.FileName.ToLower().Contains("mla")
                     ? RedirectToAction("LoadFromFileAndInsert2", "LatexEditorApplication", new { file = "mla_test.json" })
                     : RedirectToAction("LoadFromFileAndInsert", "LatexEditorApplication", new { file = "apa_test.json" });
 

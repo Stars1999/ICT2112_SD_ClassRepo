@@ -170,7 +170,7 @@
 <div class="editor-header">
     <h1>LaTeX Editor</h1>
     <div>
-        <button id="test-error-btn" class="btn btn-info me-2">Test Error Detection</button>
+        @* <button id="test-error-btn" class="btn btn-info me-2">Test Error Detection</button> *@
         <button id="download-pdf-btn" class="btn btn-primary" disabled>Download PDF</button>
     </div>
 </div>
@@ -178,7 +178,7 @@
 <!-- Toolbar -->
 <div class="bg-light d-flex align-items-center p-2 border-bottom mb-2">
     <button id="compile-btn" class="btn btn-primary me-2">Compile</button>
-    <button id="save-btn" class="btn btn-primary me-2">Save</button>
+    @* <button id="save-btn" class="btn btn-primary me-2">Save</button> *@
     <div class="btn-group me-2" role="group" aria-label="Citation Style">
         <a id="style-apa" href="/understem/load-apa-latex" class="btn btn-outline-primary">APA</a>
         <a id="style-mla" href="/understem/load-mla-latex" class="btn btn-outline-primary">MLA</a>
@@ -251,13 +251,13 @@
             const latexEditor = document.getElementById('latex-editor');
             const compileBtn = document.getElementById('compile-btn');
             const downloadPdfBtn = document.getElementById('download-pdf-btn');
-            const testErrorBtn = document.getElementById('test-error-btn');
+            @* const testErrorBtn = document.getElementById('test-error-btn'); *@
             const styleApaBtn = document.getElementById('style-apa');
             const styleMlaBtn = document.getElementById('style-mla');
             const currentStyleSpan = document.getElementById('current-style');
             const errorList = document.getElementById('error-list');
             const compilationStatus = document.getElementById('compilation-status');
-            const saveBtn = document.getElementById('save-btn');
+            @* const saveBtn = document.getElementById('save-btn'); *@
             
             // Function to update UI to reflect current style
             function updateStyleUI(style) {
@@ -317,7 +317,7 @@
 
             
             // Set up save button
-            saveBtn.addEventListener('click', function() {
+            @* saveBtn.addEventListener('click', function() {
                 let latexContent = editor ? editor.getValue() : latexEditor.value;
                 
                 fetch('/understem/save-latex', {
@@ -337,7 +337,7 @@
                     console.error('Error saving:', error);
                     compilationStatus.textContent = "Error: Could not save the document.";
                 });
-            });
+            }); *@
 
             function autoSaveToDatabase(content) {
                 fetch('/understem/save-latex', {
@@ -989,9 +989,9 @@
             });
             
             // Set up the test error detection button
-            testErrorBtn.addEventListener('click', function() {
+            @* testErrorBtn.addEventListener('click', function() {
                 testErrorDetection();
-            });
+            }); *@
             
             // Initialize the editor
             initializeStyles();

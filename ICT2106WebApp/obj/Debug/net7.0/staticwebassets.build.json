@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "CLF1QZM32CQBfOJaYV4c/BL0mdh1iomuupqZ/WmvokM=",
+  "Hash": "FtNXdEk3uDMjr7aZWYKc/GEeFEEOg6R/+fTcwaJS8kY=",
   "Source": "ICT2106WebApp",
   "BasePath": "_content/ICT2106WebApp",
   "Mode": "Default",
@@ -1205,6 +1205,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\pdfs\\document.toc"
+    },
+    {
+      "Identity": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\uploads\\apa_test.json",
+      "SourceId": "ICT2106WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\",
+      "BasePath": "_content/ICT2106WebApp",
+      "RelativePath": "uploads/apa_test.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\apa_test.json"
+    },
+    {
+      "Identity": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\uploads\\mla_test.json",
+      "SourceId": "ICT2106WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Leon\\Documents\\GitHub\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\",
+      "BasePath": "_content/ICT2106WebApp",
+      "RelativePath": "uploads/mla_test.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\mla_test.json"
     }
   ]
 }

@@ -53,7 +53,7 @@ namespace ICT2106WebApp.Controllers
 
                 // Create the redirect result
                 var redirectResult = testStatus.ToLower().Contains("mla")
-                    ? RedirectToAction("LoadFromFileAndInsert", "LatexEditorApplication", new { file = "mla_test.json" })
+                    ? RedirectToAction("LoadFromFileAndInsert2", "LatexEditorApplication", new { file = "mla_test.json" })
                     : RedirectToAction("LoadFromFileAndInsert", "LatexEditorApplication", new { file = "apa_test.json" });
 
                 // Set no-cache headers to ensure redirect works

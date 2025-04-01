@@ -26,13 +26,13 @@ namespace ICT2106WebApp.Controllers
 
                 // Update progress through stages
                 _parser.UpdateConversionStatus(fileName, "Mod1: Processing Started");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod1: 25% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod1: 50% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod1: 75% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod1: Conversion Complete");
 
                 return true;
@@ -50,17 +50,17 @@ namespace ICT2106WebApp.Controllers
             {
                 // Simulate scheduler processing Mod2
                 _parser.UpdateConversionStatus(fileName, "TaskScheduler: Queuing Mod2");
-                await Task.Delay(500);
+                //await Task.Delay(500);
 
                 // Update progress through stages
                 _parser.UpdateConversionStatus(fileName, "Mod2: Processing Started");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod2: 25% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod2: 50% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod2: 75% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod2: Conversion Complete");
 
                 return true;
@@ -78,17 +78,17 @@ namespace ICT2106WebApp.Controllers
             {
                 // Simulate scheduler processing Mod3
                 _parser.UpdateConversionStatus(fileName, "TaskScheduler: Queuing Mod3");
-                await Task.Delay(500);
+                //await Task.Delay(500);
 
                 // Update progress through stages
                 _parser.UpdateConversionStatus(fileName, "Mod3: Processing Started");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod3: 25% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod3: 50% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod3: 75% complete");
-                await Task.Delay(1000);
+                //await Task.Delay(1000);
                 _parser.UpdateConversionStatus(fileName, "Mod3: Conversion Complete");
 
                 return true;

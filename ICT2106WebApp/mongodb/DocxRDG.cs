@@ -116,7 +116,7 @@
 //     {
 // 		Console.WriteLine("DocxRDG -> saveTree");
 // 		await _treeCollection.InsertOneAsync(rootNode);
-// 		// await _treeUpdateNotify.Value.NotifyUpdatedTree(rootNode); // Notify about the update    
+// 		// await _treeUpdateNotify.Value.NotifyUpdatedTree(rootNode); // Notify about the update
 // 	}
 
 

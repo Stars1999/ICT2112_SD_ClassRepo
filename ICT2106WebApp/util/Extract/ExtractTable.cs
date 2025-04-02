@@ -12,7 +12,6 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Utilities;
 using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
-
 namespace Utilities
 {
 	public static partial class ExtractContent

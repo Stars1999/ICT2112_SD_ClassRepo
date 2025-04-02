@@ -216,7 +216,9 @@ namespace Utilities
 			{
 				{ "type", "image" },
 				{ "content", fileName },
-				{ "styling", new Dictionary<string, object>
+				{
+					"styling",
+					new Dictionary<string, object>
 					{
 						{ "widthEMU", cx },
 						{ "heightEMU", cy },
@@ -226,9 +228,9 @@ namespace Utilities
 						{ "verticalResolution", verticalResolution },
 						{ "format", imageFormat },
 						{ "alignment", alignment },
-						{ "position", imagePosition }
+						{ "position", imagePosition },
 					}
-				}
+				},
 				// { "type", "image" },
 				// { "filename", fileName },
 				// { "widthEMU", cx },

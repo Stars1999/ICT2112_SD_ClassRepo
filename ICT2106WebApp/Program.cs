@@ -9,15 +9,15 @@ using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using MongoDB.Bson; // Bson - Binary JSON
-					// MongoDB packages
-using MongoDB.Driver;
-using Utilities;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq; // Bson - Binary JSON
-using Newtonsoft.Json; // For JsonConvert
 using ICT2106WebApp.mod1Grp3;
 using ICT2106WebApp.mod1grp4;
+using Microsoft.Extensions.Options;
+using MongoDB.Bson; // Bson - Binary JSON
+// MongoDB packages
+using MongoDB.Driver;
+using Newtonsoft.Json; // For JsonConvert
+using Newtonsoft.Json.Linq; // Bson - Binary JSON
+using Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,27 +27,25 @@ builder.Services.AddLogging(); // Add logging for testing MongoDB
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 {
-var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
-return mongoClient;
+	var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+	var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+	return mongoClient;
 });
 builder.Services.AddSingleton(serviceProvider =>
 {
-var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-var mongoClient = serviceProvider.GetRequiredService<IMongoClient>();
-return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
+	var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+	var mongoClient = serviceProvider.GetRequiredService<IMongoClient>();
+	return mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
 });
 
 var serviceProvider = builder.Services.BuildServiceProvider();
 var database = serviceProvider.GetRequiredService<IMongoDatabase>();
-
 
 var app = builder.Build();
 Console.WriteLine("✅ App built successfully");
 
 // // Get logger instance
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -102,96 +100,95 @@ public static class DocumentProcessor
 		return metadata;
 	}
 
-
-// Grp3 Johnathan's Crash Recovery 
-public static async Task RunCrashRecovery(IMongoDatabase database)
-{
-    Console.WriteLine("Starting Document Processing with Crash Recovery");
-
-    DocumentControl documentControl = new DocumentControl();
-    DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
-    DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-	NodeManager nodeManager = new NodeManager();
-    TreeProcessor treeProcessor = new TreeProcessor();
-    
-    string filePath = "";
-    string outputPath = "";
-    string jsonOutputPath = "output.json"; // 
-
-	// 1. Start by checking if the docx is stored in the database
-	// By right there should only be 1 docx in the database for every conversion process.
-    Console.WriteLine("Retrieving all documents...");
-    var allDocuments = await documentGateway.GetAllAsync();
-    Console.WriteLine($"Retrieved {allDocuments.Count} documents");
-
-    // If there are documents, get the latest (should be only one)
-    if (allDocuments.Any())
-    {
-        var latestDocument = allDocuments.Last();
-        Console.WriteLine($"Latest document ID: {latestDocument.Id}");
-        Console.WriteLine($"Latest document Title: {latestDocument.Title}");
-
-        // Retrieve back the document
-        var retrievedDocument = await documentGateway.getDocument(latestDocument.Id);
-        if (retrievedDocument != null)
-        {
-            Console.WriteLine("Document retrieved successfully!");
-            Console.WriteLine($"Retrieved Document Title: {retrievedDocument.Title}");
-            outputPath = $"{retrievedDocument.Title}1.docx";
-        }
-		// Retrieve the saved document
-        await documentFailSafe.retrieveSavedDocument(latestDocument.Id, outputPath);
-        filePath = outputPath; // set the filePath to be the docx file path
-    }
-    else
-    {
-        Console.WriteLine("No documents found in the database.");
-		// doesnt exist, so i want to save one docx into my db NOW !
-        filePath = "Datarepository_zx_v4.docx"; // Update this with your actual file path
-		await documentControl.saveDocumentToDatabase(filePath);
-    }
-
-    string currentDir = Directory.GetCurrentDirectory();
-    string filePath_full = Path.Combine(currentDir, filePath);
-
-    if (!File.Exists(filePath_full))
-    {
-        Console.WriteLine($"Error: File '{filePath_full}' not found.");
-        return;
-    }
-	else{
-		Console.WriteLine("Good Job");
-	}
-	
-	// AT THIS POINT , YOU ALREADY HAVE A docx either retrieved from DB or newly read DOCX
-	
-    // STEP 2: CHECK IF JSON FILE EXISTS
-	string jsonFilePath = "output.json";
-
-	if (!File.Exists(jsonFilePath))
+	// Grp3 Johnathan's Crash Recovery
+	public static async Task RunCrashRecovery(IMongoDatabase database)
 	{
-		await ToSaveJson(documentControl,filePath,jsonFilePath);
-		await documentControl.saveJsonToDatabase(jsonOutputPath);
+		Console.WriteLine("Starting Document Processing with Crash Recovery");
 
-	}
+		DocumentControl documentControl = new DocumentControl();
+		DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
+		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+		NodeManager nodeManager = new NodeManager();
+		TreeProcessor treeProcessor = new TreeProcessor();
 
-	// STEP 3: CHECK FOR TREE
-	var rootNode = await treeProcessor.retrieveTree();
+		string filePath = "";
+		string outputPath = "";
+		string jsonOutputPath = "output.json"; //
 
-	if (rootNode == null) // IF retrieveTree does not return me the rootNode,
-	{
-		// Do something when the tree is not found
-		Console.WriteLine("Tree retrieval failed or no data available.");
-		await toSaveTree(filePath,jsonFilePath); // I will run the code to use the docx and json file to generate the tree
-	}
-	else
-	{
-		// Proceed with your logic when the tree is successfully retrieved
-		Console.WriteLine("Tree loaded successfully.");
-		CompositeNode mongoCompNode = null;
-		// Further processing here
+		// 1. Start by checking if the docx is stored in the database
+		// By right there should only be 1 docx in the database for every conversion process.
+		Console.WriteLine("Retrieving all documents...");
+		var allDocuments = await documentGateway.GetAllAsync();
+		Console.WriteLine($"Retrieved {allDocuments.Count} documents");
 
-		if (rootNode is CompositeNode compnode) // Use pattern matching
+		// If there are documents, get the latest (should be only one)
+		if (allDocuments.Any())
+		{
+			var latestDocument = allDocuments.Last();
+			Console.WriteLine($"Latest document ID: {latestDocument.Id}");
+			Console.WriteLine($"Latest document Title: {latestDocument.Title}");
+
+			// Retrieve back the document
+			var retrievedDocument = await documentGateway.getDocument(latestDocument.Id);
+			if (retrievedDocument != null)
+			{
+				Console.WriteLine("Document retrieved successfully!");
+				Console.WriteLine($"Retrieved Document Title: {retrievedDocument.Title}");
+				outputPath = $"{retrievedDocument.Title}1.docx";
+			}
+			// Retrieve the saved document
+			await documentFailSafe.retrieveSavedDocument(latestDocument.Id, outputPath);
+			filePath = outputPath; // set the filePath to be the docx file path
+		}
+		else
+		{
+			Console.WriteLine("No documents found in the database.");
+			// doesnt exist, so i want to save one docx into my db NOW !
+			filePath = "Datarepository_zx_v4.docx"; // Update this with your actual file path
+			await documentControl.saveDocumentToDatabase(filePath);
+		}
+
+		string currentDir = Directory.GetCurrentDirectory();
+		string filePath_full = Path.Combine(currentDir, filePath);
+
+		if (!File.Exists(filePath_full))
+		{
+			Console.WriteLine($"Error: File '{filePath_full}' not found.");
+			return;
+		}
+		else
+		{
+			Console.WriteLine("Good Job");
+		}
+
+		// AT THIS POINT , YOU ALREADY HAVE A docx either retrieved from DB or newly read DOCX
+
+		// STEP 2: CHECK IF JSON FILE EXISTS
+		string jsonFilePath = "output.json";
+
+		if (!File.Exists(jsonFilePath))
+		{
+			await ToSaveJson(documentControl, filePath, jsonFilePath);
+			await documentControl.saveJsonToDatabase(jsonOutputPath);
+		}
+
+		// STEP 3: CHECK FOR TREE
+		var rootNode = await treeProcessor.retrieveTree();
+
+		if (rootNode == null) // IF retrieveTree does not return me the rootNode,
+		{
+			// Do something when the tree is not found
+			Console.WriteLine("Tree retrieval failed or no data available.");
+			await toSaveTree(filePath, jsonFilePath); // I will run the code to use the docx and json file to generate the tree
+		}
+		else
+		{
+			// Proceed with your logic when the tree is successfully retrieved
+			Console.WriteLine("Tree loaded successfully.");
+			CompositeNode mongoCompNode = null;
+			// Further processing here
+
+			if (rootNode is CompositeNode compnode) // Use pattern matching
 			{
 				Console.WriteLine("mongoRootNode is a CompositeNode!");
 				mongoCompNode = compnode; // Assign to compNode
@@ -210,17 +207,19 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// Flatten the tree
 			if (mongoCompNode != null)
 			{
-			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(mongoCompNode);
-			
-			string jsonOutput = File.ReadAllText("output.json");
+				List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(mongoCompNode);
+
+				string jsonOutput = File.ReadAllText("output.json");
 				// Parse the JSON string
 				JObject jsonObject = JObject.Parse(jsonOutput);
-								JArray documentArray = (JArray)jsonObject["document"];
+				JArray documentArray = (JArray)jsonObject["document"];
 				int documentCount = documentArray.Count;
-			Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
+				Console.WriteLine(
+					$"\n\n Number of items in the JSON document array: {documentCount}"
+				);
 				// Count the number of items in the "document" array
-			// Call validation (pass the document array instead of the entire jsonObject)
-			bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
+				// Call validation (pass the document array instead of the entire jsonObject)
+				bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
 			}
 			else
 			{
@@ -233,7 +232,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// 	Console.WriteLine("Content mismatch detected!");
 
 			// bool isValidStructure = treeProcessor.ValidateNodeStructure(compNode, -1); // Root starts at level 0
-			
+
 			// // Output validation result
 			// if (isValidStructure)
 			// 	Console.WriteLine("Tree structure is valid!");
@@ -243,10 +242,11 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// DO NOT REMOVE FOR TESTING PURPOSES
 			// INodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseNode("image");
+		}
+		Console.WriteLine("finish runtest");
 	}
-	Console.WriteLine("finish runtest");
-}
-// END OF CRASH RECOVERY! TO FIX ARADHANA PART...OR ASK HER HEHE
+
+	// END OF CRASH RECOVERY! TO FIX ARADHANA PART...OR ASK HER HEHE
 
 	public async static void RunMyProgram(IMongoDatabase database)
 	{
@@ -276,8 +276,6 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 					new List<object> { layoutInfo }
 				},
 			};
-
-
 
 			// Insert layout as the first element in document contents
 			documentContents.Insert(0, layoutElement);
@@ -313,7 +311,6 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			List<AbstractNode> nodesList = new List<AbstractNode>();
 			string jsonOutput = string.Empty;
 
-
 			var numberofRunNode = 0;
 			var numberofMainNode = 0;
 
@@ -329,12 +326,12 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 					Console.WriteLine("Dictionary contents:");
 					string nodeType = "";
 					string content = "";
-					List<Dictionary<string, object>> styling = new List<Dictionary<string, object>>();
+					List<Dictionary<string, object>> styling =
+						new List<Dictionary<string, object>>();
 
 					// Loop through the dictionary and print the key-value pairs
 					foreach (var kvp in dictionary)
 					{
-
 						if (kvp.Key == "type")
 						{
 							nodeType = (string)kvp.Value;
@@ -351,7 +348,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 							if (kvp.Value is List<object> objectList)
 							{
-								List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+								List<Dictionary<string, object>> stylingList =
+									new List<Dictionary<string, object>>();
 
 								foreach (var itemhere in objectList)
 								{
@@ -381,7 +379,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 							{
 								string runType = "";
 								string runContent = "";
-								Dictionary<string, object> runStyling = new Dictionary<string, object>();
+								Dictionary<string, object> runStyling =
+									new Dictionary<string, object>();
 
 								Console.WriteLine("JSONBUILDINGrun");
 								Console.WriteLine(run);
@@ -404,13 +403,19 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 									{
 										if (runKvp.Value is List<object> objectList)
 										{
-											List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+											List<Dictionary<string, object>> stylingList =
+												new List<Dictionary<string, object>>();
 
 											foreach (var itemhere in objectList)
 											{
-												if (itemhere is Dictionary<string, object> stylingDictionary)
+												if (
+													itemhere
+													is Dictionary<string, object> stylingDictionary
+												)
 												{
-													stylingList.Add(ConvertJsonElements(stylingDictionary));
+													stylingList.Add(
+														ConvertJsonElements(stylingDictionary)
+													);
 												}
 											}
 
@@ -419,18 +424,23 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 										}
 										else
 										{
-											Console.WriteLine("The 'styling' value is not a List<object>.");
+											Console.WriteLine(
+												"The 'styling' value is not a List<object>."
+											);
 										}
 									}
-									
-									if(runKvp.Key == "runs") { //If Table Go To Cell Level
-										var runRunsList = (List<Dictionary<string, object>>)runKvp.Value;
+
+									if (runKvp.Key == "runs")
+									{ //If Table Go To Cell Level
+										var runRunsList =
+											(List<Dictionary<string, object>>)runKvp.Value;
 										// Loop through each text_run in runs
 										foreach (var runRun in runRunsList)
 										{
 											string runRunType = "";
 											string runRunContent = "";
-											Dictionary<string, object> runRunStyling = new Dictionary<string, object>();
+											Dictionary<string, object> runRunStyling =
+												new Dictionary<string, object>();
 
 											Console.WriteLine("JSONBUILDINGrunrun");
 											Console.WriteLine(runRun);
@@ -440,25 +450,44 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 												if (runRunKvp.Key == "type")
 												{
 													runRunType = (string)runRunKvp.Value;
-													Console.WriteLine($"runType: {runRunKvp.Value}");
+													Console.WriteLine(
+														$"runType: {runRunKvp.Value}"
+													);
 													Console.WriteLine($"runType: {runRunType}");
 												}
 												if (runRunKvp.Key == "content")
 												{
 													runRunContent = (string)runRunKvp.Value;
-													Console.WriteLine($"runContent: {runRunKvp.Value}");
-													Console.WriteLine($"runContent: {runRunContent}");
+													Console.WriteLine(
+														$"runContent: {runRunKvp.Value}"
+													);
+													Console.WriteLine(
+														$"runContent: {runRunContent}"
+													);
 												}
 												if (runRunKvp.Key == "styling") //This is where we get Cell Style
 												{
-													if (runRunKvp.Value is Dictionary<string, object> stylingDictionary) {
-														List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+													if (
+														runRunKvp.Value
+														is Dictionary<
+															string,
+															object
+														> stylingDictionary
+													)
+													{
+														List<
+															Dictionary<string, object>
+														> stylingList =
+															new List<Dictionary<string, object>>();
 														stylingList.Add(stylingDictionary);
-														runRunStyling = stylingList.FirstOrDefault();
+														runRunStyling =
+															stylingList.FirstOrDefault();
 													}
 													else
 													{
-														Console.WriteLine("The 'styling' value is not a Dictionary<string, object>.");
+														Console.WriteLine(
+															"The 'styling' value is not a Dictionary<string, object>."
+														);
 													}
 												}
 											}
@@ -466,9 +495,19 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 											// Create a node for each run (assuming it's a "text_run")
 											if (runRunType != "")
 											{
-												var runRunNode = nodeManager.CreateNode(id++, runRunType, runRunContent, new List<Dictionary<string, object>> { runRunStyling });
+												var runRunNode = nodeManager.CreateNode(
+													id++,
+													runRunType,
+													runRunContent,
+													new List<Dictionary<string, object>>
+													{
+														runRunStyling,
+													}
+												);
 												numberofRunNode = numberofRunNode + 1;
-												Console.WriteLine($"run myid:{id} {runRunType}: {runRunContent}\n");
+												Console.WriteLine(
+													$"run myid:{id} {runRunType}: {runRunContent}\n"
+												);
 												// nodesList.Add(runNode);
 												runRunListNodes.Add(runRunNode);
 											}
@@ -480,7 +519,12 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 								// Create a node for each run (assuming it's a "text_run")
 								if (runType != "")
 								{
-									var runNode = nodeManager.CreateNode(id++, runType, runContent, new List<Dictionary<string, object>> { runStyling });
+									var runNode = nodeManager.CreateNode(
+										id++,
+										runType,
+										runContent,
+										new List<Dictionary<string, object>> { runStyling }
+									);
 									numberofRunNode = numberofRunNode + 1;
 									Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
 									// nodesList.Add(runNode);
@@ -506,16 +550,16 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 					}
 					else
 					{
-						Console.WriteLine($"Weird its null\n type: {nodeType}\ncontent: {content}\n");
+						Console.WriteLine(
+							$"Weird its null\n type: {nodeType}\ncontent: {content}\n"
+						);
 					}
-
 
 					foreach (var runnodeitem in runListNodes)
 					{
 						nodesList.Add(runnodeitem);
 					}
 					runListNodes.Clear();
-
 				}
 				// end of checking dictionary
 
@@ -564,17 +608,15 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 				var thestylinghere = nodeInList.GetStyling();
 				string consolidatedStyling = "";
-				foreach(var dict in thestylinghere)
+				foreach (var dict in thestylinghere)
 				{
-					foreach(var kvp in dict)
+					foreach (var kvp in dict)
 					{
 						consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
 					}
 				}
 				Console.WriteLine($"styling:{consolidatedStyling}");
 				Console.Write("\n");
-
-
 			}
 
 			// Parse the JSON string
@@ -656,44 +698,48 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 				Console.WriteLine("Content mismatch detected!");
 
 			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
-			
+
 			// Output validation result
 			if (isValidStructure)
 				Console.WriteLine("Tree structure is valid!");
 			else
 				Console.WriteLine("Invalid tree structure detected.");
 
-//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 
 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
 
-//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 
-			
- 			// GROUP 4 STUFF
+
+			// GROUP 4 STUFF
 			// Step 1: Get abstract nodes of table from group 3
 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
 
-		    // Step 2: Convert abstract node to custom table entity (JOEL)
+			// Step 2: Convert abstract node to custom table entity (JOEL)
 			var tableOrganiser = new TableOrganiserManager();
-			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
+			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
+				tableAbstractNodes
+			);
 
 			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
 			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
 			var tablePreprocessingManager = new TablePreprocessingManager();
 			tablePreprocessingManager.attach(rowTabularGateway_RDG);
 			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
-			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
+			List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
+				await tablePreprocessingManager.fixTableIntegrity(tables);
 
 			// Step 4: Convert tables to LaTeX (ANDREA)
 			var latexConversionManager = new TableLatexConversionManager();
 			latexConversionManager.attach(rowTabularGateway_RDG);
 
 			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
-			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
+			List<ICT2106WebApp.mod1grp4.Table> processedTables =
+				await latexConversionManager.convertToLatexAsync(cleanedTables);
 
 			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
 			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
@@ -704,7 +750,10 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
 			var tableValidationManager = new TableValidationManager();
-			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
+			var validationStatus = tableValidationManager.validateTableLatexOutput(
+				tableAbstractNodes,
+				processedTables
+			);
 
 			var processedTableManager = new ProcessedTableManager();
 			processedTableManager.attach(rowTabularGateway_RDG);
@@ -733,7 +782,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// }
 			// if (originalMongo != null)
 			// {
-			// 	treeProcessor.PrintTree(originalMongo,0); 
+			// 	treeProcessor.PrintTree(originalMongo,0);
 			// }
 
 			// Retrieve the Latex tree from MongoDB (for demo query)
@@ -751,9 +800,9 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			}
 			// if (latexMongo != null)
 			// {
-			// 	treeProcessor.PrintTree(latexMongo,0); 
+			// 	treeProcessor.PrintTree(latexMongo,0);
 			// }
-	
+
 
 			// foreach (var tableNode in tableAbstractNodes)
 			// {
@@ -980,7 +1029,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 		return elements;
 	}
 
-	// Because my code broke , will shift this to some other class 
+	// Because my code broke , will shift this to some other class
 	private static Dictionary<string, object> ConvertJsonElements(Dictionary<string, object> input)
 	{
 		var result = new Dictionary<string, object>();
@@ -1008,69 +1057,75 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 						result[kvp.Key] = null;
 						break;
 				}
-			} else {
+			}
+			else
+			{
 				result[kvp.Key] = kvp.Value;
 			}
 		}
 		return result;
 	}
 
+	public static async Task ToSaveJson(
+		DocumentControl documentControl,
+		string filePath,
+		string jsonOutputPath
+	)
+	{
+		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+		{
+			// Get layout information
+			var layoutInfo = GetDocumentLayout(wordDoc);
 
-    public static async Task ToSaveJson(DocumentControl documentControl, string filePath, string jsonOutputPath)
-    {
-        using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
-        {
-            // Get layout information
-            var layoutInfo = GetDocumentLayout(wordDoc);
+			// Extract document contents
+			var documentContents = ExtractDocumentContents(wordDoc);
 
-            // Extract document contents
-            var documentContents = ExtractDocumentContents(wordDoc);
+			// Create layout element
+			var layoutElement = new Dictionary<string, object>
+			{
+				{ "type", "layout" },
+				{ "content", "" },
+				{
+					"styling",
+					new List<object> { layoutInfo }
+				},
+			};
 
-            // Create layout element
-            var layoutElement = new Dictionary<string, object>
-            {
-                { "type", "layout" },
-                { "content", "" },
-                { "styling", new List<object> { layoutInfo } }
-            };
+			// Insert layout as the first element in document contents
+			documentContents.Insert(0, layoutElement);
 
-            // Insert layout as the first element in document contents
-            documentContents.Insert(0, layoutElement);
+			// Create root node
+			var layoutElementRoot = new Dictionary<string, object>
+			{
+				{ "id", 0 },
+				{ "type", "root" },
+				{ "content", "" },
+			};
+			documentContents.Insert(0, layoutElementRoot);
 
-            // Create root node
-            var layoutElementRoot = new Dictionary<string, object>
-            {
-                { "id", 0 },
-                { "type", "root" },
-                { "content", "" }
-            };
-            documentContents.Insert(0, layoutElementRoot);
+			var documentData = new
+			{
+				metadata = GetDocumentMetadata(wordDoc, filePath), // Fixed `filePath_full`
+				document = documentContents,
+			};
 
-            var documentData = new
-            {
-                metadata = GetDocumentMetadata(wordDoc, filePath), // Fixed `filePath_full`
-                document = documentContents
-            };
-
-            // Convert to JSON format with UTF-8 encoding fix
+			// Convert to JSON format with UTF-8 encoding fix
 			string jsonOutput = System.Text.Json.JsonSerializer.Serialize(
-                documentData,
-                new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-                }
-            );
+				documentData,
+				new JsonSerializerOptions
+				{
+					WriteIndented = true,
+					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+				}
+			);
 
-            // Write JSON to file
-            File.WriteAllText(jsonOutputPath, jsonOutput);
-            Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
+			// Write JSON to file
+			File.WriteAllText(jsonOutputPath, jsonOutput);
+			Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
 
-            // Save JSON to database (assuming `saveJsonToDatabase` is an async method)
-        }
-    }
-
-
+			// Save JSON to database (assuming `saveJsonToDatabase` is an async method)
+		}
+	}
 
 	public static async Task toSaveTree(string filePath, string jsonOutputPath)
 	{
@@ -1143,7 +1198,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 					Console.WriteLine("Dictionary contents:");
 					string nodeType = "";
 					string content = "";
-					List<Dictionary<string, object>> styling = new List<Dictionary<string, object>>();
+					List<Dictionary<string, object>> styling =
+						new List<Dictionary<string, object>>();
 
 					// Loop through the dictionary and print the key-value pairs
 					foreach (var kvp in dictionary)
@@ -1164,7 +1220,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 							if (kvp.Value is List<object> objectList)
 							{
-								List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+								List<Dictionary<string, object>> stylingList =
+									new List<Dictionary<string, object>>();
 
 								foreach (var itemhere in objectList)
 								{
@@ -1194,7 +1251,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 							{
 								string runType = "";
 								string runContent = "";
-								Dictionary<string, object> runStyling = new Dictionary<string, object>();
+								Dictionary<string, object> runStyling =
+									new Dictionary<string, object>();
 
 								Console.WriteLine("JSONBUILDINGrun");
 								Console.WriteLine(run);
@@ -1217,13 +1275,19 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 									{
 										if (runKvp.Value is List<object> objectList)
 										{
-											List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+											List<Dictionary<string, object>> stylingList =
+												new List<Dictionary<string, object>>();
 
 											foreach (var itemhere in objectList)
 											{
-												if (itemhere is Dictionary<string, object> stylingDictionary)
+												if (
+													itemhere
+													is Dictionary<string, object> stylingDictionary
+												)
 												{
-													stylingList.Add(ConvertJsonElements(stylingDictionary));
+													stylingList.Add(
+														ConvertJsonElements(stylingDictionary)
+													);
 												}
 											}
 
@@ -1232,18 +1296,23 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 										}
 										else
 										{
-											Console.WriteLine("The 'styling' value is not a List<object>.");
+											Console.WriteLine(
+												"The 'styling' value is not a List<object>."
+											);
 										}
 									}
-									
-									if(runKvp.Key == "runs") { //If Table Go To Cell Level
-										var runRunsList = (List<Dictionary<string, object>>)runKvp.Value;
+
+									if (runKvp.Key == "runs")
+									{ //If Table Go To Cell Level
+										var runRunsList =
+											(List<Dictionary<string, object>>)runKvp.Value;
 										// Loop through each text_run in runs
 										foreach (var runRun in runRunsList)
 										{
 											string runRunType = "";
 											string runRunContent = "";
-											Dictionary<string, object> runRunStyling = new Dictionary<string, object>();
+											Dictionary<string, object> runRunStyling =
+												new Dictionary<string, object>();
 
 											Console.WriteLine("JSONBUILDINGrunrun");
 											Console.WriteLine(runRun);
@@ -1253,25 +1322,44 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 												if (runRunKvp.Key == "type")
 												{
 													runRunType = (string)runRunKvp.Value;
-													Console.WriteLine($"runType: {runRunKvp.Value}");
+													Console.WriteLine(
+														$"runType: {runRunKvp.Value}"
+													);
 													Console.WriteLine($"runType: {runRunType}");
 												}
 												if (runRunKvp.Key == "content")
 												{
 													runRunContent = (string)runRunKvp.Value;
-													Console.WriteLine($"runContent: {runRunKvp.Value}");
-													Console.WriteLine($"runContent: {runRunContent}");
+													Console.WriteLine(
+														$"runContent: {runRunKvp.Value}"
+													);
+													Console.WriteLine(
+														$"runContent: {runRunContent}"
+													);
 												}
 												if (runRunKvp.Key == "styling") //This is where we get Cell Style
 												{
-													if (runRunKvp.Value is Dictionary<string, object> stylingDictionary) {
-														List<Dictionary<string, object>> stylingList = new List<Dictionary<string, object>>();
+													if (
+														runRunKvp.Value
+														is Dictionary<
+															string,
+															object
+														> stylingDictionary
+													)
+													{
+														List<
+															Dictionary<string, object>
+														> stylingList =
+															new List<Dictionary<string, object>>();
 														stylingList.Add(stylingDictionary);
-														runRunStyling = stylingList.FirstOrDefault();
+														runRunStyling =
+															stylingList.FirstOrDefault();
 													}
 													else
 													{
-														Console.WriteLine("The 'styling' value is not a Dictionary<string, object>.");
+														Console.WriteLine(
+															"The 'styling' value is not a Dictionary<string, object>."
+														);
 													}
 												}
 											}
@@ -1279,9 +1367,19 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 											// Create a node for each run (assuming it's a "text_run")
 											if (runRunType != "")
 											{
-												var runRunNode = nodeManager.CreateNode(id++, runRunType, runRunContent, new List<Dictionary<string, object>> { runRunStyling });
+												var runRunNode = nodeManager.CreateNode(
+													id++,
+													runRunType,
+													runRunContent,
+													new List<Dictionary<string, object>>
+													{
+														runRunStyling,
+													}
+												);
 												numberofRunNode = numberofRunNode + 1;
-												Console.WriteLine($"run myid:{id} {runRunType}: {runRunContent}\n");
+												Console.WriteLine(
+													$"run myid:{id} {runRunType}: {runRunContent}\n"
+												);
 												// nodesList.Add(runNode);
 												runRunListNodes.Add(runRunNode);
 											}
@@ -1293,7 +1391,12 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 								// Create a node for each run (assuming it's a "text_run")
 								if (runType != "")
 								{
-									var runNode = nodeManager.CreateNode(id++, runType, runContent, new List<Dictionary<string, object>> { runStyling });
+									var runNode = nodeManager.CreateNode(
+										id++,
+										runType,
+										runContent,
+										new List<Dictionary<string, object>> { runStyling }
+									);
 									numberofRunNode = numberofRunNode + 1;
 									Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
 									// nodesList.Add(runNode);
@@ -1319,7 +1422,9 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 					}
 					else
 					{
-						Console.WriteLine($"Weird its null\n type: {nodeType}\ncontent: {content}\n");
+						Console.WriteLine(
+							$"Weird its null\n type: {nodeType}\ncontent: {content}\n"
+						);
 					}
 
 					foreach (var runnodeitem in runListNodes)
@@ -1330,7 +1435,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 				}
 				// end of checking dictionary
 			}
-			
+
 			Console.WriteLine($"number of Main node: {numberofMainNode}\n");
 			Console.WriteLine($"number of Run node: {numberofRunNode}\n");
 
@@ -1358,9 +1463,9 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 				var thestylinghere = nodeInList.GetStyling();
 				string consolidatedStyling = "";
-				foreach(var dict in thestylinghere)
+				foreach (var dict in thestylinghere)
 				{
-					foreach(var kvp in dict)
+					foreach (var kvp in dict)
 					{
 						consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
 					}
@@ -1411,6 +1516,4 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
 		} // Added missing closing brace for using block
 	} // Added missing closing brace for method
-
-
 }

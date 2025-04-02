@@ -112,9 +112,9 @@ public class DocumentFailSafe : IDocumentRetrieveNotify
 	// }
 	public DocumentFailSafe()
 	{
-		_docxRetrieve = (IDocumentRetrieve) new DocumentGateway_RDG();
+		_docxRetrieve = (IDocumentRetrieve)new DocumentGateway_RDG();
 		_docxRetrieve.docxRetrieve = this;
-    }
+	}
 
 	// Retrieve Saved Document
 	public async Task retrieveSavedDocument(string id, string outputPath)
@@ -142,12 +142,10 @@ public class DocumentFailSafe : IDocumentRetrieveNotify
 	{
 		Console.WriteLine("DocumentFailSafe -> Received json from RDG");
 		await Task.CompletedTask;
-
 	}
-	
+
 	public async Task retrieveSavedJson()
 	{
 		await _docxRetrieve.getJsonFile();
 	}
-
 }

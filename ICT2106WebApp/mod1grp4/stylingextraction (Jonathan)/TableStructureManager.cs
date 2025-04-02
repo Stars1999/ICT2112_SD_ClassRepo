@@ -48,6 +48,7 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 					string fontType = cellTextStyle?.RunFonts?.Ascii?.ToString() ?? "Arial";
 					//Get Text Alignment
 					string horizontalalignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.ToString() ?? "left";
+					string verticalalignment = cell.Descendants<TableCellVerticalAlignment>().FirstOrDefault()?.Val?.ToString() ?? "default";
 					//Get Text Color
 					string textcolor = cellTextStyle?.Color?.Val ?? "auto";
 					//Get Text Highlight Color
@@ -104,6 +105,7 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 								{ "fontType", fontType },
 								{ "fontsize", fontSize },
 								{ "horizontalalignment", horizontalalignment },
+								{ "verticalalignment", verticalalignment },
 								{ "textcolor", textcolor },
 								{ "highlightcolor", texthighlight },
 								{ "bordertopstyle", bordertopstyle },

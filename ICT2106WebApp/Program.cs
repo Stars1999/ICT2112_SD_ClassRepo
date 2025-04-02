@@ -715,8 +715,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			processedTableManager.logProcessingStatus(validationStatus);
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
-			// Will prove for Siti as we traverse the nodes again after updating
-			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+			// Will prove for Siti as we traverse the nodes again after updating and show that the content is updated with latex content
+			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 
 

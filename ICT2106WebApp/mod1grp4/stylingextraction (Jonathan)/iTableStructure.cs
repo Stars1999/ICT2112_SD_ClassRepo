@@ -3,5 +3,5 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 public interface iTableStructure
 {
-    Dictionary<string, object> extractTableStructure(Table table);
+	Dictionary<string, object> extractTableStructure(Table table);
 }

@@ -16,7 +16,11 @@ namespace Utilities
 {
 	public static partial class ExtractContent
 	{
-		public static string GetRunFontType(Run run, Paragraph paragraph, WordprocessingDocument doc)
+		public static string GetRunFontType(
+			Run run,
+			Paragraph paragraph,
+			WordprocessingDocument doc
+		)
 		{
 			// Default font if not found
 			string runFontType = "Default Font";
@@ -29,16 +33,24 @@ namespace Utilities
 			else
 			{
 				// 🔹 Step 2: Check Paragraph-Level Font Style
-				runFontType = paragraph.ParagraphProperties?
-					.ParagraphMarkRunProperties?.GetFirstChild<RunFonts>()?.Ascii?.Value ?? "Default Font";
+				runFontType =
+					paragraph
+						.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<RunFonts>()
+						?.Ascii?.Value ?? "Default Font";
 
 				// 🔹 Step 3: Check the style definition (if paragraph has a style)
 				string styleId = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value;
 				var stylesPart = doc.MainDocumentPart?.StyleDefinitionsPart;
 
-				if (!string.IsNullOrEmpty(styleId) && stylesPart != null && stylesPart.Styles != null)
+				if (
+					!string.IsNullOrEmpty(styleId)
+					&& stylesPart != null
+					&& stylesPart.Styles != null
+				)
 				{
-					var paragraphStyle = stylesPart.Styles.Elements<Style>().FirstOrDefault(s => s.StyleId == styleId);
+					var paragraphStyle = stylesPart
+						.Styles.Elements<Style>()
+						.FirstOrDefault(s => s.StyleId == styleId);
 					if (paragraphStyle?.StyleRunProperties?.RunFonts?.Ascii?.Value != null)
 					{
 						runFontType = paragraphStyle.StyleRunProperties.RunFonts.Ascii.Value;
@@ -46,7 +58,11 @@ namespace Utilities
 				}
 
 				// 🔹 Step 4: Check Document Default Font
-				var docDefaults = stylesPart?.Styles.Elements<Style>().FirstOrDefault(s => s.Type?.Value == StyleValues.Paragraph && s.Default?.Value == true);
+				var docDefaults = stylesPart
+					?.Styles.Elements<Style>()
+					.FirstOrDefault(s =>
+						s.Type?.Value == StyleValues.Paragraph && s.Default?.Value == true
+					);
 				if (docDefaults?.StyleRunProperties?.RunFonts?.Ascii?.Value != null)
 				{
 					runFontType = docDefaults.StyleRunProperties.RunFonts.Ascii.Value;
@@ -67,26 +83,26 @@ namespace Utilities
 			if (numberingProps != null)
 			{
 				// this is the type of listing
-				var numberingId = numberingProps?.NumberingId?.Val != null
-					? numberingProps.NumberingId.Val.Value.ToString()
-					: "None";
-
+				var numberingId =
+					numberingProps?.NumberingId?.Val != null
+						? numberingProps.NumberingId.Val.Value.ToString()
+						: "None";
 
 				// this means the depth
-				var levelId = numberingProps?.NumberingLevelReference?.Val != null
-					? numberingProps.NumberingLevelReference.Val.Value.ToString()
-					: "None";
+				var levelId =
+					numberingProps?.NumberingLevelReference?.Val != null
+						? numberingProps.NumberingLevelReference.Val.Value.ToString()
+						: "None";
 				Console.WriteLine($"Numbering ID: {numberingId ?? "None\n"}");
 				Console.WriteLine($"Level ID: {levelId ?? "None"}");
-
 			}
 			else
 			{
 				Console.WriteLine("This paragraph has no numbering properties.");
 			}
 
-
-			if (numberingProps == null) return "Unknown";
+			if (numberingProps == null)
+				return "Unknown";
 
 			var listType = numberingProps.NumberingId?.Val?.Value switch
 			{
@@ -104,7 +120,7 @@ namespace Utilities
 				19 => "roman_numeral_list",
 				20 => "uppercase_lettered_list",
 				21 => "lowercase_roman_numeral_list",
-				_ => "unknown_list"
+				_ => "unknown_list",
 			};
 			Console.WriteLine($"List type: {listType}\n");
 			return listType;
@@ -200,7 +216,8 @@ namespace Utilities
 									default:
 										if (twipValue > 240)
 										{
-											lineSpacingType = $"Multiple ({lineSpacingValue / 12:0.0}x)";
+											lineSpacingType =
+												$"Multiple ({lineSpacingValue / 12:0.0}x)";
 										}
 										break;
 								}
@@ -434,8 +451,6 @@ namespace Utilities
 
 				if (PropertiesList[0] is Dictionary<string, object> dict)
 				{
-
-
 					// get fonts and size
 					Console.WriteLine("\nS3");
 					//Check font and font size
@@ -446,7 +461,9 @@ namespace Utilities
 						runFontSizeS1 = parsedSizeS1 / 2; // Convert from half-points to standard points
 					Console.WriteLine($"Run Font Size: {runFontSizeS1}pt");
 
-					string? paraFontSizeRawS1 = paragraph.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<FontSize>()?.Val?.Value;
+					string? paraFontSizeRawS1 = paragraph
+						.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<FontSize>()
+						?.Val?.Value;
 					int paraFontSizeS1 = 12;
 
 					if (int.TryParse(paraFontSizeRawS1, out int paraParsedSizeS1))
@@ -455,10 +472,14 @@ namespace Utilities
 					string fontTypexx = GetRunFontType(run, paragraph, doc);
 					Console.WriteLine($"Paragraph Font Size1: {runFontSizeS1}pt {fontTypexx}");
 					Console.WriteLine(runText);
-					//end 
+					//end
 
 					// Now you can safely call dict.ContainsKey(...)
-					if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype") && haveBibliography == true)
+					if (
+						dict.ContainsKey("fontsize")
+						&& dict.ContainsKey("fonttype")
+						&& haveBibliography == true
+					)
 					{
 						// Retrieve and compare values | Check if citation
 						if (
@@ -478,19 +499,16 @@ namespace Utilities
 							);
 						}
 					}
-					else if (
-						dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype")
-					)
+					else if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype"))
 					{
-
 						// if (
 						// 	runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
 						// )
 						// {
 
-						string bracketPattern = @"\([^)]*\)";  // Matches entire ( ... )
-						string firstBracketPattern = @"\(";    // Matches first "("
-						string secondBracketPattern = @"\)";   // Matches first ")"
+						string bracketPattern = @"\([^)]*\)"; // Matches entire ( ... )
+						string firstBracketPattern = @"\("; // Matches first "("
+						string secondBracketPattern = @"\)"; // Matches first ")"
 
 						Match bracketMatch = Regex.Match(runText, bracketPattern);
 						Match firstBracketMatch = Regex.Match(runText, firstBracketPattern);
@@ -498,10 +516,9 @@ namespace Utilities
 
 						// matches whole bracket
 						if (
-
-							bracketMatch.Success &&
-							runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
-
+							bracketMatch.Success
+							&& runFontSizeS1 == 10
+							&& fontTypexx == "Times New Roman"
 						)
 						{
 							Console.WriteLine("bracket set\n");
@@ -509,47 +526,46 @@ namespace Utilities
 							Console.WriteLine(fontTypexx);
 							runsList.Add(
 								new Dictionary<string, object>
-									{
-											{ "type", "intext-citation" },
-											{ "content", runText },
-											{ "styling", PropertiesList[0] },
-									}
+								{
+									{ "type", "intext-citation" },
+									{ "content", runText },
+									{ "styling", PropertiesList[0] },
+								}
 							);
 						}
 						// found first bracket
-						else if
-						(
+						else if (
 							bracket == false
 							&& firstBracketMatch.Success
-							&& runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+							&& runFontSizeS1 == 10
+							&& fontTypexx == "Times New Roman"
 						)
 						{
-
 							runsList.Add(
 								new Dictionary<string, object>
-									{
-											{ "type", "intext-citation" },
-											{ "content", runText },
-											{ "styling", PropertiesList[0] },
-									}
+								{
+									{ "type", "intext-citation" },
+									{ "content", runText },
+									{ "styling", PropertiesList[0] },
+								}
 							);
 							bracket = true;
 						}
 						// second bracket
-						else if
-						(
+						else if (
 							bracket == true
-							&& secondBracketMatch.Success && runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
+							&& secondBracketMatch.Success
+							&& runFontSizeS1 == 10
+							&& fontTypexx == "Times New Roman"
 						)
 						{
-
 							runsList.Add(
 								new Dictionary<string, object>
-									{
-											{ "type", "intext-citation" },
-											{ "content", runText },
-											{ "styling", PropertiesList[0] },
-									}
+								{
+									{ "type", "intext-citation" },
+									{ "content", runText },
+									{ "styling", PropertiesList[0] },
+								}
 							);
 							bracket = false;
 						}
@@ -558,7 +574,6 @@ namespace Utilities
 						{
 							if (bracket == true)
 							{
-
 								// runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
 								Console.WriteLine("debug\n");
 								Console.WriteLine(runFontSizeS1);
@@ -567,28 +582,26 @@ namespace Utilities
 
 								runsList.Add(
 									new Dictionary<string, object>
-										{
-											{ "type", "intext-citation" },
-											{ "content", runText },
-											{ "styling", PropertiesList[0] },
-										}
+									{
+										{ "type", "intext-citation" },
+										{ "content", runText },
+										{ "styling", PropertiesList[0] },
+									}
 								);
 							}
 							else
 							{
 								runsList.Add(
 									new Dictionary<string, object>
-										{
-											{ "type", "text_run" },
-											{ "content", runText },
-											{ "styling", PropertiesList[0] },
-										}
+									{
+										{ "type", "text_run" },
+										{ "content", runText },
+										{ "styling", PropertiesList[0] },
+									}
 								);
 							}
-
 						}
 					}
-
 				}
 				else
 				{
@@ -596,8 +609,8 @@ namespace Utilities
 						new Dictionary<string, object>
 						{
 							{ "type", "text_run" },
-							{ "content", runText},
-							{ "styling", PropertiesList[0]},
+							{ "content", runText },
+							{ "styling", PropertiesList[0] },
 						}
 					);
 				}
@@ -644,7 +657,7 @@ namespace Utilities
 						{
 							{ "type", "paragraph_run?" },
 							{ "content", text },
-							  { "styling", new List<object>() }  // Ensure no comma here after the last item
+							{ "styling", new List<object>() }, // Ensure no comma here after the last item
 						};
 					}
 					else
@@ -653,7 +666,7 @@ namespace Utilities
 						{
 							{ "type", "paragraph_run" },
 							{ "content", runsList },
-							  { "styling", new List<object>() }  // Ensure no comma here after the last item
+							{ "styling", new List<object>() }, // Ensure no comma here after the last item
 						};
 					}
 				}
@@ -697,7 +710,7 @@ namespace Utilities
 						{ "type", FormatExtractor.GetParagraphType(style) },
 						{ "content", text },
 						{ "runs", runsList },
-						{ "styling??", new List<object>() }  // Ensure no comma here after the last item
+						{ "styling??", new List<object>() }, // Ensure no comma here after the last item
 					};
 					return finalDictionary;
 				}

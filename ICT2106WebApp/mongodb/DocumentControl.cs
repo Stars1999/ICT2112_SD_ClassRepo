@@ -1,14 +1,15 @@
 public class DocumentControl : IDocumentUpdateNotify
 {
-    // private readonly IDocumentUpdate _docxUpdate;
+	// private readonly IDocumentUpdate _docxUpdate;
 
-        private readonly IDocumentUpdate _dbGateway;
+	private readonly IDocumentUpdate _dbGateway;
 
-        public DocumentControl()
-        {
-            _dbGateway = (IDocumentUpdate )new DocumentGateway_RDG();
-            _dbGateway.docxUpdate = this;
-        }
+	public DocumentControl()
+	{
+		_dbGateway = (IDocumentUpdate)new DocumentGateway_RDG();
+		_dbGateway.docxUpdate = this;
+	}
+
 	// ✅ Create new document and store in DB
 	public async Task CreateDocxAsync(Docx docx)
 	{
@@ -32,7 +33,7 @@ public class DocumentControl : IDocumentUpdateNotify
 
 	// To save local document
 	public async Task saveDocumentToDatabase(string filePath)
-	{        
+	{
 		// Validate file exists
 		if (!File.Exists(filePath))
 		{

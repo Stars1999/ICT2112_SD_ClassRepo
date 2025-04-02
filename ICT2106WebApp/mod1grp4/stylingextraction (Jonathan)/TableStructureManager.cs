@@ -12,165 +12,190 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Utilities;
 using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
-//This is your file 
+//This is your file
 
 public class TableStructureManager : iTableStructure //Static was removed from here
+{
+	//extract table
+	public Dictionary<string, object> extractTableStructure(Table table) //Static was removed from here
 	{
-		//extract table
-		public Dictionary<string, object> extractTableStructure(Table table) //Static was removed from here
+		var tableRows = new List<Dictionary<string, object>>();
+
+		foreach (var row in table.Elements<TableRow>())
 		{
-			var tableRows = new List<Dictionary<string, object>>();
+			// List to hold cell dictionaries for this row.
+			var cellList = new List<Dictionary<string, object>>();
 
-			foreach (var row in table.Elements<TableRow>())
+			foreach (var cell in row.Elements<TableCell>())
 			{
-				// List to hold cell dictionaries for this row.
-				var cellList = new List<Dictionary<string, object>>();
+				// Extract the cell text.
+				string cellText = string.Join("", cell.Descendants<Text>().Select(t => t.Text));
 
-				foreach (var cell in row.Elements<TableCell>())
+				// //Example Extracter
+				// var tester = cell.Descendants<Font>().FirstOrDefault();
+				// string test = tester?.Name?.ToString();
+
+				//Get Run Properties
+				var cellTextStyle = cell.Descendants<RunProperties>().FirstOrDefault();
+
+				bool underline = cellTextStyle?.GetFirstChild<Underline>() != null;
+				bool bold = cellTextStyle?.GetFirstChild<Bold>() != null;
+				bool italic = cellTextStyle?.GetFirstChild<Italic>() != null;
+				//Get font size and style
+				float fontSize =
+					cell.Descendants<FontSize>().FirstOrDefault()?.Val != null
+						? float.Parse(cell.Descendants<FontSize>().FirstOrDefault().Val) / 2
+						: 11;
+				string fontType = cellTextStyle?.RunFonts?.Ascii?.ToString() ?? "Arial";
+				//Get Text Alignment
+				string horizontalalignment =
+					cell.Descendants<Justification>().FirstOrDefault()?.Val?.ToString() ?? "left";
+				string verticalalignment =
+					cell.Descendants<TableCellVerticalAlignment>().FirstOrDefault()?.Val?.ToString()
+					?? "default";
+				//Get Text Color
+				string textcolor = cellTextStyle?.Color?.Val ?? "auto";
+				//Get Text Highlight Color
+				string texthighlight = cellTextStyle?.Highlight?.Val ?? "none";
+				//Dump
+				// var tester = cell.Descendants<FontSize>().FirstOrDefault();
+				// string test = tester?.Val?.ToString() ?? "11";
+
+				// Extract cell borders details
+				var borders = cell.Descendants<TableCellBorders>().FirstOrDefault();
+
+				//Extract Border Style
+				string bordertopstyle = borders?.TopBorder?.Val?.ToString() ?? "default";
+				string borderbottomstyle = borders?.BottomBorder?.Val?.ToString() ?? "default";
+				string borderleftstyle = borders?.LeftBorder?.Val?.ToString() ?? "default";
+				string borderrightstyle = borders?.RightBorder?.Val?.ToString() ?? "default";
+
+				//Extract Cell Border Width
+				string bordertopwidth = (float.Parse(borders?.TopBorder?.Size ?? 8) / 8).ToString();
+				string borderbottomwidth = (
+					float.Parse(borders?.BottomBorder?.Size ?? 8) / 8
+				).ToString();
+				string borderleftwidth = (
+					float.Parse(borders?.LeftBorder?.Size ?? 8) / 8
+				).ToString();
+				string borderrightwidth = (
+					float.Parse(borders?.RightBorder?.Size ?? 8) / 8
+				).ToString();
+
+				//Extract Cell Border Colors
+				string bordertopcolor = borders?.TopBorder?.Color?.Value ?? "auto";
+				string borderbottomcolor = borders?.BottomBorder?.Color?.Value ?? "auto";
+				string borderleftcolor = borders?.LeftBorder?.Color?.Value ?? "auto";
+				string borderrightcolor = borders?.RightBorder?.Color?.Value ?? "auto";
+
+				// // Extract cell width and height
+				string cellWidth =
+					cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value != null
+						? (
+							(
+								float.Parse(
+									cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value
+								) * 2.54
+							) / 1440
+						).ToString("#.##")
+						: "auto";
+				var rowHeight =
+					row.Descendants<TableRowHeight>().FirstOrDefault() != null //Try find a way to get value, maybe use another proprty?
+						? (
+							(
+								float.Parse(row.Descendants<TableRowHeight>().FirstOrDefault().Val)
+								* 2.54
+							) / 1440
+						).ToString("#.##")
+						: "auto";
+
+				// Extract cell background color
+				var cellShading = cell.Descendants<Shading>().FirstOrDefault();
+				string cellColor = cellShading?.Fill?.Value;
+
+				// Create the cell dictionary in the desired format. (Details of cell)
+				var cellDict = new Dictionary<string, object>
 				{
-					// Extract the cell text.
-					string cellText = string.Join("", cell.Descendants<Text>().Select(t => t.Text));
-
-					// //Example Extracter
-					// var tester = cell.Descendants<Font>().FirstOrDefault();
-					// string test = tester?.Name?.ToString();
-
-					//Get Run Properties
-					var cellTextStyle = cell.Descendants<RunProperties>().FirstOrDefault();
-
-					bool underline = cellTextStyle?.GetFirstChild<Underline>() != null;
-					bool bold = cellTextStyle?.GetFirstChild<Bold>() != null;
-					bool italic = cellTextStyle?.GetFirstChild<Italic>() != null;
-					//Get font size and style
-					float fontSize = cell.Descendants<FontSize>().FirstOrDefault()?.Val != null 
-					? float.Parse(cell.Descendants<FontSize>().FirstOrDefault().Val) / 2 
-					: 11;
-					string fontType = cellTextStyle?.RunFonts?.Ascii?.ToString() ?? "Arial";
-					//Get Text Alignment
-					string horizontalalignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.ToString() ?? "left";
-					string verticalalignment = cell.Descendants<TableCellVerticalAlignment>().FirstOrDefault()?.Val?.ToString() ?? "default";
-					//Get Text Color
-					string textcolor = cellTextStyle?.Color?.Val ?? "auto";
-					//Get Text Highlight Color
-					string texthighlight = cellTextStyle?.Highlight?.Val ?? "none";
-					//Dump
-					// var tester = cell.Descendants<FontSize>().FirstOrDefault();
-					// string test = tester?.Val?.ToString() ?? "11";
-
-					// Extract cell borders details
-					var borders = cell.Descendants<TableCellBorders>().FirstOrDefault();
-
-					//Extract Border Style
-					string bordertopstyle = borders?.TopBorder?.Val?.ToString() ?? "default";
-					string borderbottomstyle = borders?.BottomBorder?.Val?.ToString() ?? "default";
-					string borderleftstyle = borders?.LeftBorder?.Val?.ToString() ?? "default";
-					string borderrightstyle = borders?.RightBorder?.Val?.ToString() ?? "default";
-
-					//Extract Cell Border Width	
-					string bordertopwidth = (float.Parse(borders?.TopBorder?.Size ?? 8)/8).ToString();
-					string borderbottomwidth = (float.Parse(borders?.BottomBorder?.Size ?? 8)/8).ToString();
-					string borderleftwidth = (float.Parse(borders?.LeftBorder?.Size ?? 8)/8).ToString();
-					string borderrightwidth = (float.Parse(borders?.RightBorder?.Size ?? 8)/8).ToString();
-
-					//Extract Cell Border Colors
-					string bordertopcolor = borders?.TopBorder?.Color?.Value ?? "auto";
-					string borderbottomcolor = borders?.BottomBorder?.Color?.Value ?? "auto";
-					string borderleftcolor = borders?.LeftBorder?.Color?.Value ?? "auto";
-					string borderrightcolor = borders?.RightBorder?.Color?.Value ?? "auto";
-						
-					// // Extract cell width and height
-					string cellWidth = cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value != null
-					? ((float.Parse(cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value)*2.54)/1440).ToString("#.##")
-					: "auto";
-					var rowHeight = row.Descendants<TableRowHeight>().FirstOrDefault() != null //Try find a way to get value, maybe use another proprty?
-					? ((float.Parse(row.Descendants<TableRowHeight>().FirstOrDefault().Val)*2.54)/1440).ToString("#.##")
-					: "auto";
-
-					// Extract cell background color
-					var cellShading = cell.Descendants<Shading>().FirstOrDefault();
-					string cellColor = cellShading?.Fill?.Value;
-					
-					// Create the cell dictionary in the desired format. (Details of cell)
-					var cellDict = new Dictionary<string, object>
+					{ "type", "cell" },
+					{ "content", cellText },
 					{
-						{ "type", "cell" },
-						{ "content", cellText },
+						"styling",
+						new Dictionary<string, object>
 						{
-							"styling",
-							new Dictionary<string, object>
-							{
-								{ "underline", underline },
-								{ "bold", bold },
-								{ "italic", italic },
-								{ "fontType", fontType },
-								{ "fontsize", fontSize },
-								{ "horizontalalignment", horizontalalignment },
-								{ "verticalalignment", verticalalignment },
-								{ "textcolor", textcolor },
-								{ "highlightcolor", texthighlight },
-								{ "bordertopstyle", bordertopstyle },
-								{ "borderbottomstyle", borderbottomstyle },
-								{ "borderleftstyle", borderleftstyle },
-								{ "borderrightstyle", borderrightstyle },
-								{ "bordertopwidth", bordertopwidth },
-								{ "borderbottomwidth", borderbottomwidth },
-								{ "borderleftwidth", borderleftwidth },
-								{ "borderrightwidth", borderrightwidth },
-								{ "bordertopcolor", bordertopcolor },
-								{ "borderbottomcolor", borderbottomcolor },
-								{ "borderleftcolor", borderleftcolor },
-								{ "borderrightcolor", borderrightcolor },
-								{ "cellWidth", cellWidth },
-								{ "rowHeight", rowHeight },
-								{ "backgroundcolor", cellColor },
-							}
-						},
-					};
-
-					cellList.Add(cellDict);
-				}
-
-				// // You can also adjust the row styling as needed.
-				// var rowStyling = new Dictionary<string, object>
-				// {
-				// 	{ "bold", false },
-				// 	{ "italic", true },
-				// 	{ "alignment", "right" },
-				// 	{ "fontsize", 12 },
-				// 	{ "fonttype", "Aptos" },
-				// 	{ "fontcolor", "0E2841" },
-				// 	{ "highlight", "none" },
-				// };
-
-				// Create a row dictionary matching the desired structure.
-				var rowDict = new Dictionary<string, object>
-				{
-					{ "type", "row" },
-					{ "content", "" },
-					{ "runs", cellList },
-					// { "styling", rowStyling },
+							{ "underline", underline },
+							{ "bold", bold },
+							{ "italic", italic },
+							{ "fontType", fontType },
+							{ "fontsize", fontSize },
+							{ "horizontalalignment", horizontalalignment },
+							{ "verticalalignment", verticalalignment },
+							{ "textcolor", textcolor },
+							{ "highlightcolor", texthighlight },
+							{ "bordertopstyle", bordertopstyle },
+							{ "borderbottomstyle", borderbottomstyle },
+							{ "borderleftstyle", borderleftstyle },
+							{ "borderrightstyle", borderrightstyle },
+							{ "bordertopwidth", bordertopwidth },
+							{ "borderbottomwidth", borderbottomwidth },
+							{ "borderleftwidth", borderleftwidth },
+							{ "borderrightwidth", borderrightwidth },
+							{ "bordertopcolor", bordertopcolor },
+							{ "borderbottomcolor", borderbottomcolor },
+							{ "borderleftcolor", borderleftcolor },
+							{ "borderrightcolor", borderrightcolor },
+							{ "cellWidth", cellWidth },
+							{ "rowHeight", rowHeight },
+							{ "backgroundcolor", cellColor },
+						}
+					},
 				};
 
-				tableRows.Add(rowDict);
+				cellList.Add(cellDict);
 			}
 
-			// Create the table dictionary with type "Table" and add the row dictionaries as its "runs".
-			var tableDict = new Dictionary<string, object>
+			// // You can also adjust the row styling as needed.
+			// var rowStyling = new Dictionary<string, object>
+			// {
+			// 	{ "bold", false },
+			// 	{ "italic", true },
+			// 	{ "alignment", "right" },
+			// 	{ "fontsize", 12 },
+			// 	{ "fonttype", "Aptos" },
+			// 	{ "fontcolor", "0E2841" },
+			// 	{ "highlight", "none" },
+			// };
+
+			// Create a row dictionary matching the desired structure.
+			var rowDict = new Dictionary<string, object>
 			{
-				{ "type", "table" },
+				{ "type", "row" },
 				{ "content", "" },
-				{ "runs", tableRows },
-				{ "styling", new Dictionary<string, object>
-					{
-						{ "TableTestH", "Test1" },
-						{ "TableTestW", "Test2" },
-					} }
+				{ "runs", cellList },
+				// { "styling", rowStyling },
 			};
 
-			return tableDict;
+			tableRows.Add(rowDict);
 		}
 
+		// Create the table dictionary with type "Table" and add the row dictionaries as its "runs".
+		var tableDict = new Dictionary<string, object>
+		{
+			{ "type", "table" },
+			{ "content", "" },
+			{ "runs", tableRows },
+			{
+				"styling",
+				new Dictionary<string, object>
+				{
+					{ "TableTestH", "Test1" },
+					{ "TableTestW", "Test2" },
+				}
+			},
+		};
+
+		return tableDict;
 	}
+}
 
 
 
@@ -205,13 +230,13 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 // 					bool bold = cellTextStyle?.GetFirstChild<Bold>() != null;
 // 					bool italic = cellTextStyle?.GetFirstChild<Italic>() != null;
 // 					//Get font size and style
-// 					float fontSize = cell.Descendants<FontSize>().FirstOrDefault()?.Val != null 
-// 					? float.Parse(cell.Descendants<FontSize>().FirstOrDefault().Val) / 2 
+// 					float fontSize = cell.Descendants<FontSize>().FirstOrDefault()?.Val != null
+// 					? float.Parse(cell.Descendants<FontSize>().FirstOrDefault().Val) / 2
 // 					: 11;
 // 					string fontType = cellTextStyle?.RunFonts?.Ascii?.ToString() ?? "Arial";
 // 					//Get Text Alignment
 // 					string horizontalalignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.ToString() ?? "left";
-					
+
 // 					//Dump
 // 					// var tester = cell.Descendants<FontSize>().FirstOrDefault();
 // 					// string test = tester?.Val?.ToString() ?? "11";
@@ -220,14 +245,14 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 // 					var borders = cell.Descendants<TableCellBorders>().FirstOrDefault();
 // 					var cellBorderDetails = new Dictionary<string, object>
 // 					{
-						
+
 // 						//Extract Cell Border Styles
 // 						{ "topstyle", borders?.TopBorder?.Val?.ToString() ?? "default" },
 // 						{ "bottomstyle", borders?.BottomBorder?.Val?.ToString() ?? "default" },
 // 						{ "leftstyle", borders?.LeftBorder?.Val?.ToString() ?? "default" },
 // 						{ "rightstyle", borders?.RightBorder?.Val?.ToString() ?? "default" },
 
-// 						//Extract Cell Border Width	
+// 						//Extract Cell Border Width
 // 						{ "topwidth", (float.Parse(borders?.TopBorder?.Size ?? 8)/8).ToString() },
 // 						{ "bottomwidth", (float.Parse(borders?.BottomBorder?.Size ?? 8)/8).ToString() },
 // 						{ "leftwidth", (float.Parse(borders?.LeftBorder?.Size ?? 8)/8).ToString() },
@@ -273,7 +298,7 @@ public class TableStructureManager : iTableStructure //Static was removed from h
 // 					// Extract cell background color
 // 					var cellShading = cell.Descendants<Shading>().FirstOrDefault();
 // 					string cellColor = cellShading?.Fill?.Value;
-					
+
 
 // 					// Create the cell dictionary in the desired format. (Details of cell)
 // 					var cellDict = new Dictionary<string, object>

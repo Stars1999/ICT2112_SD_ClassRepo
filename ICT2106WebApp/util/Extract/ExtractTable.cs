@@ -12,7 +12,6 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Utilities;
 using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
-
 namespace Utilities
 {
 	public static partial class ExtractContent
@@ -27,8 +26,7 @@ namespace Utilities
 
 			return new TableStructureManager().extractTableStructure(table);
 
-
-			//Old Version, to verify 
+			//Old Version, to verify
 			// var tableRows = new List<Dictionary<string, object>>();
 
 			// foreach (var row in table.Elements<TableRow>())
@@ -52,13 +50,13 @@ namespace Utilities
 			// 		bool bold = cellTextStyle?.GetFirstChild<Bold>() != null;
 			// 		bool italic = cellTextStyle?.GetFirstChild<Italic>() != null;
 			// 		//Get font size and style
-			// 		float fontSize = cell.Descendants<FontSize>().FirstOrDefault()?.Val != null 
-			// 		? float.Parse(cell.Descendants<FontSize>().FirstOrDefault().Val) / 2 
+			// 		float fontSize = cell.Descendants<FontSize>().FirstOrDefault()?.Val != null
+			// 		? float.Parse(cell.Descendants<FontSize>().FirstOrDefault().Val) / 2
 			// 		: 11;
 			// 		string fontType = cellTextStyle?.RunFonts?.Ascii?.ToString() ?? "Arial";
 			// 		//Get Text Alignment
 			// 		string horizontalalignment = cell.Descendants<Justification>().FirstOrDefault()?.Val?.ToString() ?? "left";
-					
+
 			// 		//Dump
 			// 		// var tester = cell.Descendants<FontSize>().FirstOrDefault();
 			// 		// string test = tester?.Val?.ToString() ?? "11";
@@ -67,14 +65,14 @@ namespace Utilities
 			// 		var borders = cell.Descendants<TableCellBorders>().FirstOrDefault();
 			// 		var cellBorderDetails = new Dictionary<string, object>
 			// 		{
-						
+
 			// 			//Extract Cell Border Styles
 			// 			{ "topstyle", borders?.TopBorder?.Val?.ToString() ?? "default" },
 			// 			{ "bottomstyle", borders?.BottomBorder?.Val?.ToString() ?? "default" },
 			// 			{ "leftstyle", borders?.LeftBorder?.Val?.ToString() ?? "default" },
 			// 			{ "rightstyle", borders?.RightBorder?.Val?.ToString() ?? "default" },
 
-			// 			//Extract Cell Border Width	
+			// 			//Extract Cell Border Width
 			// 			{ "topwidth", (float.Parse(borders?.TopBorder?.Size ?? 8)/8).ToString() },
 			// 			{ "bottomwidth", (float.Parse(borders?.BottomBorder?.Size ?? 8)/8).ToString() },
 			// 			{ "leftwidth", (float.Parse(borders?.LeftBorder?.Size ?? 8)/8).ToString() },
@@ -120,7 +118,7 @@ namespace Utilities
 			// 		// Extract cell background color
 			// 		var cellShading = cell.Descendants<Shading>().FirstOrDefault();
 			// 		string cellColor = cellShading?.Fill?.Value;
-					
+
 
 			// 		// Create the cell dictionary in the desired format. (Details of cell)
 			// 		var cellDict = new Dictionary<string, object>
@@ -184,6 +182,5 @@ namespace Utilities
 
 			// return tableDict;
 		}
-
 	}
 }

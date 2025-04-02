@@ -1,17 +1,22 @@
+using ICT2106WebApp.mod1Grp3;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using ICT2106WebApp.mod1Grp3;
 
 namespace Utilities
 {
 	public class CompositeNode : AbstractNode, INodeCollection
 	{
-
-        // [JsonProperty("children")]  // Add JsonProperty to ensure it's serialized
+		// [JsonProperty("children")]  // Add JsonProperty to ensure it's serialized
 		[BsonElement("children")]
 		private List<AbstractNode> children;
 
-		public CompositeNode(int id, int nl, string nt, string c, List<Dictionary<string, object>> s)
+		public CompositeNode(
+			int id,
+			int nl,
+			string nt,
+			string c,
+			List<Dictionary<string, object>> s
+		)
 			: base(id, nl, nt, c, s)
 		{
 			children = new List<AbstractNode>();

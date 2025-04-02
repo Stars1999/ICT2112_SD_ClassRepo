@@ -1,171 +1,179 @@
-
-
-using MongoDB.Driver;
-using Utilities;
+using ICT2106WebApp.mod1Grp3;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using ICT2106WebApp.mod1Grp3;
-public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, ITreeUpdate, INodeRetrieve, IQueryUpdate, IQueryRetrieve
+using MongoDB.Driver;
+using Utilities;
+
+public class DocumentGateway_RDG
+	: IDocumentRetrieve,
+		IDocumentUpdate,
+		ITreeUpdate,
+		INodeRetrieve,
+		IQueryUpdate,
+		IQueryRetrieve
 {
-    private readonly MongoDbService _mongoDbService;
-    private readonly IMongoCollection<Docx> _docxCollection;
-    // private readonly IMongoCollection<AbstractNode> _treeCollection;
-    private readonly IMongoCollection<AbstractNode> _treeCollection;
+	private readonly MongoDbService _mongoDbService;
+	private readonly IMongoCollection<Docx> _docxCollection;
 
-    private readonly IMongoCollection<BsonDocument> _jsonCollection;
-    // Nullable properties with null checks
-    private IDocumentUpdateNotify _docxUpdate;
-    private IDocumentRetrieveNotify _docxRetrieve;
+	// private readonly IMongoCollection<AbstractNode> _treeCollection;
+	private readonly IMongoCollection<AbstractNode> _treeCollection;
 
-    private ITreeUpdateNotify _treeUpdate;
-    
-    private IQueryUpdateNotify _queryUpdate;
+	private readonly IMongoCollection<BsonDocument> _jsonCollection;
 
-    private IQueryRetrieveNotify _queryRetrieve;
+	// Nullable properties with null checks
+	private IDocumentUpdateNotify _docxUpdate;
+	private IDocumentRetrieveNotify _docxRetrieve;
 
-    public IDocumentUpdateNotify docxUpdate
-    {
-        get => _docxUpdate;
-        set => _docxUpdate = value;
-    }
+	private ITreeUpdateNotify _treeUpdate;
 
-    public IDocumentRetrieveNotify docxRetrieve
-    {
-        get => _docxRetrieve;
-        set => _docxRetrieve = value;
-    }
+	private IQueryUpdateNotify _queryUpdate;
 
-    public ITreeUpdateNotify treeUpdate
-    {
-        get => _treeUpdate;
-        set => _treeUpdate = value;
-    }
+	private IQueryRetrieveNotify _queryRetrieve;
 
-    public IQueryUpdateNotify queryUpdate
-    {
-        get => _queryUpdate;
-        set => _queryUpdate = value;
-    }
+	public IDocumentUpdateNotify docxUpdate
+	{
+		get => _docxUpdate;
+		set => _docxUpdate = value;
+	}
 
-        public IQueryRetrieveNotify queryRetrieve
-    {
-        get => _queryRetrieve;
-        set => _queryRetrieve = value;
-    }
+	public IDocumentRetrieveNotify docxRetrieve
+	{
+		get => _docxRetrieve;
+		set => _docxRetrieve = value;
+	}
 
-    public DocumentGateway_RDG()
-    {
-        _mongoDbService = new MongoDbService();
-        _docxCollection = _mongoDbService.GetCollection<Docx>("wordox");
-        // _treeCollection = _mongoDbService.GetCollection<AbstractNode>("trees");
-        _treeCollection = _mongoDbService.GetCollection<AbstractNode>("mergewithcommentedcode");
-        _jsonCollection = _mongoDbService.GetCollection<BsonDocument>("jsonn");
-    }
+	public ITreeUpdateNotify treeUpdate
+	{
+		get => _treeUpdate;
+		set => _treeUpdate = value;
+	}
 
-    public async Task saveDocument(Docx docx)
-    {
-        Console.WriteLine("DocxRDG -> saveDocument");
+	public IQueryUpdateNotify queryUpdate
+	{
+		get => _queryUpdate;
+		set => _queryUpdate = value;
+	}
 
-        // Null check for update notifier
-        if (_docxUpdate == null)
-        {
-            Console.WriteLine("Warning: No document update notifier set.");
-            await _docxCollection.InsertOneAsync(docx);
-            return;
-        }
+	public IQueryRetrieveNotify queryRetrieve
+	{
+		get => _queryRetrieve;
+		set => _queryRetrieve = value;
+	}
 
-        await _docxCollection.InsertOneAsync(docx);
-        await _docxUpdate.notifyUpdatedDocument(docx);
-    }
+	public DocumentGateway_RDG()
+	{
+		_mongoDbService = new MongoDbService();
+		_docxCollection = _mongoDbService.GetCollection<Docx>("wordox");
+		// _treeCollection = _mongoDbService.GetCollection<AbstractNode>("trees");
+		_treeCollection = _mongoDbService.GetCollection<AbstractNode>("mergewithcommentedcode");
+		_jsonCollection = _mongoDbService.GetCollection<BsonDocument>("jsonn");
+	}
 
-    public async Task<Docx> getDocument(string id)
-    {
-        Console.WriteLine("DocxRDG -> getDocument");
-        var docx = await _docxCollection.Find(d => d.Id == id).FirstOrDefaultAsync();
-        
-        // Null check for retrieve notifier
-        if (_docxRetrieve != null && docx != null)
-        {
-            await _docxRetrieve.notifyRetrievedDocument(docx);
-        }
-        
-        return docx;
-    }
+	public async Task saveDocument(Docx docx)
+	{
+		Console.WriteLine("DocxRDG -> saveDocument");
 
-public async Task saveJsonFile(string filepath)
-{
-        string jsonData = File.ReadAllText(filepath);
+		// Null check for update notifier
+		if (_docxUpdate == null)
+		{
+			Console.WriteLine("Warning: No document update notifier set.");
+			await _docxCollection.InsertOneAsync(docx);
+			return;
+		}
 
-        // Convert JSON string to BsonDocument
-        var bsonDocument = BsonDocument.Parse(jsonData);
+		await _docxCollection.InsertOneAsync(docx);
+		await _docxUpdate.notifyUpdatedDocument(docx);
+	}
 
-        // Insert into MongoDB
-        _jsonCollection.InsertOne(bsonDocument);
-        Console.WriteLine("RDG -> json saved into DB!");
-}
+	public async Task<Docx> getDocument(string id)
+	{
+		Console.WriteLine("DocxRDG -> getDocument");
+		var docx = await _docxCollection.Find(d => d.Id == id).FirstOrDefaultAsync();
 
-public async Task getJsonFile()
-{
-    var documents = _jsonCollection.Find(new BsonDocument()).ToList();
-            // Convert BSON to JSON
-        string jsonOutput = Newtonsoft.Json.JsonConvert.SerializeObject(documents, Newtonsoft.Json.Formatting.Indented);
+		// Null check for retrieve notifier
+		if (_docxRetrieve != null && docx != null)
+		{
+			await _docxRetrieve.notifyRetrievedDocument(docx);
+		}
 
-        // Save JSON to a file
-        string filePath = "output1.json";
-        File.WriteAllText(filePath, jsonOutput);
-        Console.WriteLine($"Data successfully saved to {filePath}");
-    
-        await _docxRetrieve.notifyRetrievedJson();
- 
-}
+		return docx;
+	}
 
-public async Task saveTree(AbstractNode rootNode)
-{
-    Console.WriteLine("DocxRDG -> saveTree");
-    
-    // var bsonDocument = rootNode is CompositeNode compositeNode 
-    //     ? ToRecursiveBsonDocument(compositeNode) 
-    //     : rootNode.ToBsonDocument();
-    var bsonDocument = rootNode.ToBsonDocument(); 
+	public async Task saveJsonFile(string filepath)
+	{
+		string jsonData = File.ReadAllText(filepath);
 
-	// string jsonDoc = Newtonsoft.Json.JsonConvert.SerializeObject(rootNode, Newtonsoft.Json.Formatting.Indented);
-    // await _treeCollection.InsertOneAsync(bsonDocument);
-    await _treeCollection.InsertOneAsync(rootNode);
+		// Convert JSON string to BsonDocument
+		var bsonDocument = BsonDocument.Parse(jsonData);
 
-    Console.WriteLine("added rootNode into MongoDB!");
-}
- 
+		// Insert into MongoDB
+		_jsonCollection.InsertOne(bsonDocument);
+		Console.WriteLine("RDG -> json saved into DB!");
+	}
 
-public async Task<AbstractNode> getTree()
-{
-    Console.WriteLine("Loading tree from MongoDB...");
-    
-    var node = await _treeCollection.Find(_ => true).FirstOrDefaultAsync();
-    Console.WriteLine(node == null ? "No data found" : "Data found!");
+	public async Task getJsonFile()
+	{
+		var documents = _jsonCollection.Find(new BsonDocument()).ToList();
+		// Convert BSON to JSON
+		string jsonOutput = Newtonsoft.Json.JsonConvert.SerializeObject(
+			documents,
+			Newtonsoft.Json.Formatting.Indented
+		);
 
-    return node;
-    // return node ?? throw new Exception("No tree found in database.");
-}
+		// Save JSON to a file
+		string filePath = "output1.json";
+		File.WriteAllText(filePath, jsonOutput);
+		Console.WriteLine($"Data successfully saved to {filePath}");
 
-    // public async Task saveTree(AbstractNode rootNode)
-    // {
+		await _docxRetrieve.notifyRetrievedJson();
+	}
+
+	public async Task saveTree(AbstractNode rootNode)
+	{
+		Console.WriteLine("DocxRDG -> saveTree");
+
+		// var bsonDocument = rootNode is CompositeNode compositeNode
+		//     ? ToRecursiveBsonDocument(compositeNode)
+		//     : rootNode.ToBsonDocument();
+		var bsonDocument = rootNode.ToBsonDocument();
+
+		// string jsonDoc = Newtonsoft.Json.JsonConvert.SerializeObject(rootNode, Newtonsoft.Json.Formatting.Indented);
+		// await _treeCollection.InsertOneAsync(bsonDocument);
+		await _treeCollection.InsertOneAsync(rootNode);
+
+		Console.WriteLine("added rootNode into MongoDB!");
+	}
+
+	public async Task<AbstractNode> getTree()
+	{
+		Console.WriteLine("Loading tree from MongoDB...");
+
+		var node = await _treeCollection.Find(_ => true).FirstOrDefaultAsync();
+		Console.WriteLine(node == null ? "No data found" : "Data found!");
+
+		return node;
+		// return node ?? throw new Exception("No tree found in database.");
+	}
+
+	// public async Task saveTree(AbstractNode rootNode)
+	// {
 	// 	Console.WriteLine("DocxRDG -> saveTree");
 	// 	await _treeCollection.InsertOneAsync(rootNode);
-    //     Console.WriteLine("ADDDED");
-    // }
+	//     Console.WriteLine("ADDDED");
+	// }
 
-    public async Task<List<Docx>> GetAllAsync()
-    {
-        return await _docxCollection.Find(d => true).ToListAsync();
-    }
+	public async Task<List<Docx>> GetAllAsync()
+	{
+		return await _docxCollection.Find(d => true).ToListAsync();
+	}
 
-    public async Task UpdateAsync(Docx docx)
-    {
-        await _docxCollection.ReplaceOneAsync(d => d.Id == docx.Id, docx);
-    }
+	public async Task UpdateAsync(Docx docx)
+	{
+		await _docxCollection.ReplaceOneAsync(d => d.Id == docx.Id, docx);
+	}
 
-    public async Task DeleteAsync(string id)
-    {
-        await _docxCollection.DeleteOneAsync(d => d.Id == id);
-    }
+	public async Task DeleteAsync(string id)
+	{
+		await _docxCollection.DeleteOneAsync(d => d.Id == id);
+	}
 }

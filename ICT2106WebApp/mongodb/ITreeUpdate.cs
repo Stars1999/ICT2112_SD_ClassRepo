@@ -1,7 +1,9 @@
 using Utilities;
 
-public interface ITreeUpdate{
+public interface ITreeUpdate
+{
 	ITreeUpdateNotify treeUpdate { get; set; }
+
 	// Task LoadTree();
 	Task<AbstractNode> getTree();
 

@@ -2,7 +2,6 @@ namespace Utilities
 {
 	public class NodeManager
 	{
-
 		public AbstractNode CreateNode(
 			int id,
 			string nodeType,

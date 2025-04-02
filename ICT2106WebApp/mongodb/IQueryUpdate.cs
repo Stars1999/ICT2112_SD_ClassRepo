@@ -6,6 +6,6 @@ namespace ICT2106WebApp.mod1Grp3
     {
         IQueryUpdateNotify queryUpdate { get; set; }
 
-        Task saveTree(AbstractNode rootNode);
+        Task saveTree(AbstractNode rootNode, string collectionName);
     }
 }

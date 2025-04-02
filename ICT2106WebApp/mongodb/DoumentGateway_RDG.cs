@@ -13,6 +13,9 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, ITreeUpda
     private readonly IMongoCollection<AbstractNode> _treeCollection;
 
     private readonly IMongoCollection<BsonDocument> _jsonCollection;
+
+    private readonly IMongoCollection<AbstractNode> _latexCollection;
+
     // Nullable properties with null checks
     private IDocumentUpdateNotify _docxUpdate;
     private IDocumentRetrieveNotify _docxRetrieve;
@@ -60,6 +63,7 @@ public class DocumentGateway_RDG : IDocumentRetrieve, IDocumentUpdate, ITreeUpda
         // _treeCollection = _mongoDbService.GetCollection<AbstractNode>("trees");
         _treeCollection = _mongoDbService.GetCollection<AbstractNode>("mergewithcommentedcode");
         _jsonCollection = _mongoDbService.GetCollection<BsonDocument>("jsonn");
+        _latexCollection = _mongoDbService.GetCollection<AbstractNode>("latexTree");
     }
 
     public async Task saveDocument(Docx docx)
@@ -119,7 +123,7 @@ public async Task getJsonFile()
  
 }
 
-public async Task saveTree(AbstractNode rootNode)
+public async Task saveTree(AbstractNode rootNode, string collectionName)
 {
     Console.WriteLine("DocxRDG -> saveTree");
     
@@ -130,17 +134,42 @@ public async Task saveTree(AbstractNode rootNode)
 
 	// string jsonDoc = Newtonsoft.Json.JsonConvert.SerializeObject(rootNode, Newtonsoft.Json.Formatting.Indented);
     // await _treeCollection.InsertOneAsync(bsonDocument);
-    await _treeCollection.InsertOneAsync(rootNode);
+
+    if (collectionName == "latexTree")
+    {
+        await _latexCollection.InsertOneAsync(rootNode);
+        Console.WriteLine("added rootNode into MongoDB!");
+        return;
+    }
+    else if (collectionName == "mergewithcommentedcode")
+    {
+        await _treeCollection.DeleteManyAsync(_ => true); // Clear existing data
+    }
+    // await _treeCollection.InsertOneAsync(rootNode);
 
     Console.WriteLine("added rootNode into MongoDB!");
 }
  
 
-public async Task<AbstractNode> getTree()
+public async Task<AbstractNode> getTree(string collectionName)
 {
     Console.WriteLine("Loading tree from MongoDB...");
+    AbstractNode node = null;
     
-    var node = await _treeCollection.Find(_ => true).FirstOrDefaultAsync();
+    if (collectionName == "latexTree")
+    {
+        node = await _latexCollection.Find(_ => true).FirstOrDefaultAsync();
+        Console.WriteLine(node == null ? "No data found" : "Data found!");
+        // return node;
+    }
+    else if (collectionName == "mergewithcommentedcode")
+    {
+        node = await _treeCollection.Find(_ => true).FirstOrDefaultAsync();
+        Console.WriteLine(node == null ? "No data found" : "Data found!");
+        // return node;
+    }
+    
+    // var node = await _treeCollection.Find(_ => true).FirstOrDefaultAsync();
     Console.WriteLine(node == null ? "No data found" : "Data found!");
 
     return node;

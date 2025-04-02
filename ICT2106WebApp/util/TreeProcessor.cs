@@ -79,11 +79,11 @@ namespace Utilities
 			return (CompositeNode)rootNode;
 		}
 
-		public async Task SaveTreeToDatabase(AbstractNode rootNode)
+		public async Task SaveTreeToDatabase(AbstractNode rootNode, string collectionName)
 		{
 			Console.WriteLine("inside this function now");
 			// TODO: Save tree to database
-			await _treeUpdate.saveTree(rootNode);
+			await _treeUpdate.saveTree(rootNode, collectionName);
 		}
 
 
@@ -313,7 +313,7 @@ namespace Utilities
 		// }
 		public async Task<AbstractNode> retrieveTree()
 		{
-			AbstractNode rootNode = await _treeUpdate.getTree();
+			AbstractNode rootNode = await _treeUpdate.getTree("mergewithcommentedcode");
 			
 			if (rootNode is CompositeNode compositeNode)
 			{

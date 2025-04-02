@@ -241,13 +241,6 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// DO NOT REMOVE FOR TESTING PURPOSES
 			// INodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseNode("image");
-
-// //=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
-			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
-			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
-			// WriteToFile("traverseNodes.cs", traverseList);
-			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
-		
 	}
 	Console.WriteLine("finish runtest");
 }
@@ -589,42 +582,42 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			int documentCount = documentArray.Count;
 			Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
 
-			// Check if there are "runs" in any of the document items
-			var totalCounts = 0;
-			var i = 0;
-			foreach (var itemhere in documentArray)
-			{
-				var runs = itemhere["runs"];
+			// // Check if there are "runs" in any of the document items
+			// var totalCounts = 0;
+			// var i = 0;
+			// foreach (var itemhere in documentArray)
+			// {
+			// 	var runs = itemhere["runs"];
 
-				Console.WriteLine(i);
+			// 	Console.WriteLine(i);
 
-				if (runs != null)
-				{
-					totalCounts = totalCounts + runs.Count();
-					// Console.WriteLine($"This item has {runs.Count()} runs.");
-				}
-				else
-				{
-					// Console.WriteLine("This item has no runs.");
-				}
+			// 	if (runs != null)
+			// 	{
+			// 		totalCounts = totalCounts + runs.Count();
+			// 		// Console.WriteLine($"This item has {runs.Count()} runs.");
+			// 	}
+			// 	else
+			// 	{
+			// 		// Console.WriteLine("This item has no runs.");
+			// 	}
 
-				i = i + 1;
-			}
+			// 	i = i + 1;
+			// }
 
-			Console.WriteLine("total run count");
-			Console.WriteLine(totalCounts);
-			Console.WriteLine("\n");
+			// Console.WriteLine("total run count");
+			// Console.WriteLine(totalCounts);
+			// Console.WriteLine("\n");
 
-			totalCounts = totalCounts + i;
-			Console.WriteLine("total = ");
-			Console.WriteLine(totalCounts);
+			// totalCounts = totalCounts + i;
+			// Console.WriteLine("total = ");
+			// Console.WriteLine(totalCounts);
 
 			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 			// treeProcessor.PrintTree(rootnodehere, 0);
 
 			// SAVE TREE TO MONGODB
-			await treeProcessor.SaveTreeToDatabase(rootnodehere);
+			// await treeProcessor.SaveTreeToDatabase(rootnodehere);
 			// // RETRIEVE TEE FROM MONGODB
 			AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
 			CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
@@ -641,7 +634,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			}
 			if (mongoCompNode != null)
 			{
-				treeProcessor.PrintTree(mongoCompNode,0);
+				// treeProcessor.PrintTree(mongoCompNode,0);
 			}
 			// END TREE
 
@@ -716,10 +709,31 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			processedTableManager.logProcessingStatus(validationStatus);
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
-			// Will prove for Siti as we traverse the nodes again after updating and show that the content is updated with latex content
-			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+			// Will prove for Siti as we traverse the nodes again after updating
+			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+			
+			// Save modified latex tree back to MongoDB
+			// await traverser.UpdateLatexDocument(rootnodehere);
 
+			// Retrieve the Latex tree from MongoDB
+			ICompletedLatex completedLatex = new CompletedLatex();
+			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
+			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
 
+			if (latexRootNode is CompositeNode lcompnode) // Use pattern matching
+			{
+				Console.WriteLine("Latex Tree retrieved!");
+				latexMongo = lcompnode; // Assign to compNode
+			}
+			else
+			{
+				Console.WriteLine("Latex Tree not retrieved!");
+			}
+			if (latexMongo != null)
+			{
+				treeProcessor.PrintTree(latexMongo,0);
+			}
+	
 
 			// foreach (var tableNode in tableAbstractNodes)
 			// {
@@ -1375,7 +1389,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
-			await treeProcessor.SaveTreeToDatabase(rootnodehere);
+			await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
 		} // Added missing closing brace for using block
 	} // Added missing closing brace for method
 

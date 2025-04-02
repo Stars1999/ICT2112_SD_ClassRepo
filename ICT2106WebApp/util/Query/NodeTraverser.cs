@@ -1,5 +1,6 @@
 using Utilities;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace ICT2106WebApp.mod1Grp3
 {
@@ -85,12 +86,14 @@ namespace ICT2106WebApp.mod1Grp3
         public async Task UpdateLatexDocument(AbstractNode rootNode)
         {
             Console.WriteLine("LATEX DOCUMENT UPDATING...");
-			// TODO: Save tree to database
-			await _QueryUpdate.saveTree(rootNode);
+			await _QueryUpdate.saveTree(rootNode, "latexTree"); // Save the updated tree to the database
         }
 
-        public void notifyUpdatedTree(){
-            //TODO
+        // Notify when the tree is updated in the database
+        public async Task notifyUpdatedTree(){
+            Console.WriteLine("Tree updated...");
+
+            await Task.CompletedTask;
         }
 
 

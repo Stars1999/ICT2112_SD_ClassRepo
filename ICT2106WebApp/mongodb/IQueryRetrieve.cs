@@ -6,6 +6,6 @@ namespace ICT2106WebApp.mod1Grp3
     {
         IQueryRetrieveNotify queryRetrieve { get; set; }
 
-	    Task<AbstractNode> getTree();
+	    Task<AbstractNode> getTree(string collectionName);
     }
 }

@@ -3,7 +3,7 @@ using Utilities;
 public interface ITreeUpdate{
 	ITreeUpdateNotify treeUpdate { get; set; }
 	// Task LoadTree();
-	Task<AbstractNode> getTree();
+	Task<AbstractNode> getTree(string collectionName);
 
-	Task saveTree(AbstractNode rootNode);
+	Task saveTree(AbstractNode rootNode, string collectionName);
 }

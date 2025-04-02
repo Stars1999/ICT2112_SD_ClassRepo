@@ -13,15 +13,13 @@ namespace ICT2106WebApp.mod1Grp3
         }
 
         // Retrieve Latex Tree
-        public async Task<AbstractNode> RetrieveLatexTree() //idk HELP LA
+        public async Task<AbstractNode> RetrieveLatexTree() 
         {
-			AbstractNode rootNode = await _queryRetrieve.getTree();
+			AbstractNode rootNode = await _queryRetrieve.getTree("latexTree"); // Retrieve the tree from the database
 			
 			if (rootNode is CompositeNode compositeNode)
 			{
 				Console.WriteLine("Loaded tree is a CompositeNode!");
-				// Console.WriteLine("printing tree FROM DB\n");
-				// PrintTree(rootNode,0);
 			}
 			else
 			{
@@ -31,15 +29,13 @@ namespace ICT2106WebApp.mod1Grp3
         }
 
         // Retrieve Original Tree (Non modified)
-        public async Task<AbstractNode> RetrieveTree() //idk WORKING SAME AS RETRIEVELATEXTREE()
+        public async Task<AbstractNode> RetrieveTree() 
         {
-			AbstractNode rootNode = await _queryRetrieve.getTree();
-			
+			AbstractNode rootNode = await _queryRetrieve.getTree("mergewithcommentedcode");
+			Console.WriteLine("Retrieving tree from DB...");
 			if (rootNode is CompositeNode compositeNode)
 			{
 				Console.WriteLine("Loaded tree is a CompositeNode!");
-				// Console.WriteLine("printing tree FROM DB\n");
-				// PrintTree(rootNode,0);
 			}
 			else
 			{
@@ -48,11 +44,12 @@ namespace ICT2106WebApp.mod1Grp3
 			return rootNode;
         }
 
+		//notifty when tree is retrieved from DB
         public async Task notifyRetrieveTree()
         {
-			Console.WriteLine($" CompletedLaTeX -> Tree Retrieved!");
-		// Additional async operations if necessary
-			await Task.CompletedTask; // Keeps method async-compatible
+			Console.WriteLine($"Tree Retrieved!");
+
+			await Task.CompletedTask; 
         
         }
     }

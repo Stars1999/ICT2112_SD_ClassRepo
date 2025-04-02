@@ -26,9 +26,9 @@ public class TableStructureManager : iTableStructure
 				//Get Row/Cell Height For later [All cells in a row are same height] (Jonathan - COMPLETED)
 				var rowProperties = row.TableRowProperties; // Access the property directly
 
-				var rowHeight = rowProperties.Descendants<TableRowHeight>().Any() 
-					? ((float.Parse(rowProperties.Descendants<TableRowHeight>().FirstOrDefault().Val) * 2.54) / 1440).ToString("#.##") 
-					: "auto";
+				string rowHeight = rowProperties != null && rowProperties.Descendants<TableRowHeight>().Any() 
+				? ((float.Parse(rowProperties.Descendants<TableRowHeight>().FirstOrDefault().Val) * 2.54) / 1440).ToString("#.##") 
+				: "auto";
 
 				// List to hold cell dictionaries for this row.
 				var cellList = new List<Dictionary<string, object>>();

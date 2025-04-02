@@ -31,11 +31,11 @@ namespace Utilities
 			string jsonOutputPath
 		)
 		{
-			NodeManager nodeManager = new NodeManager();
-			var documentControl = new DocumentControl();
 			int id = 1;
 			var numberofRunNode = 0;
 			var numberofMainNode = 0;
+			NodeManager nodeManager = new NodeManager();
+			var documentControl = new DocumentControl();
 
 			List<AbstractNode> runListNodes = new List<AbstractNode>();
 			List<AbstractNode> runRunListNodes = new List<AbstractNode>();

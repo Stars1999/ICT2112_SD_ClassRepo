@@ -233,6 +233,7 @@ namespace Utilities
 
 		// END OF CRASH RECOVERY! TO FIX ARADHANA PART...OR ASK HER HEHE
 
+		// take json -> build list of nodes -> build Tree
 		public static async Task toSaveTree(string filePath, string jsonOutputPath)
 		{
 			using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
@@ -270,7 +271,7 @@ namespace Utilities
 				var documentData = new
 				{
 					// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-					metadata = ExtractContent.GetDocumentMetadata(wordDoc, filePath_full),
+					metadata = GetDocumentMetadata(wordDoc, filePath_full),
 					// headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
 					// !!footer still exists issues. Commented for now
 					// footers = DocumentHeadersFooters.ExtractFooters(wordDoc),

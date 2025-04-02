@@ -160,8 +160,8 @@ namespace ICT2106WebApp.mod1grp4
 
                                     default:
                                         // Handle default
-                                        topSpace = rowHeight / 2;
-                                        bottomSpace = rowHeight / 2;
+                                        topSpace = 0;
+                                        bottomSpace = rowHeight;
                                         break;
                                 }
                                 latexCell = $" {{ \\rule{{0pt}}{{{topSpace}cm}} \\vspace{{{bottomSpace}cm}} {latexCell}}}";

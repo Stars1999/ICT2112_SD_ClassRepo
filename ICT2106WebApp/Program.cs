@@ -617,7 +617,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// treeProcessor.PrintTree(rootnodehere, 0);
 
 			// SAVE TREE TO MONGODB
-			// await treeProcessor.SaveTreeToDatabase(rootnodehere);
+			// await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
 			// // RETRIEVE TEE FROM MONGODB
 			AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
 			CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
@@ -661,14 +661,14 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			else
 				Console.WriteLine("Invalid tree structure detected.");
 
-// 			// DO NOT REMOVE FOR TESTING PURPOSES
-// 			// INodeTraverser traverser = new NodeTraverser(rootnodehere);
-// 			// List<AbstractNode> traverseList = traverser.TraverseNode("image");
-
 //=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+
 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
+
+//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+
 			
  			// GROUP 4 STUFF
 			// Step 1: Get abstract nodes of table from group 3
@@ -711,28 +711,46 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 			// Will prove for Siti as we traverse the nodes again after updating
 			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
-			
-			// Save modified latex tree back to MongoDB
+
+			// Save modified latex tree back to MongoDB (query)
 			// await traverser.UpdateLatexDocument(rootnodehere);
 
-			// Retrieve the Latex tree from MongoDB
+			// // Retrieve the non-modified tree from MongoDB (for demo query)
 			ICompletedLatex completedLatex = new CompletedLatex();
+			// AbstractNode originalRootNode = await completedLatex.RetrieveTree();
+			// CompositeNode originalMongo = null; // declare outside so it can be used outside of the if statement
+
+			// if (originalRootNode is CompositeNode originalNode) // Use pattern matching
+			// {
+			// 	Console.WriteLine("Latex Tree retrieved!");
+			// 	originalMongo = originalNode; // Assign to compNode
+			// }
+			// else
+			// {
+			// 	Console.WriteLine("Latex Tree not retrieved!");
+			// }
+			// if (originalMongo != null)
+			// {
+			// 	treeProcessor.PrintTree(originalMongo,0); 
+			// }
+
+			// Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
 			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
 
-			if (latexRootNode is CompositeNode lcompnode) // Use pattern matching
+			if (latexRootNode is CompositeNode latexNode) // Use pattern matching
 			{
 				Console.WriteLine("Latex Tree retrieved!");
-				latexMongo = lcompnode; // Assign to compNode
+				latexMongo = latexNode; // Assign to compNode
 			}
 			else
 			{
 				Console.WriteLine("Latex Tree not retrieved!");
 			}
-			if (latexMongo != null)
-			{
-				treeProcessor.PrintTree(latexMongo,0);
-			}
+			// if (latexMongo != null)
+			// {
+			// 	treeProcessor.PrintTree(latexMongo,0); 
+			// }
 	
 
 			// foreach (var tableNode in tableAbstractNodes)

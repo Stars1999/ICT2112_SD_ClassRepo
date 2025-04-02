@@ -171,6 +171,8 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 	if (!File.Exists(jsonFilePath))
 	{
 		await ToSaveJson(documentControl,filePath,jsonFilePath);
+		await documentControl.saveJsonToDatabase(jsonOutputPath);
+
 	}
 
 	// STEP 3: CHECK FOR TREE
@@ -1065,7 +1067,6 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
             Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
 
             // Save JSON to database (assuming `saveJsonToDatabase` is an async method)
-            await documentControl.saveJsonToDatabase(jsonOutputPath);
         }
     }
 

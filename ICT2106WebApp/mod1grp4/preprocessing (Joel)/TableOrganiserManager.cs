@@ -58,7 +58,7 @@ namespace ICT2106WebApp.mod1grp4
                                                 case "underline":
                                                     cellStyling.underline = Convert.ToBoolean(kvp.Value);
                                                     break;
-                                                case "highlight":
+                                                case "highlightcolor":
                                                     cellStyling.highlight = kvp.Value?.ToString();
                                                     break;
                                                 case "textcolor":

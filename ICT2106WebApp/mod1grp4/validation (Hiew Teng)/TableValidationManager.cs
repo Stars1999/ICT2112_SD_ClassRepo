@@ -20,8 +20,11 @@ namespace ICT2106WebApp.mod1grp4
                     // Step 1: Verify the LaTeX output starts with "\begin{tabular}"
                     if (!latexOutput.StartsWith("\\begin{tabular}"))
                     {
-                        return $"LaTeX output does not start with \\begin{{tabular}} for table {tableCompositeNode.GetNodeId()}.";
-                    }
+                        if (!latexOutput.Contains("\\begin{tabular}"))
+                        {
+                            return $"LaTeX output does not start with \\begin{{tabular}} for table {tableCompositeNode.GetNodeId()}.";
+                        }
+                        }
 
                     // Step 2: Verify the LaTeX output ends with "\end{tabular}"
                     if (!latexOutput.EndsWith("\\end{tabular}"))
@@ -33,9 +36,9 @@ namespace ICT2106WebApp.mod1grp4
                     var numberOfRows = tableCompositeNode.GetChildren().Count;
                     var hlineCount = Regex.Matches(latexOutput, @"\\hline").Count;
 
-                    if (hlineCount != (numberOfRows + 1))
+                    if ((numberOfRows+1) != hlineCount)
                     {
-                        return $"Mismatch in \\hline count. Expected {numberOfRows + 1}, found {hlineCount} for table {tableCompositeNode.GetNodeId()}.";
+                        return $"Mismatch in \\hline count. Expected {numberOfRows}, found {hlineCount} for table {tableCompositeNode.GetNodeId()}.";
                     }
 
                     // Step 4: Verify the number of cells in each row
@@ -46,7 +49,8 @@ namespace ICT2106WebApp.mod1grp4
                     {
                         if (rowNode is CompositeNode rowCompositeNode && rowCompositeNode.GetNodeType() == "row")
                         {
-                            totalCellCount += rowCompositeNode.GetChildren().Count;
+                            var cellNodes = rowCompositeNode.GetChildren().Where(child => child.GetNodeType() == "cell").ToList();
+                            totalCellCount += cellNodes.Count-1;
                         }
                     }
 
@@ -65,18 +69,41 @@ namespace ICT2106WebApp.mod1grp4
                                 if (cellNode is AbstractNode cellAbstractNode && cellAbstractNode.GetNodeType() == "cell")
                                 {
                                     var cellContent = cellAbstractNode.GetContent();
-                                    if (!latexOutput.Contains(cellContent))
+
+                                    Dictionary<string, string> latexEscapes = new Dictionary<string, string>
                                     {
-                                        return $"Cell content '{cellContent}' not found in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                        { "&", "\\&" },
+                                        { "%", "\\%" },
+                                        { "$", "\\$" },
+                                        { "#", "\\#" },
+                                        { "_", "\\_" },
+                                        { "{", "\\{" },
+                                        { "}", "\\}" },
+                                        { "~", "\\~" },
+                                        { "^", "\\^" },
+                                        { "\\", "\\\\" }
+                                    };
+
+                                    foreach (var pair in latexEscapes)
+                                    {
+                                        cellContent = cellContent.Replace(pair.Key, pair.Value); // Escape special characters
+                                    }
+                                    string latexCell = cellContent; //Save content after escaping special char
+
+                                    if (!latexOutput.Contains(latexCell))
+                                    {
+                                        return $"Cell content '{latexCell}' not found in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
                                     }
 
                                     // Verify styling
                                     var cellStyling = cellAbstractNode.GetStyling();
                                     if (cellStyling != null)
                                     {
+
                                         if (cellStyling.Any(dict => dict.TryGetValue("bold", out var isBold) && isBold is bool boldValue && boldValue))
                                         {
-                                            if (!latexOutput.Contains($"\\textbf{{{cellContent}}}"))
+                                            latexCell = $"\\textbf{{{latexCell}}}";
+                                            if (!latexOutput.Contains(latexCell))
                                             {
                                                 return $"Bold styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
                                             }
@@ -84,49 +111,181 @@ namespace ICT2106WebApp.mod1grp4
 
                                         if (cellStyling.Any(dict => dict.TryGetValue("italic", out var isItalic) && isItalic is bool italicValue && italicValue))
                                         {
-                                            if (!latexOutput.Contains($"\\textit{{{cellContent}}}"))
+                                            latexCell = $"\\textit{{{latexCell}}}";
+                                            if (!latexOutput.Contains(latexCell))
                                             {
                                                 return $"Italic styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
                                             }
                                         }
+                                        if (cellStyling.Any(dict => dict.TryGetValue("highlightcolor", out var highlightValue) && highlightValue is string highlight && !string.IsNullOrEmpty(highlight) && highlight != "none"))
+                                        {
+                                            latexCell = $"\\hl{{{latexCell}}}";
 
+                                            if (!latexOutput.Contains(latexCell))
+                                            {
+                                                return $"Highlight styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                            }
+                                        }
                                         if (cellStyling.Any(dict => dict.TryGetValue("underline", out var isUnderline) && isUnderline is bool underlineValue && underlineValue))
                                         {
-                                            if (!latexOutput.Contains($"\\underline{{{cellContent}}}"))
+                                            latexCell = $"\\underline{{{latexCell}}}";
+                                            if (!latexOutput.Contains(latexCell))
                                             {
                                                 return $"Underline styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
                                             }
                                         }
 
-                                        if (cellStyling.Any(dict => dict.TryGetValue("fontsize", out var fontSizeValue) && fontSizeValue is int fontSize && fontSize != 0))
+                                        
+                                        var textcolorEntry = cellStyling
+                                            .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                            .FirstOrDefault(kv => kv.Key == "textcolor" && kv.Value is string) // Find the first key-value pair where the key is "rowheight" and the value is a string
+                                            .Value as string;
+
+                                        if (cellStyling.Any(dict => dict.TryGetValue("textcolor", out var textColorValue) && textColorValue is string && !string.IsNullOrEmpty(textColorValue.ToString()) && textColorValue.ToString() != "auto"))
                                         {
-                                            if (!latexOutput.Contains($"\\fontsize{{{cellContent}}}"))
+                                            latexCell = $"\\textcolor{{{textcolorEntry}}}{{{latexCell}}}";
+
+                                            if (!latexOutput.Contains(latexCell))
+                                            {
+                                                return $"Text color styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                            }
+                                        }
+
+                                        var fontsizeValue = cellStyling
+                                            .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                            .FirstOrDefault(kv => kv.Key == "fontsize" && kv.Value is float) // Find the first key-value pair where the key is "horizontalalignment" and the value is a string
+                                            .Value; // Extract the value and cast it to a string
+
+                                        if (fontsizeValue is float fontSize && fontSize != 0)
+                                        {
+                                            latexCell = $"{{\\fontsize{{{fontsizeValue}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+
+                                            if (!latexOutput.Contains(latexCell))
                                             {
                                                 return $"Font size styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
                                             }
                                         }
 
-                                        var alignmentKey = cellStyling
-                                            .SelectMany(dict => dict)
-                                            .Where(kv => kv.Key == "horizontalalignment" && kv.Value is string)
-                                            .Select(kv => kv.Value as string)
-                                            .FirstOrDefault();
+                                        var cellcolorEntry = cellStyling
+                                            .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                            .FirstOrDefault(kv => kv.Key == "backgroundcolor" && kv.Value is string) // Find the first key-value pair where the key is "rowheight" and the value is a string
+                                            .Value as string;
 
-                                        if (alignmentKey != null)
+                                        if (cellStyling.Any(dict => dict.TryGetValue("backgroundcolor", out var textColorValue) && textColorValue is string && !string.IsNullOrEmpty(textColorValue.ToString()) && textColorValue.ToString() != "auto"))
                                         {
-                                            var alignment = alignmentKey switch
-                                            {
-                                                "center" => "\\multicolumn{1}{|c|}",
-                                                "left" => "\\multicolumn{1}{|l|}",
-                                                "right" => "\\multicolumn{1}{|r|}",
-                                                _ => ""
-                                            };
+                                            latexCell = $"\\cellcolor{{{cellcolorEntry}}}{{{latexCell}}}";
 
-                                            if (!latexOutput.Contains(alignment))
+                                            if (!latexOutput.Contains(latexCell))
                                             {
-                                                return $"Alignment styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                                return $"Cell color styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
                                             }
                                         }
+
+                                        // Check if verticalalignment and rowHeight are present in cellStyling
+                                        if (cellStyling.Any(dict =>
+                                            dict.TryGetValue("verticalalignment", out var verticalAlignmentValue)
+                                            && verticalAlignmentValue is string verticalAlignment
+                                            && !string.IsNullOrEmpty(verticalAlignment)
+                                            && dict.TryGetValue("rowHeight", out var rowHeightValue)
+                                            && rowHeightValue is string rowHeight
+                                            && rowHeight != "auto"))
+                                        {
+                                            var rowHeightEntry = cellStyling
+                                                .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                                .FirstOrDefault(kv => kv.Key == "rowHeight" && kv.Value is string) // Find the first key-value pair where the key is "rowheight" and the value is a string
+                                                .Value as string;
+
+                                            var verticalAlignmentEntry = cellStyling
+                                            .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                            .FirstOrDefault(kv => kv.Key == "verticalalignment" && kv.Value is string) // Find the first key-value pair where the key is "rowheight" and the value is a string
+                                            .Value as string;
+
+                                            // Parse rowHeight
+                                            double rowHeight = 0;
+                                            if (double.TryParse(rowHeightEntry, out double parsedRowHeight))
+                                            {
+                                                rowHeight = parsedRowHeight;
+                                            }
+
+                                            double topSpace = 0;
+                                            double bottomSpace = 0;
+
+                                            // Handle vertical alignment based on the parsed rowHeight
+                                            switch (verticalAlignmentEntry.ToLower())
+                                            {
+                                                case "top":
+                                                    topSpace = 0;
+                                                    bottomSpace = rowHeight;
+                                                    break;
+
+                                                case "bottom":
+                                                    topSpace = rowHeight;
+                                                    bottomSpace = 0;
+                                                    break;
+
+                                                case "center":
+                                                    topSpace = rowHeight / 2;
+                                                    bottomSpace = rowHeight / 2;
+                                                    break;
+
+                                                default:
+                                                    topSpace = 0;
+                                                    bottomSpace = rowHeight;
+                                                    break;
+                                            }
+
+                                            // Apply LaTeX formatting with the calculated topSpace and bottomSpace
+                                            latexCell = $"{{ \\rule{{0pt}}{{{topSpace}cm}} \\vspace{{{bottomSpace}cm}} {latexCell}}}";
+
+                                            // Check if latexOutput contains latexCell
+                                            if (!latexOutput.Contains(latexCell))
+                                            {
+                                                return $"Vertical alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                            }
+                                        }
+                                        var alignmentValue = cellStyling
+                                            .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                            .FirstOrDefault(kv => kv.Key == "horizontalalignment" && kv.Value is string) // Find the first key-value pair where the key is "horizontalalignment" and the value is a string
+                                            .Value as string; // Extract the value and cast it to a string
+
+                                        var cellWidthValue = cellStyling
+                                            .SelectMany(dict => dict) // Flatten the list of dictionaries into a sequence of key-value pairs
+                                            .FirstOrDefault(kv => kv.Key == "cellWidth" && kv.Value is string) // Find the first key-value pair where the key is "horizontalalignment" and the value is a string
+                                            .Value as string; // Extract the value and cast it to a string
+                                        if (!string.IsNullOrEmpty(alignmentValue))
+                                        {
+                                            string alignmentChar = alignmentValue == "right" ? "r" : alignmentValue == "left" ? "l" : "c";
+                                            string alignmentRagged = alignmentValue == "right" ? "raggedleft" : alignmentValue == "left" ? "raggedright" : alignmentValue == "both" ? "justifying" : "centering";
+
+                                            latexCell = $"\n\\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cellWidthValue}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
+
+                                            if (!latexOutput.Contains(latexCell))
+                                            {
+                                                return $"Horizontal alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                            }
+                                        }
+
+                                        // var alignmentKey = cellStyling
+                                        //     .SelectMany(dict => dict)
+                                        //     .Where(kv => kv.Key == "horizontalalignment" && kv.Value is string)
+                                        //     .Select(kv => kv.Value as string)
+                                        //     .FirstOrDefault();
+
+                                        // if (alignmentKey != null)
+                                        // {
+                                        //     var alignment = alignmentKey switch
+                                        //     {
+                                        //         "center" => "\\multicolumn{1}{|c|}",
+                                        //         "left" => "\\multicolumn{1}{|l|}",
+                                        //         "right" => "\\multicolumn{1}{|r|}",
+                                        //         _ => ""
+                                        //     };
+
+                                        //     if (!latexOutput.Contains(alignment))
+                                        //     {
+                                        //         return $"Alignment styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+                                        //     }
+                                        // }
                                     }
                                 }
                             }

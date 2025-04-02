@@ -50,18 +50,18 @@ namespace ICT2106WebApp.mod1grp4
                             TableCell cell = iterator.current(); // Get current cell
                             string cellContent = cell.content;
                             Dictionary<string, string> latexEscapes = new Dictionary<string, string>
-                    {
-                        { "&", "\\&" },
-                        { "%", "\\%" },
-                        { "$", "\\$" },
-                        { "#", "\\#" },
-                        { "_", "\\_" },
-                        { "{", "\\{" },
-                        { "}", "\\}" },
-                        { "~", "\\~" },
-                        { "^", "\\^" },
-                        { "\\", "\\\\" }
-                    };
+                            {
+                                { "&", "\\&" },
+                                { "%", "\\%" },
+                                { "$", "\\$" },
+                                { "#", "\\#" },
+                                { "_", "\\_" },
+                                { "{", "\\{" },
+                                { "}", "\\}" },
+                                { "~", "\\~" },
+                                { "^", "\\^" },
+                                { "\\", "\\\\" }
+                            };
 
                             foreach (var pair in latexEscapes)
                             {
@@ -79,17 +79,17 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 latexCell = $"\\textit{{{latexCell}}}";
                             }
+                            if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "none")
+                            {
+                                // if (!predefinedColours.Contains(cell.styling.highlight))
+                                // {
+                                //     predefinedColours += $"\\definecolor{{{cell.styling.highlight}}}{{HTML}}{{{cell.styling.highlight}}}\n";
+                                // }
+                                latexCell = $"\\hl{{{latexCell}}}";
+                            }
                             if (cell.styling.underline)
                             {
                                 latexCell = $"\\underline{{{latexCell}}}";
-                            }
-                            if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
-                            {
-                                if (!predefinedColours.Contains(cell.styling.highlight))
-                                {
-                                    predefinedColours += $"\\definecolor{{{cell.styling.highlight}}}{{HTML}}{{{cell.styling.highlight}}}\n";
-                                }
-                                latexCell = $"\\hl{{{latexCell}}}";
                             }
                             if (!string.IsNullOrEmpty(cell.styling.textcolor) && cell.styling.textcolor != "auto")
                             {
@@ -164,7 +164,7 @@ namespace ICT2106WebApp.mod1grp4
                                         bottomSpace = rowHeight;
                                         break;
                                 }
-                                latexCell = $" {{ \\rule{{0pt}}{{{topSpace}cm}} \\vspace{{{bottomSpace}cm}} {latexCell}}}";
+                                latexCell = $"{{ \\rule{{0pt}}{{{topSpace}cm}} \\vspace{{{bottomSpace}cm}} {latexCell}}}";
                             }
                             if (!string.IsNullOrEmpty(cell.styling.horizontalalignment))
                             {
@@ -175,10 +175,10 @@ namespace ICT2106WebApp.mod1grp4
                                 latexCell = $"\n\\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
                             }
 
-                            if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
-                            {
-                                latexCell = $"\\sethlcolor {cell.styling.highlight}";
-                            }
+                            // if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
+                            // {
+                            //     latexCell = $"\\sethlcolor {cell.styling.highlight}";
+                            // }
                             latexTable += latexCell + " & ";
                             iterator.next(); // Advance the iterator
                         }

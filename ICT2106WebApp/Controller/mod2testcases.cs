@@ -3,9 +3,20 @@
     using System;
     using System.Collections.Generic;
     using MongoDB.Bson;
+    using CustomLogger = ICT2106WebApp.Interfaces.ILogger;
 
     public class mod2testcases
     {
+        private readonly CustomLogger _logger;
+
+        // Constructor to inject logger
+        public mod2testcases(CustomLogger logger)
+        {
+            _logger = logger;
+
+            _logger.InsertLog(DateTime.Now, "Initializing Mod2 test cases.", "Mod2TestCases");
+        }
+
         // --------------------------------- To Hold Nodes --------------------------------- //
         private Dictionary<string, BsonDocument> _nodes = new Dictionary<string, BsonDocument>();
         private Dictionary<string, BsonDocument> _latexNodesPass = new Dictionary<string, BsonDocument>();
@@ -16,25 +27,25 @@
         // This is under the assumption that each LINE in doc/letax is saved as a different node
         public mod2testcases()
         {
-            //    // TC01: Heading
-            //    _nodes["TC01"] = new BsonDocument {
-            //    { "Type", "h1" }, { "Content", "Header 1" },
-            //    { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
-            //};
-            //    // Pass
-            //    _latexNodesPass["TC01"] = new BsonDocument { { "Content", "\\section{\\textbf{Header 1}}" } };
-            //    // Fail - set to fail
-            //    _latexNodesFail["TC01"] = new BsonDocument { { "Content", "\\section{\\textb{Header 1}}" } };
+        //    // TC01: Heading
+        //    _nodes["TC01"] = new BsonDocument {
+        //    { "Type", "h1" }, { "Content", "Header 1" },
+        //    { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
+        //};
+        //    // Pass
+        //    _latexNodesPass["TC01"] = new BsonDocument { { "Content", "\\section{\\textbf{Header 1}}" } };
+        //    // Fail - set to fail
+        //    _latexNodesFail["TC01"] = new BsonDocument { { "Content", "\\section{\\textb{Header 1}}" } };
 
-            //    // TC02: Bold text
-            //    _nodes["TC02"] = new BsonDocument {
-            //    { "Type", "paragraph" }, { "Content", "Bold Text" },
-            //    { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
-            //};
-            //    // Pass
-            //    _latexNodesPass["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
-            //    // Fail - set to pass
-            //    _latexNodesFail["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
+        //    // TC02: Bold text
+        //    _nodes["TC02"] = new BsonDocument {
+        //    { "Type", "paragraph" }, { "Content", "Bold Text" },
+        //    { "Styling", new BsonArray { new BsonDocument { { "bold", true } } } }
+        //};
+        //    // Pass
+        //    _latexNodesPass["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
+        //    // Fail - set to pass
+        //    _latexNodesFail["TC02"] = new BsonDocument { { "Content", "\\textbf{Bold Text}" } };
 
             // TC03: Italic text
             _nodes["TC03"] = new BsonDocument {
@@ -211,12 +222,12 @@
                     testPassed = false;
                 }
 
-                results.Add(testPassed);
+                results.Add(!testPassed);
             }
 
             // Check if all tests passed
-            bool allPassed = !results.Contains(false);
-            return allPassed ? true : false;
+            bool allFailed = !results.Contains(false);
+            return allFailed;
         }
 
         // --------------------------------- HELPER METHODS --------------------------------- //

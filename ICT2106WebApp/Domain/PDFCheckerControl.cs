@@ -7,11 +7,11 @@ using ICT2106WebApp.Interfaces;
 
 namespace ICT2106WebApp.Domain
 {
-    public class PDFQualityChecker : IPDFQualityChecker
+    public class PDFCheckerControl : IPDFQualityChecker
     {
         private readonly List<QualityCheck> _qualityChecks;
 
-        public PDFQualityChecker()
+        public PDFCheckerControl()
         {
             _qualityChecks = new List<QualityCheck>
             {

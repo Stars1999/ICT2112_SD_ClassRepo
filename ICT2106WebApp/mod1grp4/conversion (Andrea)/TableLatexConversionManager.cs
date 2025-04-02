@@ -278,14 +278,6 @@ namespace ICT2106WebApp.mod1grp4
                             {
                                 latexCell = $"\\textbf{{{latexCell}}}";
                             }
-                            if (cell.styling.italic)
-                            {
-                                latexCell = $"\\textit{{{latexCell}}}";
-                            }
-                            if (cell.styling.underline)
-                            {
-                                latexCell = $"\\underline{{{latexCell}}}";
-                            }
 
                             latexTable += latexCell + " & ";
                             iterator.next(); // Advance the iterator

@@ -70,6 +70,9 @@ namespace ICT2106WebApp.mod1grp4
                                                 case "horizontalalignment":
                                                     cellStyling.horizontalalignment = kvp.Value?.ToString();
                                                     break;
+                                                case "verticalalignment":
+                                                    cellStyling.verticalalignment = kvp.Value?.ToString();
+                                                    break;
                                                 case "topstyle":
                                                     cellStyling.topstyle = kvp.Value?.ToString();
                                                     break;

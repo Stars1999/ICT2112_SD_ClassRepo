@@ -32,7 +32,7 @@ namespace ICT2106WebApp.mod1grp4
 
                     // Start building the LaTeX table
                     string latexTable = "\\begin{tabular}{|" + string.Join("|", table.rows[0].cells.Select(cell => $"m{{{cell.styling.cellWidth}cm}}")) + "|}";
-                    latexTable += "\n\\hline\n";
+                    latexTable += "\n\\hline";
 
                     foreach (var row in table.rows)
                     {
@@ -42,7 +42,7 @@ namespace ICT2106WebApp.mod1grp4
                         if (table.rows.IndexOf(row) != 0) // Check if it's not the first row
                         {
                             latexTable = latexTable.TrimEnd(' ', '&') + " \\\\"; // End the previous row
-                            latexTable += "\n\\hline\n"; // Add a horizontal line
+                            latexTable += "\n\\hline"; // Add a horizontal line
                         }
 
                         while (!iterator.isDone())
@@ -99,13 +99,21 @@ namespace ICT2106WebApp.mod1grp4
                                 }
                                 latexCell = $"\\textcolor{{{cell.styling.textcolor}}}{{{latexCell}}}";
                             }
+                            // if (cell.styling.fontsize != 0)
+                            // {
+                            //     int fontSize = cell.styling.fontsize;
+                            //     string rowHeightLatex = string.IsNullOrEmpty(cell.styling.rowHeight) || cell.styling.rowHeight == "auto"
+                            //         ? string.Empty
+                            //         : $"\\rule{{0pt}}{{{cell.styling.rowHeight}cm}}";
+                            //     latexCell = $"{{{rowHeightLatex}\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+                            // }
                             if (cell.styling.fontsize != 0)
                             {
                                 int fontSize = cell.styling.fontsize;
-                                string rowHeightLatex = string.IsNullOrEmpty(cell.styling.rowHeight) || cell.styling.rowHeight == "auto" 
-                                    ? string.Empty 
-                                    : $"\\rule{{0pt}}{{{cell.styling.rowHeight}cm}}";
-                                latexCell = $"{{{rowHeightLatex}\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+                                // string rowHeightLatex = string.IsNullOrEmpty(cell.styling.rowHeight) || cell.styling.rowHeight == "auto"
+                                //     ? string.Empty
+                                //     : $"\\rule{{0pt}}{{{cell.styling.rowHeight}cm}}";
+                                latexCell = $"{{\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
                             }
                             if (!string.IsNullOrEmpty(cell.styling.backgroundcolor) && cell.styling.backgroundcolor != "auto")
                             {
@@ -115,20 +123,62 @@ namespace ICT2106WebApp.mod1grp4
                                 }
                                 latexCell = $"\\cellcolor{{{cell.styling.backgroundcolor}}}{{{latexCell}}}";
                             }
+                            if (!string.IsNullOrEmpty(cell.styling.verticalalignment) && cell.styling.rowHeight != "default")
+                            {
+                                int rowHeight;
+                                if (!string.IsNullOrEmpty(cell.styling.rowHeight) && int.TryParse(cell.styling.rowHeight, out int parsedRowHeight))
+                                {
+
+                                    rowHeight = parsedRowHeight;
+                                }
+                                else
+                                {
+                                    rowHeight = 0;
+                                }
+                                int topSpace;
+                                int bottomSpace;
+                                switch (cell.styling.verticalalignment.ToLower())
+                                {
+                                    case "top":
+                                        // Handle top alignment
+                                        topSpace = 0;
+                                        bottomSpace = rowHeight;
+                                        break;
+
+                                    case "bottom":
+                                        // Handle bottom alignment
+                                        topSpace = rowHeight;
+                                        bottomSpace = 0;
+                                        break;
+
+                                    case "center":
+                                        // Handle center alignment
+                                        topSpace = rowHeight / 2;
+                                        bottomSpace = rowHeight / 2;
+                                        break;
+
+                                    default:
+                                        // Handle default
+                                        topSpace = rowHeight / 2;
+                                        bottomSpace = rowHeight / 2;
+                                        break;
+                                }
+                                latexCell = $" {{ \\rule{{0pt}}{{{topSpace}cm}} \\vspace{{{bottomSpace}cm}} {latexCell}}}";
+                            }
                             if (!string.IsNullOrEmpty(cell.styling.horizontalalignment))
                             {
                                 string alignment = cell.styling.horizontalalignment;
                                 string alignmentChar = alignment == "right" ? "r" : alignment == "left" ? "l" : "c";
                                 string alignmentRagged = alignment == "right" ? "raggedleft" : alignment == "left" ? "raggedright" : alignment == "both" ? "justifying" : "centering";
                                 // latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
-                                latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
+                                latexCell = $"\n\\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
                             }
 
                             if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
                             {
                                 latexCell = $"\\sethlcolor {cell.styling.highlight}";
                             }
-                            latexTable += latexCell + " & \n";
+                            latexTable += latexCell + " & ";
                             iterator.next(); // Advance the iterator
                         }
                     }
@@ -209,18 +259,18 @@ namespace ICT2106WebApp.mod1grp4
                             TableCell cell = iterator.current(); // Get current cell
                             string cellContent = cell.content;
                             Dictionary<string, string> latexEscapes = new Dictionary<string, string>
-                    {
-                        { "&", "\\&" },
-                        { "%", "\\%" },
-                        { "$", "\\$" },
-                        { "#", "\\#" },
-                        { "_", "\\_" },
-                        { "{", "\\{" },
-                        { "}", "\\}" },
-                        { "~", "\\~" },
-                        { "^", "\\^" },
-                        { "\\", "\\\\" }
-                    };
+                            {
+                                { "&", "\\&" },
+                                { "%", "\\%" },
+                                { "$", "\\$" },
+                                { "#", "\\#" },
+                                { "_", "\\_" },
+                                { "{", "\\{" },
+                                { "}", "\\}" },
+                                { "~", "\\~" },
+                                { "^", "\\^" },
+                                { "\\", "\\\\" }
+                            };
 
                             foreach (var pair in latexEscapes)
                             {

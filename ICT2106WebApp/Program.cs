@@ -80,7 +80,8 @@ public static class DocumentProcessor
 
 		string currentDir = Directory.GetCurrentDirectory();
 		string filePath_full = Path.Combine(currentDir, filePath);
-		await documentControl.saveDocumentToDatabase(filePath);
+		// **
+		// await documentControl.saveDocumentToDatabase(filePath);
 
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
@@ -125,13 +126,22 @@ public static class DocumentProcessor
 				document = documentContents,
 			};
 
-			NodeManager nodeManager = new NodeManager(); // Create instance of NodeMa
 			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
 
-			int id = 1;
 			List<AbstractNode> nodesList = new List<AbstractNode>();
 			string jsonOutput = string.Empty;
 
+			jsonOutput = await ExtractContent.CreateNodeList(
+				documentContents,
+				nodesList,
+				jsonOutput,
+				documentData,
+				jsonOutputPath
+			);
+
+			/*
+			NodeManager nodeManager = new NodeManager(); // Create instance of NodeMa
+			int id = 1;
 			var numberofRunNode = 0;
 			var numberofMainNode = 0;
 
@@ -139,7 +149,6 @@ public static class DocumentProcessor
 			List<AbstractNode> runListNodes = new List<AbstractNode>();
 			List<AbstractNode> runRunListNodes = new List<AbstractNode>();
 
-			// this part creates the json
 			foreach (var item in documentContents) //Go through doc content
 			{
 				// Going through each item's key-value pair of the object
@@ -407,78 +416,81 @@ public static class DocumentProcessor
 			// This calculates and accounts for the number of parent node and child nodes
 			Console.WriteLine($"number of Main node: {numberofMainNode}\n");
 			Console.WriteLine($"number of Run node: {numberofRunNode}\n");
+			*/
 
-			/* Checking my json & nodes*/
-			//Check nodelist and count the number of nodes
-			Console.WriteLine("\n\n\n\n\n\n\n\n\n nodesList.Count");
-			Console.WriteLine(nodesList.Count);
-			int nodeNum = 0;
-			foreach (var nodeInList in nodesList)
-			{
-				nodeNum = nodeNum + 1;
-				Console.Write("nodeNum:");
-				Console.Write(nodeNum);
-				Console.Write("\n");
 
-				var thetypehere = nodeInList.GetNodeType();
-				Console.WriteLine($"type:{thetypehere}");
+			// checknodes
+			// Console.WriteLine("\n\n\n\n\n\n\n\n\n nodesList.Count");
+			// Console.WriteLine(nodesList.Count);
+			// int nodeNum = 0;
+			// foreach (var nodeInList in nodesList)
+			// {
+			// 	nodeNum = nodeNum + 1;
+			// 	Console.Write("nodeNum:");
+			// 	Console.Write(nodeNum);
+			// 	Console.Write("\n");
 
-				var thelevelhere = nodeInList.GetNodeLevel();
-				Console.WriteLine($"level:{thelevelhere}");
+			// 	var thetypehere = nodeInList.GetNodeType();
+			// 	Console.WriteLine($"type:{thetypehere}");
 
-				var thecontenthere = nodeInList.GetContent();
-				Console.WriteLine($"content:{thecontenthere}");
+			// 	var thelevelhere = nodeInList.GetNodeLevel();
+			// 	Console.WriteLine($"level:{thelevelhere}");
 
-				var thestylinghere = nodeInList.GetStyling();
-				string consolidatedStyling = "";
-				foreach (var dict in thestylinghere)
-				{
-					foreach (var kvp in dict)
-					{
-						consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
-					}
-				}
-				Console.WriteLine($"styling:{consolidatedStyling}");
-				Console.Write("\n");
-			}
+			// 	var thecontenthere = nodeInList.GetContent();
+			// 	Console.WriteLine($"content:{thecontenthere}");
 
-			// Parse the JSON string
+			// 	var thestylinghere = nodeInList.GetStyling();
+			// 	string consolidatedStyling = "";
+			// 	foreach (var dict in thestylinghere)
+			// 	{
+			// 		foreach (var kvp in dict)
+			// 		{
+			// 			consolidatedStyling += $"{kvp.Key}: {kvp.Value}";
+			// 		}
+			// 	}
+			// 	Console.WriteLine($"styling:{consolidatedStyling}");
+			// 	Console.Write("\n");
+			// }
+			// ExtractContent.checkNodes(nodesList);
+			// above is for checknodes
+
+
+
+			// uncomment to see consolelogs for checking purposes
+			// ExtractContent.checkJson(documentArray);
+			// checkjson
 			JObject jsonObject = JObject.Parse(jsonOutput);
-			// Count the number of items in the "document" array
 			JArray documentArray = (JArray)jsonObject["document"];
-			int documentCount = documentArray.Count;
-			Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
+			// int documentCount = documentArray.Count;
+			// Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
+			// // Check if there are "runs" in any of the document items
+			// var totalCounts = 0;
+			// var i = 0;
+			// foreach (var itemhere in documentArray)
+			// {
+			// 	var runs = itemhere["runs"];
+			// 	Console.WriteLine(i);
+			// 	if (runs != null)
+			// 	{
+			// 		totalCounts = totalCounts + runs.Count();
+			// 		// Console.WriteLine($"This item has {runs.Count()} runs.");
+			// 	}
+			// 	else
+			// 	{
+			// 		// Console.WriteLine("This item has no runs.");
+			// 	}
+			// 	i = i + 1;
+			// }
+			// Console.WriteLine("total run count");
+			// Console.WriteLine(totalCounts);
+			// Console.WriteLine("\n");
+			// totalCounts = totalCounts + i;
+			// Console.WriteLine("total = ");
+			// Console.WriteLine(totalCounts);
+			// end of  checkjson
 
-			// Check if there are "runs" in any of the document items
-			var totalCounts = 0;
-			var i = 0;
-			foreach (var itemhere in documentArray)
-			{
-				var runs = itemhere["runs"];
 
-				Console.WriteLine(i);
-
-				if (runs != null)
-				{
-					totalCounts = totalCounts + runs.Count();
-					// Console.WriteLine($"This item has {runs.Count()} runs.");
-				}
-				else
-				{
-					// Console.WriteLine("This item has no runs.");
-				}
-
-				i = i + 1;
-			}
-
-			Console.WriteLine("total run count");
-			Console.WriteLine(totalCounts);
-			Console.WriteLine("\n");
-
-			totalCounts = totalCounts + i;
-			Console.WriteLine("total = ");
-			Console.WriteLine(totalCounts);
-
+			// !!Break here for another function ?
 			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 			// treeProcessor.PrintTree(rootnodehere, 0);
@@ -603,6 +615,7 @@ public static class DocumentProcessor
 					}
 				}
 			}
+			// end of another function?
 		}
 	}
 
@@ -644,7 +657,7 @@ public static class DocumentProcessor
 	// 		var documentData = new
 	// 		{
 	// 			// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-	// 			metadata = ExtractContent.GetDocumentMetadata(wordDoc, filePath_full),
+	// metadata = ExtractContent.GetDocumentMetadata(wordDoc, filePath_full),
 	// 			// headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
 	// 			// !!footer still exists issues. Commented for now
 	// 			// footers = DocumentHeadersFooters.ExtractFooters(wordDoc),

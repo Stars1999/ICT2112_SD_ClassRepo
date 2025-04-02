@@ -19,9 +19,10 @@ using Newtonsoft.Json; // For JsonConvert
 using Newtonsoft.Json.Linq; // Bson - Binary JSON
 using Utilities;
 
+// this file for jonathan
 namespace Utilities
 {
-	// Class
+	//  document fail safe?
 	public static partial class ExtractContent
 	{
 		// Grp3 Johnathan's Crash Recovery

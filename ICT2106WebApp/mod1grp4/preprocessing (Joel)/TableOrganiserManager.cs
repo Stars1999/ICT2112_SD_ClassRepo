@@ -9,7 +9,8 @@ namespace ICT2106WebApp.mod1grp4
 		// Convert the abstract nodes given into custom table entity (Joel - COMPLETED)
 		public List<Table> organiseTables(List<AbstractNode> abstractNodes)
 		{
-			Console.WriteLine("MODULE 1 GROUP 4: START");
+			Console.WriteLine("\n\n############################## \n");
+			Console.WriteLine("MODULE 1 GROUP 4: START\n\n");
 			var tables = new Dictionary<int, Table>(); // Use a dictionary to group tables by their ID
 
 			foreach (var node in abstractNodes)

@@ -367,8 +367,8 @@ namespace Utilities
 									Dictionary<string, object> runStyling =
 										new Dictionary<string, object>();
 
-									Console.WriteLine("JSONBUILDINGrun");
-									Console.WriteLine(run);
+									// Console.WriteLine("JSONBUILDINGrun");
+									// Console.WriteLine(run);
 									// Process the 'type' and 'content' for each run
 									foreach (var runKvp in run)
 									{
@@ -432,8 +432,8 @@ namespace Utilities
 												Dictionary<string, object> runRunStyling =
 													new Dictionary<string, object>();
 
-												Console.WriteLine("JSONBUILDINGrunrun");
-												Console.WriteLine(runRun);
+												// Console.WriteLine("JSONBUILDINGrunrun");
+												// Console.WriteLine(runRun);
 												// Process the 'type' and 'content' for each run
 												foreach (var runRunKvp in runRun)
 												{

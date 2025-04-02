@@ -166,7 +166,7 @@ namespace Utilities
 				}
 				else if (element is DocumentFormat.OpenXml.Wordprocessing.Table table)
 				{
-					Console.WriteLine("📝 Extracting Table");
+					// Console.WriteLine("📝 Extracting Table");
 					elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
 				}
 			}
@@ -301,7 +301,7 @@ namespace Utilities
 
 				// Write JSON to file
 				File.WriteAllText(jsonOutputPath, jsonOutput);
-				Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
+				Console.WriteLine($"✅ New data saved to {jsonOutputPath}");
 
 				// Save JSON to database (assuming `saveJsonToDatabase` is an async method)
 				await documentControl.saveJsonToDatabase(jsonOutputPath);

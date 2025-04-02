@@ -31,7 +31,8 @@ namespace Utilities
 			// Count the number of items in the "document" array
 			// JArray documentArray = (JArray)jsonObject["document"];
 			int documentCount = documentArray.Count;
-			Console.WriteLine($"\n\n Number of items in the JSON document array: {documentCount}");
+			Console.WriteLine("Check number of nodes");
+			Console.WriteLine($"Number of items in the JSON document array: {documentCount}");
 
 			// Check if there are "runs" in any of the document items
 			var totalCounts = 0;
@@ -40,7 +41,7 @@ namespace Utilities
 			{
 				var runs = itemhere["runs"];
 
-				Console.WriteLine(i);
+				// Console.WriteLine(i);
 
 				if (runs != null)
 				{
@@ -57,8 +58,6 @@ namespace Utilities
 
 			Console.WriteLine("total run count");
 			Console.WriteLine(totalCounts);
-			Console.WriteLine("\n");
-
 			totalCounts = totalCounts + i;
 			Console.WriteLine("total = ");
 			Console.WriteLine(totalCounts);

@@ -36,7 +36,7 @@ namespace Utilities
 			var blip = drawing.Descendants<DocumentFormat.OpenXml.Drawing.Blip>().FirstOrDefault();
 			if (blip == null)
 			{
-				Console.WriteLine("No Blip found in Drawing.");
+				// Console.WriteLine("No Blip found in Drawing.");
 				return imageList;
 			}
 
@@ -189,7 +189,7 @@ namespace Utilities
 					alignment = justValue.ToString();
 				}
 			}
-			Console.WriteLine("Image Alignment: " + alignment);
+			// Console.WriteLine("Image Alignment: " + alignment);
 
 			// 11.Get image position(for floating images)
 			string imagePosition = "Inline (position determined by text flow)";

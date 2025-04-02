@@ -139,16 +139,17 @@ public static class DocumentProcessor
 				jsonOutputPath
 			);
 
-			// uncomment to see consolelogs for checking purposes
-			// ExtractContent.checkJson(documentArray);
-			// checkjson
 			JObject jsonObject = JObject.Parse(jsonOutput);
 			JArray documentArray = (JArray)jsonObject["document"];
+			// checkjson
+			// uncomment to see consolelogs for checking purposes
+			ExtractContent.checkJson(documentArray);
 
 			// !!Break here for another function ?
 			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
-			// treeProcessor.PrintTree(rootnodehere, 0);
+			Console.WriteLine("\n\n############################## \nPrint Tree\n\n");
+			treeProcessor.PrintTree(rootnodehere, 0);
 
 			// SAVE TREE TO MONGODB
 			await treeProcessor.SaveTreeToDatabase(rootnodehere);
@@ -165,12 +166,15 @@ public static class DocumentProcessor
 			else
 				Console.WriteLine("mongoRootNode is not a CompositeNode!");
 			if (mongoCompNode != null)
+			{
+				Console.WriteLine("Print out tree. Commented out for now\n");
 				treeProcessor.PrintTree(mongoCompNode, 0);
+			}
 			// END TREE
 
 
 			//TREE VALIDAITON
-
+			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
 			// Flatten the tree
 			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(mongoCompNode);
 

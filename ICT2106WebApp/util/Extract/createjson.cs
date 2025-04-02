@@ -46,7 +46,7 @@ namespace Utilities
 				// Going through each item's key-value pair of the object
 				if (item is Dictionary<string, object> dictionary)
 				{
-					Console.WriteLine("Dictionary contents:");
+					// Console.WriteLine("Dictionary contents:");
 					string nodeType = "";
 					string content = "";
 					List<Dictionary<string, object>> styling =
@@ -58,16 +58,16 @@ namespace Utilities
 						if (kvp.Key == "type")
 						{
 							nodeType = (string)kvp.Value;
-							Console.WriteLine($"type: {nodeType}");
+							// Console.WriteLine($"type: {nodeType}");
 						}
 						if (kvp.Key == "content")
 						{
 							content = (string)kvp.Value;
-							Console.WriteLine($"content {content}");
+							// Console.WriteLine($"content {content}");
 						}
 						if (kvp.Key == "styling")
 						{
-							Console.WriteLine("Styling L1:");
+							// Console.WriteLine("Styling L1:");
 
 							if (kvp.Value is List<object> objectList)
 							{
@@ -89,7 +89,7 @@ namespace Utilities
 							}
 							else
 							{
-								Console.WriteLine("The 'styling' value is not a List<object>.");
+								// Console.WriteLine("The 'styling' value is not a List<object>.");
 							}
 						}
 						// check for run
@@ -105,22 +105,22 @@ namespace Utilities
 								Dictionary<string, object> runStyling =
 									new Dictionary<string, object>();
 
-								Console.WriteLine("JSONBUILDINGrun");
-								Console.WriteLine(run);
+								// Console.WriteLine("JSONBUILDINGrun");
+								// Console.WriteLine(run);
 								// Process the 'type' and 'content' for each run
 								foreach (var runKvp in run)
 								{
 									if (runKvp.Key == "type")
 									{
 										runType = (string)runKvp.Value;
-										Console.WriteLine($"runType: {runKvp.Value}");
-										Console.WriteLine($"runType: {runType}");
+										// Console.WriteLine($"runType: {runKvp.Value}");
+										// Console.WriteLine($"runType: {runType}");
 									}
 									if (runKvp.Key == "content")
 									{
 										runContent = (string)runKvp.Value;
-										Console.WriteLine($"runContent: {runKvp.Value}");
-										Console.WriteLine($"runContent: {runContent}");
+										// Console.WriteLine($"runContent: {runKvp.Value}");
+										// Console.WriteLine($"runContent: {runContent}");
 									}
 									if (runKvp.Key == "styling")
 									{
@@ -149,9 +149,9 @@ namespace Utilities
 										}
 										else
 										{
-											Console.WriteLine(
-												"The 'styling' value is not a List<object>."
-											);
+											// Console.WriteLine(
+											// 	"The 'styling' value is not a List<object>."
+											// );
 										}
 									}
 
@@ -167,28 +167,28 @@ namespace Utilities
 											Dictionary<string, object> runRunStyling =
 												new Dictionary<string, object>();
 
-											Console.WriteLine("JSONBUILDINGrunrun");
-											Console.WriteLine(runRun);
+											// Console.WriteLine("JSONBUILDINGrunrun");
+											// Console.WriteLine(runRun);
 											// Process the 'type' and 'content' for each run
 											foreach (var runRunKvp in runRun)
 											{
 												if (runRunKvp.Key == "type")
 												{
 													runRunType = (string)runRunKvp.Value;
-													Console.WriteLine(
-														$"runType: {runRunKvp.Value}"
-													);
-													Console.WriteLine($"runType: {runRunType}");
+													// Console.WriteLine(
+													// 	$"runType: {runRunKvp.Value}"
+													// );
+													// Console.WriteLine($"runType: {runRunType}");
 												}
 												if (runRunKvp.Key == "content")
 												{
 													runRunContent = (string)runRunKvp.Value;
-													Console.WriteLine(
-														$"runContent: {runRunKvp.Value}"
-													);
-													Console.WriteLine(
-														$"runContent: {runRunContent}"
-													);
+													// Console.WriteLine(
+													// 	$"runContent: {runRunKvp.Value}"
+													// );
+													// Console.WriteLine(
+													// 	$"runContent: {runRunContent}"
+													// );
 												}
 												if (runRunKvp.Key == "styling") //This is where we get Cell Style
 												{
@@ -210,9 +210,9 @@ namespace Utilities
 													}
 													else
 													{
-														Console.WriteLine(
-															"The 'styling' value is not a Dictionary<string, object>."
-														);
+														// Console.WriteLine(
+														// 	"The 'styling' value is not a Dictionary<string, object>."
+														// );
 													}
 												}
 											}
@@ -229,10 +229,10 @@ namespace Utilities
 														runRunStyling,
 													}
 												);
-												numberofRunNode = numberofRunNode + 1;
-												Console.WriteLine(
-													$"run myid:{id} {runRunType}: {runRunContent}\n"
-												);
+												// numberofRunNode = numberofRunNode + 1;
+												// Console.WriteLine(
+												// 	$"run myid:{id} {runRunType}: {runRunContent}\n"
+												// );
 												// nodesList.Add(runNode);
 												runRunListNodes.Add(runRunNode);
 											}
@@ -251,7 +251,7 @@ namespace Utilities
 										new List<Dictionary<string, object>> { runStyling }
 									);
 									numberofRunNode = numberofRunNode + 1;
-									Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
+									// Console.WriteLine($"run myid:{id} {runType}: {runContent}\n");
 									// nodesList.Add(runNode);
 									runListNodes.Add(runNode);
 									foreach (var runrunnodeitem in runRunListNodes)
@@ -271,13 +271,14 @@ namespace Utilities
 					if (nodeType != "" || content != "")
 					{
 						var node = nodeManager.CreateNode(id++, nodeType, content, styling);
+						numberofMainNode = numberofMainNode + 1;
 						nodesList.Add(node);
 					}
 					else
 					{
-						Console.WriteLine(
-							$"Weird its null\n type: {nodeType}\ncontent: {content}\n"
-						);
+						// Console.WriteLine(
+						// 	$"Weird its null\n type: {nodeType}\ncontent: {content}\n"
+						// );
 					}
 
 					foreach (var runnodeitem in runListNodes)
@@ -306,7 +307,7 @@ namespace Utilities
 			}
 
 			// This calculates and accounts for the number of parent node and child nodes
-			Console.WriteLine($"number of Main node: {numberofMainNode}\n");
+			Console.WriteLine($"number of Main node: {numberofMainNode}");
 			Console.WriteLine($"number of Run node: {numberofRunNode}\n");
 
 			return jsonOutput;

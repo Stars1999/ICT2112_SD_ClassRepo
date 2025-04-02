@@ -76,9 +76,8 @@ namespace Utilities
 		{
 			var numberingProps = paragraph.ParagraphProperties?.NumberingProperties;
 
-			Console.WriteLine("\nGetListType:");
-			Console.WriteLine(paragraph);
-			Console.WriteLine(numberingProps);
+			// Console.WriteLine("\nGetListType:");
+			// Console.WriteLine(numberingProps);
 
 			if (numberingProps != null)
 			{
@@ -93,12 +92,12 @@ namespace Utilities
 					numberingProps?.NumberingLevelReference?.Val != null
 						? numberingProps.NumberingLevelReference.Val.Value.ToString()
 						: "None";
-				Console.WriteLine($"Numbering ID: {numberingId ?? "None\n"}");
-				Console.WriteLine($"Level ID: {levelId ?? "None"}");
+				// Console.WriteLine($"Numbering ID: {numberingId ?? "None\n"}");
+				// Console.WriteLine($"Level ID: {levelId ?? "None"}");
 			}
 			else
 			{
-				Console.WriteLine("This paragraph has no numbering properties.");
+				// Console.WriteLine("This paragraph has no numbering properties.");
 			}
 
 			if (numberingProps == null)
@@ -122,7 +121,7 @@ namespace Utilities
 				21 => "lowercase_roman_numeral_list",
 				_ => "unknown_list",
 			};
-			Console.WriteLine($"List type: {listType}\n");
+			// Console.WriteLine($"List type: {listType}\n");
 			return listType;
 		}
 
@@ -226,7 +225,7 @@ namespace Utilities
 						}
 						catch (FormatException ex)
 						{
-							Console.WriteLine($"Error parsing Line value: {ex.Message}");
+							// Console.WriteLine($"Error parsing Line value: {ex.Message}");
 							lineSpacingValue = 1.15;
 						}
 					}
@@ -283,7 +282,7 @@ namespace Utilities
 			// Detect Page Breaks
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.Page))
 			{
-				Console.WriteLine("Detect page break\n");
+				// Console.WriteLine("Detect page break\n");
 				paragraphData["type"] = "page_break";
 				paragraphData["content"] = "[PAGE BREAK]";
 				// paragraphData["fonttype"] = paraFontType;
@@ -295,7 +294,7 @@ namespace Utilities
 			// Detect Line Breaks
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.TextWrapping))
 			{
-				Console.WriteLine("Detect line break\n");
+				// Console.WriteLine("Detect line break\n");
 				paragraphData["type"] = "line_break";
 				paragraphData["content"] = "[LINE BREAK]";
 				// paragraphData["fonttype"] = paraFontType;
@@ -306,7 +305,7 @@ namespace Utilities
 
 			if (paragraph.Descendants<DocumentFormat.OpenXml.Math.OfficeMath>().Any())
 			{
-				Console.WriteLine("Goes to math extractor\n");
+				// Console.WriteLine("Math extractor\n");
 				mathContent = MathExtractor.ExtractParagraphsWithMath(paragraph);
 				havemath = true;
 				paragraphData["type"] = "math";
@@ -318,7 +317,7 @@ namespace Utilities
 				&& havemath == false
 			)
 			{
-				Console.WriteLine("Completely empty\n");
+				// Console.WriteLine("Null / white space\n");
 				paragraphData["type"] = "empty_paragraph1";
 				paragraphData["content"] = "";
 				paragraphData["styling"] = PropertiesList;
@@ -329,7 +328,7 @@ namespace Utilities
 			// Check for page/line breaks at the paragraph level
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.Page))
 			{
-				Console.WriteLine("break value\n");
+				// Console.WriteLine("break\n");
 				return new Dictionary<string, object>
 				{
 					{ "type", "page_break" },
@@ -340,8 +339,7 @@ namespace Utilities
 
 			if (paragraph.Descendants<Break>().Any(b => b.Type?.Value == BreakValues.TextWrapping))
 			{
-				Console.WriteLine("line break\n");
-
+				// Console.WriteLine("line break\n");
 				return new Dictionary<string, object>
 				{
 					{ "type", "line_break" },
@@ -361,7 +359,7 @@ namespace Utilities
 
 				if (string.IsNullOrWhiteSpace(runText))
 				{
-					Console.WriteLine("Continue\n");
+					// Console.WriteLine("Continue\n");
 					continue;
 				}
 
@@ -452,14 +450,14 @@ namespace Utilities
 				if (PropertiesList[0] is Dictionary<string, object> dict)
 				{
 					// get fonts and size
-					Console.WriteLine("\nS3");
+					// Console.WriteLine("\nS3");
 					//Check font and font size
 					string? runFontSizeRawS1 = run.RunProperties?.FontSize?.Val?.Value;
 					int runFontSizeS1 = 12; // Default to 12pt if not found
 
 					if (int.TryParse(runFontSizeRawS1, out int parsedSizeS1))
 						runFontSizeS1 = parsedSizeS1 / 2; // Convert from half-points to standard points
-					Console.WriteLine($"Run Font Size: {runFontSizeS1}pt");
+					// Console.WriteLine($"Run Font Size: {runFontSizeS1}pt");
 
 					string? paraFontSizeRawS1 = paragraph
 						.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<FontSize>()
@@ -470,8 +468,8 @@ namespace Utilities
 						paraFontSizeS1 = paraParsedSizeS1 / 2; // Convert from half-points
 
 					string fontTypexx = GetRunFontType(run, paragraph, doc);
-					Console.WriteLine($"Paragraph Font Size1: {runFontSizeS1}pt {fontTypexx}");
-					Console.WriteLine(runText);
+					// Console.WriteLine($"Paragraph Font Size1: {runFontSizeS1}pt {fontTypexx}");
+					// Console.WriteLine(runText);
 					//end
 
 					// Now you can safely call dict.ContainsKey(...)
@@ -521,9 +519,9 @@ namespace Utilities
 							&& fontTypexx == "Times New Roman"
 						)
 						{
-							Console.WriteLine("bracket set\n");
-							Console.WriteLine(runFontSizeS1);
-							Console.WriteLine(fontTypexx);
+							// Console.WriteLine("bracket set\n");
+							// Console.WriteLine(runFontSizeS1);
+							// Console.WriteLine(fontTypexx);
 							runsList.Add(
 								new Dictionary<string, object>
 								{
@@ -575,10 +573,10 @@ namespace Utilities
 							if (bracket == true)
 							{
 								// runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
-								Console.WriteLine("debug\n");
-								Console.WriteLine(runFontSizeS1);
-								Console.WriteLine(fontTypexx);
-								Console.WriteLine(runText);
+								// Console.WriteLine("debug\n");
+								// Console.WriteLine(runFontSizeS1);
+								// Console.WriteLine(fontTypexx);
+								// Console.WriteLine(runText);
 
 								runsList.Add(
 									new Dictionary<string, object>
@@ -617,10 +615,10 @@ namespace Utilities
 			}
 
 			string pattern = @"\b(Reference|Bibliography)\b";
-			Console.WriteLine($"Total runs found: {runsList.Count}");
+			// Console.WriteLine($"Total runs found: {runsList.Count}");
 			// Console.WriteLine($"bib:{haveBibliography}");
 			// Console.WriteLine("check the text:");
-			Console.WriteLine(text);
+			// Console.WriteLine(text);
 
 			// check if it is still references / citation at the bottom
 			if (text.Length > 0 && text[0] == '[')
@@ -672,7 +670,7 @@ namespace Utilities
 				}
 				else if (runsList.Count > 1)
 				{
-					Console.WriteLine("\nRuns > 1:");
+					// Console.WriteLine("\nRuns > 1:");
 					// to see the content.
 					// foreach (var run in runsList) // `run` is a Dictionary<string, object>
 					// {
@@ -719,13 +717,13 @@ namespace Utilities
 					if (havemath == true)
 					{
 						var mathstring = "";
-						Console.WriteLine(
-							"Getting back the result and we see what is inside the for loop\n"
-						);
+						// Console.WriteLine(
+						// 	"Getting back the result and we see what is inside the for loop\n"
+						// );
 						// Go through the math and re-assemble it back from the run
 						foreach (var mathEntry in mathContent)
 						{
-							Console.WriteLine(mathEntry["content"]);
+							// Console.WriteLine(mathEntry["content"]);
 							mathstring = mathEntry["content"] + mathstring;
 						}
 						return new Dictionary<string, object>

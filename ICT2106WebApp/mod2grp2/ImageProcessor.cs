@@ -90,11 +90,12 @@ public class ImageProcessor : IProcessor
                     return "raggedright";
                 else if (alignment.Contains("Right"))
                     return "raggedleft";
-                else
+                else if (alignment.Contains("Center"))
                     return "centering";
+                    
             }
         }
-        return "centering"; // Default to center alignment
+        return "";
     }
 
    private string GetHorizontalOffset(List<Dictionary<string, object>> styling)

@@ -325,14 +325,14 @@
             .then(response => response.json())
             .then(data => {
                 // Log each progress update into the error log table
-                logError("Test Case Progress: 0%");
+                logError("Test Case Started (MOD3)");
                 // Reset progress bar and status message before starting a new progress
                 resetProgressBar();
                 let progress = 0;
                 let progressInterval = setInterval(() => {
                     if (progress < 100) {
                         progress += 20; // Simulating progress in 20% increments
-                        logError("Test Case Progress: " + progress + "%");
+                        logError("Test Case Progress (MOD3): " + progress + "%");
                         // Update the progress bar width based on the current progress
                         document.getElementById("statusProgress").style.width = progress + "%";
                         document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
@@ -343,7 +343,7 @@
                             document.getElementById("statusMessage").innerText = "Test Case Completed!";
                             document.getElementById("statusProgress").style.backgroundColor = 'green';
                         } else {
-                            logError("Test Case Failed: " + data.message); // Log final result as failure
+                            logError("Test Case Failed (MOD3): " + data.message); // Log final result as failure
                             document.getElementById("statusMessage").innerText = "Test Case Failed!";
                             document.getElementById("statusProgress").style.backgroundColor = 'red';
                         }
@@ -363,21 +363,21 @@
             .then(response => response.json())
             .then(data => {
                 // Log each progress update into the error log table
-                logError("Test Case Progress: 0%");
+                logError("Test Case Started (MOD3)");
                 // Reset progress bar and status message before starting a new progress
                 resetProgressBar();
                 let progress = 0;
                 let progressInterval = setInterval(() => {
                     if (progress < 100) {
                         progress += 20; // Simulating progress in 20% increments
-                        logError("Test Case Progress: " + progress + "%");
+                        logError("Test Case Progress (MOD3): " + progress + "%");
                         // Update the progress bar width based on the current progress
                         document.getElementById("statusProgress").style.width = progress + "%";
                         document.getElementById("statusMessage").innerText = "Status: " + progress + "%";
                     } else {
                         clearInterval(progressInterval);
                         if (data.message.includes('Test Passed')) {
-                            logError("Test Case Completed Successfully!");
+                            logError("Test Case Completed Successfully! (MOD3)");
                             document.getElementById("statusMessage").innerText = "Test Case Completed!";
                             document.getElementById("statusProgress").style.backgroundColor = 'green';
                         } else {

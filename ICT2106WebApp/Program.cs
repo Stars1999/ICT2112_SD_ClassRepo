@@ -22,7 +22,7 @@ builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the 
 builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
 
 // Register PDFQualityChecker directly
-builder.Services.AddSingleton<IPDFQualityChecker, PDFQualityChecker>();
+builder.Services.AddSingleton<IPDFQualityChecker, PDFCheckerControl>();
 builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();
 
 // Add services to the container.
@@ -58,7 +58,7 @@ builder.Services.AddScoped<ITaskScheduling, TaskSchedulerController>();
 builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
 builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
 // Register PDFQualityChecker directly
-builder.Services.AddSingleton<IPDFQualityChecker, PDFQualityChecker>();
+builder.Services.AddSingleton<IPDFQualityChecker, PDFCheckerControl>();
 builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>
 {

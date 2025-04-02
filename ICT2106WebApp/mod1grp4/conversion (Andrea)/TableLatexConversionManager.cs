@@ -292,7 +292,7 @@ namespace ICT2106WebApp.mod1grp4
 
         public async Task<bool> updateLatexCheckpointAsync(Table table)
         {
-            await notify<bool>(OperationType.SAVE, "Updated LaTeX checkpoint for table (ANDREA)", table);
+            await notify<bool>(OperationType.SAVE, $"Updated LaTeX checkpoint for table ID: {table.tableId} (ANDREA)", table);
             return true;
         }
     }

@@ -22,6 +22,14 @@ public class TableStructureManager : iTableStructure
 			// Run through each row in table
 			foreach (var row in table.Elements<TableRow>())
 			{
+
+				//Get Row/Cell Height For later [All cells in a row are same height] (Jonathan - COMPLETED)
+				var rowProperties = row.TableRowProperties; // Access the property directly
+
+				var rowHeight = rowProperties.Descendants<TableRowHeight>().Any() 
+					? ((float.Parse(rowProperties.Descendants<TableRowHeight>().FirstOrDefault().Val) * 2.54) / 1440).ToString("#.##") 
+					: "auto";
+
 				// List to hold cell dictionaries for this row.
 				var cellList = new List<Dictionary<string, object>>();
 
@@ -84,9 +92,6 @@ public class TableStructureManager : iTableStructure
 					// Extract cell width and height
 					string cellWidth = cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value != null
 					? ((float.Parse(cell.Descendants<TableCellWidth>().FirstOrDefault().Width?.Value)*2.54)/1440).ToString("#.##")
-					: "auto";
-					var rowHeight = row.Descendants<TableRowHeight>().FirstOrDefault() != null //Try find a way to get value, maybe use another proprty?
-					? ((float.Parse(row.Descendants<TableRowHeight>().FirstOrDefault().Val)*2.54)/1440).ToString("#.##")
 					: "auto";
 
 					// Extract cell background color

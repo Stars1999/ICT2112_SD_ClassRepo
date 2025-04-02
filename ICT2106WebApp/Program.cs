@@ -247,47 +247,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 			// WriteToFile("traverseNodes.cs", traverseList);
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
-			
-			// GROUP 4 STUFF
-			// Step 1: Get abstract nodes of table from group 3
-			INodeTraverser traverser = new NodeTraverser(mongoCompNode);
-			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
-
-		    // Step 2: Convert abstract node to custom table entity
-			var tableOrganiser = new TableOrganiserManager();
-			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
-			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
-			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
-			var tablePreprocessingManager = new TablePreprocessingManager();
-			tablePreprocessingManager.attach(rowTabularGateway_RDG);
-			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
-			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
-
-			// Step 4: Convert tables to LaTeX
-			var latexConversionManager = new TableLatexConversionManager();
-			latexConversionManager.attach(rowTabularGateway_RDG);
-
-			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
-			List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
-
-			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
-			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
-			// Environment.Exit(0);
-
-			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
-
-			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
-			var tableValidationManager = new TableValidationManager();
-			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
-
-			var processedTableManager = new ProcessedTableManager();
-			processedTableManager.attach(rowTabularGateway_RDG);
-			processedTableManager.logProcessingStatus(validationStatus);
-			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
-
-			// Will prove for Siti as we traverse the nodes again after updating
-			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
-
+		
 	}
 	Console.WriteLine("finish runtest");
 }
@@ -717,23 +677,23 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
 			
-// 			// GROUP 4 STUFF
+ 			// GROUP 4 STUFF
 			// Step 1: Get abstract nodes of table from group 3
 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
 
-		    // Step 2: Convert abstract node to custom table entity
+		    // Step 2: Convert abstract node to custom table entity (JOEL)
 			var tableOrganiser = new TableOrganiserManager();
 			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(tableAbstractNodes);
 
-			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
+			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
 			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
 			var tablePreprocessingManager = new TablePreprocessingManager();
 			tablePreprocessingManager.attach(rowTabularGateway_RDG);
 			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
 			List<ICT2106WebApp.mod1grp4.Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
 
-			// Step 4: Convert tables to LaTeX
+			// Step 4: Convert tables to LaTeX (ANDREA)
 			var latexConversionManager = new TableLatexConversionManager();
 			latexConversionManager.attach(rowTabularGateway_RDG);
 
@@ -746,7 +706,7 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 
 			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
 
-			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
+			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
 			var tableValidationManager = new TableValidationManager();
 			var validationStatus = tableValidationManager.validateTableLatexOutput(tableAbstractNodes, processedTables);
 
@@ -756,32 +716,32 @@ public static async Task RunCrashRecovery(IMongoDatabase database)
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
 			// Will prove for Siti as we traverse the nodes again after updating
-			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 
 
-			foreach (var tableNode in tableAbstractNodes)
-			{
-				if (tableNode.GetNodeType() == "table")
-				{
-					Console.WriteLine($"Table Node Content: {tableNode.GetContent()}");
-				}
-			}
+			// foreach (var tableNode in tableAbstractNodes)
+			// {
+			// 	if (tableNode.GetNodeType() == "table")
+			// 	{
+			// 		Console.WriteLine($"Table Node Content: {tableNode.GetContent()}");
+			// 	}
+			// }
 
-			// Print tablesFromNode
-			foreach (var table in tablesFromNode)
-			{
-				Console.WriteLine($"{table.tableId}");
-				Console.WriteLine($"{table.latexOutput}");
-				foreach (var row in table.rows)
-				{
-					foreach (var cell in row.cells)
-					{
-						Console.WriteLine($"Cell content: {cell.content}");
-						Console.WriteLine($"Cell Styling: {cell.styling}");
-					}
-				}
-			}
+			// // Print tablesFromNode
+			// foreach (var table in tablesFromNode)
+			// {
+			// 	Console.WriteLine($"{table.tableId}");
+			// 	Console.WriteLine($"{table.latexOutput}");
+			// 	foreach (var row in table.rows)
+			// 	{
+			// 		foreach (var cell in row.cells)
+			// 		{
+			// 			Console.WriteLine($"Cell content: {cell.content}");
+			// 			Console.WriteLine($"Cell Styling: {cell.styling}");
+			// 		}
+			// 	}
+			// }
 		}
 	}
 

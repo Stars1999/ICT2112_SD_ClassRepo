@@ -36,7 +36,7 @@ namespace ICT2106WebApp.mod1grp4
                     // Set the LaTeX content for the table node
                     tableNode.SetContent(processedTable.latexOutput);
                     tableNode.SetConverted(true); // Mark the table as converted
-                    Console.WriteLine($"Updated group 3 table node {tableNode.GetNodeId()} with LaTeX content of {processedTable.latexOutput}. (SITI)");
+                    Console.WriteLine($"Updated group 3 table node {tableNode.GetNodeId()} with updated LaTeX content. (SITI)");
 
                     // Traverse rows and cells to mark them as converted
                     foreach (var rowNode in tableNode.GetChildren())

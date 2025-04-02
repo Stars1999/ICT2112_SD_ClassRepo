@@ -16,7 +16,7 @@ namespace ICT2106WebApp.mod1grp4
             var logID = Guid.NewGuid().ToString();
             var logTimeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var logLocation = "Table";
-            Console.WriteLine($"insertLog({logID}, {logTimeStamp}, {description}, {logLocation})");
+            Console.WriteLine($"insertLog({logID}, {logTimeStamp}, {description}, {logLocation}) (HIEW TENG - VALIDATION, SITI - LOGGING)");
             return true;
         }
 
@@ -36,7 +36,7 @@ namespace ICT2106WebApp.mod1grp4
                     // Set the LaTeX content for the table node
                     tableNode.SetContent(processedTable.latexOutput);
                     tableNode.SetConverted(true); // Mark the table as converted
-                    Console.WriteLine($"Updated group 3 table node {tableNode.GetNodeId()} with LaTeX content of {processedTable.latexOutput}.");
+                    Console.WriteLine($"Updated group 3 table node {tableNode.GetNodeId()} with LaTeX content of {processedTable.latexOutput}. (SITI)");
 
                     // Traverse rows and cells to mark them as converted
                     foreach (var rowNode in tableNode.GetChildren())
@@ -57,11 +57,11 @@ namespace ICT2106WebApp.mod1grp4
                 }
                 else
                 {
-                    Console.WriteLine($"Warning: No matching table node found for table ID {processedTable.tableId}.");
+                    Console.WriteLine($"Warning: No matching table node found for table ID {processedTable.tableId}. (SITI)");
                 }
             }
 
-            Console.WriteLine("Processed tables have been slotted back into the tree.");
+            Console.WriteLine("Processed tables have been slotted back into the tree. (SITI)");
 
             // Delete tables that are no longer needed
             await deleteTables(processedTables);
@@ -74,7 +74,7 @@ namespace ICT2106WebApp.mod1grp4
         {
             foreach (var table in tables)
             {
-                await notify<bool>(OperationType.DELETE, "Deleting tables since no longer needed.", table);
+                await notify<bool>(OperationType.DELETE, "Deleting tables since no longer needed. (SITI)", table);
             }
             return true;
         }

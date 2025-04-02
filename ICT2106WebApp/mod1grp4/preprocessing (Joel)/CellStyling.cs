@@ -26,6 +26,9 @@ namespace ICT2106WebApp.mod1grp4 {
         [BsonElement("horizontalalignment")]
         public string horizontalalignment { get; set; }
 
+        [BsonElement("verticalalignment")]
+        public string verticalalignment { get; set; }
+
 
         [BsonElement("topstyle")]
         public string topstyle { get; set; }

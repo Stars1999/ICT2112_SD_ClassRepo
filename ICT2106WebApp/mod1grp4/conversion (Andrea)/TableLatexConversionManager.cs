@@ -147,14 +147,14 @@ namespace ICT2106WebApp.mod1grp4
                 }
                 else
                 {
-                    Console.WriteLine($"Table with id {table.tableId} has already been converted before the crash.");
+                    Console.WriteLine($"Table with id {table.tableId} has already been converted before the crash. (ANDREA)");
                     if (table == tableList[^1]) // Check if it's the last table in the list
                     {
-                        Console.WriteLine($"All tables have been processed.");
+                        Console.WriteLine($"All tables have been processed. (ANDREA)");
                     }
                     else
                     {
-                        Console.WriteLine($"Moving on to process the next table.");
+                        Console.WriteLine($"Moving on to process the next table. (ANDREA)");
                     }
                 }
 
@@ -173,7 +173,7 @@ namespace ICT2106WebApp.mod1grp4
                 // Stop processing after hitting limit
                 if (processedCount >= limit)
                 {
-                    Console.WriteLine($"Stopping after processing {limit} tables out of a total of {tableList.Count}.");
+                    Console.WriteLine($"Stopping after processing {limit} tables out of a total of {tableList.Count} (ANDREA).");
                     break;
                 }
 
@@ -274,14 +274,14 @@ namespace ICT2106WebApp.mod1grp4
                 }
                 else
                 {
-                    Console.WriteLine($"Table with id {table.tableId} has already been converted before the crash.");
+                    Console.WriteLine($"Table with id {table.tableId} has already been converted before the crash. (ANDREA)");
                     if (table == tableList[^1]) // Check if it's the last table in the list
                     {
-                        Console.WriteLine($"All tables have been processed.");
+                        Console.WriteLine($"All tables have been processed. (ANDREA)");
                     }
                     else
                     {
-                        Console.WriteLine($"Moving on to process the next table.");
+                        Console.WriteLine($"Moving on to process the next table. (ANDREA)");
                     }
                 }
 
@@ -292,7 +292,7 @@ namespace ICT2106WebApp.mod1grp4
 
         public async Task<bool> updateLatexCheckpointAsync(Table table)
         {
-            await notify<bool>(OperationType.SAVE, "Updated LaTeX checkpoint for table", table);
+            await notify<bool>(OperationType.SAVE, $"Updated LaTeX checkpoint for table ID: {table.tableId} (ANDREA)", table);
             return true;
         }
     }

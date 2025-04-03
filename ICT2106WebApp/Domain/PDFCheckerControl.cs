@@ -9,11 +9,11 @@ namespace ICT2106WebApp.Domain
 {
     public class PDFCheckerControl : IPDFQualityChecker
     {
-        private readonly List<QualityCheck> _qualityChecks;
+        private readonly List<IQualityCheck> _qualityChecks;
 
         public PDFCheckerControl()
         {
-            _qualityChecks = new List<QualityCheck>
+            _qualityChecks = new List<IQualityCheck>
             {
                 new TextFormattingCheck(),
                 new ImageResolutionCheck(),
@@ -25,17 +25,31 @@ namespace ICT2106WebApp.Domain
 
         public QualityReport CheckPDFQuality(byte[] pdfContent)
         {
+            // Create a new report with initial values
             QualityReport report = new QualityReport();
+            bool isSuccessful = true;
+            List<string> issues = new List<string>();
+            Dictionary<string, string> metrics = new Dictionary<string, string>();
+            int qualityScore = 100;
 
             foreach (var check in _qualityChecks)
             {
                 check.Execute(pdfContent, report);
             }
 
+            // Get the current state of the report
+            (isSuccessful, issues, metrics, _) = report.GetQualityReportDetails();
+
+            // Calculate quality score based on issues
             int penaltyPerIssue = 5;
-            int issuesCount = report.Issues.Count;
-            report.QualityScore = Math.Max(0, 100 - issuesCount * penaltyPerIssue);
-            report.Metrics["QualityScore"] = report.QualityScore.ToString();
+            int issuesCount = issues.Count;
+            qualityScore = Math.Max(0, 100 - issuesCount * penaltyPerIssue);
+            
+            // Add quality score to metrics
+            metrics["QualityScore"] = qualityScore.ToString();
+
+            // Update the report with our calculated values
+            report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
 
             return report;
         }
@@ -54,6 +68,9 @@ namespace ICT2106WebApp.Domain
                     int inconsistentFontsCount = 0;
                     int inconsistentSpacingCount = 0;
                     Dictionary<string, int> fontUsage = new();
+
+                    // Get the current report values
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
 
                     for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
                     {
@@ -83,18 +100,23 @@ namespace ICT2106WebApp.Domain
 
                     if (fontUsage.Count > 4)
                     {
-                        report.Issues.Add($"Too many different fonts used: {fontUsage.Count}. Recommended: 2-4 fonts.");
+                        issues.Add($"Too many different fonts used: {fontUsage.Count}. Recommended: 2-4 fonts.");
                         inconsistentFontsCount++;
                     }
 
-                    report.Metrics["FontCount"] = fontUsage.Count.ToString();
-                    report.Metrics["InconsistentSpacingPages"] = inconsistentSpacingCount.ToString();
-                    report.IsSuccessful = (inconsistentFontsCount == 0 && inconsistentSpacingCount == 0);
+                    metrics["FontCount"] = fontUsage.Count.ToString();
+                    metrics["InconsistentSpacingPages"] = inconsistentSpacingCount.ToString();
+                    isSuccessful = (inconsistentFontsCount == 0 && inconsistentSpacingCount == 0);
+
+                    // Update the report with the new values
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
                 catch (Exception ex)
                 {
-                    report.Issues.Add($"Error analyzing text formatting: {ex.Message}");
-                    report.IsSuccessful = false;
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+                    issues.Add($"Error analyzing text formatting: {ex.Message}");
+                    isSuccessful = false;
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
             }
         }
@@ -113,6 +135,9 @@ namespace ICT2106WebApp.Domain
                     using var pdfDoc = new PdfDocument(reader);
                     int lowResImageCount = 0;
                     int totalImageCount = 0;
+
+                    // Get the current report values
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
 
                     for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
                     {
@@ -137,19 +162,24 @@ namespace ICT2106WebApp.Domain
                             if (estimatedDPI < MinimumDPI)
                             {
                                 lowResImageCount++;
-                                report.Issues.Add($"Low resolution image on page {i} (~{Math.Round(estimatedDPI)} DPI).");
+                                issues.Add($"Low resolution image on page {i} (~{Math.Round(estimatedDPI)} DPI).");
                             }
                         }
                     }
 
-                    report.Metrics["TotalImages"] = totalImageCount.ToString();
-                    report.Metrics["LowResolutionImages"] = lowResImageCount.ToString();
-                    report.IsSuccessful = (lowResImageCount == 0);
+                    metrics["TotalImages"] = totalImageCount.ToString();
+                    metrics["LowResolutionImages"] = lowResImageCount.ToString();
+                    isSuccessful = (lowResImageCount == 0);
+
+                    // Update the report with the new values
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
                 catch (Exception ex)
                 {
-                    report.Issues.Add($"Error analyzing image resolution: {ex.Message}");
-                    report.IsSuccessful = false;
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+                    issues.Add($"Error analyzing image resolution: {ex.Message}");
+                    isSuccessful = false;
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
             }
         }
@@ -166,36 +196,44 @@ namespace ICT2106WebApp.Domain
                     using var reader = new PdfReader(ms);
                     using var pdfDoc = new PdfDocument(reader);
 
+                    // Get the current report values
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+
                     bool hasBookmarks = pdfDoc.GetCatalog().GetPdfObject().ContainsKey(PdfName.Outlines);
                     if (!hasBookmarks)
-                        report.Issues.Add("Document lacks bookmarks or table of contents.");
+                        issues.Add("Document lacks bookmarks or table of contents.");
 
                     bool isTagged = pdfDoc.IsTagged();
                     // Commented out accessibility check for IsTagged
                     //if (!isTagged)
-                    //    report.Issues.Add("Document is not tagged for accessibility.");
+                    //    issues.Add("Document is not tagged for accessibility.");
 
                     var info = pdfDoc.GetDocumentInfo();
                     bool missingMetadata = string.IsNullOrEmpty(info.GetTitle())
                                        || string.IsNullOrEmpty(info.GetAuthor())
                                        || string.IsNullOrEmpty(info.GetSubject());
                     if (missingMetadata)
-                        report.Issues.Add("Document metadata is incomplete (title, author, or subject missing).");
+                        issues.Add("Document metadata is incomplete (title, author, or subject missing).");
 
                     bool hasHeaders = HasAppropriateHeaders(pdfDoc);
                     if (!hasHeaders)
-                        report.Issues.Add("Document may lack proper headers/section titles.");
+                        issues.Add("Document may lack proper headers/section titles.");
 
-                    report.Metrics["IsTagged"] = isTagged.ToString();
-                    report.Metrics["HasBookmarks"] = hasBookmarks.ToString();
-                    report.Metrics["HasCompleteMetadata"] = (!missingMetadata).ToString();
+                    metrics["IsTagged"] = isTagged.ToString();
+                    metrics["HasBookmarks"] = hasBookmarks.ToString();
+                    metrics["HasCompleteMetadata"] = (!missingMetadata).ToString();
                     // Modified success criteria to not require isTagged
-                    report.IsSuccessful = (hasBookmarks && !missingMetadata && hasHeaders);
+                    isSuccessful = (hasBookmarks && !missingMetadata && hasHeaders);
+
+                    // Update the report with the new values
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
                 catch (Exception ex)
                 {
-                    report.Issues.Add($"Error analyzing structure: {ex.Message}");
-                    report.IsSuccessful = false;
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+                    issues.Add($"Error analyzing structure: {ex.Message}");
+                    isSuccessful = false;
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
             }
 
@@ -231,6 +269,9 @@ namespace ICT2106WebApp.Domain
                     using var reader = new PdfReader(ms);
                     using var pdfDoc = new PdfDocument(reader);
 
+                    // Get the current report values
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+
                     int potentialPlainTextMath = 0;
                     bool containsLatex = false;
                     bool containsMathML = false;
@@ -256,25 +297,30 @@ namespace ICT2106WebApp.Domain
                                   || content.Contains("<mi");
 
                     if (containsLatex && containsMathML)
-                        report.Issues.Add("Document mixes LaTeX and MathML notations.");
+                        issues.Add("Document mixes LaTeX and MathML notations.");
 
                     // Commented out accessibility check for math notation
                     //if ((containsLatex || containsMathML) && !pdfDoc.IsTagged())
-                    //    report.Issues.Add("Math notation present, but document is not tagged for accessibility.");
+                    //    issues.Add("Math notation present, but document is not tagged for accessibility.");
 
                     if (potentialPlainTextMath > 5)
-                        report.Issues.Add($"{potentialPlainTextMath} instances of plain-text math found. Use proper math formatting.");
+                        issues.Add($"{potentialPlainTextMath} instances of plain-text math found. Use proper math formatting.");
 
-                    report.Metrics["ContainsLatexNotation"] = containsLatex.ToString();
-                    report.Metrics["ContainsMathMLNotation"] = containsMathML.ToString();
-                    report.Metrics["PotentialPlainTextMath"] = potentialPlainTextMath.ToString();
+                    metrics["ContainsLatexNotation"] = containsLatex.ToString();
+                    metrics["ContainsMathMLNotation"] = containsMathML.ToString();
+                    metrics["PotentialPlainTextMath"] = potentialPlainTextMath.ToString();
 
-                    report.IsSuccessful = !report.Issues.Any();
+                    isSuccessful = !issues.Any();
+
+                    // Update the report with the new values
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
                 catch (Exception ex)
                 {
-                    report.Issues.Add($"Error analyzing math notation: {ex.Message}");
-                    report.IsSuccessful = false;
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+                    issues.Add($"Error analyzing math notation: {ex.Message}");
+                    isSuccessful = false;
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
             }
         }
@@ -290,6 +336,9 @@ namespace ICT2106WebApp.Domain
                     using var ms = new MemoryStream(pdfContent);
                     using var reader = new PdfReader(ms);
                     using var pdfDoc = new PdfDocument(reader);
+
+                    // Get the current report values
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
 
                     List<string> bibleTitles = new() { "references", "bibliography", "works cited", "literature" };
                     string biblioText = "";
@@ -315,24 +364,29 @@ namespace ICT2106WebApp.Domain
 
                     if (!foundBiblio)
                     {
-                        report.Issues.Add("Bibliography or references section not found.");
+                        issues.Add("Bibliography or references section not found.");
                     }
                     else
                     {
                         int referenceCount = Regex.Matches(biblioText, @"\n").Count;
                         if (referenceCount < 2)
-                            report.Issues.Add("Bibliography references seem too few or incorrectly formatted.");
+                            issues.Add("Bibliography references seem too few or incorrectly formatted.");
 
-                        report.Metrics["BibliographyPage"] = biblioPage.ToString();
-                        report.Metrics["ReferenceCount"] = referenceCount.ToString();
+                        metrics["BibliographyPage"] = biblioPage.ToString();
+                        metrics["ReferenceCount"] = referenceCount.ToString();
                     }
 
-                    report.IsSuccessful = !report.Issues.Any();
+                    isSuccessful = !issues.Any();
+
+                    // Update the report with the new values
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
                 catch (Exception ex)
                 {
-                    report.Issues.Add($"Error analyzing bibliography format: {ex.Message}");
-                    report.IsSuccessful = false;
+                    var (isSuccessful, issues, metrics, qualityScore) = report.GetQualityReportDetails();
+                    issues.Add($"Error analyzing bibliography format: {ex.Message}");
+                    isSuccessful = false;
+                    report.UpdateQualityReport(isSuccessful, issues, metrics, qualityScore);
                 }
             }
         }

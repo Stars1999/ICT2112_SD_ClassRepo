@@ -30,12 +30,16 @@ namespace ICT2106WebApp.Pages
             {
                 var pdfContent = _pdfProvider.GetPDFContent();
                 QualityReport = _pdfQualityChecker.CheckPDFQuality(pdfContent);
+                
+                // Use the GetQualityReportDetails method to access the encapsulated data
+                var (isSuccessful, issues, metrics, qualityScore) = QualityReport.GetQualityReportDetails();
+                
                 return new JsonResult(new { 
                     success = true, 
-                    qualityScore = QualityReport.QualityScore,
-                    isSuccessful = QualityReport.IsSuccessful,
-                    issues = QualityReport.Issues,
-                    metrics = QualityReport.Metrics
+                    qualityScore = qualityScore,
+                    isSuccessful = isSuccessful,
+                    issues = issues,
+                    metrics = metrics
                 });
             }
             catch (System.IO.FileNotFoundException)

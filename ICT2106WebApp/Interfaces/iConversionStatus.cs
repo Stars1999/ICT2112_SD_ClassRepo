@@ -1,18 +1,14 @@
 public interface iConversionStatus
 {
-    /// <summary>
-    /// ✅ Checks if the conversion process has completed successfully.
+    /// Checks if the conversion process has completed successfully.
     /// Returns true if a converted JSON exists, otherwise false.
-    /// </summary>
     bool fetchConversionStatus();
 
     /// <summary>
-    /// ✅ Allows setting the updated JSON to be shared with LatexCompiler.
-    /// </summary>
+    /// Allows setting the updated JSON to be shared with LatexCompiler.
     void SetUpdatedJson(string convertedJson);
 
     /// <summary>
-    /// ✅ Retrieves the updated JSON.
-    /// </summary>
+    /// Retrieves the updated JSON.
     string GetUpdatedJson();
 }

@@ -1,7 +1,17 @@
 @page
 @model ICT2106WebApp.Pages.QualityCheckerModel
+@inject ICT2106WebApp.Interfaces.IPDFProvider PDFProvider
 @{
     ViewData["Title"] = "PDF Quality Checker";
+    // Get the report details through public methods
+    var reportDetails = Model.Report.GetQualityReportDetails();
+    var isSuccessful = reportDetails.Item1;
+    var issues = reportDetails.Item2;
+    var metrics = reportDetails.Item3;
+    var qualityScore = reportDetails.Item4;
+    
+    // Check if we have PDF content in the provider
+    var hasPdfInProvider = PDFProvider.GetPDFContent().Length > 0;
 }
 
 <h2>PDF Quality Checker</h2>
@@ -15,6 +25,13 @@
     </div>
 </form>
 
+@if (hasPdfInProvider)
+{
+    <div class="provider-info">
+        <p>A PDF is currently loaded in the provider.</p>
+    </div>
+}
+
 <!-- Validation Message -->
 @if (!ModelState.IsValid)
 {
@@ -26,55 +43,38 @@
     </div>
 }
 
-@if (Model.Report != null)
+@if (Model.ShowEmptyState)
+{
+    <div class="empty-state">
+        <p>Please upload a PDF file to check its quality.</p>
+        <p>The quality checker will analyze:</p>
+        <ul>
+            <li>Text formatting and font consistency</li>
+            <li>Image resolution quality</li>
+            <li>Document structure and organization</li>
+            <li>Math notation formatting</li>
+            <li>Bibliography and reference formatting</li>
+        </ul>
+    </div>
+}
+else if (Model.Report != null)
 {
     <div class="report-container">
         <h3>Quality Report</h3>
-        <div class="status-badge @(Model.Report.IsSuccessful ? "success" : "error")">
-            Status: @(Model.Report.IsSuccessful ? "Passed" : "Issues Found")
+        <div class="status-badge @(isSuccessful ? "success" : "error")">
+            Status: @(isSuccessful ? "Passed" : "Issues Found")
         </div>
 
         <!-- Quality Score -->
-        <p><strong>Quality Score:</strong> @Model.Report.QualityScore%</p>
-
-        <!-- Quality Metrics Table -->
-        <h4>Quality Metrics</h4>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Report.Metrics.Any())
-                    {
-                        @foreach (var metric in Model.Report.Metrics)
-                        {
-                            <tr>
-                                <td>@metric.Key</td>
-                                <td>@metric.Value</td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="2">No metrics available</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <p><strong>Quality Score:</strong> @qualityScore%</p>
 
         <!-- Issues List -->
         <h4>Issues Found</h4>
         <div class="issues-container">
-            @if (Model.Report.Issues.Any())
+            @if (issues.Any())
             {
                 <ul class="issues-list">
-                    @foreach (var issue in Model.Report.Issues)
+                    @foreach (var issue in issues)
                     {
                         <li class="issue-item">@issue</li>
                     }
@@ -208,5 +208,24 @@
         background-color: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
+    }
+
+    .empty-state {
+        background-color: #f8f9fa;
+        border: 1px dashed #ced4da;
+        border-radius: 5px;
+        padding: 20px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .empty-state ul {
+        text-align: left;
+        display: inline-block;
+        margin: 15px auto;
+    }
+    
+    .empty-state li {
+        margin-bottom: 8px;
     }
 </style>

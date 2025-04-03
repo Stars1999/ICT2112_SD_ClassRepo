@@ -1,8 +1,9 @@
+using ICT2106WebApp.Models;
+
 namespace ICT2106WebApp.Interfaces
 {
     public interface IPDFQualityChecker
     {
-        Domain.QualityReport CheckPDFQuality(byte[] pdfContent);
-        List<string> GetQualityMetrics();
+        QualityReport CheckPDFQuality(byte[] pdfContent);
     }
 }

@@ -1,10 +1,11 @@
-using ICT2106WebApp.Class;
 using ICT2106WebApp.Controllers;
 using ICT2106WebApp.Data;
 using ICT2106WebApp.Interfaces;
-using ICT2106WebApp.DataSource;
 using ICT2106WebApp.Domain;
 using ICT2106WebApp.Services;
+using ICT2106WebApp.Pages;
+using System.IO;
+using ICT2106WebApp.Control;
 
 var builder = WebApplication.CreateBuilder(args);
 // builder.Services.Configure<IISServerOptions>(options =>
@@ -29,9 +30,9 @@ builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
 builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the parser service
 
 // Register PDF Quality Checker dependencies
-builder.Services.AddSingleton<IPDFQualityChecker>(provider => QualityCheckerFactory.CreateDefaultChecker());
-builder.Services.AddSingleton<IPDFProvider, MockPDFProvider>(); // Change to FilePDFProvider if needed
-builder.Services.AddSingleton<PDFQualityRepository>();
+builder.Services.AddSingleton<IPDFQualityChecker, PDFCheckerControl>();
+builder.Services.AddSingleton<IPDFProvider>(provider => 
+    new QualityCheckerModel.GeneratedPDFProvider()); // Register our inline PDF provider
 
 builder.Services.AddRazorPages();  // Add Razor Pages support
 builder.Services.AddControllers(); // Add Controllers support

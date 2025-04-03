@@ -146,6 +146,7 @@ public class DocumentGateway_RDG
 		if (collectionName == "latexTree")
 		{
 			await _latexCollection.DeleteManyAsync(_ => true); // Clear existing data
+			await _latexCollection.DeleteManyAsync(_ => true); // Clear existing data
 			await _latexCollection.InsertOneAsync(rootNode);
 			Console.WriteLine("added LatexTree into MongoDB!");
 			return;

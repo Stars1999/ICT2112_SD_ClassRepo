@@ -230,6 +230,7 @@ namespace ICT2106WebApp.mod1grp4
 		// FOR HIEW TENG STYLE FAIL VALIDATION SIMILATION (SO NOT IN UML)
 		public async Task<List<Table>> convertToLatexStyleFailAsync(List<Table> tableList)
 		{
+			int tableIndex = 0;
 			foreach (var table in tableList)
 			{
 				if (table.tableCompletionState == false)
@@ -295,6 +296,123 @@ namespace ICT2106WebApp.mod1grp4
 							{
 								latexCell = $"\\textbf{{{latexCell}}}";
 							}
+							if (cell.styling.italic)
+							{
+								latexCell = $"\\textit{{{latexCell}}}";
+							}
+							if (
+								!string.IsNullOrEmpty(cell.styling.highlight)
+								&& cell.styling.highlight != "none"
+							)
+							{
+								latexCell = $"\\hl{{{latexCell}}}";
+							}
+							if (cell.styling.underline && tableIndex!=1)
+							{
+								latexCell = $"\\underline{{{latexCell}}}";
+							}
+							if (
+								!string.IsNullOrEmpty(cell.styling.textcolor)
+								&& cell.styling.textcolor != "auto"
+							)
+							{
+								if (!predefinedColours.Contains(cell.styling.textcolor))
+								{
+									predefinedColours +=
+										$"\\definecolor{{{cell.styling.textcolor}}}{{HTML}}{{{cell.styling.textcolor}}}\n";
+								}
+								latexCell =
+									$"\\textcolor{{{cell.styling.textcolor}}}{{{latexCell}}}";
+							}
+
+							if (cell.styling.fontsize != 0)
+							{
+								int fontSize = cell.styling.fontsize;
+								// string rowHeightLatex = string.IsNullOrEmpty(cell.styling.rowHeight) || cell.styling.rowHeight == "auto"
+								//     ? string.Empty
+								//     : $"\\rule{{0pt}}{{{cell.styling.rowHeight}cm}}";
+								latexCell =
+									$"{{\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
+							}
+							if (
+								!string.IsNullOrEmpty(cell.styling.backgroundcolor)
+								&& cell.styling.backgroundcolor != "auto"
+							)
+							{
+								if (!predefinedColours.Contains(cell.styling.backgroundcolor))
+								{
+									predefinedColours +=
+										$"\\definecolor{{{cell.styling.backgroundcolor}}}{{HTML}}{{{cell.styling.backgroundcolor}}}\n";
+								}
+								latexCell =
+									$"\\cellcolor{{{cell.styling.backgroundcolor}}}{{{latexCell}}}";
+							}
+							if (
+								!string.IsNullOrEmpty(cell.styling.verticalalignment)
+								&& cell.styling.rowHeight != "auto"
+							)
+							{
+								double rowHeight;
+								if (
+									!string.IsNullOrEmpty(cell.styling.rowHeight)
+									&& double.TryParse(
+										cell.styling.rowHeight,
+										out double parsedRowHeight
+									)
+								)
+								{
+									rowHeight = parsedRowHeight;
+								}
+								else
+								{
+									rowHeight = 0;
+								}
+								double topSpace;
+								double bottomSpace;
+								switch (cell.styling.verticalalignment.ToLower())
+								{
+									case "top":
+										// Handle top alignment
+										topSpace = 0;
+										bottomSpace = rowHeight;
+										break;
+
+									case "bottom":
+										// Handle bottom alignment
+										topSpace = rowHeight;
+										bottomSpace = 0;
+										break;
+
+									case "center":
+										// Handle center alignment
+										topSpace = rowHeight / 2;
+										bottomSpace = rowHeight / 2;
+										break;
+
+									default:
+										// Handle default
+										topSpace = 0;
+										bottomSpace = rowHeight;
+										break;
+								}
+								latexCell =
+									$"{{ \\rule{{0pt}}{{{topSpace}cm}} \\vspace{{{bottomSpace}cm}} {latexCell}}}";
+							}
+							if (!string.IsNullOrEmpty(cell.styling.horizontalalignment))
+							{
+								string alignment = cell.styling.horizontalalignment;
+								string alignmentChar =
+									alignment == "right" ? "r"
+									: alignment == "left" ? "l"
+									: "c";
+								string alignmentRagged =
+									alignment == "right" ? "raggedleft"
+									: alignment == "left" ? "raggedright"
+									: alignment == "both" ? "justifying"
+									: "centering";
+								latexCell =
+									$"\n\\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
+							}
 
 							latexTable += latexCell + " & ";
 							iterator.next(); // Advance the iterator
@@ -327,6 +445,7 @@ namespace ICT2106WebApp.mod1grp4
 						Console.WriteLine($"Moving on to process the next table. (ANDREA)");
 					}
 				}
+				tableIndex++;
 			}
 
 			return tableList;

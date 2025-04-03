@@ -145,17 +145,18 @@ public class DocumentGateway_RDG
 
 		if (collectionName == "latexTree")
 		{
+			await _treeCollection.DeleteManyAsync(_ => true); // Clear existing data
 			await _latexCollection.InsertOneAsync(rootNode);
-			Console.WriteLine("added rootNode into MongoDB!");
+			Console.WriteLine("added LatexTree into MongoDB!");
 			return;
 		}
 		else if (collectionName == "mergewithcommentedcode")
 		{
 			await _treeCollection.DeleteManyAsync(_ => true); // Clear existing data
+			await _treeCollection.InsertOneAsync(rootNode);
 		}
-		// await _treeCollection.InsertOneAsync(rootNode);
 
-		Console.WriteLine("added rootNode into MongoDB!");
+		Console.WriteLine("added DocxTree into MongoDB!");
 	}
 
 	public async Task<AbstractNode> getTree(string collectionName)

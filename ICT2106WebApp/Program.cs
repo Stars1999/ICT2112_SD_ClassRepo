@@ -152,7 +152,8 @@ public static class DocumentProcessor
 			treeProcessor.PrintTree(rootnodehere, 0);
 
 			// SAVE TREE TO MONGODB
-			// await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
+			await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
+
 			// // RETRIEVE TEE FROM MONGODB
 			AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
 			CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
@@ -254,7 +255,7 @@ public static class DocumentProcessor
 			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 			// Save modified latex tree back to MongoDB (query)
-			// await traverser.UpdateLatexDocument(rootnodehere);
+			await traverser.UpdateLatexDocument(rootnodehere);
 
 			// // Retrieve the non-modified tree from MongoDB (for demo query)
 			ICompletedLatex completedLatex = new CompletedLatex();

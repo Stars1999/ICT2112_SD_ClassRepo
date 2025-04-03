@@ -273,7 +273,7 @@ namespace ICT2106WebApp.mod1grp4
 							table.rows[0].cells.Select(cell => $"m{{{cell.styling.cellWidth}cm}}")
 						)
 						+ "|}";
-					latexTable += "\n\\hline";
+					latexTable += "\n\\hline ";
 
 					foreach (var row in table.rows)
 					{
@@ -283,7 +283,7 @@ namespace ICT2106WebApp.mod1grp4
 						if (table.rows.IndexOf(row) != 0) // Check if it's not the first row
 						{
 							latexTable = latexTable.TrimEnd(' ', '&') + " \\\\"; // End the previous row
-							latexTable += "\n\\hline"; // Add a horizontal line
+							latexTable += "\n\\hline "; // Add a horizontal line
 						}
 
 						while (!iterator.isDone())

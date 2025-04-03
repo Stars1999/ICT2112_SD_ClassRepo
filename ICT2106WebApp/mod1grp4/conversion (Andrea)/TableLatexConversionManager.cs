@@ -3,8 +3,6 @@ namespace ICT2106WebApp.mod1grp4
 	// TableLatexConversionManager (Andrea - COMPLETED)
 	public class TableLatexConversionManager : iBackupTabularSubject, iTableLatexConversion
 	{
-		private iBackupGatewayObserver backupObserver;
-
 		public TableLatexConversionManager() { }
 
 		// Convert table to latex (Andrea - COMPLETED)
@@ -84,10 +82,6 @@ namespace ICT2106WebApp.mod1grp4
 								&& cell.styling.highlight != "none"
 							)
 							{
-								// if (!predefinedColours.Contains(cell.styling.highlight))
-								// {
-								//     predefinedColours += $"\\definecolor{{{cell.styling.highlight}}}{{HTML}}{{{cell.styling.highlight}}}\n";
-								// }
 								latexCell = $"\\hl{{{latexCell}}}";
 							}
 							if (cell.styling.underline)
@@ -107,14 +101,7 @@ namespace ICT2106WebApp.mod1grp4
 								latexCell =
 									$"\\textcolor{{{cell.styling.textcolor}}}{{{latexCell}}}";
 							}
-							// if (cell.styling.fontsize != 0)
-							// {
-							//     int fontSize = cell.styling.fontsize;
-							//     string rowHeightLatex = string.IsNullOrEmpty(cell.styling.rowHeight) || cell.styling.rowHeight == "auto"
-							//         ? string.Empty
-							//         : $"\\rule{{0pt}}{{{cell.styling.rowHeight}cm}}";
-							//     latexCell = $"{{{rowHeightLatex}\\fontsize{{{fontSize}}}{{\\baselineskip}}\\selectfont {latexCell}}}";
-							// }
+
 							if (cell.styling.fontsize != 0)
 							{
 								int fontSize = cell.styling.fontsize;
@@ -137,7 +124,6 @@ namespace ICT2106WebApp.mod1grp4
 								latexCell =
 									$"\\cellcolor{{{cell.styling.backgroundcolor}}}{{{latexCell}}}";
 							}
-							// Console.WriteLine(cell.styling.rowHeight);
 							if (
 								!string.IsNullOrEmpty(cell.styling.verticalalignment)
 								&& cell.styling.rowHeight != "auto"
@@ -201,15 +187,10 @@ namespace ICT2106WebApp.mod1grp4
 									: alignment == "left" ? "raggedright"
 									: alignment == "both" ? "justifying"
 									: "centering";
-								// latexCell = $" \\multicolumn{{1}}{{|{alignmentChar}|}} {{{latexCell}}}";
 								latexCell =
 									$"\n\\multicolumn{{1}}{{|{alignmentChar}|}}{{\\parbox{{{cell.styling.cellWidth}cm}}{{\\{alignmentRagged} {latexCell}}}}}";
 							}
 
-							// if (!string.IsNullOrEmpty(cell.styling.highlight) && cell.styling.highlight != "auto")
-							// {
-							//     latexCell = $"\\sethlcolor {cell.styling.highlight}";
-							// }
 							latexTable += latexCell + " & ";
 							iterator.next(); // Advance the iterator
 						}
@@ -246,7 +227,7 @@ namespace ICT2106WebApp.mod1grp4
 			return tableList;
 		}
 
-		// FOR HIEW TENG STYLE FAIL VALIDATION SIMILATION
+		// FOR HIEW TENG STYLE FAIL VALIDATION SIMILATION (SO NOT IN UML)
 		public async Task<List<Table>> convertToLatexStyleFailAsync(List<Table> tableList)
 		{
 			foreach (var table in tableList)
@@ -351,7 +332,7 @@ namespace ICT2106WebApp.mod1grp4
 			return tableList;
 		}
 
-		// FOR JOEL CRASH RECOVERY SIMULATION
+		// FOR JOEL CRASH RECOVERY SIMULATION (SO NOT IN UML)
 		public async Task<List<Table>> convertToLatexWithLimitAsync(
 			List<Table> tableList,
 			int limit

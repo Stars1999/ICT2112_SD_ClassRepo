@@ -303,6 +303,8 @@ namespace Utilities
 				File.WriteAllText(jsonOutputPath, jsonOutput);
 				//** to uncomment this line
 				// await documentControl.saveJsonToDatabase(jsonOutputPath);
+				// Console.ForegroundColor = ConsoleColor.DarkCyan;
+				// Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine($"✅ JSON output saved to {jsonOutputPath}");
 			}
 

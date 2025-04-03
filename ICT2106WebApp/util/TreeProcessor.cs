@@ -328,10 +328,13 @@ namespace Utilities
 
 			Console.WriteLine(
 				new string(' ', level * 2)
+					+ "\nNode ID: "
+					+ node.GetNodeId()
+					+ "\nNode Type: "
 					+ node.GetNodeType()
-					+ ": "
+					+ "\nContent: "
 					+ node.GetContent()
-					+ " | styling: "
+					+ "\nStyling: "
 					+ consolidatedStyling
 			);
 

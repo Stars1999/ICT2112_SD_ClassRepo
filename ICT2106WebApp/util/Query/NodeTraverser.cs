@@ -135,7 +135,7 @@ namespace ICT2106WebApp.mod1Grp3
 			foreach (var node in matchingNodesList)
 			{
 				Console.WriteLine(
-					$"Matching Node: ID={node.GetNodeId()}, Type={node.GetNodeType()}, Content={node.GetContent()}, styling={JsonConvert.SerializeObject(node.GetStyling())}, converted={node.IsConverted()}"
+					$"Matching Node: ID={node.GetNodeId()} \nType={node.GetNodeType()} \nContent={node.GetContent()} \nstyling={JsonConvert.SerializeObject(node.GetStyling())} \nconverted={node.IsConverted()} \n"
 				);
 			}
 			Console.WriteLine(matchingNodesList.Count + " nodes found of type " + nodeType);

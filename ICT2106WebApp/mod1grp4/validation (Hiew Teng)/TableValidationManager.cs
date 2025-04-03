@@ -381,28 +381,6 @@ namespace ICT2106WebApp.mod1grp4
 												return $"Horizontal alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
 											}
 										}
-
-										// var alignmentKey = cellStyling
-										//     .SelectMany(dict => dict)
-										//     .Where(kv => kv.Key == "horizontalalignment" && kv.Value is string)
-										//     .Select(kv => kv.Value as string)
-										//     .FirstOrDefault();
-
-										// if (alignmentKey != null)
-										// {
-										//     var alignment = alignmentKey switch
-										//     {
-										//         "center" => "\\multicolumn{1}{|c|}",
-										//         "left" => "\\multicolumn{1}{|l|}",
-										//         "right" => "\\multicolumn{1}{|r|}",
-										//         _ => ""
-										//     };
-
-										//     if (!latexOutput.Contains(alignment))
-										//     {
-										//         return $"Alignment styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
-										//     }
-										// }
 									}
 								}
 							}

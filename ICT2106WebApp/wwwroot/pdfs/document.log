@@ -1,17 +1,17 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.18)  27 MAR 2025 23:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.3.13)  3 APR 2025 11:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**C:/Users/aaron/OneDrive/Documents/GitHub/ICT2112_SD_ClassRepo/ICT2106WebApp/w
-wwroot/pdfs/document.tex
+**C:/Users/Leon/Documents/GitHub/ICT2112_SD_ClassRepo/ICT2106WebApp/wwwroot/pdf
+s/document.tex
 
-(C:/Users/aaron/OneDrive/Documents/GitHub/ICT2112_SD_ClassRepo/ICT2106WebApp/ww
-wroot/pdfs/document.tex
+(C:/Users/Leon/Documents/GitHub/ICT2112_SD_ClassRepo/ICT2106WebApp/wwwroot/pdfs
+/document.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
-(C:\Users\aaron\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+(C:\Users\Leon\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
 Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
-(C:\Users\aaron\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+(C:\Users\Leon\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
 File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count187
@@ -26,14 +26,14 @@ File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
 )
-(C:\Users\aaron\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
-tex.def
+(C:\Users\Leon\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdft
+ex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count195
 \l__pdf_internal_box=\box51
 )
-(C:\Users\aaron\OneDrive\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\ww
-wroot\pdfs\document.aux)
+(C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\wwwroot\pdfs
+\document.aux)
 \openout1 = `document.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
@@ -58,9 +58,9 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 6.
  [1
 
-{C:/Users/aaron/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-(C:\Users\aaron\OneDrive\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\ww
-wroot\pdfs\document.aux)
+{C:/Users/Leon/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
+(C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106WebApp\wwwroot\pdfs
+\document.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -68,19 +68,19 @@ L3 programming layer <2024-01-04>
  ) 
 Here is how much of TeX's memory you used:
  458 strings out of 474486
- 9623 string characters out of 5743755
+ 9506 string characters out of 5744227
  1926542 words of memory out of 5000000
  22815 multiletter control sequences out of 15000+600000
  561709 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 35i,6n,50p,259b,197s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/aaron/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
-cmbx12.pfb><C:/Users/aaron/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmr10.pfb><C:/Users/aaron/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/amsfonts/cm/cmr12.pfb><C:/Users/aaron/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmr17.pfb>
-Output written on C:\Users\aaron\OneDrive\Documents\GitHub\ICT2112_SD_ClassRepo
-\ICT2106WebApp\wwwroot\pdfs\document.pdf (1 page, 53992 bytes).
+ 35i,6n,50p,249b,197s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
+mbx12.pfb><C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb><C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmr12.pfb><C:/Users/Leon/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmr17.pfb>
+Output written on C:\Users\Leon\Documents\GitHub\ICT2112_SD_ClassRepo\ICT2106We
+bApp\wwwroot\pdfs\document.pdf (1 page, 54392 bytes).
 PDF statistics:
  26 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

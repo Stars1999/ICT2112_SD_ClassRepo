@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 public class PDFGenerator
 {
     private readonly string outputDirectory;
-    private readonly iGetGeneratedLatex _latexProvider;
+    private readonly EditorDocumentMapper _editorDocMapper;
 
-
-    public PDFGenerator(iGetGeneratedLatex latexProvider)
+    public PDFGenerator(EditorDocumentMapper editorDocMapper)
     {
-         _latexProvider = latexProvider;
-        // Define the directory where PDFs will be stored
+        _editorDocMapper = editorDocMapper;
+
         outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pdfs");
 
-        // Ensure the directory exists
         if (!Directory.Exists(outputDirectory))
         {
             Directory.CreateDirectory(outputDirectory);
@@ -26,29 +24,29 @@ public class PDFGenerator
     {
         try
         {
-            string latexContent = _latexProvider.GetLatexContent();
-            Console.WriteLine("[INFO] Starting LaTeX to PDF compilation...");
+            //Get the latest document from MongoDB
+            var latestDoc = await _editorDocMapper.GetLatestAsync();
 
-            // Define LaTeX file path
-            string latexFilePath = Path.Combine(outputDirectory, "document.tex");
-
-            // Validate LaTeX content
-            if (string.IsNullOrWhiteSpace(latexContent) || !latexContent.Contains("\\begin{document}"))
+            if (latestDoc == null || string.IsNullOrWhiteSpace(latestDoc.LatexContent))
             {
-                Console.WriteLine("[ERROR] Invalid LaTeX content.");
+                Console.WriteLine("[ERROR] No LaTeX content found in the latest EditorDocument.");
                 return false;
             }
 
-            // Write LaTeX content to the .tex file
+            string latexContent = latestDoc.LatexContent;
+            Console.WriteLine("[INFO] Using latest EditorDocument LaTeX content.");
+
+            // Write to .tex file
+            string latexFilePath = Path.Combine(outputDirectory, "document.tex");
             await File.WriteAllTextAsync(latexFilePath, latexContent);
             Console.WriteLine("[INFO] LaTeX file saved at: " + latexFilePath);
 
-            // Compile LaTeX to PDF
+            // Compile it
             return CompileWithPdfLaTeX(latexFilePath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] {ex.Message}");
+            Console.WriteLine($"[ERROR] PDF Generation Exception: {ex.Message}");
             return false;
         }
     }
@@ -57,7 +55,7 @@ public class PDFGenerator
     {
         try
         {
-            ProcessStartInfo psi = new ProcessStartInfo
+            var psi = new ProcessStartInfo
             {
                 FileName = "pdflatex",
                 Arguments = $"-interaction=nonstopmode -output-directory \"{outputDirectory}\" \"{latexFilePath}\"",
@@ -67,27 +65,26 @@ public class PDFGenerator
                 CreateNoWindow = true
             };
 
-            using Process process = Process.Start(psi);
+            using var process = Process.Start(psi);
             string output = process.StandardOutput.ReadToEnd();
             string error = process.StandardError.ReadToEnd();
-
             process.WaitForExit();
 
-            Console.WriteLine("[INFO] LaTeX Output:\n" + output);
-            Console.WriteLine("[ERROR] LaTeX Errors:\n" + error);
+            Console.WriteLine("[LATEX OUTPUT] " + output);
+            if (!string.IsNullOrEmpty(error)) Console.WriteLine("[LATEX ERROR] " + error);
 
             if (process.ExitCode != 0)
             {
-                Console.WriteLine($"[ERROR] LaTeX compilation failed. Exit code: {process.ExitCode}");
+                Console.WriteLine($"[ERROR] LaTeX failed with exit code: {process.ExitCode}");
                 return false;
             }
 
-            Console.WriteLine("[INFO] LaTeX compilation successful.");
+            Console.WriteLine("[INFO] PDF compilation successful.");
             return true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] LaTeX compilation error: {ex.Message}");
+            Console.WriteLine($"[ERROR] Compilation failed: {ex.Message}");
             return false;
         }
     }

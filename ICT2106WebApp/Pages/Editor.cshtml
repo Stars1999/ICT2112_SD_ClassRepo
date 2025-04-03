@@ -114,6 +114,49 @@
             z-index: 100;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* Quality Report styles */
+        .quality-report {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .quality-score {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quality-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .quality-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .quality-warning {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .quality-issues {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .quality-issue {
+            color: #dc3545;
+            margin-bottom: 5px;
+        }
         
         /* Add styling for the active button state */
         .btn-group .btn.active {
@@ -127,7 +170,7 @@
 <div class="editor-header">
     <h1>LaTeX Editor</h1>
     <div>
-        <button id="test-error-btn" class="btn btn-info me-2">Test Error Detection</button>
+        @* <button id="test-error-btn" class="btn btn-info me-2">Test Error Detection</button> *@
         <button id="download-pdf-btn" class="btn btn-primary" disabled>Download PDF</button>
     </div>
 </div>
@@ -135,10 +178,10 @@
 <!-- Toolbar -->
 <div class="bg-light d-flex align-items-center p-2 border-bottom mb-2">
     <button id="compile-btn" class="btn btn-primary me-2">Compile</button>
-    <button id="save-btn" class="btn btn-primary me-2">Save</button>
+    @* <button id="save-btn" class="btn btn-primary me-2">Save</button> *@
     <div class="btn-group me-2" role="group" aria-label="Citation Style">
-        <a id="style-apa" href="/home/load-apa-latex" class="btn btn-outline-primary">APA</a>
-        <a id="style-mla" href="/home/load-mla-latex" class="btn btn-outline-primary">MLA</a>
+        <a id="style-apa" href="/understem/load-apa-latex" class="btn btn-outline-primary">APA</a>
+        <a id="style-mla" href="/understem/load-mla-latex" class="btn btn-outline-primary">MLA</a>
     </div>
     <span id="style-status" class="me-2">Style: <span id="current-style">APA</span></span>
 </div>
@@ -149,20 +192,7 @@
     <div class="col-md-6 px-0 border-end">
         <div class="section-header">LaTeX Editor</div>
         <div class="content-area">
-            <textarea id="latex-editor" class="form-control border-0 p-2">\documentclass{article}
-\title{Sample Document}
-\author{User}
-\date{\today}
-
-\begin{document}
-\maketitle
-
-\section{Introduction}
-This is a sample LaTeX document with \alpha outside math mode.
-
-We can cite this reference \cite{unknown} here.
-
-\end{document}</textarea>
+            <textarea id="latex-editor" class="form-control border-0 p-2"></textarea>
         </div>
     </div>
     
@@ -178,6 +208,20 @@ We can cite this reference \cite{unknown} here.
 
 <!-- Error Panel -->
 <div class="mt-3">
+    <!-- Quality Report Section -->
+    <div id="quality-report" class="quality-report">
+        <div class="section-header">PDF Quality Report</div>
+        <div class="quality-score">
+            Quality Score: <span id="quality-score">-</span>%
+            <span id="quality-status" class="quality-badge">Not Checked</span>
+        </div>
+        <div id="quality-issues" class="quality-issues">
+            <div class="alert alert-info">
+                Quality check results will appear here after compiling your document.
+            </div>
+        </div>
+    </div>
+
     <div class="section-header">Errors and Warnings</div>
     <div id="error-list" class="p-2" style="max-height: 150px; overflow-y-auto;">
         <div class="alert alert-info">
@@ -207,13 +251,13 @@ We can cite this reference \cite{unknown} here.
             const latexEditor = document.getElementById('latex-editor');
             const compileBtn = document.getElementById('compile-btn');
             const downloadPdfBtn = document.getElementById('download-pdf-btn');
-            const testErrorBtn = document.getElementById('test-error-btn');
+            @* const testErrorBtn = document.getElementById('test-error-btn'); *@
             const styleApaBtn = document.getElementById('style-apa');
             const styleMlaBtn = document.getElementById('style-mla');
             const currentStyleSpan = document.getElementById('current-style');
             const errorList = document.getElementById('error-list');
             const compilationStatus = document.getElementById('compilation-status');
-            const saveBtn = document.getElementById('save-btn');
+            @* const saveBtn = document.getElementById('save-btn'); *@
             
             // Function to update UI to reflect current style
             function updateStyleUI(style) {
@@ -231,23 +275,52 @@ We can cite this reference \cite{unknown} here.
                 }
             }
             
-            // Get the current style from cookie (default to APA)
-            function getCookie(name) {
-                let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                return match ? decodeURIComponent(match[2]) : 'apa'; // Default to APA
+            async function getCitationStyle() {
+                const match = document.cookie.match(new RegExp('(^| )selectedCitationStyle=([^;]+)'));
+                if (match) return decodeURIComponent(match[2]);
+
+                // Cookie not found, try to detect from initial LaTeX content
+                try {
+                    const content = await fetch('/understem/load-latex').then(r => r.text());
+
+                    // Detect MLA markers
+                    if (content.includes("(Smith 45)") || content.includes("(Thompson 77)") || content.includes("(Brown 13)")) {
+                        console.log("[AUTO-DETECT] Detected MLA style from LaTeX content.");
+                        document.cookie = "selectedCitationStyle=mla; path=/";
+                        return "mla";
+                    }
+
+                    // Detect APA markers
+                    if (content.match(/\([A-Z][a-z]+, 20\d{2}\)/g)) {
+                        console.log("[AUTO-DETECT] Detected APA style from LaTeX content.");
+                        document.cookie = "selectedCitationStyle=apa; path=/";
+                        return "apa";
+                    }
+
+                } catch (err) {
+                    console.warn("Could not detect style from LaTeX content.", err);
+                }
+
+                // Fallback default
+                document.cookie = "selectedCitationStyle=apa; path=/";
+                return "apa";
             }
 
             // Load the saved style from cookie
-            const savedStyle = getCookie("selectedCitationStyle");
-            updateStyleUI(savedStyle);
-            
-            console.log(`[INFO] Loaded citation style: ${savedStyle}`);
+            getCitationStyle().then(savedStyle => {
+                updateStyleUI(savedStyle);
+                console.log(`[INFO] Loaded citation style: ${savedStyle}`);
+                
+                // Now initialize editor after style is detected
+                initializeEditor(savedStyle);
+            });
+
             
             // Set up save button
-            saveBtn.addEventListener('click', function() {
+            @* saveBtn.addEventListener('click', function() {
                 let latexContent = editor ? editor.getValue() : latexEditor.value;
                 
-                fetch('/home/save-latex', {
+                fetch('/understem/save-latex', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ latexContent: latexContent })
@@ -264,10 +337,10 @@ We can cite this reference \cite{unknown} here.
                     console.error('Error saving:', error);
                     compilationStatus.textContent = "Error: Could not save the document.";
                 });
-            });
+            }); *@
 
             function autoSaveToDatabase(content) {
-                fetch('/home/save-latex', {
+                fetch('/understem/save-latex', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ latexContent: content })
@@ -289,13 +362,13 @@ We can cite this reference \cite{unknown} here.
             let currentErrors = [];
             let errorMarkers = [];
             let typingTimer;
-            const doneTypingInterval = 1000; // Wait for 1 second after typing stops
+            const doneTypingInterval = 100; // Wait for 1 second after typing stops
             
             // CodeMirror editor setup
             let editor;
             
             // Initialize the editor 
-            function initializeEditor() {
+            function initializeEditor(styleToLoad) {
                 console.log("Initializing editor...");
                 
                 // Try to use CodeMirror if available
@@ -311,21 +384,39 @@ We can cite this reference \cite{unknown} here.
                         matchBrackets: true,
                         lineWrapping: true
                     });
+
+                    // Restore from localStorage if available and editor is empty
+                    const unsaved = localStorage.getItem("unsavedLatex");
+                    if (unsaved && !editor.getValue().trim()) {
+                        editor.setValue(unsaved);
+                        console.log("[RECOVERY] Unsaved content restored from localStorage.");
+                    }
+
+                    // Watch for changes and auto-save to both localStorage + MongoDB
+                    editor.on('change', function() {
+                        const currentContent = editor.getValue();
+
+                        // Local recovery save
+                        localStorage.setItem("unsavedLatex", currentContent);
+
+                        // Auto-save to DB
+                        clearTimeout(typingTimer);
+                        typingTimer = setTimeout(() => {
+                            autoSaveToDatabase(currentContent);
+                            console.log("[AUTO-SAVE] Saved to DB and localStorage.");
+                        }, doneTypingInterval);
+                    });
+
                     
                     // Set up event listener for changes
                     editor.on('change', function() {
-                        console.log("CodeMirror content changed");
-
-                        // Clear the timeout if it's already set
-                        clearTimeout(typingTimer);
-
-                        // Set a new timeout for both error detection and autosave
-                        typingTimer = setTimeout(() => {
-                            const currentContent = editor.getValue();
-                            detectErrors(); // Run your error detection
-                            autoSaveToDatabase(currentContent);// Save the current LaTeX to DB
-                        }, doneTypingInterval);
-                    });
+                    const currentContent = editor.getValue();
+                    autoSaveToDatabase(currentContent); // 🔥 Save on every change
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => {
+                        detectErrors(); // keep detection debounced
+                    }, doneTypingInterval);
+                });
 
                 } else {
                     console.log("Using plain textarea editor");
@@ -342,10 +433,10 @@ We can cite this reference \cite{unknown} here.
                 }
                 
                 // Load LaTeX content using savedStyle during initialization
-                fetch(`/home/load-latex?style=${savedStyle}`)
+                fetch(`/understem/load-latex?style=${styleToLoad}`)
                     .then(response => response.text())
                     .then(content => {
-                        console.log(`Loaded LaTeX content from server using style: ${savedStyle}`);
+                        console.log(`Loaded LaTeX content from server using style: ${styleToLoad}`);
                         if (content && !content.startsWith("Error:")) {
                             if (editor) {
                                 editor.setValue(content);
@@ -808,7 +899,7 @@ We can cite this reference \cite{unknown} here.
                 let latexContent = editor ? editor.getValue() : latexEditor.value;
                 compilationStatus.textContent = "Compiling...";
 
-                fetch('/home/compile-latex', {
+                fetch('/understem/compile-latex', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ latexContent })
@@ -822,6 +913,14 @@ We can cite this reference \cite{unknown} here.
                         `;
                         downloadPdfBtn.setAttribute("data-pdf-url", data.pdfUrl);
                         downloadPdfBtn.disabled = false;
+                        
+                        // Display quality check results if they're included in the response
+                        if (data.qualityCheck) {
+                            displayQualityResults(data.qualityCheck);
+                        } else {
+                            // Fall back to client-side quality check if server didn't provide results
+                            setTimeout(checkPDFQuality, 1000);
+                        }
                     } else {
                         compilationStatus.textContent = "Compilation failed!";
                         console.error("Compilation error:", data.error);
@@ -836,6 +935,47 @@ We can cite this reference \cite{unknown} here.
                 });
             });
 
+            // Function to display quality results from either source
+            function displayQualityResults(qualityData) {
+                const qualityReport = document.getElementById('quality-report');
+                const qualityScore = document.getElementById('quality-score');
+                const qualityStatus = document.getElementById('quality-status');
+                const qualityIssues = document.getElementById('quality-issues');
+
+                qualityScore.textContent = qualityData.qualityScore;
+                
+                qualityStatus.className = 'quality-badge ' + (qualityData.isSuccessful ? 'quality-success' : 'quality-warning');
+                qualityStatus.textContent = qualityData.isSuccessful ? 'Passed' : 'Issues Found';
+
+                qualityIssues.innerHTML = '';
+                if (qualityData.issues && qualityData.issues.length > 0) {
+                    const issuesList = document.createElement('ul');
+                    qualityData.issues.forEach(issue => {
+                        const li = document.createElement('li');
+                        li.className = 'quality-issue';
+                        li.textContent = issue;
+                        issuesList.appendChild(li);
+                    });
+                    qualityIssues.appendChild(issuesList);
+                } else {
+                    qualityIssues.innerHTML = '<div class="alert alert-success">No issues found! The PDF meets all quality standards.</div>';
+                }
+            }
+
+            function checkPDFQuality() {
+                fetch('@Url.Page("Editor", "CheckQuality")')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            displayQualityResults(data);
+                        } else {
+                            console.error('Quality check failed:', data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking quality:', error);
+                    });
+            }
             
             // Set up the download button
             downloadPdfBtn.addEventListener('click', function() {
@@ -849,9 +989,9 @@ We can cite this reference \cite{unknown} here.
             });
             
             // Set up the test error detection button
-            testErrorBtn.addEventListener('click', function() {
+            @* testErrorBtn.addEventListener('click', function() {
                 testErrorDetection();
-            });
+            }); *@
             
             // Initialize the editor
             initializeStyles();

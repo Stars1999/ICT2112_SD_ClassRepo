@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ICT2106WebApp.Interfaces;
-using ICT2106WebApp.Domain;
-using ICT2106WebApp.DataSource;
+using ICT2106WebApp.Models;
 
 namespace ICT2106WebApp.Pages
 {

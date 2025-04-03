@@ -1,4 +1,4 @@
-namespace ICT2106WebApp.Domain
+namespace ICT2106WebApp.Models
 {
     public class QualityReport
     {

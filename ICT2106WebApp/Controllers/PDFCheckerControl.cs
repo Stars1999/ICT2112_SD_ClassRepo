@@ -4,8 +4,10 @@ using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using System.Text;
 using System.Text.RegularExpressions;
 using ICT2106WebApp.Interfaces;
+using ICT2106WebApp.Models;
+using ICT2106WebApp.Domain;
 
-namespace ICT2106WebApp.Domain
+namespace ICT2106WebApp.Controllers
 {
     public class PDFCheckerControl : IPDFQualityChecker
     {
@@ -204,9 +206,6 @@ namespace ICT2106WebApp.Domain
                         issues.Add("Document lacks bookmarks or table of contents.");
 
                     bool isTagged = pdfDoc.IsTagged();
-                    // Commented out accessibility check for IsTagged
-                    //if (!isTagged)
-                    //    issues.Add("Document is not tagged for accessibility.");
 
                     var info = pdfDoc.GetDocumentInfo();
                     bool missingMetadata = string.IsNullOrEmpty(info.GetTitle())
@@ -299,9 +298,7 @@ namespace ICT2106WebApp.Domain
                     if (containsLatex && containsMathML)
                         issues.Add("Document mixes LaTeX and MathML notations.");
 
-                    // Commented out accessibility check for math notation
-                    //if ((containsLatex || containsMathML) && !pdfDoc.IsTagged())
-                    //    issues.Add("Math notation present, but document is not tagged for accessibility.");
+
 
                     if (potentialPlainTextMath > 5)
                         issues.Add($"{potentialPlainTextMath} instances of plain-text math found. Use proper math formatting.");

@@ -1,4 +1,5 @@
 using ICT2106WebApp.Interfaces;
+using ICT2106WebApp.Models;
 
 namespace ICT2106WebApp.Domain
 {

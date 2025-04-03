@@ -302,7 +302,7 @@ public static class DocumentProcessor
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
 			// Will prove for Siti as we traverse the nodes again after updating
-			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
 			// Save modified latex tree back to MongoDB (query)
 			await traverser.UpdateLatexDocument(rootnodehere);
@@ -328,7 +328,7 @@ public static class DocumentProcessor
             // }
 
 
-            //Retrieve the Latex tree from MongoDB (for demo query)
+            //Retrieve the Latex tree from MongoDB (for demo query) [Cmt out when grp4 demo]
             AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
 			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
 
@@ -345,29 +345,6 @@ public static class DocumentProcessor
 			{
 				treeProcessor.PrintTree(latexMongo, 0);
 			}
-
-			// foreach (var tableNode in tableAbstractNodes)
-			// {
-			// 	if (tableNode.GetNodeType() == "table")
-			// 	{
-			// 		Console.WriteLine($"Table Node Content: {tableNode.GetContent()}");
-			// 	}
-			// }
-
-			// // Print tablesFromNode
-			// foreach (var table in tablesFromNode)
-			// {
-			// 	Console.WriteLine($"{table.tableId}");
-			// 	Console.WriteLine($"{table.latexOutput}");
-			// 	foreach (var row in table.rows)
-			// 	{
-			// 		foreach (var cell in row.cells)
-			// 		{
-			// 			Console.WriteLine($"Cell content: {cell.content}");
-			// 			Console.WriteLine($"Cell Styling: {cell.styling}");
-			// 		}
-			// 	}
-			// }
 		}
     }
 }

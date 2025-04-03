@@ -1,0 +1,3252 @@
+{
+  "metadata": {
+    "Author": "Andrea Leow",
+    "CreatedDate_Internal": "2025-02-21 05:57:00Z",
+    "LastModified_Internal": "2025-04-03 15:00:00Z",
+    "filename": "Datarepository_zx_v4 - demo.docx",
+    "size": "2149326"
+  },
+  "headers": [
+    "I am a header",
+    "This is a header"
+  ],
+  "footers": [
+    "I am a footnote",
+    "1 PAGE",
+    "This is a Footer",
+    "I am a footer PAGE"
+  ],
+  "document": [
+    {
+      "id": 0,
+      "type": "root",
+      "content": ""
+    },
+    {
+      "type": "layout",
+      "content": "",
+      "styling": [
+        {
+          "orientation": "Portrait",
+          "pageWidth": 21,
+          "pageHeight": 29.7,
+          "columnNum": 1,
+          "columnSpacing": 1.25,
+          "margins": {
+            "top": 2.54,
+            "bottom": 2.54,
+            "left": 2.54,
+            "right": 2.54,
+            "header": 1.25,
+            "footer": 1.25
+          }
+        }
+      ]
+    },
+    {
+      "type": "h1",
+      "content": "Header 1",
+      "styling": [
+        {
+          "bold": true,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "h2",
+      "content": "Header 2",
+      "styling": [
+        {
+          "bold": true,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "h3",
+      "content": "Header 3",
+      "styling": [
+        {
+          "bold": true,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "434343",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "test text",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph_run?",
+      "content": "https://puginarug.com/",
+      "styling": []
+    },
+    {
+      "type": "paragraph",
+      "content": "Colored text",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "FF0000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "diff color and highlighted",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "0000FF",
+          "highlight": "cyan",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "this is a bolded text",
+      "styling": [
+        {
+          "bold": true,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "this is a italic text",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "bulleted_list",
+      "content": "bulleted type 1",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "bulleted_list",
+      "content": "bulleted type 1 again",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "hollow_bulleted_list",
+      "content": "bulleted type 2",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "square_bulleted_list",
+      "content": "bulleted type 3",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "diamond_bulleted_list",
+      "content": "bulleted type 4",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "arrow_bulleted_list",
+      "content": "bulleted type 5",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "checkmark_bulleted_list",
+      "content": "bulleted type 6",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "dash_bulleted_list",
+      "content": "bulleted type 7",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "ListParagraph",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "numbered_list",
+      "content": "numbered list",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "numbered_parenthesis_list",
+      "content": "numbered list with bracket",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "roman_numeral_list",
+      "content": "roman numeral list",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "lowercase_roman_numeral_list",
+      "content": "lowercase roman numeral list",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "ListParagraph",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "uppercase_lettered_list",
+      "content": "uppercase lettered list",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "uppercase_lettered_list",
+      "content": "uppercase lettered list 2",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "uppercase_lettered_list",
+      "content": "uppercase lettered list 2.1 nested",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "uppercase_lettered_list",
+      "content": "uppercase lettered list 2.2 nested",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "uppercase_lettered_list",
+      "content": "uppercase lettered list 2.2.1 nested",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "lowercase_lettered_list",
+      "content": "lowercase lettered list",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "ListParagraph",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "lowercase_lettered_parenthesis_list",
+      "content": "lowercase lettered with bracket list ",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "ListParagraph",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "this is an indented text",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "middle align",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "center",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "end align",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "right",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Lorem Ipsum",
+          "styling": {
+            "bold": true,
+            "italic": false,
+            "alignment": "both",
+            "fontsize": 10,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "white",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        },
+        {
+          "type": "text_run",
+          "content": " is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "both",
+            "fontsize": 10,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "white",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "type": "paragraph",
+      "content": "^ align to margin",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 10,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "white",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": "",
+      "runs": [
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "Hi",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "5.5",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "i",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "6.91",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "Am",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "4.1",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "Going",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "5.5",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "To",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "6.91",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "Remod",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "4.1",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "whit text here",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "FFE599",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "!@#$%^&*(){}[];’:,./ \uD83E\uDD2A",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "font calibri here",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Calibri",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "font times new roman here",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "diff spacing heres",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "line spacing",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "space after paragraph",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "Many farmers focus on raising pigs (Cole, 1998).",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Many farmers focus on raising pigs ",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "left",
+            "fontsize": 12,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "none",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        },
+        {
+          "type": "intext-citation",
+          "content": "(Cole, 1998)",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "left",
+            "fontsize": 10,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "none",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ".",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "left",
+            "fontsize": 12,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "none",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "type": "paragraph",
+      "content": "Germany played a crucial role in the study (Wdadwa, 1990).",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Germany played a crucial role in the study",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "left",
+            "fontsize": 12,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "none",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        },
+        {
+          "type": "intext-citation",
+          "content": " (Wdadwa, 1990)",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "left",
+            "fontsize": 10,
+            "fonttype": "Default Font",
+            "fontcolor": "000000",
+            "highlight": "none",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ".",
+          "styling": {
+            "bold": false,
+            "italic": false,
+            "alignment": "left",
+            "fontsize": 12,
+            "fonttype": "Cambria",
+            "fontcolor": "000000",
+            "highlight": "none",
+            "lineSpacingType": "Multiple (1.15x)",
+            "lineSpacingValue": 13.8
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "type": "table",
+      "content": "",
+      "runs": [
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "I love",
+              "styling": {
+                "underline": true,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3.23",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "flying",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "none",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "4.75",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "in",
+              "styling": {
+                "underline": false,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "right",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "the",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "both",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3.23",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "blue",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 20,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "4.75",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "sky",
+              "styling": {
+                "underline": false,
+                "bold": false,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "auto",
+                "highlightcolor": "none",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3",
+                "rowHeight": "auto",
+                "backgroundcolor": "00B050"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": "",
+      "runs": [
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "the",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 16,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "2.48",
+                "rowHeight": "auto",
+                "backgroundcolor": "0070C0"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "toilet",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 16,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "10.75",
+                "rowHeight": "auto",
+                "backgroundcolor": "0070C0"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "is",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 16,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3.28",
+                "rowHeight": "auto",
+                "backgroundcolor": "0070C0"
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "very",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 16,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "2.48",
+                "rowHeight": "auto",
+                "backgroundcolor": "0070C0"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "smelly",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 16,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "10.75",
+                "rowHeight": "auto",
+                "backgroundcolor": "0070C0"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "sia",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": true,
+                "fontType": "Arial",
+                "fontsize": 16,
+                "horizontalalignment": "left",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "default",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "1",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3.28",
+                "rowHeight": "auto",
+                "backgroundcolor": "0070C0"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "content": "",
+      "runs": [
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "i",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "6.48",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "cant",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "wait",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "single",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "0.25",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3.5",
+                "rowHeight": "auto",
+                "backgroundcolor": "auto"
+              }
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "content": "",
+          "runs": [
+            {
+              "type": "cell",
+              "content": "to",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "default",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "6.48",
+                "rowHeight": "2.23",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "go",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "center",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3",
+                "rowHeight": "2.23",
+                "backgroundcolor": "auto"
+              }
+            },
+            {
+              "type": "cell",
+              "content": "holiday",
+              "styling": {
+                "underline": true,
+                "bold": true,
+                "italic": false,
+                "fontType": "Arial",
+                "fontsize": 11,
+                "horizontalalignment": "center",
+                "verticalalignment": "bottom",
+                "textcolor": "FF0000",
+                "highlightcolor": "yellow",
+                "bordertopstyle": "single",
+                "borderbottomstyle": "default",
+                "borderleftstyle": "default",
+                "borderrightstyle": "default",
+                "bordertopwidth": "0.25",
+                "borderbottomwidth": "1",
+                "borderleftwidth": "1",
+                "borderrightwidth": "1",
+                "bordertopcolor": "auto",
+                "borderbottomcolor": "auto",
+                "borderleftcolor": "auto",
+                "borderrightcolor": "auto",
+                "cellWidth": "3.5",
+                "rowHeight": "2.23",
+                "backgroundcolor": "auto"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "(1/2) × √(4)  <- math",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "∫",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "\uD83D\uDE09\uD83D\uDC69☺\uD83D\uDC50\uD83D\uDC85\uD83D\uDCAA\uD83D\uDE0B\uD83D\uDE09\uD83D\uDE14\uD83D\uDE16\uD83D\uDE21\uD83D\uDE1C\uD83D\uDE0F\uD83D\uDE39\uD83D\uDCA9\uD83D\uDCA9\uD83D\uDCA9",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId9.png",
+      "styling": {
+        "widthEMU": 2500550,
+        "heightEMU": 2500550,
+        "widthPixels": 262.5249343832021,
+        "heightPixels": 262.5249343832021,
+        "horizontalResolution": 96,
+        "verticalResolution": 96,
+        "format": "PNG",
+        "alignment": "Left Align (Ctrl + L)",
+        "position": "Inline (position determined by text flow)"
+      }
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId10.png",
+      "styling": {
+        "widthEMU": 2786063,
+        "heightEMU": 1567160,
+        "widthPixels": 292.5000524934383,
+        "heightPixels": 164.53123359580053,
+        "horizontalResolution": 96,
+        "verticalResolution": 96,
+        "format": "PNG",
+        "alignment": "Center Align (Ctrl + E)",
+        "position": "Inline (position determined by text flow)"
+      }
+    },
+    {
+      "alignment": "center",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "center",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId11.png",
+      "styling": {
+        "widthEMU": 3205163,
+        "heightEMU": 2136775,
+        "widthPixels": 336.5000524934383,
+        "heightPixels": 224.33333333333334,
+        "horizontalResolution": 96,
+        "verticalResolution": 96,
+        "format": "PNG",
+        "alignment": "Left Align (Ctrl + L)",
+        "position": "Inline (position determined by text flow)"
+      }
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "Math Below",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "(1/2) × √(4)=1",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "center",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "(1/2)cos 2x+ (3/8)sin 4x   =3x",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "log_24y ≥ (π/2)",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "∴ ∞ ≠ ±α",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "∃xPersonx∧∀yTimey→Happyx,y",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "F=ma",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "math",
+      "content": "lim1+(1/n)^n= e",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "center",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId12.png",
+      "styling": {
+        "widthEMU": 4259713,
+        "heightEMU": 3195021,
+        "widthPixels": 447.2139632545932,
+        "heightPixels": 335.43527559055116,
+        "horizontalResolution": 2835,
+        "verticalResolution": 2835,
+        "format": "PNG",
+        "alignment": "Left Align (Ctrl + L)",
+        "position": "Inline (position determined by text flow)"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": "Figure 1: PNG",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Figure ",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "left",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": "1",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "left",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ": ",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "left",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": "PNG",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "left",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 9,
+          "fonttype": "Caption",
+          "fontcolor": "1F497D",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "JPG with Align right alignment then enable Through text wrapping",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 16,
+          "fonttype": "Aptos Display",
+          "fontcolor": "0F4761",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId13.png",
+      "styling": {
+        "widthEMU": 3469535,
+        "heightEMU": 2312895,
+        "widthPixels": 364.25564304461943,
+        "heightPixels": 242.8236220472441,
+        "horizontalResolution": 220,
+        "verticalResolution": 220,
+        "format": "JPG",
+        "alignment": "Right Align (Ctrl + R)",
+        "position": "Horizontal Offset: 2264485, Vertical Offset: 1046"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": "Figure 2: JPG",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Figure ",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "right",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": "2",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "right",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ": JPG",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "right",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "JPG with Align right alignment then enable Top & Bottom text wrapping",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 16,
+          "fonttype": "Aptos Display",
+          "fontcolor": "0F4761",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId13.png",
+      "styling": {
+        "widthEMU": 3469005,
+        "heightEMU": 2312670,
+        "widthPixels": 364.2,
+        "heightPixels": 242.8,
+        "horizontalResolution": 220,
+        "verticalResolution": 220,
+        "format": "JPG",
+        "alignment": "Right Align (Ctrl + R)",
+        "position": "Horizontal Offset: 2264410, Vertical Offset: 0"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": "Figure 3: JPG",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Figure ",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "right",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": "3",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "right",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ": JPG",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "right",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "none",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "JPEG with Justify alignment then enable Behind Text text wrapping",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 16,
+          "fonttype": "Aptos Display",
+          "fontcolor": "0F4761",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId14.png",
+      "styling": {
+        "widthEMU": 3840480,
+        "heightEMU": 2560320,
+        "widthPixels": 403.2,
+        "heightPixels": 268.8,
+        "horizontalResolution": 220,
+        "verticalResolution": 220,
+        "format": "JPG",
+        "alignment": "Justify (Ctrl + J)",
+        "position": "Horizontal Offset: 0, Vertical Offset: 0"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": "Figure 4: JPEG",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Figure ",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "both",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "yellow",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": "4",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "both",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "yellow",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ": JPEG",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "both",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "yellow",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "alignment": "both",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": true,
+          "alignment": "both",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Single",
+          "lineSpacingValue": 12
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "JPEG with Justify alignment then enable In Front of Text text wrapping (caption hidden underneath image -> can move image to see)",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 16,
+          "fonttype": "Aptos Display",
+          "fontcolor": "0F4761",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.2x)",
+          "lineSpacingValue": 13.9
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "content": "C:\\Users\\andre\\School code\\Year 2\\Trimester 2\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\Images\\Image_rId14.png",
+      "styling": {
+        "widthEMU": 3840480,
+        "heightEMU": 2560320,
+        "widthPixels": 403.2,
+        "heightPixels": 268.8,
+        "horizontalResolution": 220,
+        "verticalResolution": 220,
+        "format": "JPG",
+        "alignment": "Justify (Ctrl + J)",
+        "position": "Horizontal Offset: 0, Vertical Offset: 2043"
+      }
+    },
+    {
+      "type": "paragraph",
+      "content": "Figure 5: JPEG",
+      "runs": [
+        {
+          "type": "text_run",
+          "content": "Figure ",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "both",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "yellow",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": "5",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "both",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "yellow",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        },
+        {
+          "type": "text_run",
+          "content": ": JPEG",
+          "styling": {
+            "bold": false,
+            "italic": true,
+            "alignment": "both",
+            "fontsize": 9,
+            "fonttype": "Aptos",
+            "fontcolor": "0E2841",
+            "highlight": "yellow",
+            "lineSpacingType": "Single",
+            "lineSpacingValue": 12
+          }
+        }
+      ],
+      "styling??": []
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "- - This is a Page Break - -",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Aptos",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "-- Next Page Section Break --",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Aptos",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 20,
+          "fonttype": "Heading1",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "bibliography",
+      "content": "Reference (IEE)",
+      "styling": [
+        {
+          "bold": true,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 10,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "citation_run",
+      "content": "[1] J. Cole, “I love pigs,” *Dr. J.*, vol. 20, 1998.",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 10,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "citation_run",
+      "content": "[2] Wdadwa, “I love Germany,” *Sit.*, 1990.",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 10,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "citation_run",
+      "content": "[3] D. Chan, “I love black people,” *White Man*, vol. 20, n.d.",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 10,
+          "fonttype": "Times New Roman",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph_run?",
+      "content": "This is citation/references",
+      "styling": []
+    },
+    {
+      "alignment": "left",
+      "type": "page_break",
+      "content": "[PAGE BREAK]",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "This is an Endnote",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Aptos",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.1x)",
+          "lineSpacingValue": 12.95
+        }
+      ]
+    },
+    {
+      "alignment": "left",
+      "type": "empty_paragraph1",
+      "content": "",
+      "styling": [
+        {
+          "bold": false,
+          "italic": false,
+          "alignment": "left",
+          "fontsize": 12,
+          "fonttype": "Default Font",
+          "fontcolor": "000000",
+          "highlight": "none",
+          "lineSpacingType": "Multiple (1.15x)",
+          "lineSpacingValue": 13.8
+        }
+      ]
+    }
+  ]
+}

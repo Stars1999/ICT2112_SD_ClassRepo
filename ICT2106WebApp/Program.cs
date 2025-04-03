@@ -307,13 +307,44 @@ public static class DocumentProcessor
 			// Save modified latex tree back to MongoDB (query)
 			await traverser.UpdateLatexDocument(rootnodehere);
 
-			// // Retrieve the non-modified tree from MongoDB (for demo query)
 			ICompletedLatex completedLatex = new CompletedLatex();
-			// await completedLatex.RetrieveTree();
+
+			// // Retrieve the non-modified tree from MongoDB (for demo query)
+            // AbstractNode originalRootNode = await completedLatex.RetrieveTree();
+            // CompositeNode originalMongo = null; // declare outside so it can be used outside of the if statement
+
+            // if (originalRootNode is CompositeNode originalNode) // Use pattern matching
+            // {
+            // 	Console.WriteLine("Latex Tree retrieved!");
+            // 	originalMongo = originalNode; // Assign to compNode
+            // }
+            // else
+            // {
+            // 	Console.WriteLine("Latex Tree not retrieved!");
+            // }
+            // if (originalMongo != null)
+            // {
+            // 	treeProcessor.PrintTree(originalMongo,0);
+            // }
 
 
-			// Retrieve the Latex tree from MongoDB (for demo query)
-			await completedLatex.RetrieveLatexTree();
+            //Retrieve the Latex tree from MongoDB (for demo query)
+            AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
+			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
+
+			if (latexRootNode is CompositeNode latexNode) // Use pattern matching
+			{
+				//Console.WriteLine("Latex Tree retrieved!");
+				latexMongo = latexNode; // Assign to compNode
+			}
+			else
+			{
+				//Console.WriteLine("Latex Tree not retrieved!");
+			}
+			if (latexMongo != null)
+			{
+				treeProcessor.PrintTree(latexMongo, 0);
+			}
 
 			// foreach (var tableNode in tableAbstractNodes)
 			// {
@@ -338,5 +369,5 @@ public static class DocumentProcessor
 			// 	}
 			// }
 		}
-	}
+    }
 }

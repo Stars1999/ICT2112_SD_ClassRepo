@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ICT2106WebApp.Models;
-using ICT2106WebApp.Control;
 using System;
 using System.Collections.Generic;
+using ICT2106WebApp.Controllers;
 
 namespace ICT2106WebApp.Pages
 {

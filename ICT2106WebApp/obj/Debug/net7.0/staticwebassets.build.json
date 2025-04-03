@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Z+ovYcpvyX6OBD1DwO/ZUsxaHq+ObnP6mrCsELQyayA=",
+  "Hash": "dtEJSXlqQ/KWY/P31YRNWUfcrjpJiFvIIacyNUCvTB8=",
   "Source": "ICT2106WebApp",
   "BasePath": "_content/ICT2106WebApp",
   "Mode": "Default",
@@ -59,6 +59,27 @@
       "OriginalItemSpec": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\ICT2106WebApp.bundle.scp.css"
     },
     {
+      "Identity": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\bibliography_test.json",
+      "SourceId": "ICT2106WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\",
+      "BasePath": "_content/ICT2106WebApp",
+      "RelativePath": "bibliography_test#[.{fingerprint}]?.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2kpvzu28na",
+      "Integrity": "3hHqs43X8a/k8EBBcSNucGsdrTPlb10jR7j11//mGdI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\bibliography_test.json"
+    },
+    {
       "Identity": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\css\\site.css",
       "SourceId": "ICT2106WebApp",
       "SourceType": "Discovered",
@@ -78,6 +99,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
+    },
+    {
+      "Identity": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\document.tex",
+      "SourceId": "ICT2106WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\",
+      "BasePath": "_content/ICT2106WebApp",
+      "RelativePath": "document#[.{fingerprint}]?.tex",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "qcdpwboljr",
+      "Integrity": "2vtOQxEtk1MRbPagU4nRu6Cyoi49IMXIr4i0L6oL9wA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\document.tex"
     },
     {
       "Identity": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\favicon.ico",
@@ -1317,9 +1359,112 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\uploads\\SG60_Figma_Wireframe_Plan (1).docx",
+      "SourceId": "ICT2106WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\",
+      "BasePath": "_content/ICT2106WebApp",
+      "RelativePath": "uploads/SG60_Figma_Wireframe_Plan (1)#[.{fingerprint}]?.docx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "zdgipjfeya",
+      "Integrity": "d3g7mVcBKFJVlw2Mi0QwjXK1MsBzQh2uOPIh0mFly3k=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\SG60_Figma_Wireframe_Plan (1).docx"
     }
   ],
   "Endpoints": [
+    {
+      "Route": "bibliography_test.2kpvzu28na.json",
+      "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\bibliography_test.json",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/json"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"3hHqs43X8a/k8EBBcSNucGsdrTPlb10jR7j11//mGdI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 03 Apr 2025 12:00:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2kpvzu28na"
+        },
+        {
+          "Name": "label",
+          "Value": "bibliography_test.json"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-3hHqs43X8a/k8EBBcSNucGsdrTPlb10jR7j11//mGdI="
+        }
+      ]
+    },
+    {
+      "Route": "bibliography_test.json",
+      "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\bibliography_test.json",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/json"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"3hHqs43X8a/k8EBBcSNucGsdrTPlb10jR7j11//mGdI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 03 Apr 2025 12:00:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-3hHqs43X8a/k8EBBcSNucGsdrTPlb10jR7j11//mGdI="
+        }
+      ]
+    },
     {
       "Route": "css/site.css",
       "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\css\\site.css",
@@ -1343,7 +1488,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 08 Mar 2025 01:44:00 GMT"
+          "Value": "Thu, 03 Apr 2025 12:00:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1380,7 +1525,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 08 Mar 2025 01:44:00 GMT"
+          "Value": "Thu, 03 Apr 2025 12:00:16 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1399,6 +1544,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-0eEEzZUWfmKAf8ZjgEHELI8MvYhaSbmoCvWfVs/rSWk="
+        }
+      ]
+    },
+    {
+      "Route": "document.qcdpwboljr.tex",
+      "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\document.tex",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "528"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/x-tex"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"2vtOQxEtk1MRbPagU4nRu6Cyoi49IMXIr4i0L6oL9wA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 27 Mar 2025 07:53:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "qcdpwboljr"
+        },
+        {
+          "Name": "label",
+          "Value": "document.tex"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-2vtOQxEtk1MRbPagU4nRu6Cyoi49IMXIr4i0L6oL9wA="
+        }
+      ]
+    },
+    {
+      "Route": "document.tex",
+      "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\document.tex",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "528"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/x-tex"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"2vtOQxEtk1MRbPagU4nRu6Cyoi49IMXIr4i0L6oL9wA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 27 Mar 2025 07:53:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-2vtOQxEtk1MRbPagU4nRu6Cyoi49IMXIr4i0L6oL9wA="
         }
       ]
     },
@@ -1507,7 +1734,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 08 Mar 2025 02:39:25 GMT"
+          "Value": "Thu, 27 Mar 2025 07:53:47 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1544,7 +1771,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 08 Mar 2025 02:39:25 GMT"
+          "Value": "Thu, 27 Mar 2025 07:53:47 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1589,7 +1816,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 08 Mar 2025 02:39:25 GMT"
+          "Value": "Thu, 27 Mar 2025 07:53:47 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -1634,7 +1861,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Sat, 08 Mar 2025 02:39:25 GMT"
+          "Value": "Thu, 27 Mar 2025 07:53:47 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6401,6 +6628,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-16aFlqtpsG9RyieKZUUUjkJpqTgcJtWXwT312I4Iz1s="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/SG60_Figma_Wireframe_Plan (1).docx",
+      "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\uploads\\SG60_Figma_Wireframe_Plan (1).docx",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "37679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"d3g7mVcBKFJVlw2Mi0QwjXK1MsBzQh2uOPIh0mFly3k=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 03 Apr 2025 12:00:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-d3g7mVcBKFJVlw2Mi0QwjXK1MsBzQh2uOPIh0mFly3k="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/SG60_Figma_Wireframe_Plan (1).zdgipjfeya.docx",
+      "AssetFile": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\uploads\\SG60_Figma_Wireframe_Plan (1).docx",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "37679"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"d3g7mVcBKFJVlw2Mi0QwjXK1MsBzQh2uOPIh0mFly3k=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 03 Apr 2025 12:00:16 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "zdgipjfeya"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/SG60_Figma_Wireframe_Plan (1).docx"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-d3g7mVcBKFJVlw2Mi0QwjXK1MsBzQh2uOPIh0mFly3k="
         }
       ]
     }

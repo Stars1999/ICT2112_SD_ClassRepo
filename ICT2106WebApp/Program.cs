@@ -1,5 +1,4 @@
 using ICT2106WebApp.Class;
-using ICT2106WebApp.Control;
 using ICT2106WebApp.Controllers;
 using ICT2106WebApp.Data;
 using ICT2106WebApp.Interfaces;

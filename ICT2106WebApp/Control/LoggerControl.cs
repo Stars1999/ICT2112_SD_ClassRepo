@@ -4,7 +4,7 @@ using ICT2106WebApp.Interfaces;
 using ICT2106WebApp.Models;
 using System.Text;
 
-namespace ICT2106WebApp.Control
+namespace ICT2106WebApp.Controllers
 {
     public class LoggerControl
     {
@@ -46,7 +46,7 @@ namespace ICT2106WebApp.Control
             }
         }
         public List<Logger_SDM> FilterLogs(DateTime? startDate, DateTime? endDate, string errorLocation)
-        {      
+        {
             var logs = RetrieveAllLogs();
 
             if (startDate.HasValue && endDate.HasValue)
@@ -75,7 +75,7 @@ namespace ICT2106WebApp.Control
         public byte[] DownloadLogs(DateTime? startDate, DateTime? endDate, string filterLocation)
         {
             // Determine if filtering by date range or location is needed
-            var logs = (startDate.HasValue || endDate.HasValue || !string.IsNullOrEmpty(filterLocation))
+            var logs = startDate.HasValue || endDate.HasValue || !string.IsNullOrEmpty(filterLocation)
                 ? FilterLogs(startDate, endDate, filterLocation) // Adjusted to use the new FilterLogs method accepting date range
                 : RetrieveAllLogs();
 

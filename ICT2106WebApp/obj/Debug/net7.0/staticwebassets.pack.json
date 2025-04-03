@@ -5,8 +5,16 @@
       "PackagePath": "staticwebassets\\ICT2106WebApp.nk8312fb4k.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\bibliography_test.json",
+      "PackagePath": "staticwebassets\\bibliography_test.json"
+    },
+    {
       "Id": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\document.tex",
+      "PackagePath": "staticwebassets\\document.tex"
     },
     {
       "Id": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\favicon.ico",
@@ -243,6 +251,10 @@
     {
       "Id": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\Kerwin Loh\\Desktop\\SIT\\Year 2\\Tri 2\\Software Design\\Project\\ICT2112_SD_ClassRepo\\ICT2106WebApp\\wwwroot\\uploads\\SG60_Figma_Wireframe_Plan (1).docx",
+      "PackagePath": "staticwebassets\\uploads\\SG60_Figma_Wireframe_Plan (1).docx"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

@@ -89,7 +89,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-// DocumentProcessor.RunMyProgram(database);
+DocumentProcessor.RunMyProgram(database);
 
 // GRP3 JOHNATHAN CRASH RECOVERY TESTING
 // await ExtractContent.RunCrashRecovery(database);
@@ -259,7 +259,7 @@ public static class DocumentProcessor
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 
-
+/*
 			// GROUP 4 STUFF
 			// Step 1: Get abstract nodes of table from group 3
 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
@@ -308,7 +308,7 @@ public static class DocumentProcessor
 
 			// Will prove for Siti as we traverse the nodes again after updating
 			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
-
+*/
 			// Save modified latex tree back to MongoDB (query)
 			// await traverser.UpdateLatexDocument(rootnodehere);
 
@@ -331,19 +331,19 @@ public static class DocumentProcessor
 			// 	treeProcessor.PrintTree(originalMongo,0);
 			// }
 
-			// Retrieve the Latex tree from MongoDB (for demo query)
-			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
-			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
+			// // Retrieve the Latex tree from MongoDB (for demo query)
+			// AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
+			// CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
 
-			if (latexRootNode is CompositeNode latexNode) // Use pattern matching
-			{
-				Console.WriteLine("Latex Tree retrieved!");
-				latexMongo = latexNode; // Assign to compNode
-			}
-			else
-			{
-				Console.WriteLine("Latex Tree not retrieved!");
-			}
+			// if (latexRootNode is CompositeNode latexNode) // Use pattern matching
+			// {
+			// 	Console.WriteLine("Latex Tree retrieved!");
+			// 	latexMongo = latexNode; // Assign to compNode
+			// }
+			// else
+			// {
+			// 	Console.WriteLine("Latex Tree not retrieved!");
+			// }
 			// if (latexMongo != null)
 			// {
 			// 	treeProcessor.PrintTree(latexMongo,0);

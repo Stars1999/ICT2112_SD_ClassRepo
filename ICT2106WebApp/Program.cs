@@ -54,12 +54,6 @@ Console.CancelKeyPress += async (sender, eventArgs) =>
 
 var runCrashRecovery = false;
 
-Console.CancelKeyPress += (sender, eventArgs) =>
-{
-	eventArgs.Cancel = true; // ✅ Prevent shutdown
-	runCrashRecovery = true;
-};
-
 // try
 // {
 // 	Console.WriteLine("Running main program logic...");

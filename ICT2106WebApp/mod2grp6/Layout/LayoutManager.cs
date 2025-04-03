@@ -6,10 +6,8 @@ namespace ICT2106WebApp.mod2grp6.Layout
 {
     public class LayoutManager : IFormatLayout
     {
-        // Change this to store List<AbstractNode>
         private List<AbstractNode> content;
 
-        // Update this method to accept List<AbstractNode>
         public bool StartLayoutFormatting(List<AbstractNode> content)
         {
             try
@@ -36,6 +34,27 @@ namespace ICT2106WebApp.mod2grp6.Layout
                     if (node.GetNodeType().Contains("header") || node.GetNodeType().StartsWith("h"))
                         return true;
                 }
+                
+                // Also check for header margin in layout node
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("Margins") && style["Margins"] is Dictionary<string, object> margins)
+                                {
+                                    if (margins.ContainsKey("Header"))
+                                        return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 return false;
             }
             catch (Exception)
@@ -57,6 +76,27 @@ namespace ICT2106WebApp.mod2grp6.Layout
                     if (node.GetNodeType().Contains("footer"))
                         return true;
                 }
+                
+                // Also check for footer margin in layout node
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("Margins") && style["Margins"] is Dictionary<string, object> margins)
+                                {
+                                    if (margins.ContainsKey("Footer"))
+                                        return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 return false;
             }
             catch (Exception)
@@ -78,12 +118,13 @@ namespace ICT2106WebApp.mod2grp6.Layout
             }
         }
 
-        public bool FormatOrientation()
+        // Get the orientation setting from content (landscape or portrait)
+        public string GetOrientationSetting()
         {
             try
             {
                 if (content == null || content.Count == 0)
-                    return false;
+                    return "Portrait"; // Default to portrait
 
                 // Check for layout node with orientation information
                 foreach (var node in content)
@@ -97,14 +138,31 @@ namespace ICT2106WebApp.mod2grp6.Layout
                             {
                                 if (style.ContainsKey("Orientation"))
                                 {
-                                    // Return true regardless of orientation to apply orientation formatting
-                                    return true;
+                                    return style["Orientation"].ToString();
                                 }
                             }
                         }
                     }
                 }
-                return false;
+                return "Portrait"; // Default to portrait if not specified
+            }
+            catch (Exception)
+            {
+                return "Portrait"; // Default to portrait on error
+            }
+        }
+
+        // Improved to check actual orientation value
+        public bool FormatOrientation()
+        {
+            try
+            {
+                if (content == null || content.Count == 0)
+                    return false;
+
+                // Check for layout node with orientation information
+                string orientation = GetOrientationSetting();
+                return orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase);
             }
             catch (Exception)
             {
@@ -216,7 +274,7 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 layoutNodes.Add(new SimpleNode(
                     2,
                     "package",
-                    "\\usepackage{fancyhdr}\n\\pagestyle{fancy}",
+                    "\\usepackage{fancyhdr}",
                     new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
                 ));
             }
@@ -237,56 +295,36 @@ namespace ICT2106WebApp.mod2grp6.Layout
             // Combine geometry options
             List<string> geometryOptions = new List<string>();
             
-            // Handle orientation settings
-            if (FormatOrientation())
-            {
-                // Determine orientation type
-                string orientationType = "portrait"; // Default
-                
-                foreach (var node in content)
-                {
-                    if (node.GetNodeType().Equals("layout"))
-                    {
-                        var styling = node.GetStyling();
-                        if (styling != null && styling.Count > 0)
-                        {
-                            foreach (var style in styling)
-                            {
-                                if (style.ContainsKey("Orientation"))
-                                {
-                                    string orientation = style["Orientation"].ToString();
-                                    if (orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        orientationType = "landscape";
-                                        
-                                        // Add pdflscape package for landscape support
-                                        layoutNodes.Add(new SimpleNode(
-                                            nodeId++,
-                                            "package",
-                                            "\\usepackage{pdflscape}",
-                                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-                                        ));
-                                        
-                                        // Use landscape environment
-                                        layoutNodes.Add(new SimpleNode(
-                                            nodeId++,
-                                            "orientation",
-                                            "\\begin{landscape}",
-                                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
-                                        ));
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // Add orientation to geometry options
-                geometryOptions.Add(orientationType);
-            }
+            // Handle orientation - add appropriate orientation setting
+            string orientation = GetOrientationSetting();
             
-            // Format margins if needed
+            if (orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase))
+            {
+                // Add pdflscape package for landscape support
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "package",
+                    "\\usepackage{pdflscape}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+                ));
+                
+                // Use landscape environment - note: typically this would go around content
+                // but for this test we're just adding it as a command
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "orientation",
+                    "\\begin{landscape}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
+                ));
+            }
+            else
+            {
+                // Add explicit portrait orientation to the geometry options
+                geometryOptions.Add("portrait");
+            }
+
+            // Additional geometry options will be added below
+            
             if (FormatMargins())
             {
                 // Check for explicit margin settings in the content
@@ -332,7 +370,6 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 }
             }
             
-            // Format page size if needed
             if (FormatPageSize())
             {
                 // Check for explicit page size in content
@@ -393,19 +430,59 @@ namespace ICT2106WebApp.mod2grp6.Layout
             {
                 // Get the first header node content or use default
                 string headerContent = "Header";
+                string headerAlignment = "C"; // Default to Center
+                Dictionary<string, object> headerStyles = null;
+                
                 foreach (var node in content)
                 {
                     if (node.GetNodeType().Contains("header") || node.GetNodeType().StartsWith("h"))
                     {
                         headerContent = node.GetContent();
+                        
+                        // Extract styling information if available
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            headerStyles = styling[0];
+                            
+                            // Get alignment if specified
+                            if (headerStyles.ContainsKey("Alignment"))
+                            {
+                                string alignment = headerStyles["Alignment"].ToString().ToLower();
+                                if (alignment.Contains("left"))
+                                    headerAlignment = "L";
+                                else if (alignment.Contains("right"))
+                                    headerAlignment = "R";
+                                // C is already the default for center/other
+                            }
+                        }
                         break;
                     }
+                }
+
+                // Add header commands
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "header_clear",
+                    "\\fancyhead{}",  // Clear all header fields first
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
+                ));
+
+                // Add formatting to header content if needed
+                string formattedHeaderContent = headerContent;
+                if (headerStyles != null)
+                {
+                    if (headerStyles.ContainsKey("Bold") && Convert.ToBoolean(headerStyles["Bold"]))
+                        formattedHeaderContent = $"\\textbf{{{formattedHeaderContent}}}";
+                    if (headerStyles.ContainsKey("Italic") && Convert.ToBoolean(headerStyles["Italic"]))
+                        formattedHeaderContent = $"\\textit{{{formattedHeaderContent}}}";
+                    // Additional formatting could be added here (color, size, etc.)
                 }
 
                 layoutNodes.Add(new SimpleNode(
                     nodeId++,
                     "header",
-                    $"\\fancyhead[C]{{{headerContent}}}",
+                    $"\\fancyhead[{headerAlignment}]{{{formattedHeaderContent}}}",  // Use detected alignment
                     new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
                 ));
             }
@@ -414,19 +491,67 @@ namespace ICT2106WebApp.mod2grp6.Layout
             {
                 // Get the first footer node content or use default
                 string footerContent = "Footer with page number: \\thepage";
+                string footerAlignment = "C"; // Default to Center
+                Dictionary<string, object> footerStyles = null;
+                
                 foreach (var node in content)
                 {
                     if (node.GetNodeType().Contains("footer"))
                     {
                         footerContent = node.GetContent();
+                        
+                        // Extract styling information if available
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            footerStyles = styling[0];
+                            
+                            // Get alignment if specified
+                            if (footerStyles.ContainsKey("Alignment"))
+                            {
+                                string alignment = footerStyles["Alignment"].ToString().ToLower();
+                                if (alignment.Contains("left"))
+                                    footerAlignment = "L";
+                                else if (alignment.Contains("right"))
+                                    footerAlignment = "R";
+                                // C is already the default for center/other
+                            }
+                        }
                         break;
                     }
+                }
+
+                // Add footer commands
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "footer_clear",
+                    "\\fancyfoot{}",  // Clear all footer fields first
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
+                ));
+
+                // Add formatting to footer content if needed
+                string formattedFooterContent = footerContent;
+                if (footerStyles != null)
+                {
+                    if (footerStyles.ContainsKey("Bold") && Convert.ToBoolean(footerStyles["Bold"]))
+                        formattedFooterContent = $"\\textbf{{{formattedFooterContent}}}";
+                    if (footerStyles.ContainsKey("Italic") && Convert.ToBoolean(footerStyles["Italic"]))
+                        formattedFooterContent = $"\\textit{{{formattedFooterContent}}}";
+                    // Additional formatting could be added here (color, size, etc.)
                 }
 
                 layoutNodes.Add(new SimpleNode(
                     nodeId++,
                     "footer",
-                    $"\\fancyfoot[C]{{{footerContent}}}",
+                    $"\\fancyfoot[{footerAlignment}]{{{formattedFooterContent}}}",  // Use detected alignment
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
+                ));
+                
+                // Add page style application
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "pagestyle",
+                    "\\pagestyle{fancy}",  // Apply the fancy page style
                     new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "fancyhdr" } } }
                 ));
             }
@@ -509,35 +634,12 @@ namespace ICT2106WebApp.mod2grp6.Layout
             // Close landscape environment if it was opened
             if (FormatOrientation())
             {
-                // Check if we're using landscape orientation
-                foreach (var node in content)
-                {
-                    if (node.GetNodeType().Equals("layout"))
-                    {
-                        var styling = node.GetStyling();
-                        if (styling != null && styling.Count > 0)
-                        {
-                            foreach (var style in styling)
-                            {
-                                if (style.ContainsKey("Orientation"))
-                                {
-                                    string orientation = style["Orientation"].ToString();
-                                    if (orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        // Close landscape environment
-                                        layoutNodes.Add(new SimpleNode(
-                                            nodeId++,
-                                            "orientationEnd",
-                                            "\\end{landscape}",
-                                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
-                                        ));
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "orientationEnd",
+                    "\\end{landscape}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
+                ));
             }
 
             return layoutNodes;

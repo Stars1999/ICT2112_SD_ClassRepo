@@ -411,7 +411,7 @@
                     // Set up event listener for changes
                     editor.on('change', function() {
                     const currentContent = editor.getValue();
-                    autoSaveToDatabase(currentContent); // 🔥 Save on every change
+                    autoSaveToDatabase(currentContent); // Save on every change
                     clearTimeout(typingTimer);
                     typingTimer = setTimeout(() => {
                         detectErrors(); // keep detection debounced

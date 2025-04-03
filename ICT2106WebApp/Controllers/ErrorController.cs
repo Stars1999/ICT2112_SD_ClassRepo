@@ -32,7 +32,7 @@ public class ErrorController : Controller
                 return BadRequest("LaTeX content is required.");
             }
             
-            // ✅ Use the Facade to process errors
+            // Use the Facade to process errors
             var errors = _errorCheckingFacade.ProcessError(request.LatexContent);
             
             return Json(new { success = true, errors });

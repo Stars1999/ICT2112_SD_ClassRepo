@@ -40,7 +40,7 @@ public class BibTexMapper : IInsertBibTex
                 {
                     Console.WriteLine("[DEBUG] Found existing reference, updating.");
 
-                    // ✅ Important: Preserve original _id
+                    // Important: Preserve original _id
                     reference.Id = existingReference.Id;
                     reference.InsertedAt = DateTime.UtcNow;
                     reference.Source = "Converted";

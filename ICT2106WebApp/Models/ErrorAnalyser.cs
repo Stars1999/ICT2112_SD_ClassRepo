@@ -86,12 +86,6 @@ public class ErrorAnalyser : iErrorAnalyser
         return errors;
     }
 
-    /// <summary>
-    /// Applies an automatic fix for a given error
-    /// </summary>
-    /// <param name="latexContent">The original LaTeX content</param>
-    /// <param name="error">The error to fix</param>
-    /// <returns>The fixed LaTeX content</returns>
     public string ChangeError(string latexContent, ErrorStyle error)
     {
         if (error == null || string.IsNullOrEmpty(latexContent))
@@ -147,9 +141,6 @@ public class ErrorAnalyser : iErrorAnalyser
         return string.Join("\n", lines);
     }
 
-    /// <summary>
-    /// Checks for unclosed braces in a LaTeX line
-    /// </summary>
     private void CheckUnclosedBraces(string line, int lineNumber, List<ErrorStyle> errors)
     {
         int openBraces = line.Count(c => c == '{');
@@ -183,9 +174,6 @@ public class ErrorAnalyser : iErrorAnalyser
         }
     }
 
-    /// <summary>
-    /// Checks for math mode errors in a LaTeX line
-    /// </summary>
     private void CheckMathModeErrors(string line, int lineNumber, List<ErrorStyle> errors)
     {
         foreach (var pattern in _commonErrorPatterns.Where(p => p.Key.Contains("alpha") || 
@@ -214,9 +202,6 @@ public class ErrorAnalyser : iErrorAnalyser
         }
     }
 
-    /// <summary>
-    /// Checks if a position in a line is already in math mode
-    /// </summary>
     private bool IsMathMode(string line, int position)
     {
         int dollarCount = 0;
@@ -230,9 +215,6 @@ public class ErrorAnalyser : iErrorAnalyser
         return dollarCount % 2 == 1; // Odd number of $ means we're in math mode
     }
 
-    /// <summary>
-    /// Checks for unclosed environments in a LaTeX document
-    /// </summary>
     private void CheckUnclosedEnvironments(string fullContent, string line, int lineNumber, List<ErrorStyle> errors)
     {
         var beginMatch = Regex.Match(line, @"\\begin{([^}]*)}");
@@ -257,9 +239,6 @@ public class ErrorAnalyser : iErrorAnalyser
         }
     }
 
-    /// <summary>
-    /// Checks for undefined citations in a LaTeX line
-    /// </summary>
     private void CheckUndefinedCitations(string line, int lineNumber, List<ErrorStyle> errors)
     {
         var citeMatch = Regex.Matches(line, @"\\cite{([^}]*)}");

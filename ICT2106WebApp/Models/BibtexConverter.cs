@@ -11,9 +11,7 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
     private string _preferredStyle; // Default APA, can be changed
     private readonly IInsertBibTex _bibtexMapper;
 
-    /// <summary>
-    /// Constructor for BibTeXConverter
-    /// </summary>
+    /// Constructor for BibTeXConverte
     public BibTeXConverter(IScannerFactory citationFactory, IScannerFactory bibliographyFactory, IInsertBibTex bibtexMapper, string preferredStyle = "apa")
     {
         _citationFactory = citationFactory;
@@ -36,9 +34,7 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
         return "apa"; // Fallback
     }
 
-    /// <summary>
-    /// Converts citations and bibliography based on the preferred style.
-    /// </summary>
+    /// Converts citations and bibliography based on the preferred style
     public string ConvertCitationsAndBibliography(string jsonData, string overrideStyle = null)
     {
         Console.WriteLine($"[DEBUG] Received JSON: {jsonData}");
@@ -230,10 +226,8 @@ public class BibTeXConverter : iConversionStatus //Implements the interface
 
 
 
-    /// <summary>
-    /// ✅ Fetches the conversion status.
-    /// Returns true if the converted JSON has been updated in memory.
-    /// </summary>
+    /// Fetches the conversion status.
+    /// Returns true if the converted JSON has been updated in memory
      public void SetUpdatedJson(string convertedJson)
     {
         _updatedJson = convertedJson;

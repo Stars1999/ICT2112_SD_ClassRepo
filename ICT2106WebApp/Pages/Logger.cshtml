@@ -243,7 +243,11 @@
         sortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
         // Update icon based on sort order
         document.getElementById("sortIcon").className = sortOrder === 'asc' ? 'fa fa-arrow-down' : 'fa fa-arrow-up';
+
+        // After sorting, call pagination to refresh the table display
+        setupPagination();
     }
+
 </script>
 <script>
     var currentPage = 1;

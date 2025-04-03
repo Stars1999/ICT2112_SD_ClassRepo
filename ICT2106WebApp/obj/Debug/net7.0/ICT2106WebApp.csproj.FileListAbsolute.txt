@@ -1,92 +1,145 @@
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\appsettings.Development.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\appsettings.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.staticwebassets.runtime.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.staticwebassets.endpoints.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.exe
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.deps.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.runtimeconfig.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.pdb
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.AssemblyInfoInputs.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.AssemblyInfo.cs
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.CoreCompileInputs.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.RazorAssemblyInfo.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.RazorAssemblyInfo.cs
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\scopedcss\bundle\ICT2106WebApp.styles.css
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\scopedcss\projectbundle\ICT2106WebApp.bundle.scp.css
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.build.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.development.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.build.endpoints.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.build.ICT2106WebApp.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.ICT2106WebApp.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.ICT2106WebApp.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.pack.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.upToDateCheck.txt
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\refint\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Lab\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.AssemblyReference.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.AssemblyInfoInputs.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.AssemblyInfo.cs
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.csproj.CoreCompileInputs.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.RazorAssemblyInfo.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.RazorAssemblyInfo.cs
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.sourcelink.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\appsettings.Development.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\appsettings.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.staticwebassets.runtime.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.staticwebassets.endpoints.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.exe
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.deps.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.runtimeconfig.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ICT2106WebApp.pdb
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\DnsClient.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Bson.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\MongoDB.Driver.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\SharpCompress.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Snappier.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\ZstdSharp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\scopedcss\bundle\ICT2106WebApp.styles.css
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\scopedcss\projectbundle\ICT2106WebApp.bundle.scp.css
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.build.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.development.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.build.endpoints.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.build.ICT2106WebApp.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.ICT2106WebApp.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.ICT2106WebApp.props
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.pack.json
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\staticwebassets.upToDateCheck.txt
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106W.DE167C20.Up2Date
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\refint\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.pdb
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ICT2106WebApp.genruntimeconfig.cache
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\obj\Debug\net7.0\ref\ICT2106WebApp.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.barcodes.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.bouncy-castle-connector.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.forms.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.io.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.kernel.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.layout.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.pdfa.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.pdfua.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.sign.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.styledxmlparser.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.svg.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\itext.commons.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
-C:\Users\Kerwin Loh\Desktop\SIT\Year 2\Tri 2\Software Design\Project\ICT2112_SD_ClassRepo\ICT2106WebApp\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/appsettings.Development.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/appsettings.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.staticwebassets.runtime.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.staticwebassets.endpoints.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.exe
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.deps.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.runtimeconfig.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.pdb
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.AssemblyInfoInputs.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.AssemblyInfo.cs
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.csproj.CoreCompileInputs.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.RazorAssemblyInfo.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.RazorAssemblyInfo.cs
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/scopedcss/Pages/Shared/_Layout.cshtml.rz.scp.css
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/scopedcss/bundle/ICT2106WebApp.styles.css
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/scopedcss/projectbundle/ICT2106WebApp.bundle.scp.css
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.build.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.development.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.build.endpoints.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.build.ICT2106WebApp.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.ICT2106WebApp.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.ICT2106WebApp.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.pack.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.upToDateCheck.txt
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/refint/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.pdb
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.genruntimeconfig.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Lab/ICT2106WebApp/obj/Debug/net7.0/ref/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.csproj.AssemblyReference.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.AssemblyInfoInputs.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.AssemblyInfo.cs
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.csproj.CoreCompileInputs.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.MvcApplicationPartsAssemblyInfo.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.RazorAssemblyInfo.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.RazorAssemblyInfo.cs
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.sourcelink.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/appsettings.Development.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/appsettings.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.staticwebassets.runtime.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.staticwebassets.endpoints.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.exe
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.deps.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.runtimeconfig.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.pdb
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/DnsClient.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/MongoDB.Bson.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/MongoDB.Driver.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/SharpCompress.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Snappier.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ZstdSharp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/scopedcss/Pages/Shared/_Layout.cshtml.rz.scp.css
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/scopedcss/bundle/ICT2106WebApp.styles.css
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/scopedcss/projectbundle/ICT2106WebApp.bundle.scp.css
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.build.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.development.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.build.endpoints.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.build.ICT2106WebApp.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.ICT2106WebApp.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.ICT2106WebApp.props
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.pack.json
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.upToDateCheck.txt
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106W.DE167C20.Up2Date
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/refint/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.pdb
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.genruntimeconfig.cache
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ref/ICT2106WebApp.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.barcodes.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.bouncy-castle-connector.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.forms.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.io.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.kernel.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.layout.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.pdfa.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.pdfua.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.sign.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.styledxmlparser.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.svg.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.commons.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Microsoft.DotNet.PlatformAbstractions.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Microsoft.Extensions.DependencyModel.dll
+C:/Users/Kerwin Loh/Desktop/SIT/Year 2/Tri 2/Software Design/Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/refint/ICT2106WebApp.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.pdb
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/appsettings.Development.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/appsettings.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.staticwebassets.runtime.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.deps.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.runtimeconfig.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ICT2106WebApp.pdb
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/DnsClient.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.barcodes.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.bouncy-castle-connector.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.forms.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.io.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.kernel.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.layout.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.pdfa.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.pdfua.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.sign.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.styledxmlparser.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.svg.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/itext.commons.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Microsoft.DotNet.PlatformAbstractions.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Microsoft.Extensions.DependencyModel.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/MongoDB.Bson.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/MongoDB.Driver.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/SharpCompress.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/Snappier.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/bin/Debug/net7.0/ZstdSharp.dll
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.csproj.AssemblyReference.cache
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.AssemblyInfoInputs.cache
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.AssemblyInfo.cs
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.csproj.CoreCompileInputs.cache
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.MvcApplicationPartsAssemblyInfo.cache
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.RazorAssemblyInfo.cache
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.RazorAssemblyInfo.cs
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.ICT2106WebApp.Microsoft.AspNetCore.StaticWebAssets.props
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.build.ICT2106WebApp.props
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.ICT2106WebApp.props
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.ICT2106WebApp.props
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.pack.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.build.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/staticwebassets.development.json
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/scopedcss/Pages/Shared/_Layout.cshtml.rz.scp.css
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/scopedcss/bundle/ICT2106WebApp.styles.css
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/scopedcss/projectbundle/ICT2106WebApp.bundle.scp.css
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.csproj.CopyComplete
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ICT2106WebApp.genruntimeconfig.cache
+/Users/dennisng/SD Project/ICT2112_SD_ClassRepo/ICT2106WebApp/obj/Debug/net7.0/ref/ICT2106WebApp.dll

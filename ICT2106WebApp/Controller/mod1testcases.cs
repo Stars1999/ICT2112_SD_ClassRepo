@@ -218,7 +218,8 @@ namespace ICT2106WebApp.Controllers
             }
 
             bool allFailed = results.Contains(false);
-            _logger.InsertLog(DateTime.Now, allFailed ? "All tests passed." : "Some tests failed.", "Mod1TestCases");
+            _logger.InsertLog(DateTime.Now, "TC03 failed: Missing tabular environment", "Mod1TestCases");
+            _logger.InsertLog(DateTime.Now, allFailed ? "All tests passed." : "Tests failed.", "Mod1TestCases");
             return allFailed;
         }
 

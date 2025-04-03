@@ -30,36 +30,54 @@ namespace ICT2106WebApp.mod1grp4
       var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
 
-      // Temporary JSON file for testing abstract node
-      string jsonFilePath = "./dummyTableNode.json";
-      string jsonData = await File.ReadAllTextAsync(jsonFilePath);
-      var abstractNodes = JsonSerializer.Deserialize<List<AbstractNode>>(jsonData);
+    // GROUP 4 STUFF (look at integrated if you want to compile)
+    // Step 1: Get abstract nodes of table from group 3
+    INodeTraverser traverser = new NodeTraverser(rootnodehere);
+    List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
 
-      
-      // Step 1: Convert abstract node to custom table entity
-      var tableOrganiser = new TableOrganiserManager();
-      List<Table> tablesFromNode = tableOrganiser.organiseTables(abstractNodes);
+    // Step 2: Convert abstract node to custom table entity (JOEL)
+    var tableOrganiser = new TableOrganiserManager();
+    List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
+        tableAbstractNodes
+    );
 
-      // // Step 2: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity)
-      var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
-      var tablePreprocessingManager = new TablePreprocessingManager();
-      tablePreprocessingManager.attach(rowTabularGateway_RDG);
-      var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
-      List<Table> cleanedTables = await tablePreprocessingManager.fixTableIntegrity(tables);
+    // Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
+    var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+    var tablePreprocessingManager = new TablePreprocessingManager();
+    tablePreprocessingManager.attach(rowTabularGateway_RDG);
+    var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
+    List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
+        await tablePreprocessingManager.fixTableIntegrity(tables);
 
-      // Step 3: Convert tables to LaTeX
-      var latexConversionManager = new TableLatexConversionManager();
-      latexConversionManager.attach(rowTabularGateway_RDG);
-      List<Table> processedTables = await latexConversionManager.convertToLatexAsync(cleanedTables);
+    // Step 4: Convert tables to LaTeX (ANDREA)
+    var latexConversionManager = new TableLatexConversionManager();
+    latexConversionManager.attach(rowTabularGateway_RDG);
 
-      // // Step 4: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over)
-      var tableValidationManager = new TableValidationManager();
-      var validationStatus = tableValidationManager.validateTableLatexOutput(abstractNodes, processedTables);
+    // NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
+    List<ICT2106WebApp.mod1grp4.Table> processedTables =
+        await latexConversionManager.convertToLatexAsync(cleanedTables);
 
-      var processedTableManager = new ProcessedTableManager();
-      processedTableManager.attach(rowTabularGateway_RDG);
-      processedTableManager.logProcessingStatus(validationStatus);
-      await processedTableManager.slotProcessedTableToTree(cleanedTables);
+    // JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
+    // List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
+    // Environment.Exit(0);
+
+    // HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
+    // List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexStyleFailAsync(cleanedTables);
+
+    // Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
+    var tableValidationManager = new TableValidationManager();
+    var validationStatus = tableValidationManager.validateTableLatexOutput(
+        tableAbstractNodes,
+        processedTables
+    );
+
+    var processedTableManager = new ProcessedTableManager();
+    processedTableManager.attach(rowTabularGateway_RDG);
+    processedTableManager.logProcessingStatus(validationStatus);
+    await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+
+    // Will prove for Siti as we traverse the nodes again after updating
+    List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
     }
   }
 }

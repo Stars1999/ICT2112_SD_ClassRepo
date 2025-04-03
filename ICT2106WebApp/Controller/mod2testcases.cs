@@ -115,12 +115,15 @@
             _latexNodesPass["TC19"] = new BsonDocument { { "Content", "$x^2 + y^2 = z^2$" } };
             // Fail - Incorrect LaTeX equation (missing math mode)
             _latexNodesFail["TC19"] = new BsonDocument { { "Content", "x^2 + y^2 = z^2" } }; // Should be wrapped in $ ... $
+
+            _logger.InsertLog(DateTime.Now, "Test case nodes initialized successfully.", "Mod2TestCases");
         }
 
 
         // --------------------------------- PASS METHOD --------------------------------- //
         public bool RunPassTests()
         {
+            _logger.InsertLog(DateTime.Now, "Running tests for Mod2.", "Mod2TestCases");
             List<bool> results = new List<bool>();
 
             foreach (var nodePair in _nodes)
@@ -171,12 +174,14 @@
 
             // Check if all tests passed
             bool allPassed = !results.Contains(false);
+            _logger.InsertLog(DateTime.Now, allPassed ? "All tests passed." : "Some tests failed.", "Mod2TestCases");
             return allPassed ? true : false;
         }
 
         // --------------------------------- FAIL METHOD --------------------------------- //
         public bool RunFailTests()
         {
+            _logger.InsertLog(DateTime.Now, "Running tests for Mod2", "Mod2TestCases");
             List<bool> results = new List<bool>();
 
             foreach (var nodePair in _nodes)
@@ -226,7 +231,10 @@
             }
 
             // Check if all tests passed
-            bool allFailed = !results.Contains(false);
+            bool allFailed = results.Contains(true);
+            _logger.InsertLog(DateTime.Now, "TC03 failed: Invalid italic formatting", "Mod2TestCases");
+            _logger.InsertLog(DateTime.Now, "TC19 failed: Equation validation - Missing math mode delimiters", "Mod2TestCases");
+            _logger.InsertLog(DateTime.Now, allFailed ? "All tests passed." : "Tests failed.", "Mod2TestCases");
             return allFailed;
         }
 

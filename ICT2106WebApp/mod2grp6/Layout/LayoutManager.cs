@@ -82,8 +82,29 @@ namespace ICT2106WebApp.mod2grp6.Layout
         {
             try
             {
-                // For simplicity, always return true if content exists
-                return content != null && content.Count > 0;
+                if (content == null || content.Count == 0)
+                    return false;
+
+                // Check for layout node with orientation information
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("Orientation"))
+                                {
+                                    // Return true regardless of orientation to apply orientation formatting
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
             }
             catch (Exception)
             {
@@ -111,7 +132,28 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 if (content == null || content.Count == 0)
                     return false;
 
-                // Check for alignment variations that might indicate columns
+                // First check for explicit column settings in layout nodes
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("ColumnNum"))
+                                {
+                                    // If ColumnNum is greater than 1, we need column formatting
+                                    if (Convert.ToInt32(style["ColumnNum"]) > 1)
+                                        return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Fallback to checking alignment as before
                 bool hasCenterAlign = false;
                 bool hasRightAlign = false;
 
@@ -156,8 +198,7 @@ namespace ICT2106WebApp.mod2grp6.Layout
             }
         }
 
-
-       public List<AbstractNode> ApplyLayoutFormatting()
+        public List<AbstractNode> ApplyLayoutFormatting()
         {
             // Create nodes for layout elements
             List<AbstractNode> layoutNodes = new List<AbstractNode>();
@@ -193,38 +234,147 @@ namespace ICT2106WebApp.mod2grp6.Layout
             // Add layout formatting nodes
             int nodeId = 4;
 
-            // Handle orientation separately
-            if (FormatOrientation())
-            {
-                // Add pdflscape package for landscape support
-                layoutNodes.Add(new SimpleNode(
-                    nodeId++,
-                    "package",
-                    "\\usepackage{pdflscape}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
-                ));
-                
-                // Use landscape environment - note: typically this would go around content
-                // but for this test we're just adding it as a command
-                layoutNodes.Add(new SimpleNode(
-                    nodeId++,
-                    "orientation",
-                    "\\begin{landscape}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
-                ));
-            }
-
-            // Combine remaining geometry options
+            // Combine geometry options
             List<string> geometryOptions = new List<string>();
             
-            if (FormatMargins())
+            // Handle orientation settings
+            if (FormatOrientation())
             {
-                geometryOptions.Add("margin=1in");
+                // Determine orientation type
+                string orientationType = "portrait"; // Default
+                
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("Orientation"))
+                                {
+                                    string orientation = style["Orientation"].ToString();
+                                    if (orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        orientationType = "landscape";
+                                        
+                                        // Add pdflscape package for landscape support
+                                        layoutNodes.Add(new SimpleNode(
+                                            nodeId++,
+                                            "package",
+                                            "\\usepackage{pdflscape}",
+                                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "package" } } }
+                                        ));
+                                        
+                                        // Use landscape environment
+                                        layoutNodes.Add(new SimpleNode(
+                                            nodeId++,
+                                            "orientation",
+                                            "\\begin{landscape}",
+                                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
+                                        ));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // Add orientation to geometry options
+                geometryOptions.Add(orientationType);
             }
             
+            // Format margins if needed
+            if (FormatMargins())
+            {
+                // Check for explicit margin settings in the content
+                bool foundMargins = false;
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("Margins") && style["Margins"] is Dictionary<string, object> margins)
+                                {
+                                    // Extract margin values
+                                    if (margins.ContainsKey("Top"))
+                                        geometryOptions.Add($"top={margins["Top"]}cm");
+                                    if (margins.ContainsKey("Bottom"))
+                                        geometryOptions.Add($"bottom={margins["Bottom"]}cm");
+                                    if (margins.ContainsKey("Left"))
+                                        geometryOptions.Add($"left={margins["Left"]}cm");
+                                    if (margins.ContainsKey("Right"))
+                                        geometryOptions.Add($"right={margins["Right"]}cm");
+                                    if (margins.ContainsKey("Header"))
+                                        geometryOptions.Add($"headheight={margins["Header"]}cm");
+                                    if (margins.ContainsKey("Footer"))
+                                        geometryOptions.Add($"footskip={margins["Footer"]}cm");
+                                    
+                                    foundMargins = true;
+                                    break;
+                                }
+                            }
+                            if (foundMargins) break;
+                        }
+                    }
+                }
+                
+                // Default to 1 inch margins if no specific margins found
+                if (!foundMargins)
+                {
+                    geometryOptions.Add("margin=1in");
+                }
+            }
+            
+            // Format page size if needed
             if (FormatPageSize())
             {
-                geometryOptions.Add("a4paper");
+                // Check for explicit page size in content
+                bool foundPageSize = false;
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("PageWidth") && style.ContainsKey("PageHeight"))
+                                {
+                                    // If dimensions are approximately A4 (21 x 29.7 cm)
+                                    double width = Convert.ToDouble(style["PageWidth"]);
+                                    double height = Convert.ToDouble(style["PageHeight"]);
+                                    
+                                    if (Math.Abs(width - 21) < 0.5 && Math.Abs(height - 29.7) < 0.5)
+                                    {
+                                        geometryOptions.Add("a4paper");
+                                    }
+                                    else
+                                    {
+                                        // Custom paper size in centimeters
+                                        geometryOptions.Add($"paperwidth={width}cm,paperheight={height}cm");
+                                    }
+                                    foundPageSize = true;
+                                    break;
+                                }
+                            }
+                            if (foundPageSize) break;
+                        }
+                    }
+                }
+                
+                // Default to a4paper if no specific size found
+                if (!foundPageSize)
+                {
+                    geometryOptions.Add("a4paper");
+                }
             }
             
             // If we have any geometry options, add the combined node
@@ -283,42 +433,111 @@ namespace ICT2106WebApp.mod2grp6.Layout
 
             if (FormatColumnNum())
             {
+                // Get the column count from the content if available
                 int columnCount = 2; // Default to 2 columns
-
-                if (FormatColumnSpacing())
+                foreach (var node in content)
                 {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("ColumnNum"))
+                                {
+                                    columnCount = Convert.ToInt32(style["ColumnNum"]);
+                                    // Ensure at least 1 column
+                                    if (columnCount < 1) columnCount = 1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Only add multicol commands if we have more than 1 column
+                if (columnCount > 1)
+                {
+                    if (FormatColumnSpacing())
+                    {
+                        // Get column spacing if available
+                        double columnSpacing = 0.5; // Default spacing in cm
+                        foreach (var node in content)
+                        {
+                            if (node.GetNodeType().Equals("layout"))
+                            {
+                                var styling = node.GetStyling();
+                                if (styling != null && styling.Count > 0)
+                                {
+                                    foreach (var style in styling)
+                                    {
+                                        if (style.ContainsKey("ColumnSpacing"))
+                                        {
+                                            columnSpacing = Convert.ToDouble(style["ColumnSpacing"]);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        layoutNodes.Add(new SimpleNode(
+                            nodeId++,
+                            "columnspacing",
+                            $"\\setlength{{\\columnsep}}{{{columnSpacing}cm}}",
+                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                        ));
+                    }
+
                     layoutNodes.Add(new SimpleNode(
                         nodeId++,
-                        "columnspacing",
-                        $"\\setlength{{\\columnsep}}{{0.5cm}}",
+                        "columnbegin",
+                        $"\\begin{{multicols}}{{{columnCount}}}",
+                        new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                    ));
+
+                    layoutNodes.Add(new SimpleNode(
+                        nodeId++,
+                        "columnend",
+                        "\\end{multicols}",
                         new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
                     ));
                 }
-
-                layoutNodes.Add(new SimpleNode(
-                    nodeId++,
-                    "columnbegin",
-                    $"\\begin{{multicols}}{{{columnCount}}}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-                ));
-
-                layoutNodes.Add(new SimpleNode(
-                    nodeId++,
-                    "columnend",
-                    "\\end{multicols}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-                ));
             }
 
             // Close landscape environment if it was opened
             if (FormatOrientation())
             {
-                layoutNodes.Add(new SimpleNode(
-                    nodeId++,
-                    "orientationEnd",
-                    "\\end{landscape}",
-                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
-                ));
+                // Check if we're using landscape orientation
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("Orientation"))
+                                {
+                                    string orientation = style["Orientation"].ToString();
+                                    if (orientation.Equals("Landscape", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        // Close landscape environment
+                                        layoutNodes.Add(new SimpleNode(
+                                            nodeId++,
+                                            "orientationEnd",
+                                            "\\end{landscape}",
+                                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "pdflscape" } } }
+                                        ));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             return layoutNodes;

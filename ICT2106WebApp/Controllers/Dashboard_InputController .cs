@@ -171,7 +171,7 @@ namespace ICT2106WebApp.Controllers
 
         // GET: /dashboard/runtestmod1
         [HttpGet("runtestmod1fail")]
-        public async Task<IActionResult> runCitationTest1Fail()
+        public async Task<IActionResult> runModTest1Fail()
         {
             CustomLogger logger = new LoggerGateway_TDG();
 
@@ -188,7 +188,7 @@ namespace ICT2106WebApp.Controllers
 
         // GET: /dashboard/runtestmod2
         [HttpGet("runtestmod2fail")]
-        public async Task<IActionResult> runCitationTest2Fail()
+        public async Task<IActionResult> runModTest2Fail()
         {
             CustomLogger logger = new LoggerGateway_TDG();
             var mod2Test = new mod2testcases(logger);
@@ -204,7 +204,7 @@ namespace ICT2106WebApp.Controllers
 
         // GET: /dashboard/runtestruntestmod3fail
         [HttpGet("runtestmod3fail")]
-        public async Task<IActionResult> RunCitationTest3Fail()
+        public async Task<IActionResult> RunModTest3Fail()
         {
             CustomLogger logger = new LoggerGateway_TDG();
             var mod3 = new Mod3TestCases(logger);
@@ -213,7 +213,7 @@ namespace ICT2106WebApp.Controllers
             bool result = await mod3.RunFailTests("APA");
 
             string resultMessage = result
-                ? "Test Failed: Some citations were not converted correctly."
+                ? "Some citations were not converted correctly."
                 : "Test Passed: All citations were correctly converted.";
 
             return Ok(new

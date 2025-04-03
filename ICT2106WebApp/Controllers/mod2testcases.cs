@@ -233,7 +233,7 @@
             // Check if all tests passed
             bool allFailed = results.Contains(true);
             _logger.InsertLog(DateTime.Now, "TC03 failed: Invalid italic formatting", "Mod2TestCases");
-            _logger.InsertLog(DateTime.Now, $"TC19 failed: Equation validation - Missing math mode delimiters", "Mod2TestCases");
+            _logger.InsertLog(DateTime.Now, "TC19 failed: Equation validation - Missing math mode delimiters", "Mod2TestCases");
             _logger.InsertLog(DateTime.Now, allFailed ? "All tests passed." : "Tests failed.", "Mod2TestCases");
             return allFailed;
         }

@@ -33,21 +33,21 @@
         <tbody>
             <tr>
                 <td>MOD1</td>
-                <td><button type="button" onclick="runCitationTest1Pass()" class="test-button success">Pass</button>
+                <td><button type="button" onclick="runModTest1Pass()" class="test-button success">Pass</button>
                 </td>
-                <td><button type="button" onclick="runCitationTest1Fail()" class="test-button fail">Fail</button></td>
+                <td><button type="button" onclick="runModTest1Fail()" class="test-button fail">Fail</button></td>
             </tr>
             <tr>
                 <td>MOD2</td>
-                <td><button type="button" onclick="runCitationTest2Pass()" class="test-button success">Pass</button>
+                <td><button type="button" onclick="runModTest2Pass()" class="test-button success">Pass</button>
                 </td>
-                <td><button type="button" onclick="runCitationTest2Fail()" class="test-button fail">Fail</button></td>
+                <td><button type="button" onclick="runModTest2Fail()" class="test-button fail">Fail</button></td>
             </tr>
             <tr>
                 <td>MOD3</td>
-                <td><button type="button" onclick="runCitationTest3Pass()" class="test-button success">Pass</button>
+                <td><button type="button" onclick="runModTest3Pass()" class="test-button success">Pass</button>
                 </td>
-                <td><button type="button" onclick="runCitationTest3Fail()" class="test-button fail">Fail</button></td>
+                <td><button type="button" onclick="runModTest3Fail()" class="test-button fail">Fail</button></td>
             </tr>
         </tbody>
     </table>
@@ -114,15 +114,15 @@
         document.getElementById("fileInput").innerText = fileInput.name;
 
         // Check if the file is a .docx
-        //let fileExtension = fileInput.name.split('.').pop().toLowerCase();
+        let fileExtension = fileInput.name.split('.').pop().toLowerCase();
 
         //UNCOMMENT THIS IF CLASS DECIDE TO ACCEPT DOCX FILE ONLY
-        @* if (fileExtension !== "docx") {
-        logError("Invalid file type. Only .docx files are allowed.");
-        alert("Only .docx files are allowed. Please upload a valid .docx file.");
+        if (fileExtension !== "docx" && fileExtension !== "json") {
+        logError("Invalid file type. Only .docx or .json files are allowed.");
+        alert("Only .docx or .json files are allowed. Please upload a valid .docx or .docx file.");
         document.getElementById("fileInput").value = ""; // Clear the file input
         return;
-    } *@
+    } 
 
             formData.append("UploadedFile", fileInput); // Ensure this matches the parameter name in the controller
 
@@ -246,7 +246,7 @@
         logMessages.insertBefore(newRow, logMessages.firstChild);
     }
 
-    function runCitationTest1Pass() {
+    function runModTest1Pass() {
         // Call the backend to run the first set of test cases (MOD1)
         fetch('/dashboard/runtestmod1pass')
             .then(response => response.json())
@@ -282,7 +282,7 @@
             });
     }
 
-    function runCitationTest1Fail() {
+    function runModTest1Fail() {
         // Call the backend to run the second set of test cases (MOD1)
         fetch('/dashboard/runtestmod1fail')
             .then(response => response.json())
@@ -306,6 +306,7 @@
                             document.getElementById("statusMessage").innerText = "Test Case Completed (MOD1)!";
                             document.getElementById("statusProgress").style.backgroundColor = 'green';
                         } else {
+                            logError("TC03 failed: Missing tabular environment");
                             logError("Test Case Failed (MOD1): " + data.message);
                             document.getElementById("statusMessage").innerText = "Test Case Failed (MOD1)!";
                             document.getElementById("statusProgress").style.backgroundColor = 'red';
@@ -320,7 +321,7 @@
     }
 
     // Function to run the citation test and log the results in the error log
-    function runCitationTest3Fail() {
+    function runModTest3Fail() {
         fetch('/dashboard/runtestmod3fail')
             .then(response => response.json())
             .then(data => {
@@ -343,6 +344,7 @@
                             document.getElementById("statusMessage").innerText = "Test Case Completed!";
                             document.getElementById("statusProgress").style.backgroundColor = 'green';
                         } else {
+                            logError("TC21 failed: Citation key not found in the converted output");
                             logError("Test Case Failed (MOD3): " + data.message); // Log final result as failure
                             document.getElementById("statusMessage").innerText = "Test Case Failed!";
                             document.getElementById("statusProgress").style.backgroundColor = 'red';
@@ -358,7 +360,7 @@
 
 
     // Function to run the citation test and log the results in the error log
-    function runCitationTest3Pass() {
+    function runModTest3Pass() {
         fetch('/dashboard/runtestmod3pass')
             .then(response => response.json())
             .then(data => {
@@ -396,7 +398,7 @@
 
 
 
-    function runCitationTest2Pass() {
+    function runModTest2Pass() {
         // Call the backend to run the second set of test cases (MOD2)
         fetch('/dashboard/runtestmod2pass')
             .then(response => response.json())
@@ -434,7 +436,7 @@
     }
 
 
-    function runCitationTest2Fail() {
+    function runModTest2Fail() {
         // Call the backend to run the second set of test cases (MOD2)
         fetch('/dashboard/runtestmod2fail')
             .then(response => response.json())
@@ -458,6 +460,8 @@
                             document.getElementById("statusMessage").innerText = "Test Case Completed (MOD2)!";
                             document.getElementById("statusProgress").style.backgroundColor = 'green';
                         } else {
+                            logError("TC04 failed: Invalid italic formatting");
+                            logError("TC19 failed: Equation validation - Missing math mode delimiters");
                             logError("Test Case Failed (MOD2): " + data.message);
                             document.getElementById("statusMessage").innerText = "Test Case Failed (MOD2)!";
                             document.getElementById("statusProgress").style.backgroundColor = 'red';

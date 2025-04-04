@@ -47,9 +47,9 @@ public class ImageProcessor : IProcessor
             ? Convert.ToInt32(styling.First()["HeightEMU"]) 
             : 12700;
 
-        // Convert EMU to pixels (1 EMU = 96 / 12700 pixels)
-        float widthInPixels = widthEMU * (96f / 12700f);
-        float heightInPixels = heightEMU * (96f / 12700f);
+        // Conversion: 1 cm = 360,000 EMUs
+        float widthInCm = widthEMU / 360000f;
+        float heightInCm = heightEMU / 360000f;
 
         // Handle horizontal and vertical offsets
         string horizontalOffset = GetHorizontalOffset(styling);
@@ -61,17 +61,17 @@ public class ImageProcessor : IProcessor
         // Add horizontal and vertical offsets before the image if they exist
         if (!string.IsNullOrEmpty(horizontalOffset))
         {
-           latexCommand += $@"\hspace*{{{horizontalOffset}}}";
+            latexCommand += $@"\hspace*{{{horizontalOffset}}}";
         }
         if (!string.IsNullOrEmpty(verticalOffset))
         {
             latexCommand += $@"\vspace*{{{verticalOffset}}}";
         }
 
-        latexCommand += $@"\{alignment}";
+        latexCommand += $"{alignment}";
 
-        // Add the image itself
-        latexCommand += $@"\includegraphics[width={widthInPixels}px,height={heightInPixels}px]{{{imageFileName}}}";
+        // Add the image itself, formatting width and height in cm with 2 decimal places
+        latexCommand += $@"\includegraphics[width={widthInCm:0.00}cm,height={heightInCm:0.00}cm]{{{imageFileName}}}";
 
         // Close the LaTeX figure environment
         latexCommand += @"\end{figure}";
@@ -87,18 +87,17 @@ public class ImageProcessor : IProcessor
             {
                 string alignment = alignmentObj.ToString();
                 if (alignment.Contains("Left"))
-                    return "raggedright";
+                    return @"\raggedright";
                 else if (alignment.Contains("Right"))
-                    return "raggedleft";
+                    return @"\raggedleft";
                 else if (alignment.Contains("Center"))
-                    return "centering";
-                    
+                    return @"\centering";
             }
         }
         return "";
     }
 
-   private string GetHorizontalOffset(List<Dictionary<string, object>> styling)
+    private string GetHorizontalOffset(List<Dictionary<string, object>> styling)
     {
         foreach (var style in styling)
         {
@@ -110,7 +109,7 @@ public class ImageProcessor : IProcessor
                 if (match.Success)
                 {
                     int offset = Convert.ToInt32(match.Groups[1].Value);
-                    return $"{offset * 0.007559}cm"; // Convert EMU to cm
+                    return $"{(offset / 360000f):0.00}cm"; // Convert EMU to cm and round to 2 decimal places
                 }
             }
         }
@@ -129,7 +128,7 @@ public class ImageProcessor : IProcessor
                 if (match.Success)
                 {
                     int offset = Convert.ToInt32(match.Groups[1].Value);
-                    return $"{offset * 0.007559}cm"; // Convert EMU to cm
+                    return $"{(offset / 360000f):0.00}cm"; // Convert EMU to cm and round to 2 decimal places
                 }
             }
         }

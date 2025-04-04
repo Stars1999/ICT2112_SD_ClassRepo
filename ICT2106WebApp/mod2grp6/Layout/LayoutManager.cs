@@ -170,11 +170,49 @@ namespace ICT2106WebApp.mod2grp6.Layout
             }
         }
 
+        // Get the page dimensions from the content
+        public (double Width, double Height) GetPageDimensions()
+        {
+            double defaultWidth = 21.0; // Default A4 width in cm
+            double defaultHeight = 29.7; // Default A4 height in cm
+
+            try
+            {
+                if (content == null || content.Count == 0)
+                    return (defaultWidth, defaultHeight);
+
+                foreach (var node in content)
+                {
+                    if (node.GetNodeType().Equals("layout"))
+                    {
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
+                        {
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("PageWidth") && style.ContainsKey("PageHeight"))
+                                {
+                                    double width = Convert.ToDouble(style["PageWidth"]);
+                                    double height = Convert.ToDouble(style["PageHeight"]);
+                                    return (width, height);
+                                }
+                            }
+                        }
+                    }
+                }
+                return (defaultWidth, defaultHeight);
+            }
+            catch (Exception)
+            {
+                return (defaultWidth, defaultHeight);
+            }
+        }
+
         public bool FormatPageSize()
         {
             try
             {
-                // For simplicity, always return true if content exists
+                // Always format page size if content exists
                 return content != null && content.Count > 0;
             }
             catch (Exception)
@@ -183,14 +221,14 @@ namespace ICT2106WebApp.mod2grp6.Layout
             }
         }
 
-        public bool FormatColumnNum()
+        // Get the column number setting from the content
+        public int GetColumnCount()
         {
             try
             {
                 if (content == null || content.Count == 0)
-                    return false;
+                    return 1; // Default to 1 column
 
-                // First check for explicit column settings in layout nodes
                 foreach (var node in content)
                 {
                     if (node.GetNodeType().Equals("layout"))
@@ -202,40 +240,60 @@ namespace ICT2106WebApp.mod2grp6.Layout
                             {
                                 if (style.ContainsKey("ColumnNum"))
                                 {
-                                    // If ColumnNum is greater than 1, we need column formatting
-                                    if (Convert.ToInt32(style["ColumnNum"]) > 1)
-                                        return true;
+                                    int columnCount = Convert.ToInt32(style["ColumnNum"]);
+                                    return columnCount > 0 ? columnCount : 1;
                                 }
                             }
                         }
                     }
                 }
+                return 1; // Default to 1 column if not specified
+            }
+            catch (Exception)
+            {
+                return 1; // Default to 1 column on error
+            }
+        }
 
-                // Fallback to checking alignment as before
-                bool hasCenterAlign = false;
-                bool hasRightAlign = false;
+        // Get the column spacing setting from the content
+        public double GetColumnSpacing()
+        {
+            try
+            {
+                if (content == null || content.Count == 0)
+                    return 0.5; // Default to 0.5 cm
 
                 foreach (var node in content)
                 {
-                    var styling = node.GetStyling();
-                    if (styling == null || styling.Count == 0)
-                        continue;
-
-                    foreach (var style in styling)
+                    if (node.GetNodeType().Equals("layout"))
                     {
-                        if (style.ContainsKey("Alignment"))
+                        var styling = node.GetStyling();
+                        if (styling != null && styling.Count > 0)
                         {
-                            string alignment = style["Alignment"].ToString().ToLower();
-                            if (alignment == "center")
-                                hasCenterAlign = true;
-                            else if (alignment == "right")
-                                hasRightAlign = true;
+                            foreach (var style in styling)
+                            {
+                                if (style.ContainsKey("ColumnSpacing"))
+                                {
+                                    return Convert.ToDouble(style["ColumnSpacing"]);
+                                }
+                            }
                         }
                     }
                 }
+                return 0.5; // Default to 0.5 cm if not specified
+            }
+            catch (Exception)
+            {
+                return 0.5; // Default to 0.5 cm on error
+            }
+        }
 
-                // If we have different alignments, we might need columns
-                return hasCenterAlign || hasRightAlign;
+        public bool FormatColumnNum()
+        {
+            try
+            {
+                // Always format column settings if content exists
+                return content != null && content.Count > 0;
             }
             catch (Exception)
             {
@@ -247,8 +305,8 @@ namespace ICT2106WebApp.mod2grp6.Layout
         {
             try
             {
-                // Only apply column spacing if we're using columns
-                return FormatColumnNum();
+                // Format column spacing if column count > 1
+                return FormatColumnNum() && GetColumnCount() > 1;
             }
             catch (Exception)
             {
@@ -279,7 +337,8 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 ));
             }
 
-            if (FormatColumnNum())
+            int columnCount = GetColumnCount();
+            if (columnCount > 1)
             {
                 layoutNodes.Add(new SimpleNode(
                     3,
@@ -323,8 +382,23 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 geometryOptions.Add("portrait");
             }
 
-            // Additional geometry options will be added below
+            // Add page dimensions
+            if (FormatPageSize())
+            {
+                var (width, height) = GetPageDimensions();
+                
+                // Always include explicit dimensions
+                geometryOptions.Add($"paperwidth={width}cm");
+                geometryOptions.Add($"paperheight={height}cm");
+                
+                // Also add a4paper if dimensions match A4
+                if (Math.Abs(width - 21) < 0.5 && Math.Abs(height - 29.7) < 0.5)
+                {
+                    geometryOptions.Add("a4paper");
+                }
+            }
             
+            // Process margins
             if (FormatMargins())
             {
                 // Check for explicit margin settings in the content
@@ -370,50 +444,6 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 }
             }
             
-            if (FormatPageSize())
-            {
-                // Check for explicit page size in content
-                bool foundPageSize = false;
-                foreach (var node in content)
-                {
-                    if (node.GetNodeType().Equals("layout"))
-                    {
-                        var styling = node.GetStyling();
-                        if (styling != null && styling.Count > 0)
-                        {
-                            foreach (var style in styling)
-                            {
-                                if (style.ContainsKey("PageWidth") && style.ContainsKey("PageHeight"))
-                                {
-                                    // If dimensions are approximately A4 (21 x 29.7 cm)
-                                    double width = Convert.ToDouble(style["PageWidth"]);
-                                    double height = Convert.ToDouble(style["PageHeight"]);
-                                    
-                                    if (Math.Abs(width - 21) < 0.5 && Math.Abs(height - 29.7) < 0.5)
-                                    {
-                                        geometryOptions.Add("a4paper");
-                                    }
-                                    else
-                                    {
-                                        // Custom paper size in centimeters
-                                        geometryOptions.Add($"paperwidth={width}cm,paperheight={height}cm");
-                                    }
-                                    foundPageSize = true;
-                                    break;
-                                }
-                            }
-                            if (foundPageSize) break;
-                        }
-                    }
-                }
-                
-                // Default to a4paper if no specific size found
-                if (!foundPageSize)
-                {
-                    geometryOptions.Add("a4paper");
-                }
-            }
-            
             // If we have any geometry options, add the combined node
             if (geometryOptions.Count > 0)
             {
@@ -425,6 +455,7 @@ namespace ICT2106WebApp.mod2grp6.Layout
                     new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "geometry" } } }
                 ));
             }
+
 
             if (FormatHeaders())
             {
@@ -556,79 +587,31 @@ namespace ICT2106WebApp.mod2grp6.Layout
                 ));
             }
 
-            if (FormatColumnNum())
+            // Handle column layout if more than 1 column
+            if (columnCount > 1)
             {
-                // Get the column count from the content if available
-                int columnCount = 2; // Default to 2 columns
-                foreach (var node in content)
-                {
-                    if (node.GetNodeType().Equals("layout"))
-                    {
-                        var styling = node.GetStyling();
-                        if (styling != null && styling.Count > 0)
-                        {
-                            foreach (var style in styling)
-                            {
-                                if (style.ContainsKey("ColumnNum"))
-                                {
-                                    columnCount = Convert.ToInt32(style["ColumnNum"]);
-                                    // Ensure at least 1 column
-                                    if (columnCount < 1) columnCount = 1;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+                double columnSpacing = GetColumnSpacing();
+                
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "columnspacing",
+                    $"\\setlength{{\\columnsep}}{{{columnSpacing}cm}}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                ));
 
-                // Only add multicol commands if we have more than 1 column
-                if (columnCount > 1)
-                {
-                    if (FormatColumnSpacing())
-                    {
-                        // Get column spacing if available
-                        double columnSpacing = 0.5; // Default spacing in cm
-                        foreach (var node in content)
-                        {
-                            if (node.GetNodeType().Equals("layout"))
-                            {
-                                var styling = node.GetStyling();
-                                if (styling != null && styling.Count > 0)
-                                {
-                                    foreach (var style in styling)
-                                    {
-                                        if (style.ContainsKey("ColumnSpacing"))
-                                        {
-                                            columnSpacing = Convert.ToDouble(style["ColumnSpacing"]);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        layoutNodes.Add(new SimpleNode(
-                            nodeId++,
-                            "columnspacing",
-                            $"\\setlength{{\\columnsep}}{{{columnSpacing}cm}}",
-                            new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-                        ));
-                    }
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "columnbegin",
+                    $"\\begin{{multicols}}{{{columnCount}}}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                ));
 
-                    layoutNodes.Add(new SimpleNode(
-                        nodeId++,
-                        "columnbegin",
-                        $"\\begin{{multicols}}{{{columnCount}}}",
-                        new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-                    ));
-
-                    layoutNodes.Add(new SimpleNode(
-                        nodeId++,
-                        "columnend",
-                        "\\end{multicols}",
-                        new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
-                    ));
-                }
+                layoutNodes.Add(new SimpleNode(
+                    nodeId++,
+                    "columnend",
+                    "\\end{multicols}",
+                    new List<Dictionary<string, object>> { new Dictionary<string, object> { { "command", "multicol" } } }
+                ));
             }
 
             // Close landscape environment if it was opened

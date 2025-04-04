@@ -12,8 +12,8 @@ namespace ICT2106WebApp.mod1Grp3
 		public NodeTraverser(CompositeNode rootNode)
 		{
 			_rootNode = rootNode;
-			_QueryUpdate = (IQueryUpdate)new DocumentGateway_RDG(); //idk
-			_QueryUpdate.queryUpdate = this; //idk
+			_QueryUpdate = (IQueryUpdate)new DocumentGateway_RDG(); 
+			_QueryUpdate.queryUpdate = this; 
 		}
 
 		// Define grouped node types
@@ -76,17 +76,17 @@ namespace ICT2106WebApp.mod1Grp3
 			},
 		};
 
-		// NODETYPE LIST (for reference)
-		// metadata (not avaliable)
-		// headers: h1, h2, h3
-		// layouts: layout, page_break
-		// lists: bulleted_list, hollow_bulleted_list, square_bulleted_list, diamond_bulleted_list, arrow_bulleted_list, checkmark_bulleted_list, dash_bulleted_list, numbered_list, numbered_parenthesis_list, roman_numeral_list, lowercase_roman_numeral_list, uppercase_lettered_list, lowercase_lettered_list, lowercase_lettered_parenthesis_list
-		// paragraphs: paragraph, paragraph_run?, empty_paragraph1
-		// table : table, cell, row
-		// citationAndbibliographys: bibliography, citation_run, intext-citation
-		// text_run
-		// Image
-		// math
+		/*NODETYPE LIST (for reference)
+		metadata (not avaliable)
+		headers: h1, h2, h3
+		layouts: layout, page_break
+		lists: bulleted_list, hollow_bulleted_list, square_bulleted_list, diamond_bulleted_list, arrow_bulleted_list, checkmark_bulleted_list, dash_bulleted_list, numbered_list, numbered_parenthesis_list, roman_numeral_list, lowercase_roman_numeral_list, uppercase_lettered_list, lowercase_lettered_list, lowercase_lettered_parenthesis_list
+		paragraphs: paragraph, paragraph_run?, empty_paragraph1
+		table : table, cell, row
+		citationAndbibliographys: bibliography, citation_run, intext-citation
+		text_run
+		Image
+		math*/
 
 		public List<AbstractNode> TraverseNode(string nodeType)
 		{

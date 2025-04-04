@@ -258,16 +258,20 @@ public static class DocumentProcessor
 				Console.WriteLine("Invalid tree structure detected.");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+			
+			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
+			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 
-			// GROUP 4 STUFF
-			// INodeTraverser traverser = new NodeTraverser(rootnodehere);
+			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
+
+			INodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// Save modified latex tree back to MongoDB (query)
 			await traverser.UpdateLatexDocument(rootnodehere);
 
 			ICompletedLatex completedLatex = new CompletedLatex();
 
 			// // Retrieve the non-modified tree from MongoDB (for demo query)
-			// AbstractNode originalRootNode = await completedLatex.RetrieveTree();
+			AbstractNode originalRootNode = await completedLatex.RetrieveTree();
 			// CompositeNode originalMongo = null;
 
 			// if (originalRootNode is CompositeNode originalNode) // Use pattern matching
@@ -281,22 +285,22 @@ public static class DocumentProcessor
 			// }
 			// if (originalMongo != null)
 			// {
-			// 	treeProcessor.PrintTree(originalMongo,0);
+			// 	treeProcessor.PrintTreeContents(originalMongo);
+			// 	treeProcessor.PrintTreeHierarchy(originalMongo, 0);
 			// }
 
 
 			//Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
-			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
+			CompositeNode latexMongo = null;
 
-			if (latexRootNode is CompositeNode latexNode) // Use pattern matching
+			if (latexRootNode is CompositeNode latexNode) 
 			{
-				//Console.WriteLine("Latex Tree retrieved!");
 				latexMongo = latexNode; // Assign to compNode
 			}
 			else
 			{
-				//Console.WriteLine("Latex Tree not retrieved!");
+				Console.WriteLine("Latex Tree not retrieved!");
 			}
 			// Print the tree
 			if (latexMongo != null)
@@ -304,29 +308,6 @@ public static class DocumentProcessor
 				treeProcessor.PrintTreeContents(latexMongo);
 				treeProcessor.PrintTreeHierarchy(latexMongo, 0);
 			}
-
-			// foreach (var tableNode in tableAbstractNodes)
-			// {
-			// 	if (tableNode.GetNodeType() == "table")
-			// 	{
-			// 		Console.WriteLine($"Table Node Content: {tableNode.GetContent()}");
-			// 	}
-			// }
-
-			// // Print tablesFromNode
-			// foreach (var table in tablesFromNode)
-			// {
-			// 	Console.WriteLine($"{table.tableId}");
-			// 	Console.WriteLine($"{table.latexOutput}");
-			// 	foreach (var row in table.rows)
-			// 	{
-			// 		foreach (var cell in row.cells)
-			// 		{
-			// 			Console.WriteLine($"Cell content: {cell.content}");
-			// 			Console.WriteLine($"Cell Styling: {cell.styling}");
-			// 		}
-			// 	}
-			// }
 		}
 	}
 }

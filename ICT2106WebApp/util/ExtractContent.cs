@@ -16,6 +16,7 @@ namespace Utilities
 {
 	public static partial class ExtractContent
 	{
+		// for styling
 		public static string GetRunFontType(
 			Run run,
 			Paragraph paragraph,
@@ -72,6 +73,7 @@ namespace Utilities
 			return runFontType;
 		}
 
+		// Get list type
 		private static string GetListType(Paragraph paragraph)
 		{
 			var numberingProps = paragraph.ParagraphProperties?.NumberingProperties;
@@ -125,6 +127,7 @@ namespace Utilities
 			return listType;
 		}
 
+		// extracting paragraph
 		public static Dictionary<string, object> ExtractParagraph(
 			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph,
 			WordprocessingDocument doc,

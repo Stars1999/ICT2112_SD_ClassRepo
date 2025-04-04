@@ -166,8 +166,8 @@ namespace Utilities
 				}
 				else if (element is DocumentFormat.OpenXml.Wordprocessing.Table table)
 				{
-					Console.WriteLine("📝 Extracting Table by another modue");
-					// elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
+					// Console.WriteLine("📝 Extracting Table by another modue");
+					elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
 				}
 			}
 			return elements;

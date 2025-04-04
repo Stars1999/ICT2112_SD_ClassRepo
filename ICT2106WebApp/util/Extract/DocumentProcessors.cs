@@ -35,6 +35,14 @@ using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 namespace Utilities
 {
 	public class DocumentProcessors
+		:
+		// Iapi,
+		// iCreateNode,
+		// iDocument, // not sure if it there is such interface
+			// IDocumentRetrieve // iDocumentRetrival,
+			// iDocumentUpdate,
+			// iDocumentUpdateNotify,
+		// iLogger
 	{
 		private static readonly string jsonOutputPath = "output.json";
 		private static readonly string filePath = "Datarepository_zx_v4.docx";

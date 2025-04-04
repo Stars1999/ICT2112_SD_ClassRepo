@@ -2,7 +2,7 @@
 
 ## Group Instructions
 
-- **For Group 1 Mod 3** please access the `<Insert Branch Name>`
+- **For Group 1 Mod 3** please access the `Mod3-Grp2` Branch
 - **For Group 2 Mod 2** please access the `<Insert Branch Name>`
 - **For Group 3 Mod 1** please access the `Mod1-Grp3`
 - **For Group 4 Mod 1** please access the `Mod1-Grp4`

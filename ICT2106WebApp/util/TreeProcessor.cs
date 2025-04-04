@@ -1,4 +1,5 @@
 using System.Reflection.Metadata;
+using System.Text;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 
@@ -38,13 +39,17 @@ namespace Utilities
 
 			foreach (AbstractNode node in sequentialList)
 			{
-				if (node.GetNodeType() == "root")
+				Dictionary<string, object> nodeData = node.GetNodeData("TreeCreation");
+				string nodeType = nodeData["nodeType"].ToString();
+				int nodeLevel = (int) nodeData["nodeLevel"];
+				
+				if (nodeType == "root")
 				{
 					continue;
 				}
 
-				int currentNodeLevel = node.GetNodeLevel();
-				int currentCompositeNodeLevel = ((CompositeNode)nodeStack.Peek()).GetNodeLevel();
+				int currentNodeLevel = nodeLevel;
+				int currentCompositeNodeLevel = (int) ((CompositeNode)nodeStack.Peek()).GetNodeData("Peek")["nodeLevel"];
 
 				// Set level of runs to be +1 of runsParagraph
 				// if (node.GetNodeType() == "text_run")
@@ -71,9 +76,9 @@ namespace Utilities
 					while (currentNodeLevel <= currentCompositeNodeLevel)
 					{
 						nodeStack.Pop();
-						currentCompositeNodeLevel = (
+						currentCompositeNodeLevel = (int) (
 							(CompositeNode)nodeStack.Peek()
-						).GetNodeLevel();
+						).GetNodeData("Peek")["nodeLevel"];
 					}
 					((CompositeNode)nodeStack.Peek()).AddChild(node);
 					nodeStack.Push(node);
@@ -255,8 +260,9 @@ namespace Utilities
 			string jsonContent
 		)
 		{
-			string treeType = treeNode.GetNodeType();
-			string treeContent = treeNode.GetContent();
+			Dictionary<string, object> nodeData = treeNode.GetNodeData("ContentValidation");
+			string treeType = nodeData["nodeType"].ToString();
+			string treeContent = nodeData["content"].ToString();
 
 			if (treeType != jsonType || treeContent != jsonContent)
 			{
@@ -282,15 +288,16 @@ namespace Utilities
 			return jsonItem["content"]?.ToString() ?? "";
 		}
 
-		public bool ValidateNodeStructure(AbstractNode node, int parentLevel)
+		public bool ValidateTreeStructure(AbstractNode node, int parentLevel)
 		{
-			int nodeLevel = node.GetNodeLevel(); // Get the level of the current node
+			Dictionary<string, object> nodeData = node.GetNodeData("TreeStructureValidation");
+			int nodeLevel = (int) nodeData["nodeLevel"]; // Get the level of the current node
 			int expectedLevel = parentLevel + 1; // Expected level based on parent
 
 			if (nodeLevel < expectedLevel && nodeLevel != -1)
 			{
 				Console.WriteLine(
-					$"Structural error: '{node.GetNodeType()}' at level {nodeLevel}, expected {expectedLevel}."
+					$"Structural error: '{nodeData["nodeType"]}' at level {nodeLevel}, expected {expectedLevel}."
 				);
 				return false;
 			}
@@ -300,19 +307,20 @@ namespace Utilities
 			{
 				foreach (var child in compositeNode.GetChildren())
 				{
-					if (!ValidateNodeStructure(child, nodeLevel)) // Pass current node level as parentLevel
+					if (!ValidateTreeStructure(child, nodeLevel)) // Pass current node level as parentLevel
 						return false;
 				}
 			}
 			return true;
 		}
 
-		// Recursive method to print the tree hierarchy
-		public void PrintTree(AbstractNode node, int level)
+		// Recursive method to print the tree contents
+		public void PrintTreeContents(AbstractNode node)
 		{
+			Dictionary<string, object> nodeData = node.GetNodeData("TreePrint");
 			// Print the node's content (could be its type or content)
 			// var nodeStyles = node.GetStyling();
-			var result = node.GetStyling(); // This returns List<Dictionary<string, object>>
+			List<Dictionary<string, object>> result = (List<Dictionary<string, object>>) nodeData["styling"]; // This returns List<Dictionary<string, object>>
 			string consolidatedStyling = "";
 
 			// Loop through each dictionary in the list
@@ -326,13 +334,13 @@ namespace Utilities
 			}
 
 			Console.WriteLine(
-				new string(' ', level * 2)
+				new string(' ', 1)
 					+ "\nNode ID: "
-					+ node.GetNodeId()
+					+ nodeData["nodeId"]
 					+ "\nNode Type: "
-					+ node.GetNodeType()
+					+ nodeData["nodeType"]
 					+ "\nContent: "
-					+ node.GetContent()
+					+ nodeData["content"]
 					+ "\nStyling: "
 					+ consolidatedStyling
 			);
@@ -342,7 +350,56 @@ namespace Utilities
 				// Recursively print children of composite nodes
 				foreach (var child in compositeNode.GetChildren())
 				{
-					PrintTree(child, level + 1);
+					PrintTreeContents(child);
+				}
+			}
+		}
+
+		// Recursive method to print the tree hierarchy
+		public void PrintTreeHierarchy(AbstractNode node, int level, bool isLastChild = true, List<bool> isLastChildHistory = null)
+		{
+			// Initialize history tracking for the first call
+			if (isLastChildHistory == null)
+				isLastChildHistory = new List<bool>();
+				
+			Dictionary<string, object> nodeData = node.GetNodeData("TreePrint");
+			
+			// Build the prefix based on the hierarchy history
+			StringBuilder prefix = new StringBuilder();
+			
+			// Add appropriate symbols based on history of last children
+			for (int i = 0; i < level; i++)
+			{
+				if (i == level - 1)
+				{
+					// For the current level
+					prefix.Append(isLastChild ? "└── " : "├── ");
+				}
+				else
+				{
+					// For parent levels
+					prefix.Append(isLastChildHistory.Count > i && !isLastChildHistory[i] ? "│   " : "    ");
+				}
+			}
+			
+			// Print the current node
+			Console.WriteLine(prefix + "Node ID: " + nodeData["nodeId"] + ", Node Type: " + nodeData["nodeType"]);
+			
+			// If this is a composite node, print its children
+			if (node is CompositeNode compositeNode)
+			{
+				var children = compositeNode.GetChildren().ToList();
+				
+				// Track the last child status in history for child nodes
+				List<bool> childHistory = new List<bool>(isLastChildHistory);
+				while (childHistory.Count < level)
+					childHistory.Add(isLastChild);
+					
+				// Process each child
+				for (int i = 0; i < children.Count; i++)
+				{
+					bool childIsLast = (i == children.Count - 1);
+					PrintTreeHierarchy(children[i], level + 1, childIsLast, childHistory);
 				}
 			}
 		}

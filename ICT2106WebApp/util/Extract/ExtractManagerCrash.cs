@@ -678,16 +678,18 @@ namespace Utilities
 					Console.Write(nodeNum);
 					Console.Write("\n");
 
-					var thetypehere = nodeInList.GetNodeType();
+					Dictionary<string, object> nodeData = nodeInList.GetNodeData("NodeInfo");
+
+					var thetypehere = nodeData["nodeType"].ToString();
 					Console.WriteLine($"type:{thetypehere}");
 
-					var thelevelhere = nodeInList.GetNodeLevel();
+					var thelevelhere = nodeData["nodeLevel"].ToString();
 					Console.WriteLine($"level:{thelevelhere}");
 
-					var thecontenthere = nodeInList.GetContent();
+					var thecontenthere = nodeData["content"].ToString();
 					Console.WriteLine($"content:{thecontenthere}");
 
-					var thestylinghere = nodeInList.GetStyling();
+					var thestylinghere = nodeData["styling"] as List<Dictionary<string, object>>;
 					string consolidatedStyling = "";
 					foreach (var dict in thestylinghere)
 					{

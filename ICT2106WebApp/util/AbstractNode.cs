@@ -55,20 +55,23 @@ namespace Utilities
 			SetConverted(false);
 		}
 
-		// Abstract Methods
-		public abstract int GetNodeId();
-		public abstract int GetNodeLevel();
-		public abstract string GetNodeType();
-		public abstract string GetContent();
-		public abstract List<Dictionary<string, object>> GetStyling();
-		public abstract bool IsConverted();
+		// Abstract Getters
+		protected abstract int GetNodeId();
+		protected abstract int GetNodeLevel();
+		protected abstract string GetNodeType();
+		protected abstract string GetContent();
+		protected abstract List<Dictionary<string, object>> GetStyling();
+		protected abstract bool IsConverted();
 
 		// Abstract Setters
-		internal abstract void SetNodeId(int id);
-		internal abstract void SetNodeLevel(int nl);
-		internal abstract void SetNodeType(string nodeType);
-		public abstract void SetContent(string content);
-		public abstract void SetStyling(List<Dictionary<string, object>> styling);
-		public abstract void SetConverted(bool converted);
+		protected abstract void SetNodeId(int id);
+		protected abstract void SetNodeLevel(int nl);
+		protected abstract void SetNodeType(string nodeType);
+		protected abstract void SetContent(string content);
+		protected abstract void SetStyling(List<Dictionary<string, object>> styling);
+		protected abstract void SetConverted(bool converted);
+
+		// Abstract methods
+		public abstract Dictionary<string, object> GetNodeData(string purpose);
 	}
 }

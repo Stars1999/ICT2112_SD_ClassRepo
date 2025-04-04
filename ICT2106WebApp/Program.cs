@@ -197,8 +197,10 @@ public static class DocumentProcessor
 
 			var defaultColor = Console.ForegroundColor;
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
-			Console.WriteLine("\n\n############################## \nPrint Tree\n\n");
-			treeProcessor.PrintTree(rootnodehere, 0);
+			Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
+			treeProcessor.PrintTreeContents(rootnodehere);
+			Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
+			treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
 			Console.ForegroundColor = defaultColor;
 
 			// SAVE TREE TO MONGODB
@@ -221,7 +223,8 @@ public static class DocumentProcessor
 				// Console.WriteLine("Print out tree. Commented out for now\n");
 
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				treeProcessor.PrintTree(mongoCompNode, 0);
+				treeProcessor.PrintTreeContents(mongoCompNode);
+				treeProcessor.PrintTreeHierarchy(mongoCompNode, 0);
 				Console.ForegroundColor = defaultColor;
 			}
 			// END TREE
@@ -246,7 +249,7 @@ public static class DocumentProcessor
 				Console.WriteLine("Content mismatch detected!");
 			}
 
-			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
+			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
 
 			// Output validation result
 			if (isValidStructure)
@@ -298,7 +301,8 @@ public static class DocumentProcessor
 			// Print the tree
 			if (latexMongo != null)
 			{
-				treeProcessor.PrintTree(latexMongo, 0);
+				treeProcessor.PrintTreeContents(latexMongo);
+				treeProcessor.PrintTreeHierarchy(latexMongo, 0);
 			}
 
 			// foreach (var tableNode in tableAbstractNodes)

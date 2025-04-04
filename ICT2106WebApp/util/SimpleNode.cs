@@ -5,64 +5,114 @@ namespace Utilities
 		public SimpleNode(int id, int nl, string nt, string c, List<Dictionary<string, object>> s)
 			: base(id, nl, nt, c, s) { }
 
-		public override int GetNodeId()
+		protected override int GetNodeId()
 		{
 			return nodeId;
 		}
 
-		public override int GetNodeLevel()
+		protected override int GetNodeLevel()
 		{
 			return nodeLevel;
 		}
 
-		public override string GetNodeType()
+		protected override string GetNodeType()
 		{
 			return nodeType;
 		}
 
-		public override string GetContent()
+		protected override string GetContent()
 		{
 			return content;
 		}
 
-		public override List<Dictionary<string, object>> GetStyling()
+		protected override List<Dictionary<string, object>> GetStyling()
 		{
 			return styling;
 		}
 
-		public override bool IsConverted()
+		protected override bool IsConverted()
 		{
 			return converted;
 		}
 
-		internal override void SetNodeId(int id)
+		protected override void SetNodeId(int id)
 		{
 			nodeId = id;
 		}
 
-		internal override void SetNodeLevel(int nl)
+		protected override void SetNodeLevel(int nl)
 		{
 			nodeLevel = nl;
 		}
 
-		internal override void SetNodeType(string nt)
+		protected override void SetNodeType(string nt)
 		{
 			nodeType = nt;
 		}
 
-		public override void SetContent(string c)
+		protected override void SetContent(string c)
 		{
 			content = c;
 		}
 
-		public override void SetStyling(List<Dictionary<string, object>> s)
+		protected override void SetStyling(List<Dictionary<string, object>> s)
 		{
 			styling = s;
 		}
 
-		public override void SetConverted(bool c)
+		protected override void SetConverted(bool c)
 		{
 			converted = c;
+		}
+
+		public override Dictionary<string, object> GetNodeData(string purpose)
+		{
+			switch (purpose.ToLower())
+			{
+				case "treecreation":
+					return new Dictionary<string, object>
+					{
+						{ "nodeLevel", GetNodeLevel() },
+						{ "nodeType", GetNodeType() }
+					};
+				case "contentvalidation":
+					return new Dictionary<string, object>
+					{
+						{ "nodeType", GetNodeType() },
+						{ "content", GetContent() }
+					};
+				case "treestructurevalidation":
+					return new Dictionary<string, object>
+					{
+						{ "nodeLevel", GetNodeLevel() },
+						{ "nodeType", GetNodeType() }
+					};
+				case "treeprint":
+					return new Dictionary<string, object>
+					{
+						{ "nodeId", GetNodeId() },
+						{ "nodeType", GetNodeType() },
+						{ "content", GetContent() },
+						{ "styling", GetStyling() }
+					};
+				case "nodetraversal":
+					return new Dictionary<string, object>
+					{
+						{ "nodeType", GetNodeType() }
+					};
+				case "nodeinfo":
+					return new Dictionary<string, object>
+					{
+						{ "nodeId", GetNodeId() },
+						{ "nodeLevel", GetNodeLevel() },
+						{ "nodeType", GetNodeType() },
+						{ "content", GetContent() },
+						{ "styling", GetStyling() },
+						{ "converted", IsConverted() }
+					};
+				default:
+					throw new ArgumentException("Invalid purpose specified.");
+			}
 		}
 	}
 }

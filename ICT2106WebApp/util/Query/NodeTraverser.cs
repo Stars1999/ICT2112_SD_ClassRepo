@@ -101,12 +101,14 @@ namespace ICT2106WebApp.mod1Grp3
 				List<AbstractNode> matchingNodes
 			)
 			{
+				Dictionary<string, object> nodeData = node.GetNodeData("NodeTraversal");
+				string nt = nodeData["nodeType"].ToString();
 				// Check if current node matches the type
 				if (
-					node.GetNodeType() == nodeType
+					nt == nodeType
 					|| (
 						nodeTypeGroups.ContainsKey(nodeType)
-						&& nodeTypeGroups[nodeType].Contains(node.GetNodeType())
+						&& nodeTypeGroups[nodeType].Contains(nt)
 					)
 				)
 				{
@@ -134,8 +136,9 @@ namespace ICT2106WebApp.mod1Grp3
 
 			foreach (var node in matchingNodesList)
 			{
+				Dictionary<string, object> nodeData = node.GetNodeData("NodeInfo");
 				Console.WriteLine(
-					$"Matching Node: ID={node.GetNodeId()} \nType={node.GetNodeType()} \nContent={node.GetContent()} \nstyling={JsonConvert.SerializeObject(node.GetStyling())} \nconverted={node.IsConverted()} \n"
+					$"Matching Node: ID={nodeData["nodeId"]} \nType={nodeData["nodeType"]} \nContent={nodeData["content"]} \nstyling={JsonConvert.SerializeObject(nodeData["styling"])} \nconverted={nodeData["converted"]} \n"
 				);
 			}
 			Console.WriteLine(matchingNodesList.Count + " nodes found of type " + nodeType);
@@ -168,7 +171,7 @@ namespace ICT2106WebApp.mod1Grp3
 				foreach (var group in nodeTypeGroups)
 				{
 					// If the node type matches any of the types in the group, add it to the list
-					if (group.Value.Contains(node.GetNodeType()) || group.Key == "allNodes")
+					if (group.Value.Contains(node.GetNodeData("NodeTraversal")["nodeType"]) || group.Key == "allNodes")
 					{
 						matchingNodes.Add(node);
 						break;
@@ -213,7 +216,7 @@ namespace ICT2106WebApp.mod1Grp3
 				// Group nodes by their corresponding group name
 				foreach (var node in nodes)
 				{
-					string nodeType = node.GetNodeType();
+					string nodeType = node.GetNodeData("NodeTraversal")["nodeType"].ToString();
 					string groupKey = nodeTypeGroups
 						.FirstOrDefault(g => g.Value.Contains(nodeType))
 						.Key;
@@ -245,11 +248,12 @@ namespace ICT2106WebApp.mod1Grp3
 
 					foreach (var node in nodeList)
 					{
-						var nodeId = node.GetNodeId();
-						var nodeLevel = node.GetNodeLevel();
-						var nodeType = node.GetNodeType();
-						var nodeContent = node.GetContent();
-						var nodeStyling = JsonConvert.SerializeObject(node.GetStyling());
+						Dictionary<string, object> nodeData = node.GetNodeData("NodeInfo");
+						var nodeId = nodeData["nodeId"];
+						var nodeLevel = nodeData["nodeLevel"];
+						var nodeType = nodeData["nodeType"];
+						var nodeContent = nodeData["content"];
+						var nodeStyling = JsonConvert.SerializeObject(nodeData["styling"]);
 
 						if (nodeType == "image")
 						{

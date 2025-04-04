@@ -7,20 +7,6 @@ namespace Utilities
 {
 	public class TreeProcessor : ITreeUpdateNotify
 	{
-		// private List<string> nodeOrder = new List<string>
-		// {
-		// 	"root",
-		// 	"h1",
-		// 	"h2",
-		// 	"h3",
-		// 	"h4",
-		// 	"h5",
-		// 	"h6",
-		// 	"table",
-		// 	"row",
-		// 	"runsParagraph",
-		// };
-		// Save Tree to Database
 		private readonly ITreeUpdate _treeUpdate;
 
 		public TreeProcessor()
@@ -31,6 +17,7 @@ namespace Utilities
 			// _docxRetrieve.docxRetrieve = this;
 		}
 
+		// Method to create relational tree using nodes
 		public CompositeNode CreateTree(List<AbstractNode> sequentialList)
 		{
 			Stack<AbstractNode> nodeStack = new Stack<AbstractNode>();
@@ -51,17 +38,6 @@ namespace Utilities
 				int currentNodeLevel = nodeLevel;
 				int currentCompositeNodeLevel = (int)
 					((CompositeNode)nodeStack.Peek()).GetNodeData("Peek")["nodeLevel"];
-
-				// Set level of runs to be +1 of runsParagraph
-				// if (node.GetNodeType() == "text_run")
-				// {
-				// 	currentNodeLevel = nodeOrder.IndexOf("runsParagraph") + 1;
-				// }
-
-				// if (node.GetNodeType() == "cell")
-				// {
-				// 	currentNodeLevel = nodeOrder.IndexOf("row") + 1;
-				// }
 
 				if (currentNodeLevel == -1)
 				{
@@ -87,6 +63,7 @@ namespace Utilities
 			return (CompositeNode)rootNode;
 		}
 
+		// Method to save relational tree to database
 		public async Task SaveTreeToDatabase(AbstractNode rootNode, string collectionName)
 		{
 			Console.WriteLine("inside this function now");

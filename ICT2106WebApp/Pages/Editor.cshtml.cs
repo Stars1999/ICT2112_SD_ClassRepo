@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ICT2106WebApp.Interfaces;
 using ICT2106WebApp.Models;
+using System.IO;
 
 namespace ICT2106WebApp.Pages
 {
@@ -9,16 +10,16 @@ namespace ICT2106WebApp.Pages
     {
         private readonly ILogger<EditorModel> _logger;
         private readonly IPDFQualityChecker _pdfQualityChecker;
-        private readonly IPDFProvider _pdfProvider;
+        private readonly PDFGenerator _pdfGenerator;
 
         public EditorModel(
             ILogger<EditorModel> logger,
             IPDFQualityChecker pdfQualityChecker,
-            IPDFProvider pdfProvider)
+            PDFGenerator pdfGenerator)
         {
             _logger = logger;
             _pdfQualityChecker = pdfQualityChecker;
-            _pdfProvider = pdfProvider;
+            _pdfGenerator = pdfGenerator;
         }
 
         public QualityReport QualityReport { get; set; } = new QualityReport();
@@ -27,7 +28,20 @@ namespace ICT2106WebApp.Pages
         {
             try 
             {
-                var pdfContent = _pdfProvider.GetPDFContent();
+                // Get PDF path directly
+                string pdfRelativePath = _pdfGenerator.GetGeneratedPDFUrl().TrimStart('/');
+                string pdfFullPath = Path.Combine(
+                    Directory.GetCurrentDirectory(), 
+                    "wwwroot",
+                    pdfRelativePath
+                );
+
+                if (!System.IO.File.Exists(pdfFullPath))
+                {
+                    throw new FileNotFoundException("No PDF has been generated yet.");
+                }
+
+                var pdfContent = System.IO.File.ReadAllBytes(pdfFullPath);
                 QualityReport = _pdfQualityChecker.CheckPDFQuality(pdfContent);
                 
                 // Use the GetQualityReportDetails method to access the encapsulated data

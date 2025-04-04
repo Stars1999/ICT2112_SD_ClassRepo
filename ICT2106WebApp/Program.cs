@@ -1,9 +1,6 @@
-using ICT2106WebApp.Class;
 using ICT2106WebApp.Controllers;
 using ICT2106WebApp.Data;
 using ICT2106WebApp.Interfaces;
-using ICT2106WebApp.DataSource;
-using ICT2106WebApp.Domain;
 using ICT2106WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +20,7 @@ builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
 
 // Register PDFQualityChecker directly
 builder.Services.AddSingleton<IPDFQualityChecker, PDFCheckerControl>();
-builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();
+
 
 // Add services to the container.
 builder.Services.AddControllers(); // <-- Ensure this line is here
@@ -59,7 +56,6 @@ builder.Services.AddScoped<IDocument, DocumentParserService>(); // Register the 
 builder.Services.AddScoped<IDocumentTestCase, TestCaseControl>();
 // Register PDFQualityChecker directly
 builder.Services.AddSingleton<IPDFQualityChecker, PDFCheckerControl>();
-builder.Services.AddSingleton<IPDFProvider, GeneratedPDFProvider>();
 builder.Services.AddSingleton<iErrorPresenter>(provider =>
 {
     var errorAnalyser = provider.GetRequiredService<iErrorAnalyser>();

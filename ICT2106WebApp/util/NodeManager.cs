@@ -286,7 +286,9 @@ namespace Utilities
 									if (itemhere is Dictionary<string, object> stylingDictionary)
 									{
 										stylingList.Add(
-											ExtractContent.ConvertJsonElements(stylingDictionary)
+											DocumentProcessors.ConvertJsonElements(
+												stylingDictionary
+											)
 										);
 									}
 								}
@@ -331,7 +333,7 @@ namespace Utilities
 												)
 												{
 													stylingList.Add(
-														ExtractContent.ConvertJsonElements(
+														DocumentProcessors.ConvertJsonElements(
 															stylingDictionary
 														)
 													);

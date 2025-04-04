@@ -93,7 +93,7 @@ namespace Utilities
 
 			if (!File.Exists(jsonFilePath))
 			{
-				await ExtractContent.ToSaveJson(documentControl, filePath, jsonFilePath);
+				await DocumentProcessors.ToSaveJson(documentControl, filePath, jsonFilePath);
 			}
 
 			// STEP 3: CHECK FOR TREE
@@ -103,7 +103,7 @@ namespace Utilities
 			{
 				// Do something when the tree is not found
 				Console.WriteLine("Tree retrieval failed or no data available.");
-				await ExtractContent.toSaveTree(filePath, jsonFilePath); // I will run the code to use the docx and json file to generate the tree
+				await toSaveTree(filePath, jsonFilePath); // I will run the code to use the docx and json file to generate the tree
 			}
 			else
 			{
@@ -345,10 +345,10 @@ namespace Utilities
 			using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 			{
 				// Get layout information
-				var layoutInfo = ExtractContent.GetDocumentLayout(wordDoc);
+				var layoutInfo = DocumentProcessors.GetDocumentLayout(wordDoc);
 
 				// Extract document contents
-				var documentContents = ExtractContent.ExtractDocumentContents(wordDoc);
+				var documentContents = DocumentProcessors.ExtractDocumentContents(wordDoc);
 
 				// Create layout element
 				var layoutElement = new Dictionary<string, object>
@@ -377,7 +377,7 @@ namespace Utilities
 				var documentData = new
 				{
 					// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-					metadata = GetDocumentMetadata(wordDoc, filePath_full),
+					metadata = DocumentProcessors.GetDocumentMetadata(wordDoc, filePath_full),
 					// headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
 					// !!footer still exists issues. Commented for now
 					// footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
@@ -443,7 +443,7 @@ namespace Utilities
 										)
 										{
 											stylingList.Add(
-												ExtractContent.ConvertJsonElements(
+												DocumentProcessors.ConvertJsonElements(
 													stylingDictionary
 												)
 											);
@@ -508,7 +508,7 @@ namespace Utilities
 													)
 													{
 														stylingList.Add(
-															ExtractContent.ConvertJsonElements(
+															DocumentProcessors.ConvertJsonElements(
 																stylingDictionary
 															)
 														);

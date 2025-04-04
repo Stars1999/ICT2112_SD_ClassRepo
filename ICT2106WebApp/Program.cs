@@ -156,18 +156,15 @@ public static class DocumentProcessor
 
 			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
 
-			var documentProcessor = new DocumentProcessors();
-			List<Object> documentContents = documentProcessor.ParseDocument(database, filePath);
+			var documentProcessors = new DocumentProcessors();
+			List<Object> documentContents = documentProcessors
+				.ParseDocument(database, filePath)
+				.Result;
 
 			NodeManager nodeManager = new NodeManager();
 
 			//ceate a list of nodes
-			List<AbstractNode> nodesList = nodeManager.CreateNodeList(documentContents);
-
-			// !!Break here for another function ?
-			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// to uncomement!! 165: 240
-
+			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 
 			var defaultColor = Console.ForegroundColor;
@@ -196,7 +193,6 @@ public static class DocumentProcessor
 			if (mongoCompNode != null)
 			{
 				// Console.WriteLine("Print out tree. Commented out for now\n");
-
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				treeProcessor.PrintTreeContents(mongoCompNode);
 				treeProcessor.PrintTreeHierarchy(mongoCompNode, 0);
@@ -204,27 +200,20 @@ public static class DocumentProcessor
 			}
 			// END TREE
 
-
 			//TREE VALIDAITON
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
-
 			// -- validate content --
 			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
 			bool isContentValid = nodeManager.ValidateContentRecursive(
 				flattenedTree,
-				documentArray,
+				documentProcessors.documentArray,
 				0
 			);
-
 			if (isContentValid)
-			{
 				Console.WriteLine("Content is valid!");
-			}
 			else
-			{
 				Console.WriteLine("Content mismatch detected!");
-			}
 
 			// -- validate structure --
 			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
@@ -265,7 +254,6 @@ public static class DocumentProcessor
 			// 	treeProcessor.PrintTreeContents(originalMongo);
 			// 	treeProcessor.PrintTreeHierarchy(originalMongo, 0);
 			// }
-
 
 			//Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();

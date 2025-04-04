@@ -193,7 +193,7 @@ namespace ICT2106WebApp.mod1Grp3
 			// Start traversing the tree from the root node using the iterator method
 			TraverseWithIteratorForAll(_rootNode, allNodesList);
 
-			WriteToFile("traverseNodes.cs", allNodesList);
+			WriteToFile("allNodesList.cs", allNodesList);
 
 			return allNodesList;
 		}

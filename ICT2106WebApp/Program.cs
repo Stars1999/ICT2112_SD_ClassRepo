@@ -254,7 +254,6 @@ public static class DocumentProcessor
 
 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
-			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 
@@ -311,11 +310,13 @@ public static class DocumentProcessor
 			// Save modified latex tree back to MongoDB (query)
 			await traverser.UpdateLatexDocument(rootnodehere);
 
+
+//============================ Print to show tree retrival query from db is workiing ==========================//
 			ICompletedLatex completedLatex = new CompletedLatex();
 
 			// // Retrieve the non-modified tree from MongoDB (for demo query)
 			// AbstractNode originalRootNode = await completedLatex.RetrieveTree();
-			// CompositeNode originalMongo = null; // declare outside so it can be used outside of the if statement
+			// CompositeNode originalMongo = null;
 
 			// if (originalRootNode is CompositeNode originalNode) // Use pattern matching
 			// {
@@ -349,29 +350,6 @@ public static class DocumentProcessor
 			{
 				treeProcessor.PrintTree(latexMongo, 0);
 			}
-
-			// foreach (var tableNode in tableAbstractNodes)
-			// {
-			// 	if (tableNode.GetNodeType() == "table")
-			// 	{
-			// 		Console.WriteLine($"Table Node Content: {tableNode.GetContent()}");
-			// 	}
-			// }
-
-			// // Print tablesFromNode
-			// foreach (var table in tablesFromNode)
-			// {
-			// 	Console.WriteLine($"{table.tableId}");
-			// 	Console.WriteLine($"{table.latexOutput}");
-			// 	foreach (var row in table.rows)
-			// 	{
-			// 		foreach (var cell in row.cells)
-			// 		{
-			// 			Console.WriteLine($"Cell content: {cell.content}");
-			// 			Console.WriteLine($"Cell Styling: {cell.styling}");
-			// 		}
-			// 	}
-			// }
 		}
 	}
 }

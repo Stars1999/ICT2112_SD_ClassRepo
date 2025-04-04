@@ -73,19 +73,19 @@ namespace Utilities
 					return new Dictionary<string, object>
 					{
 						{ "nodeLevel", GetNodeLevel() },
-						{ "nodeType", GetNodeType() }
+						{ "nodeType", GetNodeType() },
 					};
 				case "contentvalidation":
 					return new Dictionary<string, object>
 					{
 						{ "nodeType", GetNodeType() },
-						{ "content", GetContent() }
+						{ "content", GetContent() },
 					};
 				case "treestructurevalidation":
 					return new Dictionary<string, object>
 					{
 						{ "nodeLevel", GetNodeLevel() },
-						{ "nodeType", GetNodeType() }
+						{ "nodeType", GetNodeType() },
 					};
 				case "treeprint":
 					return new Dictionary<string, object>
@@ -93,13 +93,10 @@ namespace Utilities
 						{ "nodeId", GetNodeId() },
 						{ "nodeType", GetNodeType() },
 						{ "content", GetContent() },
-						{ "styling", GetStyling() }
+						{ "styling", GetStyling() },
 					};
 				case "nodetraversal":
-					return new Dictionary<string, object>
-					{
-						{ "nodeType", GetNodeType() }
-					};
+					return new Dictionary<string, object> { { "nodeType", GetNodeType() } };
 				case "nodeinfo":
 					return new Dictionary<string, object>
 					{
@@ -108,14 +105,18 @@ namespace Utilities
 						{ "nodeType", GetNodeType() },
 						{ "content", GetContent() },
 						{ "styling", GetStyling() },
-						{ "converted", IsConverted() }
+						{ "converted", IsConverted() },
 					};
 				default:
 					throw new ArgumentException("Invalid purpose specified.");
 			}
 		}
 
-		public override void SetNodeData(string content, List<Dictionary<string, object>> styling, bool converted)
+		public override void SetNodeData(
+			string content,
+			List<Dictionary<string, object>> styling,
+			bool converted
+		)
 		{
 			SetContent(content);
 			SetStyling(styling);

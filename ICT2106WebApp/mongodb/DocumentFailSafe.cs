@@ -1,4 +1,5 @@
 using System.Reflection;
+using DocumentFormat.OpenXml.Packaging;
 using ICT2106WebApp.mod1Grp3;
 using Newtonsoft.Json.Linq;
 using Utilities;
@@ -65,7 +66,8 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 
 		Console.WriteLine("Starting Document Processing with Crash Recovery");
 
-		DocumentControl documentControl = new DocumentControl();
+		// DocumentControl documentControl = new DocumentControl();
+		DocumentProcessors documentProcessor = new DocumentProcessors();
 		DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
 		TreeProcessor treeProcessor = new TreeProcessor();
@@ -104,7 +106,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 
 			Console.WriteLine("No documents found. Saving default document into the database...");
 			filePath = "Datarepository_zx_v4.docx"; // your fallback document
-			await documentControl.saveDocumentToDatabase(filePath);
+			await documentProcessor.saveDocumentToDatabase(filePath);
 
 			// Retry the process after saving
 			await runCrashRecovery(true);
@@ -127,7 +129,12 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		// Step 2: Check if JSON exists
 		if (!File.Exists(jsonOutputPath))
 		{
-			await ExtractContent.ToSaveJson(documentControl, filePath, jsonOutputPath);
+			// await DocumentProcessors.ToSaveJson(documentProcessor, filePath, jsonOutputPath);
+						var documentProcessors = new DocumentProcessors();
+
+			List<Object> documentContents = documentProcessors
+				.ParseDocument(filePath)
+				.Result;
 		}
 
 		// Step 3: Check for tree in DB
@@ -136,7 +143,28 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		if (rootNode == null)
 		{
 			Console.WriteLine("Tree not found. Generating new tree...");
-			await ExtractContent.toSaveTree(filePath, jsonOutputPath);
+			//ceate a list of nodes
+			using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath_full, false))
+			{
+				var documentContents = DocumentProcessors.ExtractDocumentContents(wordDoc);
+				var rootElement = DocumentProcessors.elementRoot();
+				documentContents.Insert(0, DocumentProcessors.ExtractLayout(wordDoc));
+				documentContents.Insert(0, rootElement);
+			
+			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+
+			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
+
+			var defaultColor = Console.ForegroundColor;
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
+			treeProcessor.PrintTreeContents(rootnodehere);
+			Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
+			treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
+			Console.ForegroundColor = defaultColor;
+
+			// SAVE TREE TO MONGODB
+			await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
 
 			// Retry retrieving the tree after generating it
 			rootNode = await treeProcessor.retrieveTree();
@@ -145,6 +173,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 			{
 				Console.WriteLine("❌ Failed to retrieve tree even after saving.");
 				return;
+			}
 			}
 		}
 
@@ -333,5 +362,88 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 
 	// 	Console.WriteLine("Completed Error Recovery");
 	// }
+
+	public static async Task toSaveTree(string filePath, string jsonOutputPath)
+	{
+		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+		{
+			// Get layout information
+			var layoutInfo = DocumentProcessors.GetDocumentLayout(wordDoc);
+
+			// Extract document contents
+			var documentContents = DocumentProcessors.ExtractDocumentContents(wordDoc);
+
+			// Create layout element
+			var layoutElement = new Dictionary<string, object>
+				{
+					{ "type", "layout" },
+					{ "content", "" },
+					{
+						"styling",
+						new List<object> { layoutInfo }
+					},
+				};
+
+			// Insert layout as the first element in document contents
+			documentContents.Insert(0, layoutElement);
+
+			// // to create rootnode
+			var layoutElementRoot = new Dictionary<string, object>
+				{
+					{ "id", 0 },
+					{ "type", "root" },
+					{ "content", "" },
+				};
+			documentContents.Insert(0, layoutElementRoot);
+			string currentDir = Directory.GetCurrentDirectory();
+			string filePath_full = Path.Combine(currentDir, filePath);
+
+			var documentData = new
+			{
+				// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
+				metadata = DocumentProcessors.GetDocumentMetadata(wordDoc, filePath_full),
+				// headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
+				// !!footer still exists issues. Commented for now
+				// footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
+				// documentContents is what i need
+				document = documentContents,
+			};
+
+			List<AbstractNode> nodesList = new List<AbstractNode>();
+			string jsonOutput = string.Empty;
+
+			// jsonOutput = await NodeManager.CreateNodeList(
+			// 	documentContents,
+			// 	nodesList,
+			// 	jsonOutput,
+			// 	documentData,
+			// 	jsonOutputPath
+			// );
+
+			// JObject jsonObject = JObject.Parse(jsonOutput);
+			// JArray documentArray = (JArray)jsonObject["document"];
+			// checkjson
+			// uncomment to see consolelogs for checking purposes
+			// ExtractContent.checkJson(documentArray);
+
+			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
+
+			// !!Break here for another function ?
+			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
+
+			var defaultColor = Console.ForegroundColor;
+			Console.ForegroundColor = ConsoleColor.DarkCyan;
+			Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
+			treeProcessor.PrintTreeContents(rootnodehere);
+			Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
+			treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
+			Console.ForegroundColor = defaultColor;
+
+			// SAVE TREE TO MONGODB
+			await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
+		}
+	}
 }
+
 

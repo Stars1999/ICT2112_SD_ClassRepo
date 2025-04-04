@@ -7,12 +7,14 @@ namespace ICT2106WebApp.mod1Grp3
 		private List<AbstractNode> _collection;
 		private int _currentIndex;
 
+		// Constructor to initialize the iterator with a collection of nodes
 		public NodeIterator(List<AbstractNode> collection)
 		{
 			_collection = collection;
-			_currentIndex = -1;
+			_currentIndex = -1; // Start before the first element
 		}
 
+		// Method to get the current node
 		public AbstractNode current()
 		{
 			if (_currentIndex >= 0 && _currentIndex < _collection.Count)
@@ -22,6 +24,7 @@ namespace ICT2106WebApp.mod1Grp3
 			return null;
 		}
 
+		// Method to get the next node
 		public AbstractNode next()
 		{
 			if (!isDone())
@@ -32,6 +35,7 @@ namespace ICT2106WebApp.mod1Grp3
 			return null;
 		}
 
+		// Method to check if the iteration is done
 		public bool isDone()
 		{
 			return _currentIndex >= _collection.Count - 1;

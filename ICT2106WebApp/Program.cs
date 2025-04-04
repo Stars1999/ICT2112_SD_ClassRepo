@@ -31,6 +31,8 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 	var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
 	return mongoClient;
 });
+
+// singleton
 builder.Services.AddSingleton(serviceProvider =>
 {
 	var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
@@ -43,7 +45,7 @@ var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
 var app = builder.Build();
 
-// Jon part's for error testing
+// ahJon part's for error testing
 Console.CancelKeyPress += async (sender, eventArgs) =>
 {
 	eventArgs.Cancel = true;
@@ -53,20 +55,7 @@ Console.CancelKeyPress += async (sender, eventArgs) =>
 	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
 	await documentFailSafe.runCrashRecovery(false);
 };
-
 var runCrashRecovery = false;
-
-// try
-// {
-// 	Console.WriteLine("Running main program logic...");
-// 	DocumentProcessor.RunMyProgram(database);
-// }
-// catch (Exception ex)
-// {
-// 	Console.WriteLine("Crash detected, running recovery.");
-// 	await ExtractContent.RunCrashRecovery(database);
-// }
-
 Console.WriteLine("✅ App built successfully");
 
 // // Get logger instance
@@ -86,10 +75,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 DocumentProcessor.RunMyProgram(database);
-
-// GRP3 JOHNATHAN CRASH RECOVERY TESTING
-// await ExtractContent.RunCrashRecovery(database);
-
 await app.StartAsync();
 
 // Listen for SIGINT continuously
@@ -111,8 +96,6 @@ while (true)
 	await Task.Delay(100); // Prevent busy looping
 }
 
-// app.Run();
-
 // ✅ Extracts content from Word document
 public static class DocumentProcessor
 {
@@ -122,80 +105,31 @@ public static class DocumentProcessor
 	// Running whole program
 	public async static void RunMyProgram(IMongoDatabase database)
 	{
-		var documentControl = new DocumentControl();
+		// var documentControl = new DocumentControl();
 		string filePath = "Datarepository_zx_v4.docx"; // Change this to your actual file path
-		string jsonOutputPath = "output.json"; // File where JSON will be saved
+		// string jsonOutputPath = "output.json"; // File where JSON will be saved
 
 		// getting the path
-		string currentDir = Directory.GetCurrentDirectory();
-		string filePath_full = Path.Combine(currentDir, filePath);
+		// string currentDir = Directory.GetCurrentDirectory();
+		// string filePath_full = Path.Combine(currentDir, filePath);
 		// **
 		// await documentControl.saveDocumentToDatabase(filePath);
 
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
-			// Get layout information from the word document
-			var layoutInfo = ExtractContent.GetDocumentLayout(wordDoc);
+			var documentProcessors = new DocumentProcessors();
 
-			// Extract document contents
-			var documentContents = ExtractContent.ExtractDocumentContents(wordDoc);
+			List<Object> documentContents = documentProcessors
+				.ParseDocument(filePath)
+				// .ParseDocument(database, filePath)
+				.Result;
 
-			// Create layout element
-			var layoutElement = new Dictionary<string, object>
-			{
-				{ "type", "layout" },
-				{ "content", "" },
-				{
-					"styling",
-					new List<object> { layoutInfo }
-				},
-			};
+			NodeManager nodeManager = new NodeManager();
 
-			// Insert layout as the first element in document contents
-			documentContents.Insert(0, layoutElement);
-
-			// // to create rootnode
-			var layoutElementRoot = new Dictionary<string, object>
-			{
-				{ "id", 0 },
-				{ "type", "root" },
-				{ "content", "" },
-			};
-			documentContents.Insert(0, layoutElementRoot);
-
-			// important!!
-			var documentData = new
-			{
-				// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-				metadata = ExtractContent.GetDocumentMetadata(wordDoc, filePath_full),
-				headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
-				// !!footer still exists issues. Commented for now
-				footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
-				// documentContents is what i need
-				document = documentContents,
-			};
+			//ceate a list of nodes
+			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
 
 			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
-
-			List<AbstractNode> nodesList = new List<AbstractNode>();
-			string jsonOutput = string.Empty;
-
-			jsonOutput = await ExtractContent.CreateNodeList(
-				documentContents,
-				nodesList,
-				jsonOutput,
-				documentData,
-				jsonOutputPath
-			);
-
-			JObject jsonObject = JObject.Parse(jsonOutput);
-			JArray documentArray = (JArray)jsonObject["document"];
-			// checkjson
-			// uncomment to see consolelogs for checking purposes
-			ExtractContent.checkJson(documentArray);
-
-			// !!Break here for another function ?
-			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 
 			var defaultColor = Console.ForegroundColor;
@@ -224,7 +158,6 @@ public static class DocumentProcessor
 			if (mongoCompNode != null)
 			{
 				// Console.WriteLine("Print out tree. Commented out for now\n");
-
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
 				treeProcessor.PrintTreeContents(mongoCompNode);
 				treeProcessor.PrintTreeHierarchy(mongoCompNode, 0);
@@ -232,35 +165,31 @@ public static class DocumentProcessor
 			}
 			// END TREE
 
-
 			//TREE VALIDAITON
-			NodeManager nodeManager = new NodeManager();
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
-			
-			// -- validate content -- 
+			// -- validate content --
 			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
-			bool isContentValid = nodeManager.ValidateContentRecursive(flattenedTree, documentArray, 0);
-
+			bool isContentValid = nodeManager.ValidateContentRecursive(
+				flattenedTree,
+				documentProcessors.documentArray,
+				0
+			);
 			if (isContentValid)
-			{
 				Console.WriteLine("Content is valid!");
-			}
 			else
-			{
 				Console.WriteLine("Content mismatch detected!");
-			}
 
 			// -- validate structure --
 			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
-			
+
 			if (isValidStructure)
 				Console.WriteLine("Tree structure is valid!\n");
 			else
 				Console.WriteLine("Invalid tree structure detected.\n");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
-			
+
 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
 
@@ -281,7 +210,6 @@ public static class DocumentProcessor
 				treeProcessor.PrintTreeContents(originalTree);
 				treeProcessor.PrintTreeHierarchy(originalTree, 0);
 			}
-
 
 			//Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();

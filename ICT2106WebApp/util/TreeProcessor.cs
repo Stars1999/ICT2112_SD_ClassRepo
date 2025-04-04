@@ -41,15 +41,16 @@ namespace Utilities
 			{
 				Dictionary<string, object> nodeData = node.GetNodeData("TreeCreation");
 				string nodeType = nodeData["nodeType"].ToString();
-				int nodeLevel = (int) nodeData["nodeLevel"];
-				
+				int nodeLevel = (int)nodeData["nodeLevel"];
+
 				if (nodeType == "root")
 				{
 					continue;
 				}
 
 				int currentNodeLevel = nodeLevel;
-				int currentCompositeNodeLevel = (int) ((CompositeNode)nodeStack.Peek()).GetNodeData("Peek")["nodeLevel"];
+				int currentCompositeNodeLevel = (int)
+					((CompositeNode)nodeStack.Peek()).GetNodeData("Peek")["nodeLevel"];
 
 				// Set level of runs to be +1 of runsParagraph
 				// if (node.GetNodeType() == "text_run")
@@ -76,9 +77,8 @@ namespace Utilities
 					while (currentNodeLevel <= currentCompositeNodeLevel)
 					{
 						nodeStack.Pop();
-						currentCompositeNodeLevel = (int) (
-							(CompositeNode)nodeStack.Peek()
-						).GetNodeData("Peek")["nodeLevel"];
+						currentCompositeNodeLevel = (int)
+							((CompositeNode)nodeStack.Peek()).GetNodeData("Peek")["nodeLevel"];
 					}
 					((CompositeNode)nodeStack.Peek()).AddChild(node);
 					nodeStack.Push(node);
@@ -95,7 +95,7 @@ namespace Utilities
 		}
 
 		// ----------------------------------TREE VALIDATION CODES-----------------------------------------
-				public List<AbstractNode> FlattenTree(AbstractNode root)
+		public List<AbstractNode> FlattenTree(AbstractNode root)
 		{
 			List<AbstractNode> flatList = new List<AbstractNode>();
 			int count = 0;
@@ -122,11 +122,11 @@ namespace Utilities
 			// }
 			return flatList;
 		}
-		
+
 		public bool ValidateTreeStructure(AbstractNode node, int parentLevel)
 		{
 			Dictionary<string, object> nodeData = node.GetNodeData("TreeStructureValidation");
-			int nodeLevel = (int) nodeData["nodeLevel"]; // Get the level of the current node
+			int nodeLevel = (int)nodeData["nodeLevel"]; // Get the level of the current node
 			int expectedLevel = parentLevel + 1; // Expected level based on parent
 
 			if (nodeLevel < expectedLevel && nodeLevel != -1)
@@ -155,7 +155,8 @@ namespace Utilities
 			Dictionary<string, object> nodeData = node.GetNodeData("TreePrint");
 			// Print the node's content (could be its type or content)
 			// var nodeStyles = node.GetStyling();
-			List<Dictionary<string, object>> result = (List<Dictionary<string, object>>) nodeData["styling"]; // This returns List<Dictionary<string, object>>
+			List<Dictionary<string, object>> result =
+				(List<Dictionary<string, object>>)nodeData["styling"]; // This returns List<Dictionary<string, object>>
 			string consolidatedStyling = "";
 
 			// Loop through each dictionary in the list
@@ -191,17 +192,22 @@ namespace Utilities
 		}
 
 		// Recursive method to print the tree hierarchy
-		public void PrintTreeHierarchy(AbstractNode node, int level, bool isLastChild = true, List<bool> isLastChildHistory = null)
+		public void PrintTreeHierarchy(
+			AbstractNode node,
+			int level,
+			bool isLastChild = true,
+			List<bool> isLastChildHistory = null
+		)
 		{
 			// Initialize history tracking for the first call
 			if (isLastChildHistory == null)
 				isLastChildHistory = new List<bool>();
-				
+
 			Dictionary<string, object> nodeData = node.GetNodeData("TreePrint");
-			
+
 			// Build the prefix based on the hierarchy history
 			StringBuilder prefix = new StringBuilder();
-			
+
 			// Add appropriate symbols based on history of last children
 			for (int i = 0; i < level; i++)
 			{
@@ -213,23 +219,27 @@ namespace Utilities
 				else
 				{
 					// For parent levels
-					prefix.Append(isLastChildHistory.Count > i && !isLastChildHistory[i] ? "│   " : "    ");
+					prefix.Append(
+						isLastChildHistory.Count > i && !isLastChildHistory[i] ? "│   " : "    "
+					);
 				}
 			}
-			
+
 			// Print the current node
-			Console.WriteLine(prefix + "Node ID: " + nodeData["nodeId"] + ", Node Type: " + nodeData["nodeType"]);
-			
+			Console.WriteLine(
+				prefix + "Node ID: " + nodeData["nodeId"] + ", Node Type: " + nodeData["nodeType"]
+			);
+
 			// If this is a composite node, print its children
 			if (node is CompositeNode compositeNode)
 			{
 				var children = compositeNode.GetChildren().ToList();
-				
+
 				// Track the last child status in history for child nodes
 				List<bool> childHistory = new List<bool>(isLastChildHistory);
 				while (childHistory.Count < level)
 					childHistory.Add(isLastChild);
-					
+
 				// Process each child
 				for (int i = 0; i < children.Count; i++)
 				{

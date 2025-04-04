@@ -12,8 +12,8 @@ namespace ICT2106WebApp.mod1Grp3
 		public NodeTraverser(CompositeNode rootNode)
 		{
 			_rootNode = rootNode;
-			_QueryUpdate = (IQueryUpdate)new DocumentGateway_RDG(); 
-			_QueryUpdate.queryUpdate = this; 
+			_QueryUpdate = (IQueryUpdate)new DocumentGateway_RDG();
+			_QueryUpdate.queryUpdate = this;
 		}
 
 		// Define grouped node types
@@ -159,6 +159,5 @@ namespace ICT2106WebApp.mod1Grp3
 
 			await Task.CompletedTask;
 		}
-
 	}
 }

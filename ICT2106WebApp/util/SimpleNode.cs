@@ -114,5 +114,12 @@ namespace Utilities
 					throw new ArgumentException("Invalid purpose specified.");
 			}
 		}
+
+		public override void SetNodeData(string content, List<Dictionary<string, object>> styling, bool converted)
+		{
+			SetContent(content);
+			SetStyling(styling);
+			SetConverted(converted);
+		}
 	}
 }

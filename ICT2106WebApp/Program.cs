@@ -113,50 +113,8 @@ public static class DocumentProcessor
 
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
-			// Extract document contents
-			// var documentContents = ExtractContent.ExtractDocumentContents(wordDoc);
-
-			// Get layout information from the word document
-			// var layoutInfo = ExtractContent.GetDocumentLayout(wordDoc);
-
-			// // Create layout element
-			// var layoutElement = new Dictionary<string, object>
-			// {
-			// 	{ "type", "layout" },
-			// 	{ "content", "" },
-			// 	{
-			// 		"styling",
-			// 		new List<object> { layoutInfo }
-			// 	},
-			// };
-
-			// Insert layout as the first element in document contents
-
-			// documentContents.Insert(0, ExtractContent.ExtractLayout);
-
-			// // to create rootnode
-			// var layoutElementRoot = new Dictionary<string, object>
-			// {
-			// 	{ "id", 0 },
-			// 	{ "type", "root" },
-			// 	{ "content", "" },
-			// };
-			// documentContents.Insert(0, layoutElementRoot);
-
-			// important!!
-			// var documentData = new
-			// {
-			// 	// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-			// 	metadata = ExtractContent.GetDocumentMetadata(wordDoc, filePath_full),
-			// 	headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
-			// 	footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
-			// 	// documentContents is what i need
-			// 	document = documentContents,
-			// };
-
-			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
-
 			var documentProcessors = new DocumentProcessors();
+
 			List<Object> documentContents = documentProcessors
 				.ParseDocument(database, filePath)
 				.Result;
@@ -165,6 +123,8 @@ public static class DocumentProcessor
 
 			//ceate a list of nodes
 			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+
+			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 
 			var defaultColor = Console.ForegroundColor;

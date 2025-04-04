@@ -2,69 +2,27 @@ namespace Utilities
 {
 	public class SimpleNode : AbstractNode
 	{
-		public SimpleNode(int id, int nl, string nt, string c, List<Dictionary<string, object>> s)
+		// SimpleNode Constructor
+  		public SimpleNode(int id, int nl, string nt, string c, List<Dictionary<string, object>> s)
 			: base(id, nl, nt, c, s) { }
 
-		protected override int GetNodeId()
-		{
-			return nodeId;
-		}
+  		// Getters
+		protected override int GetNodeId() { return nodeId; }
+		protected override int GetNodeLevel() { return nodeLevel; }
+		protected override string GetNodeType() { return nodeType; }
+		protected override string GetContent() { return content; }
+  		protected override List<Dictionary<string, object>> GetStyling() { return styling; }
+		protected override bool IsConverted() { return converted; }
 
-		protected override int GetNodeLevel()
-		{
-			return nodeLevel;
-		}
+		// Setters
+		protected override void SetNodeId(int id) { nodeId = id; } 
+  		protected override void SetNodeLevel(int nl) { nodeLevel = nl; }
+		protected override void SetNodeType(string nt) { nodeType = nt; }
+		protected override void SetContent(string c) { content = c; }
+		protected override void SetStyling(List<Dictionary<string, object>> s) { styling = s; }
+		protected override void SetConverted(bool c) { converted = c; }
 
-		protected override string GetNodeType()
-		{
-			return nodeType;
-		}
-
-		protected override string GetContent()
-		{
-			return content;
-		}
-
-		protected override List<Dictionary<string, object>> GetStyling()
-		{
-			return styling;
-		}
-
-		protected override bool IsConverted()
-		{
-			return converted;
-		}
-
-		protected override void SetNodeId(int id)
-		{
-			nodeId = id;
-		}
-
-		protected override void SetNodeLevel(int nl)
-		{
-			nodeLevel = nl;
-		}
-
-		protected override void SetNodeType(string nt)
-		{
-			nodeType = nt;
-		}
-
-		protected override void SetContent(string c)
-		{
-			content = c;
-		}
-
-		protected override void SetStyling(List<Dictionary<string, object>> s)
-		{
-			styling = s;
-		}
-
-		protected override void SetConverted(bool c)
-		{
-			converted = c;
-		}
-
+		// Method that returns node data based on purpose
 		public override Dictionary<string, object> GetNodeData(string purpose)
 		{
 			switch (purpose.ToLower())
@@ -112,6 +70,7 @@ namespace Utilities
 			}
 		}
 
+		// Method to set or change node data
 		public override void SetNodeData(
 			string content,
 			List<Dictionary<string, object>> styling,

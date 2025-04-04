@@ -35,6 +35,14 @@ using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 namespace Utilities
 {
 	public class DocumentProcessors : IDocumentUpdateNotify
+		// :
+		// Iapi,
+		// iCreateNode,
+		// iDocument, // not sure if it there is such interface
+			// IDocumentRetrieve // iDocumentRetrival,
+			// iDocumentUpdate,
+			// iDocumentUpdateNotify,
+		// iLogger
 	{
 		private readonly IDocumentUpdate _dbGateway;
 		private readonly Docx docxEntity;

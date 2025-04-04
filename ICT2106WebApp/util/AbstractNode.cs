@@ -39,6 +39,7 @@ namespace Utilities
 		[BsonElement("converted")]
 		protected bool converted;
 
+		// Abstract Constructor
 		protected AbstractNode(
 			int id,
 			int nl,

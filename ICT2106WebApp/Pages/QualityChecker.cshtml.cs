@@ -13,12 +13,10 @@ namespace ICT2106WebApp.Pages
     public class QualityCheckerModel : PageModel
     {
         private readonly IPDFQualityChecker _pdfQualityChecker;
-        private readonly IPDFProvider _pdfProvider;
 
-        public QualityCheckerModel(IPDFQualityChecker pdfQualityChecker, IPDFProvider pdfProvider)
+        public QualityCheckerModel(IPDFQualityChecker pdfQualityChecker)
         {
             _pdfQualityChecker = pdfQualityChecker;
-            _pdfProvider = pdfProvider;
         }
 
         [BindProperty]
@@ -44,13 +42,7 @@ namespace ICT2106WebApp.Pages
                     PdfFile.CopyTo(ms);
                     var pdfContent = ms.ToArray();
                     
-                    // Update the content in the provider so it's available to other components
-                    if (_pdfProvider is GeneratedPDFProvider provider)
-                    {
-                        provider.SetPDFContent(pdfContent);
-                    }
-                    
-                    // Use the quality checker to analyze the PDF
+                    // Directly use the quality checker to analyze the PDF
                     Report = _pdfQualityChecker.CheckPDFQuality(pdfContent);
                 }
             }
@@ -61,17 +53,6 @@ namespace ICT2106WebApp.Pages
             }
 
             return Page();
-        }
-
-        // Inner implementation of IPDFProvider that stores the uploaded PDF content
-        // Simulates retrieving PDF from Mod 3 group 2
-        public class GeneratedPDFProvider : IPDFProvider
-        {
-            private static byte[] _pdfContent = Array.Empty<byte>();
-
-            public byte[] GetPDFContent() => _pdfContent;
-
-            public void SetPDFContent(byte[] content) => _pdfContent = content;
         }
     }
 }

@@ -7,7 +7,7 @@ using ICT2106WebApp.Interfaces;
 using ICT2106WebApp.Domain;
 using ICT2106WebApp.Models;
 
-namespace ICT2106WebApp.Control
+namespace ICT2106WebApp.Controllers
 {
     public class PDFCheckerControl : IPDFQualityChecker
     {

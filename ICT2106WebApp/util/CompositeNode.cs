@@ -113,7 +113,7 @@ namespace Utilities
 						{ "nodeType", GetNodeType() },
 						{ "content", GetContent() }
 					};
-				case "treevalidation":
+				case "treestructurevalidation":
 					return new Dictionary<string, object>
 					{
 						{ "nodeLevel", GetNodeLevel() },

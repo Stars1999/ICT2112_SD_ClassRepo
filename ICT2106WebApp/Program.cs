@@ -49,7 +49,9 @@ Console.CancelKeyPress += async (sender, eventArgs) =>
 	eventArgs.Cancel = true;
 	Console.WriteLine("SIGINT received. Running crash recovery...");
 
-	await ExtractContent.RunCrashRecovery(database);
+	// await ExtractContent.RunCrashRecovery(database);
+	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+	await documentFailSafe.runCrashRecovery(false);
 };
 
 var runCrashRecovery = false;
@@ -99,8 +101,9 @@ while (true)
 		Console.ForegroundColor = ConsoleColor.Red;
 		Console.WriteLine("SIGINT received. Running crash recovery...\n");
 		Console.ResetColor();
-
-		await ExtractContent.RunCrashRecovery(database);
+		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+		await documentFailSafe.runCrashRecovery(false);
+		// await ExtractContent.RunCrashRecovery(database);
 
 		Console.WriteLine("✅ Crash recovery done. Server still running.\n");
 	}
@@ -270,43 +273,26 @@ public static class DocumentProcessor
 			ICompletedLatex completedLatex = new CompletedLatex();
 
 			// // Retrieve the non-modified tree from MongoDB (for demo query)
-			AbstractNode originalRootNode = await completedLatex.RetrieveTree();
+			AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
 			// CompositeNode originalMongo = null;
-
-			// if (originalRootNode is CompositeNode originalNode) // Use pattern matching
-			// {
-			// 	Console.WriteLine("Latex Tree retrieved!");
-			// 	originalMongo = originalNode; // Assign to compNode
-			// }
-			// else
-			// {
-			// 	Console.WriteLine("Latex Tree not retrieved!");
-			// }
-			// if (originalMongo != null)
-			// {
-			// 	treeProcessor.PrintTreeContents(originalMongo);
-			// 	treeProcessor.PrintTreeHierarchy(originalMongo, 0);
-			// }
+			CompositeNode originalTree = (CompositeNode) originalRootNode;
+			if (originalTree != null)
+			{
+				treeProcessor.PrintTreeContents(originalTree);
+				treeProcessor.PrintTreeHierarchy(originalTree, 0);
+			}
 
 
 			//Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
-			CompositeNode latexMongo = null;
-
-			if (latexRootNode is CompositeNode latexNode) 
-			{
-				latexMongo = latexNode; // Assign to compNode
-			}
-			else
-			{
-				Console.WriteLine("Latex Tree not retrieved!");
-			}
-			// Print the tree
+			CompositeNode latexMongo = (CompositeNode) latexRootNode;
 			if (latexMongo != null)
 			{
 				treeProcessor.PrintTreeContents(latexMongo);
 				treeProcessor.PrintTreeHierarchy(latexMongo, 0);
 			}
+
+			Console.WriteLine("Program Main Flow COMPLETED");
 		}
 	}
 }

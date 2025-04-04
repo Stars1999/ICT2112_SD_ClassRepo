@@ -4,29 +4,18 @@ public class DocumentControl : IDocumentUpdateNotify
 
 	private readonly IDocumentUpdate _dbGateway;
 
+	private readonly Docx docxEntity;
 	public DocumentControl()
 	{
 		_dbGateway = (IDocumentUpdate)new DocumentGateway_RDG();
 		_dbGateway.docxUpdate = this;
 	}
 
-	// ✅ Create new document and store in DB
-	public async Task CreateDocxAsync(Docx docx)
-	{
-		if (docx == null)
-		{
-			throw new ArgumentNullException(nameof(docx), "Document cannot be null.");
-		}
-
-		await _dbGateway.saveDocument(docx); // Save document using injected dependency
-
-		// await _docxUpdate.saveDocument(docx); // Save document using injected dependency
-	}
-
 	// IDocumentUpdateNotify
 	public async Task notifyUpdatedDocument(Docx docx)
 	{
-		Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.Title}");
+		// Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.Title}");
+		Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.GetDocxAttributeValue("title")}");
 		// Additional async operations if necessary
 		await Task.CompletedTask; // Keeps method async-compatible
 	}
@@ -52,16 +41,16 @@ public class DocumentControl : IDocumentUpdateNotify
 			byte[] fileData = await File.ReadAllBytesAsync(filePath);
 
 			// Create Docx object
-			var docx = new Docx
-			{
-				Title = Path.GetFileNameWithoutExtension(filePath),
-				FileName = Path.GetFileName(filePath),
-				ContentType =
-					"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-				UploadDate = DateTime.UtcNow,
-				FileData = fileData,
-			};
-
+			// var docx = new Docx
+			// {
+			// 	Title = Path.GetFileNameWithoutExtension(filePath),
+			// 	FileName = Path.GetFileName(filePath),
+			// 	ContentType =
+			// 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+			// 	UploadDate = DateTime.UtcNow,
+			// 	FileData = fileData,
+			// };
+			var docx = docxEntity.CreateDocx(Path.GetFileNameWithoutExtension(filePath),Path.GetFileName(filePath), fileData);
 			// Check if _docxUpdate is null or not initialized
 			// if (_docxUpdate == null)
 			// {
@@ -72,7 +61,9 @@ public class DocumentControl : IDocumentUpdateNotify
 			// Use RDG method to save document
 			await _dbGateway.saveDocument(docx);
 
-			Console.WriteLine($"DocumentControl -> Document saved: {docx.Title}");
+			// Console.WriteLine($"DocumentControl -> Document saved: {docx.Title}");
+			Console.WriteLine($"DocumentControl -> Document saved: {docx.GetDocxAttributeValue("title")}");
+
 		}
 		catch (Exception ex)
 		{

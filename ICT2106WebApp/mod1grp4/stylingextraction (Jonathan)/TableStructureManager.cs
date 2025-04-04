@@ -14,7 +14,7 @@ using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 public class TableStructureManager : iTableStructure
 {
-	// xtract table (Jonathan - COMPLETED)
+	// Extract table (Jonathan - COMPLETED)
 	public Dictionary<string, object> extractTableStructure(Table table)
 	{
 		var tableRows = new List<Dictionary<string, object>>();

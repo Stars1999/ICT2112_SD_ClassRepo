@@ -10,7 +10,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ICT2106WebApp.mod1Grp3;
-using ICT2106WebApp.mod1grp4;
+// using ICT2106WebApp.mod1grp4;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson; // Bson - Binary JSON
 // MongoDB packages
@@ -166,8 +166,8 @@ namespace Utilities
 				}
 				else if (element is DocumentFormat.OpenXml.Wordprocessing.Table table)
 				{
-					// Console.WriteLine("📝 Extracting Table");
-					elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
+					Console.WriteLine("📝 Extracting Table by another modue");
+					// elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
 				}
 			}
 			return elements;

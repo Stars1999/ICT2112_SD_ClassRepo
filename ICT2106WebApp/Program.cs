@@ -10,7 +10,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using ICT2106WebApp.mod1Grp3;
-using ICT2106WebApp.mod1grp4;
+// using ICT2106WebApp.mod1grp4;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson; // Bson - Binary JSON
 // MongoDB packages
@@ -265,26 +265,26 @@ public static class DocumentProcessor
 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
 
 			// Step 2: Convert abstract node to custom table entity (JOEL)
-			var tableOrganiser = new TableOrganiserManager();
-			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
-				tableAbstractNodes
-			);
+			// var tableOrganiser = new TableOrganiserManager();
+			// List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
+			// 	tableAbstractNodes
+			// );
 
 			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
-			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
-			var tablePreprocessingManager = new TablePreprocessingManager();
-			tablePreprocessingManager.attach(rowTabularGateway_RDG);
-			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
-			List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
-				await tablePreprocessingManager.fixTableIntegrity(tables);
+			// var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+			// var tablePreprocessingManager = new TablePreprocessingManager();
+			// tablePreprocessingManager.attach(rowTabularGateway_RDG);
+			// var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
+			// List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
+			// 	await tablePreprocessingManager.fixTableIntegrity(tables);
 
 			// Step 4: Convert tables to LaTeX (ANDREA)
-			var latexConversionManager = new TableLatexConversionManager();
-			latexConversionManager.attach(rowTabularGateway_RDG);
+			// var latexConversionManager = new TableLatexConversionManager();
+			// latexConversionManager.attach(rowTabularGateway_RDG);
 
 			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
-			List<ICT2106WebApp.mod1grp4.Table> processedTables =
-				await latexConversionManager.convertToLatexAsync(cleanedTables);
+			// List<ICT2106WebApp.mod1grp4.Table> processedTables =
+			// 	await latexConversionManager.convertToLatexAsync(cleanedTables);
 
 			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
 			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
@@ -294,16 +294,16 @@ public static class DocumentProcessor
 			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexStyleFailAsync(cleanedTables);
 
 			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
-			var tableValidationManager = new TableValidationManager();
-			var validationStatus = tableValidationManager.validateTableLatexOutput(
-				tableAbstractNodes,
-				processedTables
-			);
+			// var tableValidationManager = new TableValidationManager();
+			// var validationStatus = tableValidationManager.validateTableLatexOutput(
+			// 	tableAbstractNodes,
+			// 	processedTables
+			// );
 
-			var processedTableManager = new ProcessedTableManager();
-			processedTableManager.attach(rowTabularGateway_RDG);
-			processedTableManager.logProcessingStatus(validationStatus);
-			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+			// var processedTableManager = new ProcessedTableManager();
+			// processedTableManager.attach(rowTabularGateway_RDG);
+			// processedTableManager.logProcessingStatus(validationStatus);
+			// await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
 			// Will prove for Siti as we traverse the nodes again after updating
 			// List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");

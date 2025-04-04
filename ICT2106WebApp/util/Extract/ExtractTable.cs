@@ -20,7 +20,8 @@ namespace Utilities
 		// (Jonathan - COMPLETED)
 		public static Dictionary<string, object> ExtractTable(Table table)
 		{
-			return new TableStructureManager().extractTableStructure(table);
+			return null;
+			// return new TableStructureManager().extractTableStructure(table);
 		}
 	}
 }

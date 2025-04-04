@@ -105,19 +105,19 @@ namespace Utilities
 					return new Dictionary<string, object>
 					{
 						{ "nodeLevel", GetNodeLevel() },
-						{ "nodeType", GetNodeType() }
+						{ "nodeType", GetNodeType() },
 					};
 				case "contentvalidation":
 					return new Dictionary<string, object>
 					{
 						{ "nodeType", GetNodeType() },
-						{ "content", GetContent() }
+						{ "content", GetContent() },
 					};
 				case "treestructurevalidation":
 					return new Dictionary<string, object>
 					{
 						{ "nodeLevel", GetNodeLevel() },
-						{ "nodeType", GetNodeType() }
+						{ "nodeType", GetNodeType() },
 					};
 				case "treeprint":
 					return new Dictionary<string, object>
@@ -125,13 +125,10 @@ namespace Utilities
 						{ "nodeId", GetNodeId() },
 						{ "nodeType", GetNodeType() },
 						{ "content", GetContent() },
-						{ "styling", GetStyling() }
+						{ "styling", GetStyling() },
 					};
 				case "nodetraversal":
-					return new Dictionary<string, object>
-					{
-						{ "nodeType", GetNodeType() }
-					};
+					return new Dictionary<string, object> { { "nodeType", GetNodeType() } };
 				case "nodeinfo":
 					return new Dictionary<string, object>
 					{
@@ -139,13 +136,10 @@ namespace Utilities
 						{ "nodeType", GetNodeType() },
 						{ "content", GetContent() },
 						{ "styling", GetStyling() },
-						{ "converted", IsConverted() }
+						{ "converted", IsConverted() },
 					};
 				case "peek":
-					return new Dictionary<string, object>
-					{
-						{ "nodeLevel", GetNodeLevel() }
-					};
+					return new Dictionary<string, object> { { "nodeLevel", GetNodeLevel() } };
 				default:
 					throw new ArgumentException("Invalid purpose specified.");
 			}

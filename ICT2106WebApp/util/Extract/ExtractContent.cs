@@ -16,6 +16,35 @@ namespace Utilities
 {
 	public static partial class ExtractContent
 	{
+		// layout
+		public static object ExtractLayout(WordprocessingDocument wordDoc)
+		{
+			var layoutInfo = ExtractContent.GetDocumentLayout(wordDoc);
+			// Create layout element
+			var layoutElement = new Dictionary<string, object>
+			{
+				{ "type", "layout" },
+				{ "content", "" },
+				{
+					"styling",
+					new List<object> { layoutInfo }
+				},
+			};
+
+			return layoutElement;
+		}
+
+		public static object elementRoot()
+		{
+			var elementRoot = new Dictionary<string, object>
+			{
+				{ "id", 0 },
+				{ "type", "root" },
+				{ "content", "" },
+			};
+			return elementRoot;
+		}
+
 		// for styling
 		public static string GetRunFontType(
 			Run run,

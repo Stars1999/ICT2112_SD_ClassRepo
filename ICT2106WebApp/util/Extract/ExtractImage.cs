@@ -231,21 +231,8 @@ namespace Utilities
 						{ "position", imagePosition },
 					}
 				},
-				// { "type", "image" },
-				// { "filename", fileName },
-				// { "widthEMU", cx },
-				// { "heightEMU", cy },
-				// { "widthPixels", widthPixels },
-				// { "heightPixels", heightPixels },
-				// { "horizontalResolution", horizontalResolution },
-				// { "verticalResolution", verticalResolution },
-				// { "format", imageFormat },
-				// { "alignment", alignment },
-				// { "position", imagePosition },
 			};
-
 			imageList.Add(imageInfo);
-
 			return imageList;
 		}
 	}

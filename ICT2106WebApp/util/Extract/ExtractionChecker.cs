@@ -24,15 +24,16 @@ namespace Utilities
 {
 	public static partial class ExtractContent
 	{
-		public static void checkJson(JArray documentArray)
+		public static void checkJson(string jsonString)
 		{
 			// Parse the JSON string
-			// JObject jsonObject = JObject.Parse(jsonOutput);
+			JObject jsonObject = JObject.Parse(jsonString);
 			// Count the number of items in the "document" array
-			// JArray documentArray = (JArray)jsonObject["document"];
+			JArray documentArray = (JArray)jsonObject["document"];
+
 			int documentCount = documentArray.Count;
 			Console.WriteLine("Check number of nodes");
-			Console.WriteLine($"Number of items in the JSON document array: {documentCount}");
+			Console.WriteLine($"Number of items/nodes in the JSON document array: {documentCount}");
 
 			// Check if there are "runs" in any of the document items
 			var totalCounts = 0;
@@ -75,7 +76,6 @@ namespace Utilities
 				Console.Write(nodeNum);
 				Console.Write("\n");
 
-				
 				Dictionary<string, object> nodeData = nodeInList.GetNodeData("NodeInfo");
 
 				var thetypehere = nodeData["nodeType"].ToString();

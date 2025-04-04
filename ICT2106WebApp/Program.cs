@@ -231,15 +231,14 @@ public static class DocumentProcessor
 
 
 			//TREE VALIDAITON
+			NodeManager nodeManager = new NodeManager();
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
-			// Flatten the tree
-			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(mongoCompNode);
+			
+			// -- validate content -- 
+			List<AbstractNode> flattenedTree = nodeManager.FlattenTree(rootnodehere);
+			bool isContentValid = nodeManager.ValidateContent(flattenedTree, documentArray);
 
-			// Call validation (pass the document array instead of the entire jsonObject)
-			bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
-
-			// Output validation result
 			if (isContentValid)
 			{
 				Console.WriteLine("Content is valid!");
@@ -249,9 +248,9 @@ public static class DocumentProcessor
 				Console.WriteLine("Content mismatch detected!");
 			}
 
+			// -- validate structure --
 			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
-
-			// Output validation result
+			
 			if (isValidStructure)
 				Console.WriteLine("Tree structure is valid!");
 			else

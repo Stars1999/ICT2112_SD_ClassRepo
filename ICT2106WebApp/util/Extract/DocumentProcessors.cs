@@ -35,14 +35,14 @@ using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 namespace Utilities
 {
 	public class DocumentProcessors : IDocumentUpdateNotify
-		// :
-		// Iapi,
-		// iCreateNode,
-		// iDocument, // not sure if it there is such interface
-			// IDocumentRetrieve // iDocumentRetrival,
-			// iDocumentUpdate,
-			// iDocumentUpdateNotify,
-		// iLogger
+	// :
+	// Iapi,
+	// iCreateNode,
+	// iDocument, // not sure if it there is such interface
+	// IDocumentRetrieve // iDocumentRetrival,
+	// iDocumentUpdate,
+	// iDocumentUpdateNotify,
+	// iLogger
 	{
 		private readonly IDocumentUpdate _dbGateway;
 		private readonly Docx docxEntity;
@@ -55,86 +55,94 @@ namespace Utilities
 
 		public DocumentProcessors()
 		{
-			_dbGateway = (IDocumentUpdate) new DocumentGateway_RDG();
+			_dbGateway = (IDocumentUpdate)new DocumentGateway_RDG();
 			_dbGateway.docxUpdate = this;
 		}
 
 		// Interface
-			// IDocumentUpdateNotify
-	public async Task notifyUpdatedDocument(Docx docx)
-	{
-		// Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.Title}");
-		Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.GetDocxAttributeValue("title")}");
-		// Additional async operations if necessary
-		await Task.CompletedTask; // Keeps method async-compatible
-	}
-
-	// To save local document
-	public async Task saveDocumentToDatabase(string filePath)
-	{
-		// Validate file exists
-		if (!File.Exists(filePath))
+		// IDocumentUpdateNotify
+		public async Task notifyUpdatedDocument(Docx docx)
 		{
-			throw new FileNotFoundException($"File not found: {filePath}");
+			// Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.Title}");
+			Console.WriteLine(
+				$"DocumentControl -> Notify Document updated: {docx.GetDocxAttributeValue("title")}"
+			);
+			// Additional async operations if necessary
+			await Task.CompletedTask; // Keeps method async-compatible
 		}
 
-		// Validate it's a .docx file
-		if (!filePath.EndsWith(".docx", StringComparison.OrdinalIgnoreCase))
+		// To save local document
+		public async Task saveDocumentToDatabase(string filePath)
 		{
-			throw new ArgumentException("File is not a .docx format");
+			// Validate file exists
+			if (!File.Exists(filePath))
+			{
+				throw new FileNotFoundException($"File not found: {filePath}");
+			}
+
+			// Validate it's a .docx file
+			if (!filePath.EndsWith(".docx", StringComparison.OrdinalIgnoreCase))
+			{
+				throw new ArgumentException("File is not a .docx format");
+			}
+
+			try
+			{
+				// Read file into byte array
+				byte[] fileData = await File.ReadAllBytesAsync(filePath);
+
+				// Create Docx object
+				// var docx = new Docx
+				// {
+				// 	Title = Path.GetFileNameWithoutExtension(filePath),
+				// 	FileName = Path.GetFileName(filePath),
+				// 	ContentType =
+				// 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				// 	UploadDate = DateTime.UtcNow,
+				// 	FileData = fileData,
+				// };
+				var docx = docxEntity.CreateDocx(
+					Path.GetFileNameWithoutExtension(filePath),
+					Path.GetFileName(filePath),
+					fileData
+				);
+				// Check if _docxUpdate is null or not initialized
+				// if (_docxUpdate == null)
+				// {
+				// 	Console.WriteLine("Error: _docxUpdate is not initialized.");
+				// 	return;
+				// }
+
+				// Use RDG method to save document
+				await _dbGateway.saveDocument(docx);
+
+				// Console.WriteLine($"DocumentControl -> Document saved: {docx.Title}");
+				Console.WriteLine(
+					$"DocumentControl -> Document saved: {docx.GetDocxAttributeValue("title")}"
+				);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"DocumentControl -> Error saving document: {ex.Message}");
+				Console.WriteLine(ex.StackTrace); // Log the stack trace to help identify where the issue occurred
+				throw;
+			}
 		}
 
-		try
+		public async Task saveJsonToDatabase(string filePath)
 		{
-			// Read file into byte array
-			byte[] fileData = await File.ReadAllBytesAsync(filePath);
-
-			// Create Docx object
-			// var docx = new Docx
-			// {
-			// 	Title = Path.GetFileNameWithoutExtension(filePath),
-			// 	FileName = Path.GetFileName(filePath),
-			// 	ContentType =
-			// 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-			// 	UploadDate = DateTime.UtcNow,
-			// 	FileData = fileData,
-			// };
-			var docx = docxEntity.CreateDocx(Path.GetFileNameWithoutExtension(filePath),Path.GetFileName(filePath), fileData);
-			// Check if _docxUpdate is null or not initialized
-			// if (_docxUpdate == null)
-			// {
-			// 	Console.WriteLine("Error: _docxUpdate is not initialized.");
-			// 	return;
-			// }
-
-			// Use RDG method to save document
-			await _dbGateway.saveDocument(docx);
-
-			// Console.WriteLine($"DocumentControl -> Document saved: {docx.Title}");
-			Console.WriteLine($"DocumentControl -> Document saved: {docx.GetDocxAttributeValue("title")}");
-
+			Console.WriteLine("DocumentControl -> saving json");
+			await _dbGateway.saveJsonFile(filePath);
 		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"DocumentControl -> Error saving document: {ex.Message}");
-			Console.WriteLine(ex.StackTrace); // Log the stack trace to help identify where the issue occurred
-			throw;
-		}
-	}
 
-	public async Task saveJsonToDatabase(string filePath)
-	{
-		Console.WriteLine("DocumentControl -> saving json");
-		await _dbGateway.saveJsonFile(filePath);
-	}
-
-		// Method: Return full path
+		// Method: Combines the current working directory with the provided file name to return the full file path.
 		private static string ReturnFullFilePath(string fileName)
 		{
 			string currentDir = Directory.GetCurrentDirectory();
 			return Path.Combine(currentDir, fileName);
 		}
 
+		// Extracts and returns a list of header texts from the header parts of a Word document.
 		private static List<string> ExtractHeaders(WordprocessingDocument doc)
 		{
 			var headers = new List<string>();
@@ -182,7 +190,8 @@ namespace Utilities
 		}
 
 		/* Footer below. But need to fix the page number not being picked up*/
-		public static List<string> ExtractFooters(WordprocessingDocument doc)
+		// Extracts and returns a list of footer texts from the footer parts of a Word document, including dynamic fields (e.g., page numbers).
+		private static List<string> ExtractFooters(WordprocessingDocument doc)
 		{
 			var footers = new List<string>();
 
@@ -246,7 +255,8 @@ namespace Utilities
 			return footers;
 		}
 
-		public static List<Dictionary<string, object>> ExtractImagesFromDrawing(
+		// Processes a Drawing element to extract image details (such as dimensions, format, alignment, and position) and saves the image locally. Returns a list of dictionaries with image information.
+		private static List<Dictionary<string, object>> ExtractImagesFromDrawing(
 			WordprocessingDocument doc,
 			DocumentFormat.OpenXml.Wordprocessing.Drawing drawing
 		)
@@ -265,7 +275,7 @@ namespace Utilities
 			var blip = drawing.Descendants<DocumentFormat.OpenXml.Drawing.Blip>().FirstOrDefault();
 			if (blip == null)
 			{
-				// Console.WriteLine("No Blip found in Drawing.");
+				Console.WriteLine("No Blip found in Drawing.");
 				return imageList;
 			}
 
@@ -302,7 +312,6 @@ namespace Utilities
 
 			// 3. Build the full file path with Path.Combine.
 			string fileName = Path.Combine(folderPath, $"Image_{embed}.png");
-			// string fileName = $"/image/Image_{embed}.png";
 			using (var stream = imagePart.GetStream())
 			using (var fileStream = new FileStream(fileName, FileMode.Create))
 			{
@@ -344,12 +353,8 @@ namespace Utilities
 			double verticalResolution = 0;
 			try
 			{
-				// using (var img = Image.FromFile(fileName))
-				// using (var img = System.Drawing.Image.FromFile(fileName))
 				using (var img = SixImage.Load<SixPixelFormats.Rgba32>(fileName))
 				{
-					// horizontalResolution = img.HorizontalResolution;
-					// verticalResolution = img.VerticalResolution;
 					horizontalResolution = img.Metadata.HorizontalResolution;
 					verticalResolution = img.Metadata.VerticalResolution;
 				}
@@ -367,17 +372,6 @@ namespace Utilities
 				"image/gif" => "GIF",
 				_ => "Unknown",
 			};
-
-			// 10. Get image alignment from the parent Paragraph (if available)
-			// string alignment = "Not specified (?)";
-			// var parentParagraph = drawing.Ancestors<Paragraph>().FirstOrDefault();
-			// if (parentParagraph != null && parentParagraph.ParagraphProperties?.Justification != null)
-			// {
-			// 	// The Justification value is an enum (e.g., left, center, right, both)
-			// 	// alignment = parentParagraph.ParagraphProperties.Justification.Val.Value;
-			// 	Console.WriteLine(parentParagraph.ParagraphProperties.Justification.Val);
-			// 	alignment = parentParagraph.ParagraphProperties.Justification.Val.ToString();
-			// }
 
 			// 10. Get image alignment from the parent Paragraph (if available)
 			string alignment = "Left Align (Ctrl + L)";
@@ -418,19 +412,15 @@ namespace Utilities
 					alignment = justValue.ToString();
 				}
 			}
-			// Console.WriteLine("Image Alignment: " + alignment);
 
 			// 11.Get image position(for floating images)
 			string imagePosition = "Inline (position determined by text flow)";
-			// var anchorElement = drawing.Descendants<WP.Anchor>().FirstOrDefault();
 			var anchorElement = drawing
 				.Descendants<DocumentFormat.OpenXml.Drawing.Wordprocessing.Anchor>()
 				.FirstOrDefault();
 
 			if (anchorElement != null)
 			{
-				// var posH = anchorElement.PositionH;
-				// var posV = anchorElement.PositionV;
 				var horizontalPosElem = anchorElement.HorizontalPosition;
 				var verticalPosElem = anchorElement.VerticalPosition;
 
@@ -465,8 +455,8 @@ namespace Utilities
 			return imageList;
 		}
 
-		// get my meta data
-		public static Dictionary<string, string> GetDocumentMetadata(
+		// Retrieves metadata (like title, author, creation and modification dates) from the document’s package properties and the file system, returning them as key/value pairs in a dictionary.
+		private static Dictionary<string, string> GetDocumentMetadata(
 			WordprocessingDocument doc,
 			string filepath
 		)
@@ -489,21 +479,19 @@ namespace Utilities
 
 			FileInfo fileInfo = new FileInfo(filepath);
 
-			string fileName = fileInfo.Name; // "Example.docx"
-			long fileSize = fileInfo.Length; // size in bytes
+			string fileName = fileInfo.Name;
+			long fileSize = fileInfo.Length;
 
 			metadata["filename"] = fileName;
 			metadata["size"] = fileSize.ToString();
-
 			Console.WriteLine(metadata);
 			return metadata;
 		}
 
-		// Extract layout
+		// Extracts layout-related information (such as page size, orientation, margins, and columns) from the document and wraps it in a dictionary (used as a layout element).
 		public static object ExtractLayout(WordprocessingDocument wordDoc)
 		{
 			var layoutInfo = GetDocumentLayout(wordDoc);
-			// Create layout element
 			var layoutElement = new Dictionary<string, object>
 			{
 				{ "type", "layout" },
@@ -517,6 +505,7 @@ namespace Utilities
 			return layoutElement;
 		}
 
+		// Creates and returns a dictionary representing the “root” node of the document structure (typically used as the base for the node tree).
 		public static object elementRoot()
 		{
 			var elementRoot = new Dictionary<string, object>
@@ -528,7 +517,7 @@ namespace Utilities
 			return elementRoot;
 		}
 
-		// for styling
+		// Determines the font type for a given run by checking its own formatting first, then falling back to the paragraph’s formatting and finally to the document default.
 		public static string GetRunFontType(
 			WordRun run,
 			WordParagraph paragraph,
@@ -585,13 +574,10 @@ namespace Utilities
 			return runFontType;
 		}
 
-		// Get list type
+		// Determines the type of list (e.g., numbered, bulleted) by examining the numbering properties of a paragraph and returns a string representing the list type
 		private static string GetListType(WordParagraph paragraph)
 		{
 			var numberingProps = paragraph.ParagraphProperties?.NumberingProperties;
-
-			// Console.WriteLine("\nGetListType:");
-			// Console.WriteLine(numberingProps);
 
 			if (numberingProps != null)
 			{
@@ -606,8 +592,6 @@ namespace Utilities
 					numberingProps?.NumberingLevelReference?.Val != null
 						? numberingProps.NumberingLevelReference.Val.Value.ToString()
 						: "None";
-				// Console.WriteLine($"Numbering ID: {numberingId ?? "None\n"}");
-				// Console.WriteLine($"Level ID: {levelId ?? "None"}");
 			}
 			else
 			{
@@ -635,12 +619,11 @@ namespace Utilities
 				21 => "lowercase_roman_numeral_list",
 				_ => "unknown_list",
 			};
-			// Console.WriteLine($"List type: {listType}\n");
 			return listType;
 		}
 
-		// extracting paragraph
-		public static Dictionary<string, object> ExtractParagraph(
+		// Extracts text and styling information from a paragraph—including handling breaks, math elements, and bibliography cues—and returns a dictionary representing the paragraph’s content and properties.
+		private static Dictionary<string, object> ExtractParagraph(
 			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph,
 			WordprocessingDocument doc,
 			ref bool haveBibliography
@@ -736,7 +719,6 @@ namespace Utilities
 										break;
 								}
 							}
-							//Console.WriteLine($"Extracted line spacing: {lineSpacingType}, {lineSpacingValue}");
 						}
 						catch (FormatException ex)
 						{
@@ -749,8 +731,6 @@ namespace Utilities
 
 			var paragraphData = new Dictionary<string, object>();
 			paragraphData["alignment"] = alignment;
-			// paragraphData["fontType"] = fontType;
-			// paragraphData["fontSize"] = fontSize;
 
 			var havemath = false;
 			List<Dictionary<string, object>> mathContent = new List<Dictionary<string, object>>();
@@ -774,16 +754,6 @@ namespace Utilities
 					{ "lineSpacingValue", lineSpacingValue },
 				},
 			};
-			// the one below can grab as text
-			// // check for internal using word. This works
-			// string paraText = paragraph.InnerText.Trim();
-
-			// // Check if it starts with "References"
-			// if (paraText.StartsWith("References", StringComparison.OrdinalIgnoreCase))
-			// {
-			// 	Console.WriteLine("Found a references paragraph:");
-			// 	Console.WriteLine(paraText);
-			// }
 
 			// Detect type of lists
 			if (paragraph.ParagraphProperties?.NumberingProperties != null)
@@ -824,7 +794,7 @@ namespace Utilities
 
 			if (paragraph.Descendants<DocumentFormat.OpenXml.Math.OfficeMath>().Any())
 			{
-				// Console.WriteLine("Math extractor\n");
+				Console.WriteLine("Math extractor\n");
 				mathContent = ExtractParagraphsWithMath(paragraph);
 				havemath = true;
 				paragraphData["type"] = "math";
@@ -836,7 +806,7 @@ namespace Utilities
 				&& havemath == false
 			)
 			{
-				// Console.WriteLine("Null / white space\n");
+				Console.WriteLine("Null / white space\n");
 				paragraphData["type"] = "empty_paragraph1";
 				paragraphData["content"] = "";
 				paragraphData["styling"] = PropertiesList;
@@ -847,7 +817,7 @@ namespace Utilities
 			// Check for page/line breaks at the paragraph level
 			if (paragraph.Descendants<WordBreak>().Any(b => b.Type?.Value == BreakValues.Page))
 			{
-				// Console.WriteLine("break\n");
+				Console.WriteLine("break\n");
 				return new Dictionary<string, object>
 				{
 					{ "type", "page_break" },
@@ -882,7 +852,6 @@ namespace Utilities
 
 				if (string.IsNullOrWhiteSpace(runText))
 				{
-					// Console.WriteLine("Continue\n");
 					continue;
 				}
 
@@ -938,7 +907,6 @@ namespace Utilities
 						firstDict,
 						new JsonSerializerOptions { WriteIndented = true }
 					);
-					// Console.WriteLine("Serialized JSON:\n" + json);
 
 					// Convert JSON back to a dictionary (deserialize)
 					var modifiedDict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
@@ -956,31 +924,17 @@ namespace Utilities
 						modifiedDict["highlight"] = runHighlightColor;
 						// Assign it back to PropertiesList[0]
 						PropertiesList[0] = modifiedDict;
-
-						// Console.WriteLine("check the font type:");
-						// Console.WriteLine(runfontType);
 					}
-					// Print modified dictionary
-					// Console.WriteLine(
-					//     "Modified JSON:\n"
-					//         + JsonSerializer.Serialize(
-					//             PropertiesList[0],
-					//             new JsonSerializerOptions { WriteIndented = true }
-					//         )
-					// );
 				}
 
 				if (PropertiesList[0] is Dictionary<string, object> dict)
 				{
 					// get fonts and size
-					// Console.WriteLine("\nS3");
-					//Check font and font size
 					string? runFontSizeRawS1 = run.RunProperties?.FontSize?.Val?.Value;
 					int runFontSizeS1 = 12; // Default to 12pt if not found
 
 					if (int.TryParse(runFontSizeRawS1, out int parsedSizeS1))
 						runFontSizeS1 = parsedSizeS1 / 2; // Convert from half-points to standard points
-					// Console.WriteLine($"Run Font Size: {runFontSizeS1}pt");
 
 					string? paraFontSizeRawS1 = paragraph
 						.ParagraphProperties?.ParagraphMarkRunProperties?.GetFirstChild<FontSize>()
@@ -991,9 +945,6 @@ namespace Utilities
 						paraFontSizeS1 = paraParsedSizeS1 / 2; // Convert from half-points
 
 					string fontTypexx = GetRunFontType(run, paragraph, doc);
-					// Console.WriteLine($"Paragraph Font Size1: {runFontSizeS1}pt {fontTypexx}");
-					// Console.WriteLine(runText);
-					//end
 
 					// Now you can safely call dict.ContainsKey(...)
 					if (
@@ -1022,11 +973,6 @@ namespace Utilities
 					}
 					else if (dict.ContainsKey("fontsize") && dict.ContainsKey("fonttype"))
 					{
-						// if (
-						// 	runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
-						// )
-						// {
-
 						string bracketPattern = @"\([^)]*\)"; // Matches entire ( ... )
 						string firstBracketPattern = @"\("; // Matches first "("
 						string secondBracketPattern = @"\)"; // Matches first ")"
@@ -1042,9 +988,6 @@ namespace Utilities
 							&& fontTypexx == "Times New Roman"
 						)
 						{
-							// Console.WriteLine("bracket set\n");
-							// Console.WriteLine(runFontSizeS1);
-							// Console.WriteLine(fontTypexx);
 							runsList.Add(
 								new Dictionary<string, object>
 								{
@@ -1095,12 +1038,6 @@ namespace Utilities
 						{
 							if (bracket == true)
 							{
-								// runFontSizeS1 == 10 && fontTypexx == "Times New Roman"
-								// Console.WriteLine("debug\n");
-								// Console.WriteLine(runFontSizeS1);
-								// Console.WriteLine(fontTypexx);
-								// Console.WriteLine(runText);
-
 								runsList.Add(
 									new Dictionary<string, object>
 									{
@@ -1138,10 +1075,6 @@ namespace Utilities
 			}
 
 			string pattern = @"\b(Reference|Bibliography)\b";
-			// Console.WriteLine($"Total runs found: {runsList.Count}");
-			// Console.WriteLine($"bib:{haveBibliography}");
-			// Console.WriteLine("check the text:");
-			// Console.WriteLine(text);
 
 			// check if it is still references / citation at the bottom
 			if (text.Length > 0 && text[0] == '[')
@@ -1240,9 +1173,6 @@ namespace Utilities
 					if (havemath == true)
 					{
 						var mathstring = "";
-						// Console.WriteLine(
-						// 	"Getting back the result and we see what is inside the for loop\n"
-						// );
 						// Go through the math and re-assemble it back from the run
 						foreach (var mathEntry in mathContent)
 						{
@@ -1270,7 +1200,7 @@ namespace Utilities
 		}
 
 		// Method: Save content as JSON
-		// Return A string containing the serialized JSON for checking purposes later
+		// Serializes the provided document data into a formatted JSON string, writes it to a file (using a predefined output path), and returns the JSON string.
 		private static string SaveDocumentDataToJsonFile(object documentData)
 		{
 			var jsonOutput = JsonSerializer.Serialize(
@@ -1289,9 +1219,8 @@ namespace Utilities
 		}
 
 		//Method: Parse the document
-		// public async Task<List<object>> ParseDocument(IMongoDatabase database, string fileName)
+		// Opens and processes a Word document: extracts document contents (including layout, headers, footers, paragraphs, and tables), converts them to JSON, and stores the JSON (also saving it to a database). Returns a list of objects representing the document’s elements.
 		public async Task<List<object>> ParseDocument(string fileName)
-
 		{
 			// var documentControl = new DocumentControl(); // Must be declared inside the method
 
@@ -1326,6 +1255,7 @@ namespace Utilities
 			}
 		}
 
+		// Extracts overall layout settings from the document (like orientation, page size, columns, and margins) and returns these as a dictionary.
 		public static Dictionary<string, object> GetDocumentLayout(WordprocessingDocument doc)
 		{
 			var layout = new Dictionary<string, object>();
@@ -1430,7 +1360,7 @@ namespace Utilities
 			return layout;
 		}
 
-		// extract document content
+		// Iterates over the document’s body elements and extracts content (paragraphs, tables, images) into a list of objects. Each element is processed by dedicated functions (such as ExtractParagraph or ExtractImagesFromDrawing).
 		public static List<object> ExtractDocumentContents(WordprocessingDocument doc)
 		{
 			var elements = new List<object>();
@@ -1469,7 +1399,7 @@ namespace Utilities
 			return elements;
 		}
 
-		// json related stuff
+		// Converts values of type JsonElement within the given dictionary to native .NET types (string, number, boolean) and returns the updated dictionary.
 		public static Dictionary<string, object> ConvertJsonElements(
 			Dictionary<string, object> input
 		)
@@ -1508,6 +1438,7 @@ namespace Utilities
 			return result;
 		}
 
+		// Extracts layout and document content, serializes the combined data to JSON, writes the JSON to a file, and saves it to a database asynchronously via a DocumentControl instance.
 		public static async Task ToSaveJson(
 			DocumentProcessors documentControl,
 			string filePath,
@@ -1571,13 +1502,15 @@ namespace Utilities
 		}
 
 		// Convert twips (1/1440 of an inch) to centimeters
+		// Converts a measurement in twips (1/1440 of an inch) to centimeters, rounding the result as needed.
 		private static double ConvertTwipsToCentimeters(int twips)
 		{
 			// 1 inch = 2.54 cm, and 1 inch = 1440 twips
 			return Math.Round((double)twips / 1440 * 2.54, 2);
 		}
 
-		public static string GetParagraphFont(
+		// Returns the font name for a paragraph by examining its style (ParagraphStyleId), defaulting to “Default Font” if not found.
+		private static string GetParagraphFont(
 			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph
 		)
 		{
@@ -1591,7 +1524,8 @@ namespace Utilities
 			return "Default Font";
 		}
 
-		public static int GetParagraphFontSize(
+		// Retrieves the font size from a paragraph’s properties (usually given in half-points) and converts it to standard point size.
+		private static int GetParagraphFontSize(
 			DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph
 		)
 		{
@@ -1604,7 +1538,8 @@ namespace Utilities
 		}
 
 		// Change the type to header
-		public static string GetParagraphType(string style)
+		// Maps a paragraph style (e.g., “Heading1”, “Heading2”) to a simpler type representation (e.g., “h1”, “h2”, or “paragraph”).
+		private static string GetParagraphType(string style)
 		{
 			return style switch
 			{
@@ -1616,7 +1551,8 @@ namespace Utilities
 			};
 		}
 
-		public static List<Dictionary<string, object>> ExtractParagraphsWithMath(
+		// Extracts both standard text and math equations from a paragraph that contains math elements, returning a list of dictionaries representing each math (and text) element.
+		private static List<Dictionary<string, object>> ExtractParagraphsWithMath(
 			WordParagraph paragraph
 		)
 		{
@@ -1644,11 +1580,13 @@ namespace Utilities
 			return results;
 		}
 
-		public static string ExtractReadableMath(MathOfficeMath mathElement)
+		// Converts a MathOfficeMath element into a human-readable string format.
+		private static string ExtractReadableMath(MathOfficeMath mathElement)
 		{
 			return GetMathString(mathElement);
 		}
 
+		// Recursively traverses an OpenXmlElement (which can be a fraction, radical, n-ary operator, superscript, subscript, etc.) and returns a string that represents the mathematical expression contained within.
 		private static string GetMathString(OpenXmlElement element)
 		{
 			switch (element)

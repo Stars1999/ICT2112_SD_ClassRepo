@@ -10,6 +10,7 @@ namespace Utilities
 		[BsonElement("children")]
 		private List<AbstractNode> children;
 
+  		// CompositeNode Constructor
 		public CompositeNode(
 			int id,
 			int nl,
@@ -22,81 +23,33 @@ namespace Utilities
 			children = new List<AbstractNode>();
 		}
 
-		internal void AddChild(AbstractNode child)
-		{
-			children.Add(child);
-		}
+		// Getters
+		protected override int GetNodeId() { return nodeId; }
+		protected override int GetNodeLevel() { return nodeLevel; }
+		protected override string GetNodeType() { return nodeType; }
+		protected override string GetContent() { return content; }
+		protected override List<Dictionary<string, object>> GetStyling() { return styling; }
+		protected override bool IsConverted() { return converted; }
 
-		internal List<AbstractNode> GetChildren()
-		{
-			return children;
-		}
+		// Setters
+  		protected override void SetNodeId(int id) { nodeId = id; }
+		protected override void SetNodeLevel(int nl) { nodeLevel = nl; }
+		protected override void SetNodeType(string nt) { nodeType = nt; }
+		protected override void SetContent(string c) { content = c; }
+		protected override void SetStyling(List<Dictionary<string, object>> s) { styling = s; }
+		protected override void SetConverted(bool c) { converted = c; }
 
-		protected override int GetNodeId()
-		{
-			return nodeId;
-		}
-
-		protected override int GetNodeLevel()
-		{
-			return nodeLevel;
-		}
-
-		protected override string GetNodeType()
-		{
-			return nodeType;
-		}
-
-		protected override string GetContent()
-		{
-			return content;
-		}
-
-		protected override List<Dictionary<string, object>> GetStyling()
-		{
-			return styling;
-		}
-
-		protected override bool IsConverted()
-		{
-			return converted;
-		}
-
-		protected override void SetNodeId(int id)
-		{
-			nodeId = id;
-		}
-
-		protected override void SetNodeLevel(int nl)
-		{
-			nodeLevel = nl;
-		}
-
-		protected override void SetNodeType(string nt)
-		{
-			nodeType = nt;
-		}
-
-		protected override void SetContent(string c)
-		{
-			content = c;
-		}
-
-		protected override void SetStyling(List<Dictionary<string, object>> s)
-		{
-			styling = s;
-		}
-
-		protected override void SetConverted(bool c)
-		{
-			converted = c;
-		}
-
+		// Methods for managing children
+		internal void AddChild(AbstractNode child) { children.Add(child); }
+		internal List<AbstractNode> GetChildren() { return children; }
+  
+		// Create iterator for children
 		public INodeIterator CreateIterator()
 		{
 			return new NodeIterator(children);
 		}
 
+		// Method that returns node data based on purpose
 		public override Dictionary<string, object> GetNodeData(string purpose)
 		{
 			switch (purpose.ToLower())
@@ -145,6 +98,7 @@ namespace Utilities
 			}
 		}
 
+		// Method to set or change node data
 		public override void SetNodeData(
 			string content,
 			List<Dictionary<string, object>> styling,

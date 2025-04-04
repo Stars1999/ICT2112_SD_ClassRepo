@@ -22,14 +22,14 @@ namespace Utilities
 				&& paragraph.ParagraphProperties.ParagraphStyleId != null
 			)
 			{
-				Console.WriteLine(
-					"paragraph font type"
-						+ paragraph.ParagraphProperties.ParagraphStyleId.Val?.Value
-						+ "\n"
-				);
+				// Console.WriteLine(
+				// 	"paragraph font type"
+				// 		+ paragraph.ParagraphProperties.ParagraphStyleId.Val?.Value
+				// 		+ "\n"
+				// );
 				return paragraph.ParagraphProperties.ParagraphStyleId.Val?.Value ?? "Default Font";
 			}
-			Console.WriteLine(paragraph.ParagraphProperties);
+			// Console.WriteLine(paragraph.ParagraphProperties);
 			return "Default Font";
 		}
 

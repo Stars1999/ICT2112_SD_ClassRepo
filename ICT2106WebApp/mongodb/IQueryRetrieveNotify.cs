@@ -1,7 +1,7 @@
 namespace ICT2106WebApp.mod1Grp3
 {
-    public interface IQueryRetrieveNotify
-    {
-        void notifyRetrieveTree();
-    }
+	public interface IQueryRetrieveNotify
+	{
+		Task notifyRetrieveTree();
+	}
 }

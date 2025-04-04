@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Utilities
 {
-	public class TreeProcessor: ITreeUpdateNotify
+	public class TreeProcessor : ITreeUpdateNotify
 	{
 		// private List<string> nodeOrder = new List<string>
 		// {
@@ -19,17 +19,18 @@ namespace Utilities
 		// 	"row",
 		// 	"runsParagraph",
 		// };
-		// Save Tree to Database 
+		// Save Tree to Database
 		private readonly ITreeUpdate _treeUpdate;
 
 		public TreeProcessor()
 		{
 			// _docxRetrieve = (IDocumentRetrieve) new DocumentGateway_RDG();
-			_treeUpdate = (ITreeUpdate) new DocumentGateway_RDG();
+			_treeUpdate = (ITreeUpdate)new DocumentGateway_RDG();
 			_treeUpdate.treeUpdate = this;
 			// _docxRetrieve.docxRetrieve = this;
 		}
-        public CompositeNode CreateTree(List<AbstractNode> sequentialList)
+
+		public CompositeNode CreateTree(List<AbstractNode> sequentialList)
 		{
 			Stack<AbstractNode> nodeStack = new Stack<AbstractNode>();
 			AbstractNode rootNode = sequentialList[0];
@@ -70,7 +71,9 @@ namespace Utilities
 					while (currentNodeLevel <= currentCompositeNodeLevel)
 					{
 						nodeStack.Pop();
-						currentCompositeNodeLevel = ((CompositeNode)nodeStack.Peek()).GetNodeLevel();
+						currentCompositeNodeLevel = (
+							(CompositeNode)nodeStack.Peek()
+						).GetNodeLevel();
 					}
 					((CompositeNode)nodeStack.Peek()).AddChild(node);
 					nodeStack.Push(node);
@@ -79,19 +82,19 @@ namespace Utilities
 			return (CompositeNode)rootNode;
 		}
 
-		public async Task SaveTreeToDatabase(AbstractNode rootNode)
+		public async Task SaveTreeToDatabase(AbstractNode rootNode, string collectionName)
 		{
 			Console.WriteLine("inside this function now");
 			// TODO: Save tree to database
-			await _treeUpdate.saveTree(rootNode);
+			await _treeUpdate.saveTree(rootNode, collectionName);
 		}
 
-		// TREE VALIDATION CODES 
+		// TREE VALIDATION CODES
 		public bool ValidateContent(List<AbstractNode> treeNodes, JArray documentArray)
 		{
 			return ValidateContentRecursive(treeNodes, documentArray, 0);
 		}
-		
+
 		public List<AbstractNode> FlattenTree(AbstractNode root)
 		{
 			List<AbstractNode> flatList = new List<AbstractNode>();
@@ -114,16 +117,20 @@ namespace Utilities
 			// Console.WriteLine("flatList contents:");
 			// foreach (var node in flatList)
 			// {
-				// Console.WriteLine($"{count}. Node Type: {node.GetNodeType()}, Node Content: {node.GetContent()}");
+			// Console.WriteLine($"{count}. Node Type: {node.GetNodeType()}, Node Content: {node.GetContent()}");
 			// 	count++;
 			// }
 			return flatList;
 		}
 
-		private bool ValidateContentRecursive(List<AbstractNode> treeNodes, JArray documentArray, int startIndex)
+		private bool ValidateContentRecursive(
+			List<AbstractNode> treeNodes,
+			JArray documentArray,
+			int startIndex
+		)
 		{
 			int treeNodeIndex = startIndex;
-			
+
 			for (int jsonIndex = 0; jsonIndex < documentArray.Count; jsonIndex++)
 			{
 				JObject jsonItem = (JObject)documentArray[jsonIndex];
@@ -133,7 +140,13 @@ namespace Utilities
 				if (HasNestedRuns(jsonItem))
 				{
 					// Validate current node type and content
-					if (!CompareNodeTypeAndContent(treeNodes[treeNodeIndex], jsonType, GetJsonNodeContent(jsonItem)))
+					if (
+						!CompareNodeTypeAndContent(
+							treeNodes[treeNodeIndex],
+							jsonType,
+							GetJsonNodeContent(jsonItem)
+						)
+					)
 					{
 						return false;
 					}
@@ -150,7 +163,13 @@ namespace Utilities
 				else if (jsonItem["runs"] is JArray runs && runs.Count > 0)
 				{
 					// Validate main node
-					if (!CompareNodeTypeAndContent(treeNodes[treeNodeIndex], jsonType, GetJsonNodeContent(jsonItem)))
+					if (
+						!CompareNodeTypeAndContent(
+							treeNodes[treeNodeIndex],
+							jsonType,
+							GetJsonNodeContent(jsonItem)
+						)
+					)
 					{
 						return false;
 					}
@@ -160,7 +179,13 @@ namespace Utilities
 					foreach (var run in runs)
 					{
 						string runContent = run["content"]?.ToString() ?? "";
-						if (!CompareNodeTypeAndContent(treeNodes[treeNodeIndex], "text_run", runContent))
+						if (
+							!CompareNodeTypeAndContent(
+								treeNodes[treeNodeIndex],
+								"text_run",
+								runContent
+							)
+						)
 						{
 							return false;
 						}
@@ -170,7 +195,13 @@ namespace Utilities
 				// Handle simple nodes without runs
 				else
 				{
-					if (!CompareNodeTypeAndContent(treeNodes[treeNodeIndex], jsonType, jsonItem["content"]?.ToString() ?? ""))
+					if (
+						!CompareNodeTypeAndContent(
+							treeNodes[treeNodeIndex],
+							jsonType,
+							jsonItem["content"]?.ToString() ?? ""
+						)
+					)
 					{
 						return false;
 					}
@@ -181,7 +212,11 @@ namespace Utilities
 			return true;
 		}
 
-		private bool ValidateNestedRuns(List<AbstractNode> treeNodes, ref int treeNodeIndex, JArray nestedRuns)
+		private bool ValidateNestedRuns(
+			List<AbstractNode> treeNodes,
+			ref int treeNodeIndex,
+			JArray nestedRuns
+		)
 		{
 			foreach (var nestedRun in nestedRuns)
 			{
@@ -214,16 +249,22 @@ namespace Utilities
 			return jsonItem["runs"] is JArray runs && runs.Count > 0;
 		}
 
-		private bool CompareNodeTypeAndContent(AbstractNode treeNode, string jsonType, string jsonContent)
+		private bool CompareNodeTypeAndContent(
+			AbstractNode treeNode,
+			string jsonType,
+			string jsonContent
+		)
 		{
 			string treeType = treeNode.GetNodeType();
 			string treeContent = treeNode.GetContent();
 
 			if (treeType != jsonType || treeContent != jsonContent)
 			{
-				Console.WriteLine($"❌ Mismatch:" +
-					$"\n  Tree   - Type: {treeType}, Content: '{treeContent}'" +
-					$"\n  JSON   - Type: {jsonType}, Content: '{jsonContent}'");
+				Console.WriteLine(
+					$"❌ Mismatch:"
+						+ $"\n  Tree   - Type: {treeType}, Content: '{treeContent}'"
+						+ $"\n  JSON   - Type: {jsonType}, Content: '{jsonContent}'"
+				);
 				return false;
 			}
 			return true;
@@ -240,8 +281,7 @@ namespace Utilities
 			// Otherwise, return the content directly
 			return jsonItem["content"]?.ToString() ?? "";
 		}
-		
-		// validate the hierarchical structure of the tree
+
 		public bool ValidateNodeStructure(AbstractNode node, int parentLevel)
 		{
 			int nodeLevel = node.GetNodeLevel(); // Get the level of the current node
@@ -249,23 +289,21 @@ namespace Utilities
 
 			if (nodeLevel < expectedLevel && nodeLevel != -1)
 			{
-				Console.WriteLine($"Structural error: '{node.GetNodeType()}' at level {nodeLevel}, expected {expectedLevel}.");
+				Console.WriteLine(
+					$"Structural error: '{node.GetNodeType()}' at level {nodeLevel}, expected {expectedLevel}."
+				);
 				return false;
 			}
 
 			// Check children if the node is composite
-			// if(nodeLevel != -1 ) 
-			// {
-				if (node is CompositeNode compositeNode)
+			if (node is CompositeNode compositeNode)
 			{
-				foreach (var child in compositeNode.GetChildren()) 
+				foreach (var child in compositeNode.GetChildren())
 				{
 					if (!ValidateNodeStructure(child, nodeLevel)) // Pass current node level as parentLevel
 						return false;
 				}
 			}
-			// }
-
 			return true;
 		}
 
@@ -283,15 +321,21 @@ namespace Utilities
 				// Loop through each key-value pair in the dictionary
 				foreach (var kvp in dict)
 				{
-        		consolidatedStyling += $"{kvp.Key}: {kvp.Value}, ";
+					consolidatedStyling += $"{kvp.Key}: {kvp.Value}, ";
 				}
 			}
 
 			Console.WriteLine(
-				new string(' ', level * 2) + node.GetNodeType() + ": " + node.GetContent() + " | styling: " + consolidatedStyling
-				
+				new string(' ', level * 2)
+					+ "\nNode ID: "
+					+ node.GetNodeId()
+					+ "\nNode Type: "
+					+ node.GetNodeType()
+					+ "\nContent: "
+					+ node.GetContent()
+					+ "\nStyling: "
+					+ consolidatedStyling
 			);
-
 
 			if (node is CompositeNode compositeNode)
 			{
@@ -303,11 +347,10 @@ namespace Utilities
 			}
 		}
 
-
-        public Task NotifyUpdatedTree(AbstractNode node)
-        {
+		public Task NotifyUpdatedTree(AbstractNode node)
+		{
 			return Task.CompletedTask;
-        }
+		}
 
 		// public async Task retrieveTree()
 		// {
@@ -316,8 +359,8 @@ namespace Utilities
 		// }
 		public async Task<AbstractNode> retrieveTree()
 		{
-			AbstractNode rootNode = await _treeUpdate.getTree();
-			
+			AbstractNode rootNode = await _treeUpdate.getTree("mergewithcommentedcode");
+
 			if (rootNode is CompositeNode compositeNode)
 			{
 				Console.WriteLine("Loaded tree is a CompositeNode!");
@@ -331,5 +374,5 @@ namespace Utilities
 			}
 			return rootNode;
 		}
-    }
+	}
 }

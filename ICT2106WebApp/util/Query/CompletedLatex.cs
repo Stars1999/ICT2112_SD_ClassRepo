@@ -1,57 +1,57 @@
-using Utilities; 
+using Utilities;
 
 namespace ICT2106WebApp.mod1Grp3
 {
-    public class CompletedLatex: ICompletedLatex, IQueryRetrieveNotify 
-    {
-        private readonly IQueryRetrieve _queryRetrieve;
+	public class CompletedLatex : ICompletedLatex, IQueryRetrieveNotify
+	{
+		private readonly IQueryRetrieve _queryRetrieve;
 
-        public CompletedLatex()
-        {
-            _queryRetrieve = (IQueryRetrieve) new DocumentGateway_RDG();
-            _queryRetrieve.queryRetrieve = this;
-        }
+		public CompletedLatex()
+		{
+			_queryRetrieve = (IQueryRetrieve)new DocumentGateway_RDG();
+			_queryRetrieve.queryRetrieve = this;
+		}
 
-        // Retrieve Latex Tree
-        public async Task<AbstractNode> RetrieveLatexTree() //idk HELP LA
-        {
-			AbstractNode rootNode = await _queryRetrieve.getTree();
-			
+		// Retrieve Latex Tree
+		public async Task<AbstractNode> RetrieveLatexTree()
+		{
+			AbstractNode rootNode = await _queryRetrieve.getTree("latexTree"); // Retrieve the tree from the database
+			Console.WriteLine("Retrieving tree from DB...");
+
 			if (rootNode is CompositeNode compositeNode)
 			{
-				Console.WriteLine("Loaded tree is a CompositeNode!");
-				// Console.WriteLine("printing tree FROM DB\n");
-				// PrintTree(rootNode,0);
+				Console.WriteLine("Latex Tree Retrieved Sucessfully!");
 			}
 			else
 			{
-				Console.WriteLine("Loaded tree is not a CompositeNode!");
+				Console.WriteLine("Latex Tree Retrieved Unsucessfully!");
 			}
 			return rootNode;
-        }
+		}
 
-        // Retrieve Original Tree (Non modified)
-        public async Task<AbstractNode> RetrieveTree() //idk WORKING SAME AS RETRIEVELATEXTREE()
-        {
-			AbstractNode rootNode = await _queryRetrieve.getTree();
-			
+		// Retrieve Original Tree (Non modified)
+		public async Task<AbstractNode> RetrieveTree()
+		{
+			AbstractNode rootNode = await _queryRetrieve.getTree("mergewithcommentedcode");
+			Console.WriteLine("Retrieving tree from DB...");
+
 			if (rootNode is CompositeNode compositeNode)
 			{
-				Console.WriteLine("Loaded tree is a CompositeNode!");
-				// Console.WriteLine("printing tree FROM DB\n");
-				// PrintTree(rootNode,0);
+				Console.WriteLine("Non Modified Tree Retrieved Sucessfully!");
 			}
 			else
 			{
-				Console.WriteLine("Loaded tree is not a CompositeNode!");
+				Console.WriteLine("Non Modified Tree Retrieved Unsucessfully!");
 			}
 			return rootNode;
-        }
+		}
 
-        public void notifyRetrieveTree()
-        {
-            // TODO: Implement this method
-            
-        }
-    }
+		//notifty when tree is retrieved from DB
+		public async Task notifyRetrieveTree()
+		{
+			Console.WriteLine($"Tree Retrieved!");
+
+			await Task.CompletedTask;
+		}
+	}
 }

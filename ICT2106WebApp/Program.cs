@@ -236,8 +236,8 @@ public static class DocumentProcessor
 			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
 			
 			// -- validate content -- 
-			List<AbstractNode> flattenedTree = nodeManager.FlattenTree(rootnodehere);
-			bool isContentValid = nodeManager.ValidateContent(flattenedTree, documentArray);
+			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
+			bool isContentValid = nodeManager.ValidateContentRecursive(flattenedTree, documentArray, 0);
 
 			if (isContentValid)
 			{
@@ -252,9 +252,9 @@ public static class DocumentProcessor
 			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
 			
 			if (isValidStructure)
-				Console.WriteLine("Tree structure is valid!");
+				Console.WriteLine("Tree structure is valid!\n");
 			else
-				Console.WriteLine("Invalid tree structure detected.");
+				Console.WriteLine("Invalid tree structure detected.\n");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 			

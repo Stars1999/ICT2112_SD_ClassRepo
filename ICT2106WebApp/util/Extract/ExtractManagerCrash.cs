@@ -142,21 +142,23 @@ namespace Utilities
 				// Flatten the tree
 				if (mongoCompNode != null)
 				{
-					List<AbstractNode> flattenedTree = nodeManager.FlattenTree(rootNode);
+					List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootNode);
 
 					string jsonOutput = File.ReadAllText("output.json");
 					// Parse the JSON string
 					JObject jsonObject = JObject.Parse(jsonOutput);
 					JArray documentArray = (JArray)jsonObject["document"];
 					int documentCount = documentArray.Count;
+					int startIndex = 0;
 					Console.WriteLine(
 						$"\n\n Number of items in the JSON document array: {documentCount}"
 					);
 					// Count the number of items in the "document" array
 					// Call validation (pass the document array instead of the entire jsonObject)
-					bool isContentValid = nodeManager.ValidateContent(
+					bool isContentValid = nodeManager.ValidateContentRecursive(
 						flattenedTree,
-						documentArray
+						documentArray,
+						startIndex
 					);
 				}
 				else

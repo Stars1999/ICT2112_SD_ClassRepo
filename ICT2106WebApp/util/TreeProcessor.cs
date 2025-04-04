@@ -95,6 +95,34 @@ namespace Utilities
 		}
 
 		// ----------------------------------TREE VALIDATION CODES-----------------------------------------
+				public List<AbstractNode> FlattenTree(AbstractNode root)
+		{
+			List<AbstractNode> flatList = new List<AbstractNode>();
+			int count = 0;
+
+			void Traverse(AbstractNode node)
+			{
+				flatList.Add(node); // Add current node to list
+				if (node is CompositeNode compositeNode)
+				{
+					foreach (var child in compositeNode.GetChildren())
+					{
+						Traverse(child); // Recursively add children
+					}
+				}
+			}
+
+			Traverse(root);
+			// Print the flatList by iterating over the nodes
+			// Console.WriteLine("flatList contents:");
+			// foreach (var node in flatList)
+			// {
+			// Console.WriteLine($"{count}. Node Type: {node.GetNodeType()}, Node Content: {node.GetContent()}");
+			// 	count++;
+			// }
+			return flatList;
+		}
+		
 		public bool ValidateTreeStructure(AbstractNode node, int parentLevel)
 		{
 			Dictionary<string, object> nodeData = node.GetNodeData("TreeStructureValidation");

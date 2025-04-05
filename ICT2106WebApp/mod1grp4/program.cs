@@ -76,7 +76,7 @@ namespace ICT2106WebApp.mod1grp4
     var processedTableManager = new ProcessedTableManager();
     processedTableManager.attach(rowTabularGateway_RDG);
     processedTableManager.logProcessingStatus(validationStatus);
-    await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+    await processedTableManager.slotProcessedTableToTree(processedTables, tableAbstractNodes);
 
     // Will prove for Siti as we traverse the nodes again after updating
     List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");

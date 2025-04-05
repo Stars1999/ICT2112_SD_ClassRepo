@@ -31,6 +31,8 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 	var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
 	return mongoClient;
 });
+
+// singleton
 builder.Services.AddSingleton(serviceProvider =>
 {
 	var mongoDbSettings = serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value;
@@ -43,28 +45,17 @@ var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
 var app = builder.Build();
 
-// Jon part's for error testing
+// ahJon part's for error testing
 Console.CancelKeyPress += async (sender, eventArgs) =>
 {
 	eventArgs.Cancel = true;
 	Console.WriteLine("SIGINT received. Running crash recovery...");
 
-	await ExtractContent.RunCrashRecovery(database);
+	// await ExtractContent.RunCrashRecovery(database);
+	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+	await documentFailSafe.runCrashRecovery(false);
 };
-
 var runCrashRecovery = false;
-
-// try
-// {
-// 	Console.WriteLine("Running main program logic...");
-// 	DocumentProcessor.RunMyProgram(database);
-// }
-// catch (Exception ex)
-// {
-// 	Console.WriteLine("Crash detected, running recovery.");
-// 	await ExtractContent.RunCrashRecovery(database);
-// }
-
 Console.WriteLine("✅ App built successfully");
 
 // // Get logger instance
@@ -84,10 +75,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 DocumentProcessor.RunMyProgram(database);
-
-// GRP3 JOHNATHAN CRASH RECOVERY TESTING
-// await ExtractContent.RunCrashRecovery(database);
-
 await app.StartAsync();
 
 // Listen for SIGINT continuously
@@ -99,8 +86,9 @@ while (true)
 		Console.ForegroundColor = ConsoleColor.Red;
 		Console.WriteLine("SIGINT received. Running crash recovery...\n");
 		Console.ResetColor();
-
-		await ExtractContent.RunCrashRecovery(database);
+		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+		await documentFailSafe.runCrashRecovery(false);
+		// await ExtractContent.RunCrashRecovery(database);
 
 		Console.WriteLine("✅ Crash recovery done. Server still running.\n");
 	}
@@ -108,93 +96,48 @@ while (true)
 	await Task.Delay(100); // Prevent busy looping
 }
 
-// app.Run();
-
 // ✅ Extracts content from Word document
 public static class DocumentProcessor
 {
+	// actual document processor process
+
+
 	// Running whole program
 	public async static void RunMyProgram(IMongoDatabase database)
 	{
-		var documentControl = new DocumentControl();
+		// var documentControl = new DocumentControl();
 		string filePath = "Datarepository_zx_v4.docx"; // Change this to your actual file path
-		string jsonOutputPath = "output.json"; // File where JSON will be saved
+		// string jsonOutputPath = "output.json"; // File where JSON will be saved
 
-		string currentDir = Directory.GetCurrentDirectory();
-		string filePath_full = Path.Combine(currentDir, filePath);
+		// getting the path
+		// string currentDir = Directory.GetCurrentDirectory();
+		// string filePath_full = Path.Combine(currentDir, filePath);
 		// **
 		// await documentControl.saveDocumentToDatabase(filePath);
 
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
-			// Get layout information
-			var layoutInfo = ExtractContent.GetDocumentLayout(wordDoc);
+			var documentProcessors = new DocumentProcessors();
 
-			// Extract document contents
-			var documentContents = ExtractContent.ExtractDocumentContents(wordDoc);
+			List<Object> documentContents = documentProcessors
+				.ParseDocument(filePath)
+				// .ParseDocument(database, filePath)
+				.Result;
 
-			// Create layout element
-			var layoutElement = new Dictionary<string, object>
-			{
-				{ "type", "layout" },
-				{ "content", "" },
-				{
-					"styling",
-					new List<object> { layoutInfo }
-				},
-			};
+			NodeManager nodeManager = new NodeManager();
 
-			// Insert layout as the first element in document contents
-			documentContents.Insert(0, layoutElement);
-
-			// // to create rootnode
-			var layoutElementRoot = new Dictionary<string, object>
-			{
-				{ "id", 0 },
-				{ "type", "root" },
-				{ "content", "" },
-			};
-			documentContents.Insert(0, layoutElementRoot);
-
-			// important!!
-			var documentData = new
-			{
-				// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
-				metadata = ExtractContent.GetDocumentMetadata(wordDoc, filePath_full),
-				headers = DocumentHeadersFooters.ExtractHeaders(wordDoc),
-				// !!footer still exists issues. Commented for now
-				footers = DocumentHeadersFooters.ExtractFooters(wordDoc),
-				// documentContents is what i need
-				document = documentContents,
-			};
+			//ceate a list of nodes
+			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
 
 			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
-
-			List<AbstractNode> nodesList = new List<AbstractNode>();
-			string jsonOutput = string.Empty;
-
-			jsonOutput = await ExtractContent.CreateNodeList(
-				documentContents,
-				nodesList,
-				jsonOutput,
-				documentData,
-				jsonOutputPath
-			);
-
-			JObject jsonObject = JObject.Parse(jsonOutput);
-			JArray documentArray = (JArray)jsonObject["document"];
-			// checkjson
-			// uncomment to see consolelogs for checking purposes
-			ExtractContent.checkJson(documentArray);
-
-			// !!Break here for another function ?
-			// CREATE AND PRINT TREE HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 
 			var defaultColor = Console.ForegroundColor;
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
-			Console.WriteLine("\n\n############################## \nPrint Tree\n\n");
-			treeProcessor.PrintTree(rootnodehere, 0);
+			Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
+			treeProcessor.PrintTreeContents(rootnodehere);
+			Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
+			treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
 			Console.ForegroundColor = defaultColor;
 
 			// SAVE TREE TO MONGODB
@@ -215,47 +158,43 @@ public static class DocumentProcessor
 			if (mongoCompNode != null)
 			{
 				// Console.WriteLine("Print out tree. Commented out for now\n");
-
 				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				treeProcessor.PrintTree(mongoCompNode, 0);
+				treeProcessor.PrintTreeContents(mongoCompNode);
+				treeProcessor.PrintTreeHierarchy(mongoCompNode, 0);
 				Console.ForegroundColor = defaultColor;
 			}
 			// END TREE
 
-
 			//TREE VALIDAITON
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
 			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
-			// Flatten the tree
-			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(mongoCompNode);
-
-			// Call validation (pass the document array instead of the entire jsonObject)
-			bool isContentValid = treeProcessor.ValidateContent(flattenedTree, documentArray);
-
-			// Output validation result
+			// -- validate content --
+			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
+			bool isContentValid = nodeManager.ValidateContentRecursive(
+				flattenedTree,
+				documentProcessors.documentArray,
+				0
+			);
 			if (isContentValid)
 				Console.WriteLine("Content is valid!");
 			else
 				Console.WriteLine("Content mismatch detected!");
 
-			bool isValidStructure = treeProcessor.ValidateNodeStructure(rootnodehere, -1); // Root starts at level 0
+			// -- validate structure --
+			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
 
-			// Output validation result
 			if (isValidStructure)
-				Console.WriteLine("Tree structure is valid!");
+				Console.WriteLine("Tree structure is valid!\n");
 			else
-				Console.WriteLine("Invalid tree structure detected.");
+				Console.WriteLine("Invalid tree structure detected.\n");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 
 			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
 			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
-			// Console.WriteLine("Traversal complete. Check traverseNodes.cs for results.");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 
-			// GROUP 4 STUFF
-			// Step 1: Get abstract nodes of table from group 3
 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
 
 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
@@ -310,41 +249,25 @@ public static class DocumentProcessor
 			ICompletedLatex completedLatex = new CompletedLatex();
 
 			// // Retrieve the non-modified tree from MongoDB (for demo query)
-            // AbstractNode originalRootNode = await completedLatex.RetrieveTree();
-            // CompositeNode originalMongo = null; // declare outside so it can be used outside of the if statement
-
-            // if (originalRootNode is CompositeNode originalNode) // Use pattern matching
-            // {
-            // 	Console.WriteLine("Latex Tree retrieved!");
-            // 	originalMongo = originalNode; // Assign to compNode
-            // }
-            // else
-            // {
-            // 	Console.WriteLine("Latex Tree not retrieved!");
-            // }
-            // if (originalMongo != null)
-            // {
-            // 	treeProcessor.PrintTree(originalMongo,0);
-            // }
-
-
-            //Retrieve the Latex tree from MongoDB (for demo query) [Cmt out when grp4 demo]
-            AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
-			CompositeNode latexMongo = null; // declare outside so it can be used outside of the if statement
-
-			if (latexRootNode is CompositeNode latexNode) // Use pattern matching
+			AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
+			// CompositeNode originalMongo = null;
+			CompositeNode originalTree = (CompositeNode)originalRootNode;
+			if (originalTree != null)
 			{
-				//Console.WriteLine("Latex Tree retrieved!");
-				latexMongo = latexNode; // Assign to compNode
+				treeProcessor.PrintTreeContents(originalTree);
+				treeProcessor.PrintTreeHierarchy(originalTree, 0);
 			}
-			else
-			{
-				//Console.WriteLine("Latex Tree not retrieved!");
-			}
+
+			//Retrieve the Latex tree from MongoDB (for demo query)
+			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
+			CompositeNode latexMongo = (CompositeNode)latexRootNode;
 			if (latexMongo != null)
 			{
-				treeProcessor.PrintTree(latexMongo, 0);
+				treeProcessor.PrintTreeContents(latexMongo);
+				treeProcessor.PrintTreeHierarchy(latexMongo, 0);
 			}
+
+			Console.WriteLine("Program Main Flow COMPLETED");
 		}
-    }
+	}
 }

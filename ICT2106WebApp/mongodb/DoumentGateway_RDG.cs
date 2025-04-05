@@ -5,7 +5,7 @@ using MongoDB.Driver;
 using Utilities;
 
 public class DocumentGateway_RDG
-	: IDocumentRetrieve,
+	: ICrashRecoveryRetrieve,
 		IDocumentUpdate,
 		ITreeUpdate,
 		INodeRetrieve,
@@ -24,7 +24,7 @@ public class DocumentGateway_RDG
 
 	// Nullable properties with null checks
 	private IDocumentUpdateNotify _docxUpdate;
-	private IDocumentRetrieveNotify _docxRetrieve;
+	private ICrashRecoveryRetrieveNotify _docxRetrieve;
 
 	private ITreeUpdateNotify _treeUpdate;
 
@@ -38,7 +38,7 @@ public class DocumentGateway_RDG
 		set => _docxUpdate = value;
 	}
 
-	public IDocumentRetrieveNotify docxRetrieve
+	public ICrashRecoveryRetrieveNotify docxRetrieve
 	{
 		get => _docxRetrieve;
 		set => _docxRetrieve = value;
@@ -70,6 +70,19 @@ public class DocumentGateway_RDG
 		_treeCollection = _mongoDbService.GetCollection<AbstractNode>("mergewithcommentedcode");
 		_jsonCollection = _mongoDbService.GetCollection<BsonDocument>("jsonn");
 		_latexCollection = _mongoDbService.GetCollection<AbstractNode>("latexTree");
+		// Docx.RegisterMongoSerializer();
+
+		// if (!BsonClassMap.IsClassMapRegistered(typeof(Docx)))
+        // {
+        //     BsonClassMap.RegisterClassMap<Docx>(cm =>
+        //     {
+        //         cm.AutoMap(); // maps public methods/properties
+        //         cm.MapIdMember(c => c.GetType().GetProperty("DocId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance));
+        //         cm.MapMember(c => c.GetType().GetProperty("Title", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance));
+        //         cm.MapMember(c => c.GetType().GetProperty("FileName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance));
+        //         cm.MapMember(c => c.GetType().GetProperty("FileData", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance));
+        //     });
+        // }
 	}
 
 	public async Task saveDocument(Docx docx)
@@ -91,7 +104,10 @@ public class DocumentGateway_RDG
 	public async Task<Docx> getDocument(string id)
 	{
 		Console.WriteLine("DocxRDG -> getDocument");
-		var docx = await _docxCollection.Find(d => d.Id == id).FirstOrDefaultAsync();
+		// var docx = await _docxCollection.Find(d => d.Id == id).FirstOrDefaultAsync();
+
+		// var docx = await _docxCollection.Find(d => (string)d.GetDocxAttributeValue("docxId") == id).FirstOrDefaultAsync();
+		var docx = await _docxCollection.Find(_ => true).FirstOrDefaultAsync();
 
 		// Null check for retrieve notifier
 		if (_docxRetrieve != null && docx != null)
@@ -146,7 +162,6 @@ public class DocumentGateway_RDG
 		if (collectionName == "latexTree")
 		{
 			await _latexCollection.DeleteManyAsync(_ => true); // Clear existing data
-			await _latexCollection.DeleteManyAsync(_ => true); // Clear existing data
 			await _latexCollection.InsertOneAsync(rootNode);
 			Console.WriteLine("added LatexTree into MongoDB!");
 			return;
@@ -199,11 +214,15 @@ public class DocumentGateway_RDG
 
 	public async Task UpdateAsync(Docx docx)
 	{
-		await _docxCollection.ReplaceOneAsync(d => d.Id == docx.Id, docx);
+		// await _docxCollection.ReplaceOneAsync(d => d.getDocxAttributeValue("docxId") == docx.Id, docx);
+				await _docxCollection.ReplaceOneAsync(d => (string)d.GetDocxAttributeValue("docxId") == (string)docx.GetDocxAttributeValue("docxId"), docx);
+
 	}
 
 	public async Task DeleteAsync(string id)
 	{
-		await _docxCollection.DeleteOneAsync(d => d.Id == id);
+		// await _docxCollection.DeleteOneAsync(d => d.Id == id);
+		await _docxCollection.DeleteOneAsync(d => (string)d.GetDocxAttributeValue("docxId") == id);
+
 	}
 }

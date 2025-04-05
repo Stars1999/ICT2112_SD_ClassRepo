@@ -30,7 +30,7 @@ namespace ICT2106WebApp.mod1Grp3
 		}
 
 		// Retrieve Original Tree (Non modified)
-		public async Task<AbstractNode> RetrieveTree()
+		public async Task<AbstractNode> RetrieveUnmodifiedTree()
 		{
 			AbstractNode rootNode = await _queryRetrieve.getTree("mergewithcommentedcode");
 			Console.WriteLine("Retrieving tree from DB...");
@@ -47,7 +47,7 @@ namespace ICT2106WebApp.mod1Grp3
 		}
 
 		//notifty when tree is retrieved from DB
-		public async Task notifyRetrieveTree()
+		public async Task notifyRetrievedTree()
 		{
 			Console.WriteLine($"Tree Retrieved!");
 

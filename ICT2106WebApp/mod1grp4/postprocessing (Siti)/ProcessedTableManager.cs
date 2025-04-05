@@ -34,16 +34,18 @@ namespace ICT2106WebApp.mod1grp4
 				var tableNode = abstractNodes
 					.OfType<CompositeNode>()
 					.FirstOrDefault(node =>
-						node.GetNodeType() == "table" && node.GetNodeId() == processedTable.tableId
+						node.GetNodeData("nodeinfo")["nodeType"].ToString() == "table"
+						&& node.GetNodeData("nodeinfo")["nodeId"].ToString()
+							== processedTable.tableId.ToString()
 					);
 
 				if (tableNode != null)
 				{
 					// Set the LaTeX content for the table node
-					tableNode.SetContent(processedTable.latexOutput);
-					tableNode.SetConverted(true); // Mark the table as converted
+					tableNode.SetNodeData(processedTable.latexOutput, null, null);
+					tableNode.SetNodeData(null, null, true); // Mark the table as converted
 					Console.WriteLine(
-						$"Updated group 3 table node {tableNode.GetNodeId()} with updated LaTeX content. (SITI)"
+						$"Updated group 3 table node {tableNode.GetNodeData("nodeinfo")["nodeId"]} with updated LaTeX content. (SITI)"
 					);
 
 					// Traverse rows and cells to mark them as converted
@@ -51,19 +53,22 @@ namespace ICT2106WebApp.mod1grp4
 					{
 						if (
 							rowNode is CompositeNode rowCompositeNode
-							&& rowCompositeNode.GetNodeType() == "row"
+							&& rowCompositeNode.GetNodeData("nodeinfo")["nodeType"].ToString()
+								== "row"
 						)
 						{
-							rowCompositeNode.SetConverted(true); // Mark the row as converted
+							rowCompositeNode.SetNodeData(null, null, true); // Mark the row as converted
 
 							foreach (var cellNode in rowCompositeNode.GetChildren())
 							{
 								if (
 									cellNode is AbstractNode cellAbstractNode
-									&& cellAbstractNode.GetNodeType() == "cell"
+									&& cellAbstractNode
+										.GetNodeData("nodeinfo")["nodeType"]
+										.ToString() == "cell"
 								)
 								{
-									cellAbstractNode.SetConverted(true); // Mark the cell as converted
+									cellAbstractNode.SetNodeData(null, null, true); // Mark the cell as converted
 								}
 							}
 						}

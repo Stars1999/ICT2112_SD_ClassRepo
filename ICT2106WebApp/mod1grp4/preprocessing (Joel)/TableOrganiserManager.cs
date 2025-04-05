@@ -16,25 +16,23 @@ namespace ICT2106WebApp.mod1grp4
 			{
 				if (
 					node is CompositeNode tableCompositeNode
-					&& tableCompositeNode.GetNodeType() == "table"
+					&& tableCompositeNode.GetNodeData("nodeinfo")["nodeType"].ToString() == "table"
 				)
 				{
-					var tableId = tableCompositeNode.GetNodeId();
+					var tableId = tableCompositeNode.GetNodeData("nodeinfo")["nodeId"].ToString();
 
 					// Check if the table already exists in the dictionary
-					if (!tables.TryGetValue(tableId, out var existingTable))
+					if (!tables.TryGetValue(int.Parse(tableId), out var existingTable))
 					{
 						// Create a new table if it doesn't already exist
 						existingTable = new Table(
-							tableId,
+							int.Parse(tableId),
 							new List<TableRow>(),
 							false,
-							tableCompositeNode.GetContent()
-						)
-						{
-							type = "table",
-						};
-						tables[tableId] = existingTable;
+							tableCompositeNode.GetNodeData("nodeinfo")["content"].ToString()
+						);
+						existingTable.type = "table";
+						tables[int.Parse(tableId)] = existingTable;
 					}
 
 					// Process rows and add them to the existing table
@@ -42,7 +40,8 @@ namespace ICT2106WebApp.mod1grp4
 					{
 						if (
 							rowNode is CompositeNode rowCompositeNode
-							&& rowCompositeNode.GetNodeType() == "row"
+							&& rowCompositeNode.GetNodeData("nodeinfo")["nodeType"].ToString()
+								== "row"
 						)
 						{
 							var cells = new List<TableCell>();
@@ -52,11 +51,19 @@ namespace ICT2106WebApp.mod1grp4
 							{
 								if (
 									cellNode is AbstractNode cellAbstractNode
-									&& cellAbstractNode.GetNodeType() == "cell"
+									&& cellAbstractNode
+										.GetNodeData("nodeinfo")["nodeType"]
+										.ToString() == "cell"
 								)
 								{
-									var cellContent = cellAbstractNode.GetContent();
-									var cellStylingRaw = cellAbstractNode.GetStyling();
+									var cellContent = cellAbstractNode
+										.GetNodeData("nodeinfo")["content"]
+										.ToString();
+									var cellStylingRaw =
+										cellAbstractNode.GetNodeData("nodeinfo")["styling"]
+										as List<Dictionary<string, object>>;
+									;
+									;
 
 									// Inline conversion logic
 									var cellStyling = new CellStyling();
@@ -67,6 +74,7 @@ namespace ICT2106WebApp.mod1grp4
 											switch (kvp.Key.ToLower())
 											{
 												case "bold":
+
 													cellStyling.bold = Convert.ToBoolean(kvp.Value);
 													break;
 												case "italic":

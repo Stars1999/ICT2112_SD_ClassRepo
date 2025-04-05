@@ -17,7 +17,7 @@ namespace ICT2106WebApp.mod1grp4
 			{
 				if (
 					tableNode is CompositeNode tableCompositeNode
-					&& tableCompositeNode.GetNodeType() == "table"
+					&& tableCompositeNode.GetNodeData("nodeinfo")["nodeType"].ToString() == "table"
 				)
 				{
 					var processedTable = processedTables[currentTableIndex];
@@ -28,14 +28,14 @@ namespace ICT2106WebApp.mod1grp4
 					{
 						if (!latexOutput.Contains("\\begin{tabular}"))
 						{
-							return $"LaTeX output does not start with \\begin{{tabular}} for table {tableCompositeNode.GetNodeId()}.";
+							return $"LaTeX output does not start with \\begin{{tabular}} for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 						}
 					}
 
 					// Step 2: Verify the LaTeX output ends with "\end{tabular}"
 					if (!latexOutput.EndsWith("\\end{tabular}"))
 					{
-						return $"LaTeX output does not end with \\end{{tabular}} for table {tableCompositeNode.GetNodeId()}.";
+						return $"LaTeX output does not end with \\end{{tabular}} for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 					}
 
 					// Step 3: Verify the number of \hlines matches the number of rows + 1
@@ -44,7 +44,7 @@ namespace ICT2106WebApp.mod1grp4
 
 					if ((numberOfRows + 1) != hlineCount)
 					{
-						return $"Mismatch in \\hline count. Expected {numberOfRows}, found {hlineCount} for table {tableCompositeNode.GetNodeId()}.";
+						return $"Mismatch in \\hline count. Expected {numberOfRows}, found {hlineCount} for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 					}
 
 					// Step 4: Verify the number of cells in each row
@@ -55,12 +55,15 @@ namespace ICT2106WebApp.mod1grp4
 					{
 						if (
 							rowNode is CompositeNode rowCompositeNode
-							&& rowCompositeNode.GetNodeType() == "row"
+							&& rowCompositeNode.GetNodeData("nodeinfo")["nodeType"].ToString()
+								== "row"
 						)
 						{
 							var cellNodes = rowCompositeNode
 								.GetChildren()
-								.Where(child => child.GetNodeType() == "cell")
+								.Where(child =>
+									child.GetNodeData("nodeinfo")["nodeType"].ToString() == "cell"
+								)
 								.ToList();
 							totalCellCount += cellNodes.Count - 1;
 						}
@@ -68,7 +71,7 @@ namespace ICT2106WebApp.mod1grp4
 
 					if (latexCellCount != totalCellCount)
 					{
-						return $"Mismatch in cell count. Expected {totalCellCount}, found {latexCellCount} for table {tableCompositeNode.GetNodeId()}.";
+						return $"Mismatch in cell count. Expected {totalCellCount}, found {latexCellCount} for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 					}
 
 					// Step 5: Verify cell content and styling
@@ -76,17 +79,22 @@ namespace ICT2106WebApp.mod1grp4
 					{
 						if (
 							rowNode is CompositeNode rowCompositeNode
-							&& rowCompositeNode.GetNodeType() == "row"
+							&& rowCompositeNode.GetNodeData("nodeinfo")["nodeType"].ToString()
+								== "row"
 						)
 						{
 							foreach (var cellNode in rowCompositeNode.GetChildren())
 							{
 								if (
 									cellNode is AbstractNode cellAbstractNode
-									&& cellAbstractNode.GetNodeType() == "cell"
+									&& cellAbstractNode
+										.GetNodeData("nodeinfo")["nodeType"]
+										.ToString() == "cell"
 								)
 								{
-									var cellContent = cellAbstractNode.GetContent();
+									var cellContent = cellAbstractNode
+										.GetNodeData("nodeinfo")["content"]
+										.ToString();
 
 									Dictionary<string, string> latexEscapes = new Dictionary<
 										string,
@@ -113,11 +121,15 @@ namespace ICT2106WebApp.mod1grp4
 
 									if (!latexOutput.Contains(latexCell))
 									{
-										return $"Cell content '{latexCell}' not found in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+										return $"Cell content '{latexCell}' not found in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 									}
 
 									// Verify styling
-									var cellStyling = cellAbstractNode.GetStyling();
+									var cellStyling =
+										cellAbstractNode.GetNodeData("nodeinfo")["styling"]
+										as List<Dictionary<string, object>>;
+									;
+
 									if (cellStyling != null)
 									{
 										if (
@@ -131,7 +143,7 @@ namespace ICT2106WebApp.mod1grp4
 											latexCell = $"\\textbf{{{latexCell}}}";
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Bold styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Bold styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 
@@ -146,7 +158,7 @@ namespace ICT2106WebApp.mod1grp4
 											latexCell = $"\\textit{{{latexCell}}}";
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Italic styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Italic styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 										if (
@@ -165,7 +177,7 @@ namespace ICT2106WebApp.mod1grp4
 
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Highlight styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Highlight styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 										if (
@@ -179,7 +191,7 @@ namespace ICT2106WebApp.mod1grp4
 											latexCell = $"\\underline{{{latexCell}}}";
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Underline styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Underline styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 
@@ -208,7 +220,7 @@ namespace ICT2106WebApp.mod1grp4
 
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Text color styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Text color styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 
@@ -226,7 +238,7 @@ namespace ICT2106WebApp.mod1grp4
 
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Font size styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Font size styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 
@@ -256,7 +268,7 @@ namespace ICT2106WebApp.mod1grp4
 
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Cell color styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Cell color styling for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 
@@ -342,7 +354,7 @@ namespace ICT2106WebApp.mod1grp4
 											// Check if latexOutput contains latexCell
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Vertical alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Vertical alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 										var alignmentValue =
@@ -378,7 +390,7 @@ namespace ICT2106WebApp.mod1grp4
 
 											if (!latexOutput.Contains(latexCell))
 											{
-												return $"Horizontal alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeId()}.";
+												return $"Horizontal alignment for cell '{cellContent}' is missing in LaTeX output for table {tableCompositeNode.GetNodeData("nodeinfo")["nodeId"]}.";
 											}
 										}
 									}

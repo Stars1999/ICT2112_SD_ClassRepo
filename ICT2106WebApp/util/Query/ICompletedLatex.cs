@@ -8,6 +8,6 @@ namespace ICT2106WebApp.mod1Grp3
 		Task<AbstractNode> RetrieveLatexTree();
 
 		// Method to get the original tree
-		Task<AbstractNode> RetrieveTree();
+		Task<AbstractNode> RetrieveUnmodifiedTree();
 	}
 }

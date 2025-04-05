@@ -480,7 +480,7 @@ namespace ICT2106WebApp.mod1Grp3
 		}
 
 		// Extracts layout-related information (such as page size, orientation, margins, and columns) from the document and wraps it in a dictionary (used as a layout element).
-		private static object ExtractLayout(WordprocessingDocument wordDoc)
+		public static object ExtractLayout(WordprocessingDocument wordDoc)
 		{
 			var layoutInfo = GetDocumentLayout(wordDoc);
 			var layoutElement = new Dictionary<string, object>
@@ -497,7 +497,7 @@ namespace ICT2106WebApp.mod1Grp3
 		}
 
 		// Creates and returns a dictionary representing the “root” node of the document structure (typically used as the base for the node tree).
-		private static object elementRoot()
+		public static object elementRoot()
 		{
 			var elementRoot = new Dictionary<string, object>
 			{
@@ -1352,7 +1352,7 @@ namespace ICT2106WebApp.mod1Grp3
 		}
 
 		// Iterates over the document’s body elements and extracts content (paragraphs, tables, images) into a list of objects. Each element is processed by dedicated functions (such as ExtractParagraph or ExtractImagesFromDrawing).
-		private static List<object> ExtractDocumentContents(WordprocessingDocument doc)
+		public static List<object> ExtractDocumentContents(WordprocessingDocument doc)
 		{
 			var elements = new List<object>();
 			var body = doc.MainDocumentPart?.Document?.Body;

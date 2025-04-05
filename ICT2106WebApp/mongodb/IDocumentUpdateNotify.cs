@@ -1,4 +1,7 @@
-public interface IDocumentUpdateNotify
+namespace ICT2106WebApp.mod1Grp3
 {
-	Task notifyUpdatedDocument(Docx docx);
+	public interface IDocumentUpdateNotify
+	{
+		Task notifyUpdatedDocument(Docx docx);
+	}
 }

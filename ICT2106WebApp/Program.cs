@@ -39,7 +39,7 @@ Console.CancelKeyPress += async (sender, eventArgs) =>
 
 	// await ExtractContent.RunCrashRecovery(database);
 	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-	await documentFailSafe.runCrashRecovery(false);
+	await documentFailSafe.runCrashRecovery(database, false);
 };
 var runCrashRecovery = false;
 Console.WriteLine("✅ App built successfully");
@@ -73,7 +73,7 @@ while (true)
 		Console.WriteLine("SIGINT received. Running crash recovery...\n");
 		Console.ResetColor();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-		await documentFailSafe.runCrashRecovery(false);
+		await documentFailSafe.runCrashRecovery(database, false);
 
 		Console.WriteLine("✅ Crash recovery done. Server still running.\n");
 	}

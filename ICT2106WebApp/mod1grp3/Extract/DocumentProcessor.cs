@@ -109,7 +109,6 @@ namespace ICT2106WebApp.mod1Grp3
 				// Read file into byte array
 				byte[] fileData = await File.ReadAllBytesAsync(filePath);
 
-		
 				var docx = docxEntity.CreateDocx(
 					Path.GetFileNameWithoutExtension(filePath),
 					Path.GetFileName(filePath),
@@ -809,7 +808,7 @@ namespace ICT2106WebApp.mod1Grp3
 				&& havemath == false
 			)
 			{
-				Console.WriteLine("Null / white space\n");
+				// Console.WriteLine("Null / white space\n");
 				paragraphData["type"] = "empty_paragraph1";
 				paragraphData["content"] = "";
 				paragraphData["styling"] = PropertiesList;
@@ -961,6 +960,8 @@ namespace ICT2106WebApp.mod1Grp3
 							&& runfontType == "Times New Roman"
 						)
 						{
+							Console.WriteLine($"✍️ Run Content: \"{runText}\"");
+
 							runsList.Add(
 								new Dictionary<string, object>
 								{
@@ -1095,6 +1096,7 @@ namespace ICT2106WebApp.mod1Grp3
 					&& haveBibliography == false
 				)
 				{
+					Console.WriteLine("📚 Bibliography Detected");
 					haveBibliography = true;
 					return new Dictionary<string, object>
 					{
@@ -1107,6 +1109,7 @@ namespace ICT2106WebApp.mod1Grp3
 				{
 					if (runsList.Count == 0)
 					{
+						Console.WriteLine(text);
 						return new Dictionary<string, object>
 						{
 							{ "type", "paragraph_run?" },
@@ -1126,6 +1129,7 @@ namespace ICT2106WebApp.mod1Grp3
 				}
 				else if (runsList.Count > 1)
 				{
+					Console.WriteLine(text);
 					var finalDictionary = new Dictionary<string, object>
 					{
 						{ "type", GetParagraphType(style) },
@@ -1155,6 +1159,7 @@ namespace ICT2106WebApp.mod1Grp3
 					}
 					else
 					{
+						Console.WriteLine(text);
 						return new Dictionary<string, object>
 						{
 							{ "type", GetParagraphType(style) },
@@ -1343,6 +1348,7 @@ namespace ICT2106WebApp.mod1Grp3
 				if (drawing != null)
 				{
 					var imageObjects = ExtractImagesFromDrawing(doc, drawing);
+					Console.WriteLine("image detected");
 					elements.AddRange(imageObjects);
 				}
 				else if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
@@ -1470,6 +1476,7 @@ namespace ICT2106WebApp.mod1Grp3
 			foreach (var mathElement in paragraph.Descendants<MathOfficeMath>())
 			{
 				string mathText = ExtractReadableMath(mathElement);
+				Console.WriteLine(mathText);
 				results.Add(
 					new Dictionary<string, object> { { "type", "math" }, { "content", mathText } }
 				);

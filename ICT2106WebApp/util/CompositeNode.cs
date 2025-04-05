@@ -2,7 +2,7 @@ using ICT2106WebApp.mod1Grp3;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
-namespace Utilities
+namespace ICT2106WebApp.mod1Grp3
 {
 	public class CompositeNode : AbstractNode, INodeCollection
 	{

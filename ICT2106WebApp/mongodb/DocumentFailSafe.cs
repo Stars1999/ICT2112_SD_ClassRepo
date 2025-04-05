@@ -67,12 +67,12 @@ namespace ICT2106WebApp.mod1Grp3
 
 			Console.WriteLine("Starting Document Processing with Crash Recovery");
 
-			// DocumentControl documentControl = new DocumentControl();
-			DocumentProcessors documentProcessor = new DocumentProcessors();
-			DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
-			DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-			TreeProcessor treeProcessor = new TreeProcessor();
-			NodeManager nodeManager = new NodeManager();
+		// DocumentControl documentControl = new DocumentControl();
+		DocumentProcessor documentProcessor = new DocumentProcessor();
+		DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
+		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+		TreeProcessor treeProcessor = new TreeProcessor();
+		NodeManager nodeManager = new NodeManager();
 
 			// Step 1: Check if doc exists in DB
 			Console.WriteLine(
@@ -140,11 +140,11 @@ namespace ICT2106WebApp.mod1Grp3
 
 			Console.WriteLine("Word document found, continuing with processing...");
 
-			// Step 2: Check if JSON exists
-			if (!File.Exists(jsonOutputPath))
-			{
-				// await DocumentProcessors.ToSaveJson(documentProcessor, filePath, jsonOutputPath);
-				var documentProcessors = new DocumentProcessors();
+		// Step 2: Check if JSON exists
+		if (!File.Exists(jsonOutputPath))
+		{
+			// await DocumentProcessors.ToSaveJson(documentProcessor, filePath, jsonOutputPath);
+			var documentProcessors = new DocumentProcessor();
 
 				List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 			}

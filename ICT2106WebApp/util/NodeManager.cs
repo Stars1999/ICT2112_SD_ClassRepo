@@ -19,13 +19,11 @@ namespace Utilities
 			if (nodeLevel >= 0)
 			{
 				newNode = new CompositeNode(id, nodeLevel, nodeType, content, styling);
-				InsertNodeToDatabase(newNode);
 				return newNode;
 			}
 			else
 			{
 				newNode = new SimpleNode(id, nodeLevel, nodeType, content, styling);
-				InsertNodeToDatabase(newNode);
 				return newNode;
 			}
 		}
@@ -59,27 +57,6 @@ namespace Utilities
 				default:
 					return -1;
 			}
-		}
-
-		public void InsertNodeToDatabase(AbstractNode node)
-		{
-			// TODO: Insert node to database
-		}
-
-		public AbstractNode GetLastSavedNode()
-		{
-			// TODO: Retrieve last saved node from database
-			return new CompositeNode(0, 0, "root", "root", new List<Dictionary<string, object>>()); // Dummy return
-		}
-
-		public void NotifyUpdatedNode()
-		{
-			// TODO: Notify updated node??
-		}
-
-		public void NotifyRetrievedNode()
-		{
-			// TODO: Notify retrieved node??
 		}
 
 		// -- node content validation --

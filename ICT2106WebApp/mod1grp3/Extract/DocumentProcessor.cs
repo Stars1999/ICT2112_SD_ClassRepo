@@ -109,6 +109,7 @@ namespace ICT2106WebApp.mod1Grp3
 				// Read file into byte array
 				byte[] fileData = await File.ReadAllBytesAsync(filePath);
 
+		
 				var docx = docxEntity.CreateDocx(
 					Path.GetFileNameWithoutExtension(filePath),
 					Path.GetFileName(filePath),
@@ -118,6 +119,7 @@ namespace ICT2106WebApp.mod1Grp3
 				// Use RDG method to save document
 				await _dbGateway.saveDocument(docx);
 
+				// Console.WriteLine($"DocumentControl -> Document saved: {docx.Title}");
 				Console.WriteLine(
 					$"DocumentControl -> Document saved: {docx.GetDocxAttributeValue("title")}"
 				);
@@ -1352,7 +1354,6 @@ namespace ICT2106WebApp.mod1Grp3
 				{
 					Console.WriteLine("📝 Extracting Table done by Group 4");
 					//  Deleted from this branch as not part of our team repo
-					// ExtractTable method should be found in Group 4's repo
 					// elements.Add(ExtractContent.ExtractTable(table));
 				}
 			}

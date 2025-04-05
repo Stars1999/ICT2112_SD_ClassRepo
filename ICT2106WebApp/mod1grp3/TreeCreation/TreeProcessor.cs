@@ -1,7 +1,5 @@
-using System.Reflection.Metadata;
 using System.Text;
 using MongoDB.Driver;
-using Newtonsoft.Json.Linq;
 
 namespace ICT2106WebApp.mod1Grp3
 {
@@ -11,10 +9,8 @@ namespace ICT2106WebApp.mod1Grp3
 
 		public TreeProcessor()
 		{
-			// _docxRetrieve = (IDocumentRetrieve) new DocumentGateway_RDG();
 			_treeUpdate = (ITreeUpdate)new DocumentGateway_RDG();
 			_treeUpdate.treeUpdate = this;
-			// _docxRetrieve.docxRetrieve = this;
 		}
 
 		// Method to create relational tree using nodes
@@ -90,13 +86,7 @@ namespace ICT2106WebApp.mod1Grp3
 			}
 
 			Traverse(root);
-			// Print the flatList by iterating over the nodes
-			// Console.WriteLine("flatList contents:");
-			// foreach (var node in flatList)
-			// {
-			// Console.WriteLine($"{count}. Node Type: {node.GetNodeType()}, Node Content: {node.GetContent()}");
-			// 	count++;
-			// }
+
 			return flatList;
 		}
 
@@ -131,7 +121,6 @@ namespace ICT2106WebApp.mod1Grp3
 		{
 			Dictionary<string, object> nodeData = node.GetNodeData("TreePrint");
 			// Print the node's content (could be its type or content)
-			// var nodeStyles = node.GetStyling();
 			List<Dictionary<string, object>> result =
 				(List<Dictionary<string, object>>)nodeData["styling"]; // This returns List<Dictionary<string, object>>
 
@@ -232,11 +221,6 @@ namespace ICT2106WebApp.mod1Grp3
 			return Task.CompletedTask;
 		}
 
-		// public async Task retrieveTree()
-		// {
-		// 	// await _treeUpdate.loadTree();
-		// 	await CompositeNode compNode = (CompositeNode) _treeUpdate.loadTree()
-		// }
 		public async Task<AbstractNode> retrieveTree()
 		{
 			AbstractNode rootNode = await _treeUpdate.getTree("mergewithcommentedcode");
@@ -244,9 +228,6 @@ namespace ICT2106WebApp.mod1Grp3
 			if (rootNode is CompositeNode compositeNode)
 			{
 				Console.WriteLine("Loaded tree is a CompositeNode!");
-				// Console.WriteLine("printing tree FROM DB\n");
-				// PrintTree(rootNode,0);
-				// Process the tree
 			}
 			else
 			{

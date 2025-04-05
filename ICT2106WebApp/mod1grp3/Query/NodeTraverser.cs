@@ -150,12 +150,13 @@ namespace ICT2106WebApp.mod1Grp3
 		{
 			Console.WriteLine("LATEX DOCUMENT UPDATING...");
 			await _QueryUpdate.saveTree(rootNode, "latexTree"); // Save the updated tree to the database
+			await notifyUpdatedTree(); // Notify that the tree has been updated
 		}
 
 		// Notify when the tree is updated in the database
 		public async Task notifyUpdatedTree()
 		{
-			Console.WriteLine("Tree updated...");
+			Console.WriteLine("Notify Latex Tree has been updated in the database...");
 
 			await Task.CompletedTask;
 		}

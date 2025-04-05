@@ -31,13 +31,12 @@ var database = serviceProvider.GetRequiredService<IMongoDatabase>();
 
 var app = builder.Build();
 
-// ahJon part's for error testing
+// johnathan part's for error testing
 Console.CancelKeyPress += async (sender, eventArgs) =>
 {
 	eventArgs.Cancel = true;
 	Console.WriteLine("SIGINT received. Running crash recovery...");
 
-	// await ExtractContent.RunCrashRecovery(database);
 	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
 	await documentFailSafe.runCrashRecovery(false);
 };
@@ -84,7 +83,6 @@ while (true)
 // Running whole program
 async static void RunMyProgram(IMongoDatabase database)
 {
-	// var documentControl = new DocumentControl();
 	string filePath = "Datarepository_zx_v4 - demo.docx"; // Change this to your actual file path
 	string jsonOutputPath = "output.json"; // File where JSON will be saved
 
@@ -217,17 +215,16 @@ async static void RunMyProgram(IMongoDatabase database)
 
 		ICompletedLatex completedLatex = new CompletedLatex();
 
-		// // Retrieve the non-modified tree from MongoDB (for demo query)
-		// AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
-		// // CompositeNode originalMongo = null;
-		// CompositeNode originalTree = (CompositeNode)originalRootNode;
-		// if (originalTree != null)
-		// {
-		// 	treeProcessor.PrintTreeContents(originalTree);
-		// 	treeProcessor.PrintTreeHierarchy(originalTree, 0);
-		// }
+		// Retrieve the non-modified tree from MongoDB (for query)
+		AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
+		CompositeNode originalTree = (CompositeNode)originalRootNode;
+		if (originalTree != null)
+		{
+			treeProcessor.PrintTreeContents(originalTree);
+			treeProcessor.PrintTreeHierarchy(originalTree, 0);
+		}
 
-		//Retrieve the Latex tree from MongoDB (for demo query)
+		//Retrieve the Latex tree from MongoDB (for query)
 		AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
 		CompositeNode latexMongo = (CompositeNode)latexRootNode;
 		if (latexMongo != null)

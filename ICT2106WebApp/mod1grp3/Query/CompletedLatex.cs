@@ -21,6 +21,7 @@ namespace ICT2106WebApp.mod1Grp3
 			if (rootNode is CompositeNode compositeNode)
 			{
 				Console.WriteLine("Latex Tree Retrieved Sucessfully!");
+				await notifyRetrievedTree(); // Notify that the tree has been retrieved
 			}
 			else
 			{
@@ -38,6 +39,7 @@ namespace ICT2106WebApp.mod1Grp3
 			if (rootNode is CompositeNode compositeNode)
 			{
 				Console.WriteLine("Non Modified Tree Retrieved Sucessfully!");
+				await notifyRetrievedTree(); // Notify that the tree has been retrieved
 			}
 			else
 			{
@@ -49,7 +51,7 @@ namespace ICT2106WebApp.mod1Grp3
 		//notify when tree is retrieved from DB
 		public async Task notifyRetrievedTree()
 		{
-			Console.WriteLine($"Tree Retrieved!");
+			Console.WriteLine($"Notify retrieved tree from Database...");
 
 			await Task.CompletedTask;
 		}

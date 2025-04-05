@@ -5,16 +5,8 @@ using Newtonsoft.Json.Linq;
 
 public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 {
-	// private readonly Lazy<IDocumentRetrieve> _docxRetrieve;
 	private readonly ICrashRecoveryRetrieve _docxRetrieve;
 
-	// // private readonly DocxRDG _docxRDG;
-	// public DocumentFailSafe(IServiceProvider serviceProvider)
-	// {
-	// 	_docxRetrieve = new Lazy<IDocumentRetrieve>(
-	// 		() => serviceProvider.GetRequiredService<IDocumentRetrieve>()
-	// 	);
-	// }
 	public DocumentFailSafe()
 	{
 		_docxRetrieve = (ICrashRecoveryRetrieve)new DocumentGateway_RDG();

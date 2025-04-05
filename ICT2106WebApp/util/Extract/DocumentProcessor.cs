@@ -38,7 +38,6 @@ namespace ICT2106WebApp.mod1Grp3
 
 		public List<AbstractNode> CreateNodeList(List<object> documentContents)
 		{
-			// return _nodeManager.CreateNodeList(documentContents);
 			return NodeManager.CreateNodeList(documentContents);
 		}
 
@@ -83,7 +82,6 @@ namespace ICT2106WebApp.mod1Grp3
 		// IDocumentUpdateNotify
 		public async Task notifyUpdatedDocument(Docx docx)
 		{
-			// Console.WriteLine($"DocumentControl -> Notify Document updated: {docx.Title}");
 			Console.WriteLine(
 				$"DocumentControl -> Notify Document updated: {docx.GetDocxAttributeValue("title")}"
 			);
@@ -111,32 +109,15 @@ namespace ICT2106WebApp.mod1Grp3
 				// Read file into byte array
 				byte[] fileData = await File.ReadAllBytesAsync(filePath);
 
-				// Create Docx object
-				// var docx = new Docx
-				// {
-				// 	Title = Path.GetFileNameWithoutExtension(filePath),
-				// 	FileName = Path.GetFileName(filePath),
-				// 	ContentType =
-				// 		"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-				// 	UploadDate = DateTime.UtcNow,
-				// 	FileData = fileData,
-				// };
 				var docx = docxEntity.CreateDocx(
 					Path.GetFileNameWithoutExtension(filePath),
 					Path.GetFileName(filePath),
 					fileData
 				);
-				// Check if _docxUpdate is null or not initialized
-				// if (_docxUpdate == null)
-				// {
-				// 	Console.WriteLine("Error: _docxUpdate is not initialized.");
-				// 	return;
-				// }
 
 				// Use RDG method to save document
 				await _dbGateway.saveDocument(docx);
 
-				// Console.WriteLine($"DocumentControl -> Document saved: {docx.Title}");
 				Console.WriteLine(
 					$"DocumentControl -> Document saved: {docx.GetDocxAttributeValue("title")}"
 				);
@@ -1371,6 +1352,7 @@ namespace ICT2106WebApp.mod1Grp3
 				{
 					Console.WriteLine("📝 Extracting Table done by Group 4");
 					//  Deleted from this branch as not part of our team repo
+					// ExtractTable method should be found in Group 4's repo
 					// elements.Add(ExtractContent.ExtractTable(table));
 				}
 			}

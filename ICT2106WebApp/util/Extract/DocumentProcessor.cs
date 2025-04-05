@@ -5,7 +5,6 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-
 // MongoDB packages
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
@@ -25,29 +24,59 @@ using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 
 namespace ICT2106WebApp.mod1Grp3
 {
-	public class DocumentProcessor : IDocumentUpdateNotify
-	// :
-	// Iapi,
-	// iCreateNode,
-	// iDocument, 
-	// IDocumentRetrieve // iDocumentRetrival,
-	// iDocumentUpdate,
-	// iDocumentUpdateNotify,
-	// iLogger
+	public class DocumentProcessor : IDocumentUpdateNotify, ICreateNode, IDocumentUpdate
 	{
 		private readonly IDocumentUpdate _dbGateway;
 		private readonly Docx docxEntity;
 
 		private static readonly string jsonOutputPath = "output.json";
 		private static readonly string filePath = "Datarepository_zx_v4.docx";
+		private readonly NodeManager _nodeManager = new NodeManager();
 
 		public string jsonString { get; set; }
 		public JArray documentArray { get; set; }
+
+		public List<AbstractNode> CreateNodeList(List<object> documentContents)
+		{
+			// return _nodeManager.CreateNodeList(documentContents);
+			return NodeManager.CreateNodeList(documentContents);
+		}
+
+		public bool ValidateContentRecursive(
+			List<AbstractNode> treeNodes,
+			JArray documentArray,
+			int startIndex
+		)
+		{
+			return _nodeManager.ValidateContentRecursive(treeNodes, documentArray, startIndex);
+		}
 
 		public DocumentProcessor()
 		{
 			_dbGateway = (IDocumentUpdate)new DocumentGateway_RDG();
 			_dbGateway.docxUpdate = this;
+		}
+
+		// Implementation of IDocumentUpdate interface
+		public IDocumentUpdateNotify docxUpdate
+		{
+			get => _dbGateway.docxUpdate;
+			set => _dbGateway.docxUpdate = value;
+		}
+
+		public async Task<List<Docx>> GetAllAsync()
+		{
+			return await _dbGateway.GetAllAsync();
+		}
+
+		public async Task saveDocument(Docx docx)
+		{
+			await _dbGateway.saveDocument(docx);
+		}
+
+		public async Task saveJsonFile(string filepath)
+		{
+			await _dbGateway.saveJsonFile(filepath);
 		}
 
 		// Interface
@@ -857,9 +886,6 @@ namespace ICT2106WebApp.mod1Grp3
 							?.Ascii?.Value ?? "Default Font";
 				}
 
-				// string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
-				// int runFontSize = runFontSizeRaw != null ? int.Parse(runFontSizeRaw) / 2 : 12; // Default to 12pt
-
 				string? runFontSizeRaw = run.RunProperties?.FontSize?.Val?.Value;
 				int runFontSize = 12; // Default to 12pt
 
@@ -1117,39 +1143,6 @@ namespace ICT2106WebApp.mod1Grp3
 				}
 				else if (runsList.Count > 1)
 				{
-					// Console.WriteLine("\nRuns > 1:");
-					// to see the content.
-					// foreach (var run in runsList) // `run` is a Dictionary<string, object>
-					// {
-					// 	Console.WriteLine("Run Details:");
-					// 	foreach (var kvp in run) // `kvp` is KeyValuePair<string, object>
-					// 	{
-					// 		if (kvp.Value is List<object> styleObjects) // Check if value is List<object>
-					// 		{
-					// 			Console.WriteLine($"{kvp.Key}:");
-					// 			foreach (var styleObject in styleObjects) // Iterate over list items
-					// 			{
-					// 				if (styleObject is Dictionary<string, object> styleDict) // Ensure it's a dictionary
-					// 				{
-					// 					Console.WriteLine("if styling is true:");
-					// 					foreach (var styleKvp in styleDict) // Iterate dictionary key-value pairs
-					// 					{
-					// 						Console.WriteLine($"  - {styleKvp.Key}: {styleKvp.Value}");
-					// 					}
-					// 				}
-					// 				else
-					// 				{
-					// 					Console.WriteLine($"  - Unexpected type: {styleObject.GetType()}");
-					// 				}
-					// 			}
-					// 		}
-					// 		else
-					// 		{
-					// 			Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-					// 		}
-					// 	}
-					// 	Console.WriteLine("------------");
-					// }
 					var finalDictionary = new Dictionary<string, object>
 					{
 						{ "type", GetParagraphType(style) },
@@ -1227,7 +1220,6 @@ namespace ICT2106WebApp.mod1Grp3
 				// for the other contents
 				var documentData = new
 				{
-					// metadata = DocumentMetadataExtractor.GetMetadata(wordDoc),
 					metadata = GetDocumentMetadata(wordDoc, ReturnFullFilePath(fileName)),
 					headers = ExtractHeaders(wordDoc),
 					footers = ExtractFooters(wordDoc),
@@ -1239,9 +1231,9 @@ namespace ICT2106WebApp.mod1Grp3
 				JObject jsonObject = JObject.Parse(jsonString);
 				this.documentArray = (JArray)jsonObject["document"];
 
-				// uncomment to see consolelogs for checking purposes
+				// uncomment to see console.logs for checking purposes
+				// This code can be uncomemnted to see the data
 				// checkJson((jsonString);
-
 				return documentContents;
 			}
 		}
@@ -1275,22 +1267,14 @@ namespace ICT2106WebApp.mod1Grp3
 					&& pageSize.Orient.Value == PageOrientationValues.Landscape;
 
 				layout["orientation"] = isLandscape ? "Landscape" : "Portrait";
-				// Console.WriteLine($"Orientation: {(isLandscape ? "Landscape" : "Portrait")}");
-
 				if (pageSize.Width != null)
 				{
 					layout["pageWidth"] = ConvertTwipsToCentimeters((int)pageSize.Width.Value);
-					// Console.WriteLine(
-					//     $"Page Width: {layout["pageWidth"]} cm (Original: {pageSize.Width.Value} twips)"
-					// );
 				}
 
 				if (pageSize.Height != null)
 				{
 					layout["pageHeight"] = ConvertTwipsToCentimeters((int)pageSize.Height.Value);
-					// Console.WriteLine(
-					//     $"Page Height: {layout["pageHeight"]} cm (Original: {pageSize.Height.Value} twips)"
-					// );
 				}
 			}
 			else
@@ -1351,7 +1335,9 @@ namespace ICT2106WebApp.mod1Grp3
 			return layout;
 		}
 
-		// Iterates over the document’s body elements and extracts content (paragraphs, tables, images) into a list of objects. Each element is processed by dedicated functions (such as ExtractParagraph or ExtractImagesFromDrawing).
+		// Iterates over the document’s body elements and extracts content
+		// (paragraphs, tables, images) into a list of objects.
+		// Each element is processed by dedicated functions (such as ExtractParagraph or ExtractImagesFromDrawing).
 		public static List<object> ExtractDocumentContents(WordprocessingDocument doc)
 		{
 			var elements = new List<object>();
@@ -1378,13 +1364,14 @@ namespace ICT2106WebApp.mod1Grp3
 				}
 				else if (element is DocumentFormat.OpenXml.Wordprocessing.Paragraph paragraph)
 				{
-					// ✅ Extract Paragraphs
+					// Extract Paragraphs
 					elements.Add(ExtractParagraph(paragraph, doc, ref haveBibliography));
 				}
 				else if (element is DocumentFormat.OpenXml.Wordprocessing.Table table)
 				{
-					// Console.WriteLine("📝 Extracting Table by another modue");
-					elements.Add(ExtractContent.ExtractTable(table)); // ✅ Extract Tables
+					Console.WriteLine("📝 Extracting Table done by Group 4");
+					//  Deleted from this branch as not part of our team repo
+					// elements.Add(ExtractContent.ExtractTable(table));
 				}
 			}
 			return elements;
@@ -1428,69 +1415,6 @@ namespace ICT2106WebApp.mod1Grp3
 			}
 			return result;
 		}
-
-		// Extracts layout and document content, serializes the combined data to JSON, writes the JSON to a file, and saves it to a database asynchronously via a DocumentControl instance.
-		// public static async Task ToSaveJson(
-		// 	DocumentProcessors documentControl,
-		// 	string filePath,
-		// 	string jsonOutputPath
-		// )
-		// {
-		// 	using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
-		// 	{
-		// 		// Get layout information
-		// 		var layoutInfo = GetDocumentLayout(wordDoc);
-
-		// 		// Extract document contents
-		// 		var documentContents = ExtractDocumentContents(wordDoc);
-
-		// 		// Create layout element
-		// 		var layoutElement = new Dictionary<string, object>
-		// 		{
-		// 			{ "type", "layout" },
-		// 			{ "content", "" },
-		// 			{
-		// 				"styling",
-		// 				new List<object> { layoutInfo }
-		// 			},
-		// 		};
-
-		// 		// Insert layout as the first element in document contents
-		// 		documentContents.Insert(0, layoutElement);
-
-		// 		// Create root node
-		// 		var layoutElementRoot = new Dictionary<string, object>
-		// 		{
-		// 			{ "id", 0 },
-		// 			{ "type", "root" },
-		// 			{ "content", "" },
-		// 		};
-		// 		documentContents.Insert(0, layoutElementRoot);
-
-		// 		var documentData = new
-		// 		{
-		// 			metadata = GetDocumentMetadata(wordDoc, filePath), // Fixed `filePath_full`
-		// 			document = documentContents,
-		// 		};
-
-		// 		// Convert to JSON format with UTF-8 encoding fix
-		// 		string jsonOutput = System.Text.Json.JsonSerializer.Serialize(
-		// 			documentData,
-		// 			new JsonSerializerOptions
-		// 			{
-		// 				WriteIndented = true,
-		// 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		// 			}
-		// 		);
-
-		// 		// Write JSON to file
-		// 		File.WriteAllText(jsonOutputPath, jsonOutput);
-		// 		Console.WriteLine($"✅ New data saved to {jsonOutputPath}");
-
-		// 		// Save JSON to database (assuming `saveJsonToDatabase` is an async method)
-		// 		await documentControl.saveJsonToDatabase(jsonOutputPath);
-		// 	}
-		// }
 
 		// Convert twips (1/1440 of an inch) to centimeters
 		// Converts a measurement in twips (1/1440 of an inch) to centimeters, rounding the result as needed.
@@ -1600,14 +1524,10 @@ namespace ICT2106WebApp.mod1Grp3
 						naryChar = naryProps.ControlProperties.FirstChild.InnerText;
 					}
 
-					// string subscript = GetMathString(nary.SubArgument);
-					// string superscript = GetMathString(nary.SuperArgument);
-					// string mainArg = GetMathString(nary.Argument);
 					string supExpression = GetMathString(nary.SuperArgument);
 					string subExpression = GetMathString(nary.SubArgument);
 					string mainArg = GetMathString(nary.Elements<Base>().FirstOrDefault());
 					return $"{naryChar}[{subExpression},{supExpression}]({mainArg})";
-				// return $"{naryChar}[{subscript},{superscript}]({mainArg})";
 
 				case Superscript superscript:
 					string baseSup = GetMathString(superscript.Base);

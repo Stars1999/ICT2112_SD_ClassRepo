@@ -4,7 +4,6 @@ namespace ICT2106WebApp.mod1Grp3
 {
 	public class NodeManager
 	{
-
 		// Method to create nodes
 		public AbstractNode CreateNode(
 			int id,
@@ -229,7 +228,6 @@ namespace ICT2106WebApp.mod1Grp3
 			NodeManager nodeManager = new NodeManager();
 			var documentProcessor = new DocumentProcessor();
 
-
 			List<AbstractNode> runListNodes = new List<AbstractNode>();
 			List<AbstractNode> runRunListNodes = new List<AbstractNode>();
 
@@ -266,9 +264,7 @@ namespace ICT2106WebApp.mod1Grp3
 									if (itemhere is Dictionary<string, object> stylingDictionary)
 									{
 										stylingList.Add(
-											DocumentProcessor.ConvertJsonElements(
-												stylingDictionary
-											)
+											DocumentProcessor.ConvertJsonElements(stylingDictionary)
 										);
 									}
 								}

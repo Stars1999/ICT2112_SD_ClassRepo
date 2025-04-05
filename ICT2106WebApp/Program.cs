@@ -1,7 +1,6 @@
 using DocumentFormat.OpenXml.Packaging;
 using ICT2106WebApp.mod1Grp3;
 using Microsoft.Extensions.Options;
-
 // MongoDB packages
 using MongoDB.Driver;
 
@@ -86,11 +85,12 @@ async static void RunMyProgram(IMongoDatabase database)
 {
 	string filePath = "Datarepository_zx_v4 - demo.docx"; // Change this to your actual file path
 	string jsonOutputPath = "output.json"; // File where JSON will be saved
+	var documentProcessor = new DocumentProcessor();
 
 	using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 	{
 		NodeManager nodeManager = new NodeManager();
-		TreeProcessor treeProcessor = new TreeProcessor(); 
+		TreeProcessor treeProcessor = new TreeProcessor();
 		DocumentProcessor documentProcessors;
 		CompositeNode rootnodehere = null;
 		bool isValid = false;
@@ -99,12 +99,11 @@ async static void RunMyProgram(IMongoDatabase database)
 		{
 			documentProcessors = new DocumentProcessor();
 
-			List<Object> documentContents = documentProcessors
-				.ParseDocument(filePath)
-				.Result;
+			List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 
 			//ceate a list of nodes
-			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+			// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+			List<AbstractNode> nodesList = documentProcessor.CreateNodeList(documentContents);
 			rootnodehere = treeProcessor.CreateTree(nodesList);
 
 			Console.ForegroundColor = ConsoleColor.DarkCyan;

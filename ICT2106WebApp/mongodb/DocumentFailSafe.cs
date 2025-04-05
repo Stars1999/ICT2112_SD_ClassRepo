@@ -160,9 +160,9 @@ namespace ICT2106WebApp.mod1Grp3
 					WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath_full, false)
 				)
 				{
-					var documentContents = DocumentProcessors.ExtractDocumentContents(wordDoc);
-					var rootElement = DocumentProcessors.elementRoot();
-					documentContents.Insert(0, DocumentProcessors.ExtractLayout(wordDoc));
+					var documentContents = DocumentProcessor.ExtractDocumentContents(wordDoc);
+					var rootElement = DocumentProcessor.elementRoot();
+					documentContents.Insert(0, DocumentProcessor.ExtractLayout(wordDoc));
 					documentContents.Insert(0, rootElement);
 
 					// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);

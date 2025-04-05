@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -10,15 +5,11 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using ICT2106WebApp.mod1Grp3;
-using Microsoft.Extensions.Options;
-using MongoDB.Bson; // Bson - Binary JSON
+
 // MongoDB packages
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Metadata;
-using Utilities;
 using MathOfficeMath = DocumentFormat.OpenXml.Math.OfficeMath;
 using MathRun = DocumentFormat.OpenXml.Math.Run;
 using MathText = DocumentFormat.OpenXml.Math.Text;
@@ -34,11 +25,11 @@ using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 
 namespace Utilities
 {
-	public class DocumentProcessors : IDocumentUpdateNotify
+	public class DocumentProcessor : IDocumentUpdateNotify
 	// :
 	// Iapi,
 	// iCreateNode,
-	// iDocument, // not sure if it there is such interface
+	// iDocument, 
 	// IDocumentRetrieve // iDocumentRetrival,
 	// iDocumentUpdate,
 	// iDocumentUpdateNotify,
@@ -53,7 +44,7 @@ namespace Utilities
 		public string jsonString { get; set; }
 		public JArray documentArray { get; set; }
 
-		public DocumentProcessors()
+		public DocumentProcessor()
 		{
 			_dbGateway = (IDocumentUpdate)new DocumentGateway_RDG();
 			_dbGateway.docxUpdate = this;

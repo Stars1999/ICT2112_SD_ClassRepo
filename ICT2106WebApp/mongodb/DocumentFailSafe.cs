@@ -71,7 +71,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 
 		Console.WriteLine("Starting Document Processing with Crash Recovery");
 
-		DocumentProcessors documentProcessor = new DocumentProcessors();
+		DocumentProcessor documentProcessor = new DocumentProcessor();
 		DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
 		TreeProcessor treeProcessor = new TreeProcessor();
@@ -146,7 +146,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		// Step 2: Check if JSON exists
 		if (!File.Exists(jsonOutputPath))
 		{
-			var documentProcessors = new DocumentProcessors();
+			var documentProcessors = new DocumentProcessor();
 			List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 		}
 
@@ -161,7 +161,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 				WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath_full, false)
 			)
 			{
-				var documentProcessors = new DocumentProcessors();
+				var documentProcessors = new DocumentProcessor();
 
 				List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 

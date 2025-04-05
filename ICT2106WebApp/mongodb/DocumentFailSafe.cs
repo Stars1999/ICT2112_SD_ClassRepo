@@ -1,6 +1,5 @@
 using System.Reflection;
 using DocumentFormat.OpenXml.Packaging;
-using ICT2106WebApp.mod1Grp3;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 
@@ -27,10 +26,7 @@ namespace ICT2106WebApp.mod1Grp3
 
 			// Write the bytes to a file
 			// await File.WriteAllBytesAsync(outputPath, docx.FileData);
-			await File.WriteAllBytesAsync(
-				outputPath,
-				(byte[])docx.GetDocxAttributeValue("fileData")
-			);
+			await File.WriteAllBytesAsync(outputPath, (byte[])docx.GetDocxAttributeValue("fileData"));
 			Console.WriteLine($"DocumentFailSafe -> Document retrieved and saved to: {outputPath}");
 		}
 
@@ -68,22 +64,12 @@ namespace ICT2106WebApp.mod1Grp3
 
 			Console.WriteLine("Starting Document Processing with Crash Recovery");
 
-			// DocumentControl documentControl = new DocumentControl();
-			// DocumentProcessor documentProcessor = new DocumentProcessor();
-			var documentProcessor = new DocumentProcessor(
-				new HeaderExtractor(),
-				new FooterExtractor(),
-				new LayoutExtractor(),
-				new ParagraphExtractor(),
-				new ImageExtractor(),
-				new MetadataExtractor(),
-				new JsonSerializerService(),
-				new MongoDocumentRepository(new DocumentGateway_RDG())
-			);
-			DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
-			DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-			TreeProcessor treeProcessor = new TreeProcessor();
-			NodeManager nodeManager = new NodeManager();
+		// DocumentControl documentControl = new DocumentControl();
+		DocumentProcessor documentProcessor = new DocumentProcessor();
+		DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
+		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
+		TreeProcessor treeProcessor = new TreeProcessor();
+		NodeManager nodeManager = new NodeManager();
 
 			// Step 1: Check if doc exists in DB
 			Console.WriteLine(
@@ -112,8 +98,7 @@ namespace ICT2106WebApp.mod1Grp3
 					Console.WriteLine(
 						$"Retrieved Document Title: {(string)retrievedDocument.GetDocxAttributeValue("title")}"
 					);
-					outputPath =
-						$"{(string)retrievedDocument.GetDocxAttributeValue("title")}1.docx";
+					outputPath = $"{(string)retrievedDocument.GetDocxAttributeValue("title")}1.docx";
 				}
 
 				await documentFailSafe.retrieveSavedDocument(
@@ -130,9 +115,7 @@ namespace ICT2106WebApp.mod1Grp3
 					return;
 				}
 
-				Console.WriteLine(
-					"No documents found. Saving default document into the database..."
-				);
+				Console.WriteLine("No documents found. Saving default document into the database...");
 				filePath = "Datarepository_zx_v4 - demo.docx"; // your fallback document
 				await documentProcessor.saveDocumentToDatabase(filePath);
 
@@ -154,25 +137,13 @@ namespace ICT2106WebApp.mod1Grp3
 
 			Console.WriteLine("Word document found, continuing with processing...");
 
-			// Step 2: Check if JSON exists
-			if (!File.Exists(jsonOutputPath))
-			{
-				// await DocumentProcessors.ToSaveJson(documentProcessor, filePath, jsonOutputPath);
-				// var documentProcessors = new DocumentProcessor();
+		// Step 2: Check if JSON exists
+		if (!File.Exists(jsonOutputPath))
+		{
+			// await DocumentProcessors.ToSaveJson(documentProcessor, filePath, jsonOutputPath);
+			var documentProcessors = new DocumentProcessor();
 
-				// var documentProcessor = new DocumentProcessor(
-				// 	new HeaderExtractor(),
-				// 	new FooterExtractor(),
-				// 	new LayoutExtractor(),
-				// 	new ParagraphExtractor(),
-				// 	new ImageExtractor(),
-				// 	new MetadataExtractor(),
-				// 	new JsonSerializerService(),
-				// 	new MongoDocumentRepository(new DocumentGateway_RDG())
-				// );
-
-				// List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
-				List<object> documentContents = documentProcessor.ParseDocument(filePath).Result;
+				List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 			}
 
 			// Step 3: Check for tree in DB
@@ -183,17 +154,13 @@ namespace ICT2106WebApp.mod1Grp3
 				Console.WriteLine("Tree not found. Generating new tree...");
 				//ceate a list of nodes
 				using (
-					WordprocessingDocument wordDoc = WordprocessingDocument.Open(
-						filePath_full,
-						false
-					)
+					WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath_full, false)
 				)
 				{
-					// var documentContents = DocumentProcessor.ExtractDocumentContents(wordDoc);
-					// var rootElement = DocumentProcessor.elementRoot();
-					// documentContents.Insert(0, DocumentProcessor.ExtractLayout(wordDoc));
-					// documentContents.Insert(0, rootElement);
-					var documentContents = await documentProcessor.ParseDocument(filePath);
+					var documentContents = DocumentProcessor.ExtractDocumentContents(wordDoc);
+					var rootElement = DocumentProcessor.elementRoot();
+					documentContents.Insert(0, DocumentProcessor.ExtractLayout(wordDoc));
+					documentContents.Insert(0, rootElement);
 
 					// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
 					List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
@@ -202,13 +169,9 @@ namespace ICT2106WebApp.mod1Grp3
 
 					var defaultColor = Console.ForegroundColor;
 					Console.ForegroundColor = ConsoleColor.DarkCyan;
-					Console.WriteLine(
-						"\n\n############################## \nPrint Tree Contents\n\n"
-					);
+					Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
 					treeProcessor.PrintTreeContents(rootnodehere);
-					Console.WriteLine(
-						"\n\n############################## \nPrint Tree Hierarchy\n\n"
-					);
+					Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
 					treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
 					Console.ForegroundColor = defaultColor;
 
@@ -246,15 +209,11 @@ namespace ICT2106WebApp.mod1Grp3
 					documentArray,
 					0
 				);
-				Console.WriteLine(
-					isContentValid ? "Content is valid!" : "Content mismatch detected!"
-				);
+				Console.WriteLine(isContentValid ? "Content is valid!" : "Content mismatch detected!");
 
 				bool isValidStructure = treeProcessor.ValidateTreeStructure(mongoCompNode, -1);
 				Console.WriteLine(
-					isValidStructure
-						? "Tree structure is valid!"
-						: "Invalid tree structure detected."
+					isValidStructure ? "Tree structure is valid!" : "Invalid tree structure detected."
 				);
 			}
 
@@ -341,4 +300,5 @@ namespace ICT2106WebApp.mod1Grp3
 			Console.WriteLine("✅ Completed Error Recovery & Document Processing");
 		}
 	}
+
 }

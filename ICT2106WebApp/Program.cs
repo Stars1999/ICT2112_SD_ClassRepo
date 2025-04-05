@@ -1,6 +1,7 @@
 using DocumentFormat.OpenXml.Packaging;
 using ICT2106WebApp.mod1Grp3;
 using Microsoft.Extensions.Options;
+
 // MongoDB packages
 using MongoDB.Driver;
 
@@ -89,27 +90,18 @@ async static void RunMyProgram(IMongoDatabase database)
 	using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 	{
 		NodeManager nodeManager = new NodeManager();
-		TreeProcessor treeProcessor = new TreeProcessor();
-		// DocumentProcessor documentProcessors;
+		TreeProcessor treeProcessor = new TreeProcessor(); 
+		DocumentProcessor documentProcessors;
 		CompositeNode rootnodehere = null;
 		bool isValid = false;
 
 		while (!isValid)
 		{
-			// documentProcessors = new DocumentProcessor();
-			var processor = new DocumentProcessor(
-				new HeaderExtractor(),
-				new FooterExtractor(),
-				new LayoutExtractor(),
-				// new ParagraphExtractor(),
-				new ParagraphExtractor(),
-				new ImageExtractor(),
-				new MetadataExtractor(),
-				new JsonSerializerService(),
-				new MongoDocumentRepository(new DocumentGateway_RDG()) // or whatever gateway you use
-			);
+			documentProcessors = new DocumentProcessor();
 
-			List<Object> documentContents = processor.ParseDocument(filePath).Result;
+			List<Object> documentContents = documentProcessors
+				.ParseDocument(filePath)
+				.Result;
 
 			//ceate a list of nodes
 			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
@@ -121,7 +113,7 @@ async static void RunMyProgram(IMongoDatabase database)
 			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
 			bool isContentValid = nodeManager.ValidateContentRecursive(
 				flattenedTree,
-				processor.documentArray,
+				documentProcessors.documentArray,
 				0
 			);
 			if (!isContentValid)

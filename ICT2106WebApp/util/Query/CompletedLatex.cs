@@ -46,7 +46,7 @@ namespace ICT2106WebApp.mod1Grp3
 			return rootNode;
 		}
 
-		//notifty when tree is retrieved from DB
+		//notify when tree is retrieved from DB
 		public async Task notifyRetrievedTree()
 		{
 			Console.WriteLine($"Tree Retrieved!");

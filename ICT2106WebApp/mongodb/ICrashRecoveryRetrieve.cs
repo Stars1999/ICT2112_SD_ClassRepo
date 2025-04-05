@@ -1,19 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
-// public interface IDocumentRetrieve
-// {
-// 	IDocumentRetrieveNotify docxRetrieve { get; set; }
-
-// 	Task<Docx> getDocument(string id);
-
-// 	Task getJsonFile();
-// }
-public interface ICrashRecoveryRetrieve
+namespace ICT2106WebApp.mod1Grp3
 {
-	ICrashRecoveryRetrieveNotify docxRetrieve { get; set; }
+	public interface ICrashRecoveryRetrieve
+	{
+		ICrashRecoveryRetrieveNotify docxRetrieve { get; set; }
 
-	Task<Docx> getDocument(string id);
+		Task<Docx> getDocument(string id);
 
-	Task getJsonFile();
+		Task getJsonFile();
+	}
 }

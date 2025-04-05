@@ -1,12 +1,8 @@
-// public interface IDocumentRetrieveNotify
-// {
-// 	Task notifyRetrievedDocument(Docx docx);
-// 	Task notifyRetrievedJson();
-// }
-
-public interface ICrashRecoveryRetrieveNotify
+namespace ICT2106WebApp.mod1Grp3
 {
-	Task notifyRetrievedDocument(Docx docx);
-	Task notifyRetrievedJson();
+	public interface ICrashRecoveryRetrieveNotify
+	{
+		Task notifyRetrievedDocument(Docx docx);
+		Task notifyRetrievedJson();
+	}
 }
-

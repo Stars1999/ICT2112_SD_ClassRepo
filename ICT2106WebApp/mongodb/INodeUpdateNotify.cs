@@ -1,6 +1,8 @@
 using Utilities;
-
-public interface INodeUpdateNotify
+namespace ICT2106WebApp.mod1Grp3
 {
-	Task notifyUpdatedNode(AbstractNode node);
+	public interface INodeUpdateNotify
+	{
+		Task notifyUpdatedNode(AbstractNode node);
+	}
 }

@@ -101,12 +101,10 @@ namespace Utilities
 		// Method to set or change node data
 		public override void SetNodeData(
 			string content,
-			List<Dictionary<string, object>> styling,
 			bool converted
 		)
 		{
 			SetContent(content);
-			SetStyling(styling);
 			SetConverted(converted);
 		}
 	}

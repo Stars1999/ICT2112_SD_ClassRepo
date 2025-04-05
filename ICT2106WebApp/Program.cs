@@ -106,7 +106,7 @@ public static class DocumentProcessor
 	public async static void RunMyProgram(IMongoDatabase database)
 	{
 		// var documentControl = new DocumentControl();
-		string filePath = "Datarepository_zx_v4.docx"; // Change this to your actual file path
+		string filePath = "Datarepository_zx_v4 - demo.docx"; // Change this to your actual file path
 		// string jsonOutputPath = "output.json"; // File where JSON will be saved
 
 		// getting the path
@@ -117,20 +117,50 @@ public static class DocumentProcessor
 
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
-			var documentProcessors = new DocumentProcessors();
-
-			List<Object> documentContents = documentProcessors
-				.ParseDocument(filePath)
-				// .ParseDocument(database, filePath)
-				.Result;
-
 			NodeManager nodeManager = new NodeManager();
+			TreeProcessor treeProcessor = new TreeProcessor(); 
+			DocumentProcessors documentProcessors;
+			CompositeNode rootnodehere = null;
+			bool isValid = false;
 
-			//ceate a list of nodes
-			List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+			while (!isValid)
+			{
+				documentProcessors = new DocumentProcessors();
 
-			TreeProcessor treeProcessor = new TreeProcessor(); // Create instance of NodeMa
-			CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
+				List<Object> documentContents = documentProcessors
+					.ParseDocument(filePath)
+					// .ParseDocument(database, filePath)
+					.Result;
+
+				//ceate a list of nodes
+				List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+				rootnodehere = treeProcessor.CreateTree(nodesList);
+
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
+				Console.WriteLine("\n\n############################## \nTree Validation\n\n");
+
+				List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
+				bool isContentValid = nodeManager.ValidateContentRecursive(
+					flattenedTree,
+					documentProcessors.documentArray,
+					0
+				);
+				if (!isContentValid)
+				{
+					Console.WriteLine("Content mismatch detected! Retrying...\n");
+					continue;
+				}
+
+				bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1);
+				if (!isValidStructure)
+				{
+					Console.WriteLine("Invalid tree structure detected. Retrying...\n");
+					continue;
+				}
+
+				Console.WriteLine("Tree content and structure are valid!");
+				isValid = true; // exit loop
+			}
 
 			var defaultColor = Console.ForegroundColor;
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -165,28 +195,6 @@ public static class DocumentProcessor
 			}
 			// END TREE
 
-			//TREE VALIDAITON
-			Console.ForegroundColor = ConsoleColor.DarkCyan;
-			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
-			// -- validate content --
-			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
-			bool isContentValid = nodeManager.ValidateContentRecursive(
-				flattenedTree,
-				documentProcessors.documentArray,
-				0
-			);
-			if (isContentValid)
-				Console.WriteLine("Content is valid!");
-			else
-				Console.WriteLine("Content mismatch detected!");
-
-			// -- validate structure --
-			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1); // Root starts at level 0
-
-			if (isValidStructure)
-				Console.WriteLine("Tree structure is valid!\n");
-			else
-				Console.WriteLine("Invalid tree structure detected.\n");
 
 			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
 

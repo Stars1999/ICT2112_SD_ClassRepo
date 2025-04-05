@@ -171,7 +171,8 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 				documentContents.Insert(0, DocumentProcessors.ExtractLayout(wordDoc));
 				documentContents.Insert(0, rootElement);
 
-				List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+				// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+				List<AbstractNode> nodesList = nodeManager.CreateNodeList(documentContents);
 
 				CompositeNode rootnodehere = treeProcessor.CreateTree(nodesList);
 

@@ -2,7 +2,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Utilities
 {
-	public class NodeManager
+	public class NodeManager: ICreateNode
 	{
 
 		// Method to create nodes
@@ -220,7 +220,7 @@ namespace Utilities
 			return jsonItem["content"]?.ToString() ?? "";
 		}
 
-		public static List<AbstractNode> CreateNodeList(List<object> documentContents)
+		public List<AbstractNode> CreateNodeList(List<object> documentContents)
 		{
 			List<AbstractNode> nodesList = new List<AbstractNode>();
 			int id = 1;

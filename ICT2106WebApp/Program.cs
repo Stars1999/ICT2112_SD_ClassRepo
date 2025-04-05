@@ -133,7 +133,8 @@ public static class DocumentProcessor
 					.Result;
 
 				//ceate a list of nodes
-				List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
+				List<AbstractNode> nodesList = nodeManager.CreateNodeList(documentContents);
+				// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
 				rootnodehere = treeProcessor.CreateTree(nodesList);
 
 				Console.ForegroundColor = ConsoleColor.DarkCyan;

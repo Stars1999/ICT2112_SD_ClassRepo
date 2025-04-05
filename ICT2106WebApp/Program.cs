@@ -238,7 +238,7 @@ public static class DocumentProcessor
 			var processedTableManager = new ProcessedTableManager();
 			processedTableManager.attach(rowTabularGateway_RDG);
 			processedTableManager.logProcessingStatus(validationStatus);
-			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+			await processedTableManager.slotProcessedTableToTree(processedTables, tableAbstractNodes);
 
 			Console.WriteLine("I WANT TO SEE SITI STUFF");
 

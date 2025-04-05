@@ -119,10 +119,7 @@ public static class DocumentProcessor
 		{
 			var documentProcessors = new DocumentProcessors();
 
-			List<Object> documentContents = documentProcessors
-				.ParseDocument(filePath)
-				// .ParseDocument(database, filePath)
-				.Result;
+			List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 
 			NodeManager nodeManager = new NodeManager();
 
@@ -204,7 +201,7 @@ public static class DocumentProcessor
 			// // Retrieve the non-modified tree from MongoDB (for demo query)
 			AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
 			// CompositeNode originalMongo = null;
-			CompositeNode originalTree = (CompositeNode) originalRootNode;
+			CompositeNode originalTree = (CompositeNode)originalRootNode;
 			if (originalTree != null)
 			{
 				treeProcessor.PrintTreeContents(originalTree);
@@ -213,7 +210,7 @@ public static class DocumentProcessor
 
 			//Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
-			CompositeNode latexMongo = (CompositeNode) latexRootNode;
+			CompositeNode latexMongo = (CompositeNode)latexRootNode;
 			if (latexMongo != null)
 			{
 				treeProcessor.PrintTreeContents(latexMongo);

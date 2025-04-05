@@ -489,7 +489,7 @@ namespace Utilities
 		}
 
 		// Extracts layout-related information (such as page size, orientation, margins, and columns) from the document and wraps it in a dictionary (used as a layout element).
-		public static object ExtractLayout(WordprocessingDocument wordDoc)
+		private static object ExtractLayout(WordprocessingDocument wordDoc)
 		{
 			var layoutInfo = GetDocumentLayout(wordDoc);
 			var layoutElement = new Dictionary<string, object>
@@ -506,7 +506,7 @@ namespace Utilities
 		}
 
 		// Creates and returns a dictionary representing the “root” node of the document structure (typically used as the base for the node tree).
-		public static object elementRoot()
+		private static object elementRoot()
 		{
 			var elementRoot = new Dictionary<string, object>
 			{
@@ -518,7 +518,7 @@ namespace Utilities
 		}
 
 		// Determines the font type for a given run by checking its own formatting first, then falling back to the paragraph’s formatting and finally to the document default.
-		public static string GetRunFontType(
+		private static string GetRunFontType(
 			WordRun run,
 			WordParagraph paragraph,
 			WordprocessingDocument doc
@@ -1256,7 +1256,7 @@ namespace Utilities
 		}
 
 		// Extracts overall layout settings from the document (like orientation, page size, columns, and margins) and returns these as a dictionary.
-		public static Dictionary<string, object> GetDocumentLayout(WordprocessingDocument doc)
+		private static Dictionary<string, object> GetDocumentLayout(WordprocessingDocument doc)
 		{
 			var layout = new Dictionary<string, object>();
 			var mainDocumentPart = doc.MainDocumentPart;
@@ -1361,7 +1361,7 @@ namespace Utilities
 		}
 
 		// Iterates over the document’s body elements and extracts content (paragraphs, tables, images) into a list of objects. Each element is processed by dedicated functions (such as ExtractParagraph or ExtractImagesFromDrawing).
-		public static List<object> ExtractDocumentContents(WordprocessingDocument doc)
+		private static List<object> ExtractDocumentContents(WordprocessingDocument doc)
 		{
 			var elements = new List<object>();
 			var body = doc.MainDocumentPart?.Document?.Body;
@@ -1439,67 +1439,67 @@ namespace Utilities
 		}
 
 		// Extracts layout and document content, serializes the combined data to JSON, writes the JSON to a file, and saves it to a database asynchronously via a DocumentControl instance.
-		public static async Task ToSaveJson(
-			DocumentProcessors documentControl,
-			string filePath,
-			string jsonOutputPath
-		)
-		{
-			using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
-			{
-				// Get layout information
-				var layoutInfo = GetDocumentLayout(wordDoc);
+		// public static async Task ToSaveJson(
+		// 	DocumentProcessors documentControl,
+		// 	string filePath,
+		// 	string jsonOutputPath
+		// )
+		// {
+		// 	using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+		// 	{
+		// 		// Get layout information
+		// 		var layoutInfo = GetDocumentLayout(wordDoc);
 
-				// Extract document contents
-				var documentContents = ExtractDocumentContents(wordDoc);
+		// 		// Extract document contents
+		// 		var documentContents = ExtractDocumentContents(wordDoc);
 
-				// Create layout element
-				var layoutElement = new Dictionary<string, object>
-				{
-					{ "type", "layout" },
-					{ "content", "" },
-					{
-						"styling",
-						new List<object> { layoutInfo }
-					},
-				};
+		// 		// Create layout element
+		// 		var layoutElement = new Dictionary<string, object>
+		// 		{
+		// 			{ "type", "layout" },
+		// 			{ "content", "" },
+		// 			{
+		// 				"styling",
+		// 				new List<object> { layoutInfo }
+		// 			},
+		// 		};
 
-				// Insert layout as the first element in document contents
-				documentContents.Insert(0, layoutElement);
+		// 		// Insert layout as the first element in document contents
+		// 		documentContents.Insert(0, layoutElement);
 
-				// Create root node
-				var layoutElementRoot = new Dictionary<string, object>
-				{
-					{ "id", 0 },
-					{ "type", "root" },
-					{ "content", "" },
-				};
-				documentContents.Insert(0, layoutElementRoot);
+		// 		// Create root node
+		// 		var layoutElementRoot = new Dictionary<string, object>
+		// 		{
+		// 			{ "id", 0 },
+		// 			{ "type", "root" },
+		// 			{ "content", "" },
+		// 		};
+		// 		documentContents.Insert(0, layoutElementRoot);
 
-				var documentData = new
-				{
-					metadata = GetDocumentMetadata(wordDoc, filePath), // Fixed `filePath_full`
-					document = documentContents,
-				};
+		// 		var documentData = new
+		// 		{
+		// 			metadata = GetDocumentMetadata(wordDoc, filePath), // Fixed `filePath_full`
+		// 			document = documentContents,
+		// 		};
 
-				// Convert to JSON format with UTF-8 encoding fix
-				string jsonOutput = System.Text.Json.JsonSerializer.Serialize(
-					documentData,
-					new JsonSerializerOptions
-					{
-						WriteIndented = true,
-						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-					}
-				);
+		// 		// Convert to JSON format with UTF-8 encoding fix
+		// 		string jsonOutput = System.Text.Json.JsonSerializer.Serialize(
+		// 			documentData,
+		// 			new JsonSerializerOptions
+		// 			{
+		// 				WriteIndented = true,
+		// 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+		// 			}
+		// 		);
 
-				// Write JSON to file
-				File.WriteAllText(jsonOutputPath, jsonOutput);
-				Console.WriteLine($"✅ New data saved to {jsonOutputPath}");
+		// 		// Write JSON to file
+		// 		File.WriteAllText(jsonOutputPath, jsonOutput);
+		// 		Console.WriteLine($"✅ New data saved to {jsonOutputPath}");
 
-				// Save JSON to database (assuming `saveJsonToDatabase` is an async method)
-				await documentControl.saveJsonToDatabase(jsonOutputPath);
-			}
-		}
+		// 		// Save JSON to database (assuming `saveJsonToDatabase` is an async method)
+		// 		await documentControl.saveJsonToDatabase(jsonOutputPath);
+		// 	}
+		// }
 
 		// Convert twips (1/1440 of an inch) to centimeters
 		// Converts a measurement in twips (1/1440 of an inch) to centimeters, rounding the result as needed.

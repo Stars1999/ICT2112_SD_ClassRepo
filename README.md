@@ -5,7 +5,7 @@ To see document extraction as well as, table extraction , conversion to LaTeX an
 To start, 
 ensure that you are in the right directory 
 ```bash
-cd ICT2112_SD_ClassRepo
+cd ICT2112_SD_ClassRepo/ICT2106WebApp
 ```
 
 then run the application using 

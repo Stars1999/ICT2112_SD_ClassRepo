@@ -34,7 +34,7 @@ using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 
 namespace Utilities
 {
-	public class DocumentProcessors : IDocumentUpdateNotify
+	public class DocumentProcessor : IDocumentUpdateNotify
 	// :
 	// Iapi,
 	// iCreateNode,
@@ -53,7 +53,7 @@ namespace Utilities
 		public string jsonString { get; set; }
 		public JArray documentArray { get; set; }
 
-		public DocumentProcessors()
+		public DocumentProcessor()
 		{
 			_dbGateway = (IDocumentUpdate)new DocumentGateway_RDG();
 			_dbGateway.docxUpdate = this;
@@ -1440,7 +1440,7 @@ namespace Utilities
 
 		// Extracts layout and document content, serializes the combined data to JSON, writes the JSON to a file, and saves it to a database asynchronously via a DocumentControl instance.
 		public static async Task ToSaveJson(
-			DocumentProcessors documentControl,
+			DocumentProcessor documentControl,
 			string filePath,
 			string jsonOutputPath
 		)

@@ -1,22 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
 using ICT2106WebApp.mod1Grp3;
 using ICT2106WebApp.mod1grp4;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson; // Bson - Binary JSON
+
 // MongoDB packages
 using MongoDB.Driver;
-using Newtonsoft.Json; // For JsonConvert
-using Newtonsoft.Json.Linq; // Bson - Binary JSON
 using Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,7 +62,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-DocumentProcessor.RunMyProgram(database);
+RunMyProgram(database);
 await app.StartAsync();
 
 // Listen for SIGINT continuously
@@ -88,7 +76,6 @@ while (true)
 		Console.ResetColor();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
 		await documentFailSafe.runCrashRecovery(database,false);
-		// await ExtractContent.RunCrashRecovery(database);
 
 		Console.WriteLine("✅ Crash recovery done. Server still running.\n");
 	}
@@ -96,189 +83,163 @@ while (true)
 	await Task.Delay(100); // Prevent busy looping
 }
 
-// ✅ Extracts content from Word document
-public static class DocumentProcessor
+// Running whole program
+async static void RunMyProgram(IMongoDatabase database)
 {
-	// actual document processor process
+	// var documentControl = new DocumentControl();
+	string filePath = "Datarepository_zx_v4 - demo.docx"; // Change this to your actual file path
+	string jsonOutputPath = "output.json"; // File where JSON will be saved
 
-
-	// Running whole program
-	public async static void RunMyProgram(IMongoDatabase database)
+	using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 	{
-		// var documentControl = new DocumentControl();
-		string filePath = "Datarepository_zx_v4 - demo.docx"; // Change this to your actual file path
-		// string jsonOutputPath = "output.json"; // File where JSON will be saved
+		NodeManager nodeManager = new NodeManager();
+		TreeProcessor treeProcessor = new TreeProcessor(); 
+		DocumentProcessor documentProcessors;
+		CompositeNode rootnodehere = null;
+		bool isValid = false;
 
-		// getting the path
-		// string currentDir = Directory.GetCurrentDirectory();
-		// string filePath_full = Path.Combine(currentDir, filePath);
-		// **
-		// await documentControl.saveDocumentToDatabase(filePath);
-
-		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+		while (!isValid)
 		{
-			NodeManager nodeManager = new NodeManager();
-			TreeProcessor treeProcessor = new TreeProcessor(); 
-			DocumentProcessors documentProcessors;
-			CompositeNode rootnodehere = null;
-			bool isValid = false;
+			documentProcessors = new DocumentProcessor();
 
-			while (!isValid)
-			{
-				documentProcessors = new DocumentProcessors();
+			List<Object> documentContents = documentProcessors
+				.ParseDocument(filePath)
+				.Result;
 
-				List<Object> documentContents = documentProcessors
-					.ParseDocument(filePath)
-					// .ParseDocument(database, filePath)
-					.Result;
+			//ceate a list of nodes
+			List<AbstractNode> nodesList = nodeManager.CreateNodeList(documentContents);
+			rootnodehere = treeProcessor.CreateTree(nodesList);
 
-				//ceate a list of nodes
-				List<AbstractNode> nodesList = nodeManager.CreateNodeList(documentContents);
-				// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
-				rootnodehere = treeProcessor.CreateTree(nodesList);
-
-				Console.ForegroundColor = ConsoleColor.DarkCyan;
-				Console.WriteLine("\n\n############################## \nTree Validation\n\n");
-
-				List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
-				bool isContentValid = nodeManager.ValidateContentRecursive(
-					flattenedTree,
-					documentProcessors.documentArray,
-					0
-				);
-				if (!isContentValid)
-				{
-					Console.WriteLine("Content mismatch detected! Retrying...\n");
-					continue;
-				}
-
-				bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1);
-				if (!isValidStructure)
-				{
-					Console.WriteLine("Invalid tree structure detected. Retrying...\n");
-					continue;
-				}
-
-				Console.WriteLine("Tree content and structure are valid!");
-				isValid = true; // exit loop
-			}
-
-			var defaultColor = Console.ForegroundColor;
 			Console.ForegroundColor = ConsoleColor.DarkCyan;
-			Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
-			treeProcessor.PrintTreeContents(rootnodehere);
-			Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
-			treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
-			Console.ForegroundColor = defaultColor;
+			Console.WriteLine("\n\n############################## \nTree Validation\n\n");
 
-			// SAVE TREE TO MONGODB
-			await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
-
-			// // RETRIEVE TEE FROM MONGODB
-			AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
-			CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
-
-			if (mongoRootNode is CompositeNode compnode) // Use pattern matching
-			{
-				Console.WriteLine("mongoRootNode is a CompositeNode!");
-				mongoCompNode = compnode; // Assign to compNode
-				Console.WriteLine("Typecasted mongoRootNode from AbstractNode to CompositeNode!");
-			}
-			else
-				Console.WriteLine("mongoRootNode is not a CompositeNode!");
-			if (mongoCompNode != null)
-			{
-				// Console.WriteLine("Print out tree. Commented out for now\n");
-				Console.ForegroundColor = ConsoleColor.DarkYellow;
-				treeProcessor.PrintTreeContents(mongoCompNode);
-				treeProcessor.PrintTreeHierarchy(mongoCompNode, 0);
-				Console.ForegroundColor = defaultColor;
-			}
-			// END TREE
-
-
-			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
-
-			// NodeTraverser traverser = new NodeTraverser(rootnodehere);
-			// List<AbstractNode> traverseList = traverser.TraverseAllNodeTypes();
-
-			//=========================FOR PRINTING ALL TRAVERSE NODES (NOT PART OF FEATURES)============================//
-
-			INodeTraverser traverser = new NodeTraverser(rootnodehere);
-
-			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
-			Console.WriteLine("OFFIICALLY DOING JOEL GRP STUFF");
-			// Step 2: Convert abstract node to custom table entity (JOEL)
-			var tableOrganiser = new TableOrganiserManager();
-			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
-				tableAbstractNodes
+			List<AbstractNode> flattenedTree = treeProcessor.FlattenTree(rootnodehere);
+			bool isContentValid = nodeManager.ValidateContentRecursive(
+				flattenedTree,
+				documentProcessors.documentArray,
+				0
 			);
-
-			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
-			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
-			var tablePreprocessingManager = new TablePreprocessingManager();
-			tablePreprocessingManager.attach(rowTabularGateway_RDG);
-			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
-			List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
-				await tablePreprocessingManager.fixTableIntegrity(tables);
-
-			// Step 4: Convert tables to LaTeX (ANDREA)
-			var latexConversionManager = new TableLatexConversionManager();
-			latexConversionManager.attach(rowTabularGateway_RDG);
-
-			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
-			List<ICT2106WebApp.mod1grp4.Table> processedTables =
-				await latexConversionManager.convertToLatexAsync(cleanedTables);
-
-			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
-			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
-			// Environment.Exit(0);
-
-			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
-			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexStyleFailAsync(cleanedTables);
-
-			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
-			var tableValidationManager = new TableValidationManager();
-			var validationStatus = tableValidationManager.validateTableLatexOutput(
-				tableAbstractNodes,
-				processedTables
-			);
-
-			var processedTableManager = new ProcessedTableManager();
-			processedTableManager.attach(rowTabularGateway_RDG);
-			processedTableManager.logProcessingStatus(validationStatus);
-			await processedTableManager.slotProcessedTableToTree(processedTables, tableAbstractNodes);
-
-			Console.WriteLine("I WANT TO SEE SITI STUFF");
-
-			// Will prove for Siti as we traverse the nodes again after updating
-			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
-
-			// Save modified latex tree back to MongoDB (query)
-			await traverser.UpdateLatexDocument(rootnodehere);
-
-			ICompletedLatex completedLatex = new CompletedLatex();
-
-			// // // Retrieve the non-modified tree from MongoDB (for demo query)
-			// AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
-			// // CompositeNode originalMongo = null;
-			// CompositeNode originalTree = (CompositeNode)originalRootNode;
-			// if (originalTree != null)
-			// {
-			// 	treeProcessor.PrintTreeContents(originalTree);
-			// 	treeProcessor.PrintTreeHierarchy(originalTree, 0);
-			// }
-			
-			//Retrieve the Latex tree from MongoDB (for demo query)
-			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
-			CompositeNode latexMongo = (CompositeNode)latexRootNode;
-			if (latexMongo != null)
+			if (!isContentValid)
 			{
-				treeProcessor.PrintTreeContents(latexMongo);
-				treeProcessor.PrintTreeHierarchy(latexMongo, 0);
+				Console.WriteLine("Content mismatch detected! Retrying...\n");
+				continue;
 			}
 
-			Console.WriteLine("Program Main Flow COMPLETED");
+			bool isValidStructure = treeProcessor.ValidateTreeStructure(rootnodehere, -1);
+			if (!isValidStructure)
+			{
+				Console.WriteLine("Invalid tree structure detected. Retrying...\n");
+				continue;
+			}
+
+			Console.WriteLine("Tree content and structure are valid!");
+			isValid = true; // exit loop
 		}
+
+		var defaultColor = Console.ForegroundColor;
+		Console.ForegroundColor = ConsoleColor.DarkCyan;
+		Console.WriteLine("\n\n############################## \nPrint Tree Contents\n\n");
+		treeProcessor.PrintTreeContents(rootnodehere);
+		Console.WriteLine("\n\n############################## \nPrint Tree Hierarchy\n\n");
+		treeProcessor.PrintTreeHierarchy(rootnodehere, 0);
+		Console.ForegroundColor = defaultColor;
+
+		// SAVE TREE TO MONGODB
+		await treeProcessor.SaveTreeToDatabase(rootnodehere, "mergewithcommentedcode");
+
+		// // RETRIEVE TEE FROM MONGODB
+		AbstractNode mongoRootNode = await treeProcessor.retrieveTree();
+		CompositeNode mongoCompNode = null; // declare outside so it can be used outside of the if statement
+
+		if (mongoRootNode is CompositeNode compnode) // Use pattern matching
+		{
+			Console.WriteLine("mongoRootNode is a CompositeNode!");
+			mongoCompNode = compnode; // Assign to compNode
+			Console.WriteLine("Typecasted mongoRootNode from AbstractNode to CompositeNode!");
+		}
+		else
+			Console.WriteLine("mongoRootNode is not a CompositeNode!");
+		if (mongoCompNode != null)
+		{
+			Console.ForegroundColor = ConsoleColor.DarkYellow;
+			treeProcessor.PrintTreeContents(mongoCompNode);
+			treeProcessor.PrintTreeHierarchy(mongoCompNode, 0);
+			Console.ForegroundColor = defaultColor;
+		}
+		// END TREE PROCESSING
+
+		INodeTraverser traverser = new NodeTraverser(rootnodehere);
+
+		List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
+		Console.WriteLine("OFFIICALLY DOING JOEL GRP STUFF");
+		// Step 2: Convert abstract node to custom table entity (JOEL)
+		var tableOrganiser = new TableOrganiserManager();
+		List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
+			tableAbstractNodes
+		);
+
+		// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
+		var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+		var tablePreprocessingManager = new TablePreprocessingManager();
+		tablePreprocessingManager.attach(rowTabularGateway_RDG);
+		var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
+		List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
+			await tablePreprocessingManager.fixTableIntegrity(tables);
+
+		// Step 4: Convert tables to LaTeX (ANDREA)
+		var latexConversionManager = new TableLatexConversionManager();
+		latexConversionManager.attach(rowTabularGateway_RDG);
+
+		// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
+		List<ICT2106WebApp.mod1grp4.Table> processedTables =
+			await latexConversionManager.convertToLatexAsync(cleanedTables);
+
+		// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
+		// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
+		// Environment.Exit(0);
+
+		// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
+		// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexStyleFailAsync(cleanedTables);
+
+		// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
+		var tableValidationManager = new TableValidationManager();
+		var validationStatus = tableValidationManager.validateTableLatexOutput(
+			tableAbstractNodes,
+			processedTables
+		);
+
+		var processedTableManager = new ProcessedTableManager();
+		processedTableManager.attach(rowTabularGateway_RDG);
+		processedTableManager.logProcessingStatus(validationStatus);
+		await processedTableManager.slotProcessedTableToTree(processedTables, tableAbstractNodes);
+
+		// Will prove for Siti as we traverse the nodes again after updating
+		List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+
+		// Save modified latex tree back to MongoDB (query)
+		await traverser.UpdateLatexDocument(rootnodehere);
+
+		ICompletedLatex completedLatex = new CompletedLatex();
+
+		// // Retrieve the non-modified tree from MongoDB (for demo query)
+		// AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
+		// // CompositeNode originalMongo = null;
+		// CompositeNode originalTree = (CompositeNode)originalRootNode;
+		// if (originalTree != null)
+		// {
+		// 	treeProcessor.PrintTreeContents(originalTree);
+		// 	treeProcessor.PrintTreeHierarchy(originalTree, 0);
+		// }
+		
+		//Retrieve the Latex tree from MongoDB (for demo query)
+		AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
+		CompositeNode latexMongo = (CompositeNode)latexRootNode;
+		if (latexMongo != null)
+		{
+			treeProcessor.PrintTreeContents(latexMongo);
+			treeProcessor.PrintTreeHierarchy(latexMongo, 0);
+		}
+
+		Console.WriteLine("Program Main Flow COMPLETED");
 	}
 }

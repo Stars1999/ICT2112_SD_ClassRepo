@@ -228,7 +228,7 @@ namespace Utilities
 			var numberofMainNode = 0;
 			NodeManager nodeManager = new NodeManager();
 			// var documentControl = new DocumentControl();
-			var documentProcessor = new DocumentProcessors();
+			var documentProcessor = new DocumentProcessor();
 
 
 			List<AbstractNode> runListNodes = new List<AbstractNode>();
@@ -267,7 +267,7 @@ namespace Utilities
 									if (itemhere is Dictionary<string, object> stylingDictionary)
 									{
 										stylingList.Add(
-											DocumentProcessors.ConvertJsonElements(
+											DocumentProcessor.ConvertJsonElements(
 												stylingDictionary
 											)
 										);
@@ -314,7 +314,7 @@ namespace Utilities
 												)
 												{
 													stylingList.Add(
-														DocumentProcessors.ConvertJsonElements(
+														DocumentProcessor.ConvertJsonElements(
 															stylingDictionary
 														)
 													);

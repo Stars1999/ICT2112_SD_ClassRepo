@@ -74,7 +74,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		Console.WriteLine("Starting Document Processing with Crash Recovery");
 
 		// DocumentControl documentControl = new DocumentControl();
-		DocumentProcessors documentProcessor = new DocumentProcessors();
+		DocumentProcessor documentProcessor = new DocumentProcessor();
 		DocumentGateway_RDG documentGateway = new DocumentGateway_RDG();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
 		TreeProcessor treeProcessor = new TreeProcessor();
@@ -150,7 +150,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		if (!File.Exists(jsonOutputPath))
 		{
 			// await DocumentProcessors.ToSaveJson(documentProcessor, filePath, jsonOutputPath);
-			var documentProcessors = new DocumentProcessors();
+			var documentProcessors = new DocumentProcessor();
 
 			List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 		}
@@ -166,9 +166,9 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 				WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath_full, false)
 			)
 			{
-				var documentContents = DocumentProcessors.ExtractDocumentContents(wordDoc);
-				var rootElement = DocumentProcessors.elementRoot();
-				documentContents.Insert(0, DocumentProcessors.ExtractLayout(wordDoc));
+				var documentContents = DocumentProcessor.ExtractDocumentContents(wordDoc);
+				var rootElement = DocumentProcessor.elementRoot();
+				documentContents.Insert(0, DocumentProcessor.ExtractLayout(wordDoc));
 				documentContents.Insert(0, rootElement);
 
 				// List<AbstractNode> nodesList = NodeManager.CreateNodeList(documentContents);
@@ -467,10 +467,10 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 		{
 			// Get layout information
-			var layoutInfo = DocumentProcessors.GetDocumentLayout(wordDoc);
+			var layoutInfo = DocumentProcessor.GetDocumentLayout(wordDoc);
 
 			// Extract document contents
-			var documentContents = DocumentProcessors.ExtractDocumentContents(wordDoc);
+			var documentContents = DocumentProcessor.ExtractDocumentContents(wordDoc);
 
 			// Create layout element
 			var layoutElement = new Dictionary<string, object>

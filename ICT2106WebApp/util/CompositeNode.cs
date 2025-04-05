@@ -162,21 +162,38 @@ namespace Utilities
 		}
 
 		// Method to set or change node data
+		// public override void SetNodeData(
+		// 	string content,
+		// 	List<Dictionary<string, object>> styling,
+		// 	bool? converted = null
+		// )
+		// {
+		// 	// SetContent(content);
+		// 	// SetStyling(styling);
+		// 	// SetConverted(converted);
+		// 	if (content != null)
+		// 		SetContent(content);
+		// 	if (styling != null)
+		// 		SetStyling(styling);
+		// 	if (converted.HasValue)
+		// 		SetConverted(converted.Value);
+		// }
+
 		public override void SetNodeData(
-			string content,
-			List<Dictionary<string, object>> styling,
-			bool? converted = null
+			string content = null,
+			// List<Dictionary<string,object>> styling,
+			bool converted = false
 		)
 		{
-			// SetContent(content);
-			// SetStyling(styling);
-			// SetConverted(converted);
 			if (content != null)
-				SetContent(content);
-			if (styling != null)
-				SetStyling(styling);
-			if (converted.HasValue)
-				SetConverted(converted.Value);
+			{
+			SetContent(content);
+			}
+			if (converted != false)
+			{
+			SetConverted(converted);
+			}
+			// SetStyling(styling);
 		}
 	}
 }

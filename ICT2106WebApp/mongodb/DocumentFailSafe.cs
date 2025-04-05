@@ -1,6 +1,8 @@
 using System.Reflection;
 using DocumentFormat.OpenXml.Packaging;
 using ICT2106WebApp.mod1Grp3;
+using ICT2106WebApp.mod1grp4;
+using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using Utilities;
 
@@ -63,7 +65,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 		await _docxRetrieve.getJsonFile();
 	}
 
-	public async Task runCrashRecovery(bool hasRetried = false)
+	public async Task runCrashRecovery(IMongoDatabase database, bool hasRetried = false)
 	{
 		string filePath = "";
 		string outputPath = "";
@@ -127,7 +129,7 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 			await documentProcessor.saveDocumentToDatabase(filePath);
 
 			// Retry the process after saving
-			await runCrashRecovery(true);
+			await runCrashRecovery(database,true);
 			return;
 		}
 
@@ -223,12 +225,85 @@ public class DocumentFailSafe : ICrashRecoveryRetrieveNotify
 			);
 		}
 
-		INodeTraverser traverser = new NodeTraverser(mongoCompNode);
-		List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
+		// INodeTraverser traverser = new NodeTraverser(mongoCompNode);
+		// List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
+		 //added here onwards
+		 			INodeTraverser traverser = new NodeTraverser(mongoCompNode);
 
+			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
+			Console.WriteLine("OFFIICALLY DOING JOEL GRP STUFF");
+			// Step 2: Convert abstract node to custom table entity (JOEL)
+			var tableOrganiser = new TableOrganiserManager();
+			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
+				tableAbstractNodes
+			);
+
+			// Step 3: Preprocess tables (setup observer, recover backup tables if exist, fix table integrity) (JOEL)
+			var rowTabularGateway_RDG = new RowTabularGateway_RDG(database);
+			var tablePreprocessingManager = new TablePreprocessingManager();
+			tablePreprocessingManager.attach(rowTabularGateway_RDG);
+			var tables = await tablePreprocessingManager.recoverBackupTablesIfExist(tablesFromNode);
+			List<ICT2106WebApp.mod1grp4.Table> cleanedTables =
+				await tablePreprocessingManager.fixTableIntegrity(tables);
+
+			// Step 4: Convert tables to LaTeX (ANDREA)
+			var latexConversionManager = new TableLatexConversionManager();
+			latexConversionManager.attach(rowTabularGateway_RDG);
+
+			// NORMAL FLOW (this will prove for Andrea where she inserts the content to overleaf and jonathan for styling of table)
+			List<ICT2106WebApp.mod1grp4.Table> processedTables =
+				await latexConversionManager.convertToLatexAsync(cleanedTables);
+
+			// JOEL CRASH RECOVERY FLOW (we will convert 2 tables then stop the program, this will prove for Joel run crash flow first then normal again)
+			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexWithLimitAsync(cleanedTables, 2);
+			// Environment.Exit(0);
+
+			// HIEW TENG VALIDATION CHECK FLOW (we will omit out some stuff in the latex conversion, will prove for hiew teng where validation is wrong)
+			// List<ICT2106WebApp.mod1grp4.Table> processedTables = await latexConversionManager.convertToLatexStyleFailAsync(cleanedTables);
+
+			// Step 5: Post-processing (validation of latex, logging of validation status, convert processed tables to nodes to send over) (HIEW TENG AND SITI)
+			var tableValidationManager = new TableValidationManager();
+			var validationStatus = tableValidationManager.validateTableLatexOutput(
+				tableAbstractNodes,
+				processedTables
+			);
+
+			var processedTableManager = new ProcessedTableManager();
+			processedTableManager.attach(rowTabularGateway_RDG);
+			processedTableManager.logProcessingStatus(validationStatus);
+			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
+
+			Console.WriteLine("I WANT TO SEE SITI STUFF");
+
+			// Will prove for Siti as we traverse the nodes again after updating
+			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
+
+			// Save modified latex tree back to MongoDB (query)
+			await traverser.UpdateLatexDocument(mongoCompNode);
+
+			ICompletedLatex completedLatex = new CompletedLatex();
+
+			// // // Retrieve the non-modified tree from MongoDB (for demo query)
+			// AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
+			// // CompositeNode originalMongo = null;
+			// CompositeNode originalTree = (CompositeNode)originalRootNode;
+			// if (originalTree != null)
+			// {
+			// 	treeProcessor.PrintTreeContents(originalTree);
+			// 	treeProcessor.PrintTreeHierarchy(originalTree, 0);
+			// }
+			Console.WriteLine("ok can see all");
+			//Retrieve the Latex tree from MongoDB (for demo query)
+			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
+			CompositeNode latexMongo = (CompositeNode)latexRootNode;
+			if (latexMongo != null)
+			{
+				treeProcessor.PrintTreeContents(latexMongo);
+				treeProcessor.PrintTreeHierarchy(latexMongo, 0);
+			}
 		// Group 4 table processing logic goes here...
 
-		await traverser.UpdateLatexDocument(mongoCompNode);
+		// await traverser.UpdateLatexDocument(mongoCompNode);
 
 		Console.WriteLine("✅ Completed Error Recovery & Document Processing");
 	}

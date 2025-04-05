@@ -53,7 +53,7 @@ Console.CancelKeyPress += async (sender, eventArgs) =>
 
 	// await ExtractContent.RunCrashRecovery(database);
 	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-	await documentFailSafe.runCrashRecovery(false);
+	await documentFailSafe.runCrashRecovery(database,false);
 };
 var runCrashRecovery = false;
 Console.WriteLine("✅ App built successfully");
@@ -87,7 +87,7 @@ while (true)
 		Console.WriteLine("SIGINT received. Running crash recovery...\n");
 		Console.ResetColor();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-		await documentFailSafe.runCrashRecovery(false);
+		await documentFailSafe.runCrashRecovery(database,false);
 		// await ExtractContent.RunCrashRecovery(database);
 
 		Console.WriteLine("✅ Crash recovery done. Server still running.\n");
@@ -198,7 +198,7 @@ public static class DocumentProcessor
 			INodeTraverser traverser = new NodeTraverser(rootnodehere);
 
 			List<AbstractNode> tableAbstractNodes = traverser.TraverseNode("tables");
-
+			Console.WriteLine("OFFIICALLY DOING JOEL GRP STUFF");
 			// Step 2: Convert abstract node to custom table entity (JOEL)
 			var tableOrganiser = new TableOrganiserManager();
 			List<ICT2106WebApp.mod1grp4.Table> tablesFromNode = tableOrganiser.organiseTables(
@@ -240,6 +240,8 @@ public static class DocumentProcessor
 			processedTableManager.logProcessingStatus(validationStatus);
 			await processedTableManager.slotProcessedTableToTree(cleanedTables, tableAbstractNodes);
 
+			Console.WriteLine("I WANT TO SEE SITI STUFF");
+
 			// Will prove for Siti as we traverse the nodes again after updating
 			List<AbstractNode> endingTableAbstractNodes = traverser.TraverseNode("tables");
 
@@ -248,16 +250,16 @@ public static class DocumentProcessor
 
 			ICompletedLatex completedLatex = new CompletedLatex();
 
-			// // Retrieve the non-modified tree from MongoDB (for demo query)
-			AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
-			// CompositeNode originalMongo = null;
-			CompositeNode originalTree = (CompositeNode)originalRootNode;
-			if (originalTree != null)
-			{
-				treeProcessor.PrintTreeContents(originalTree);
-				treeProcessor.PrintTreeHierarchy(originalTree, 0);
-			}
-
+			// // // Retrieve the non-modified tree from MongoDB (for demo query)
+			// AbstractNode originalRootNode = await completedLatex.RetrieveUnmodifiedTree();
+			// // CompositeNode originalMongo = null;
+			// CompositeNode originalTree = (CompositeNode)originalRootNode;
+			// if (originalTree != null)
+			// {
+			// 	treeProcessor.PrintTreeContents(originalTree);
+			// 	treeProcessor.PrintTreeHierarchy(originalTree, 0);
+			// }
+			
 			//Retrieve the Latex tree from MongoDB (for demo query)
 			AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
 			CompositeNode latexMongo = (CompositeNode)latexRootNode;

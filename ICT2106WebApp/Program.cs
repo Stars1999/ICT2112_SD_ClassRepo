@@ -2,7 +2,6 @@ using DocumentFormat.OpenXml.Packaging;
 using ICT2106WebApp.mod1Grp3;
 using ICT2106WebApp.mod1grp4;
 using Microsoft.Extensions.Options;
-
 // MongoDB packages
 using MongoDB.Driver;
 
@@ -40,7 +39,7 @@ Console.CancelKeyPress += async (sender, eventArgs) =>
 
 	// await ExtractContent.RunCrashRecovery(database);
 	DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-	await documentFailSafe.runCrashRecovery(database,false);
+	await documentFailSafe.runCrashRecovery(false);
 };
 var runCrashRecovery = false;
 Console.WriteLine("✅ App built successfully");
@@ -74,7 +73,7 @@ while (true)
 		Console.WriteLine("SIGINT received. Running crash recovery...\n");
 		Console.ResetColor();
 		DocumentFailSafe documentFailSafe = new DocumentFailSafe();
-		await documentFailSafe.runCrashRecovery(database,false);
+		await documentFailSafe.runCrashRecovery(false);
 
 		Console.WriteLine("✅ Crash recovery done. Server still running.\n");
 	}
@@ -92,7 +91,7 @@ async static void RunMyProgram(IMongoDatabase database)
 	using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
 	{
 		NodeManager nodeManager = new NodeManager();
-		TreeProcessor treeProcessor = new TreeProcessor(); 
+		TreeProcessor treeProcessor = new TreeProcessor();
 		DocumentProcessor documentProcessors;
 		CompositeNode rootnodehere = null;
 		bool isValid = false;
@@ -101,9 +100,7 @@ async static void RunMyProgram(IMongoDatabase database)
 		{
 			documentProcessors = new DocumentProcessor();
 
-			List<Object> documentContents = documentProcessors
-				.ParseDocument(filePath)
-				.Result;
+			List<Object> documentContents = documentProcessors.ParseDocument(filePath).Result;
 
 			//ceate a list of nodes
 			List<AbstractNode> nodesList = nodeManager.CreateNodeList(documentContents);
@@ -229,7 +226,7 @@ async static void RunMyProgram(IMongoDatabase database)
 		// 	treeProcessor.PrintTreeContents(originalTree);
 		// 	treeProcessor.PrintTreeHierarchy(originalTree, 0);
 		// }
-		
+
 		//Retrieve the Latex tree from MongoDB (for demo query)
 		AbstractNode latexRootNode = await completedLatex.RetrieveLatexTree();
 		CompositeNode latexMongo = (CompositeNode)latexRootNode;

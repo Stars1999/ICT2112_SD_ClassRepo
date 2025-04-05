@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 
 // MongoDB packages
 using MongoDB.Driver;
-using Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 

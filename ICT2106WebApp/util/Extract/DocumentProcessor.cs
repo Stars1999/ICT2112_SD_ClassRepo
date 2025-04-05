@@ -10,7 +10,6 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using ICT2106WebApp.mod1Grp3;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson; // Bson - Binary JSON
 // MongoDB packages
@@ -18,7 +17,6 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Metadata;
-using Utilities;
 using MathOfficeMath = DocumentFormat.OpenXml.Math.OfficeMath;
 using MathRun = DocumentFormat.OpenXml.Math.Run;
 using MathText = DocumentFormat.OpenXml.Math.Text;
@@ -32,7 +30,7 @@ using WordStyle = DocumentFormat.OpenXml.Wordprocessing.Style;
 using WordText = DocumentFormat.OpenXml.Wordprocessing.Text;
 using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 
-namespace Utilities
+namespace ICT2106WebApp.mod1Grp3
 {
 	public class DocumentProcessor : IDocumentUpdateNotify
 	// :

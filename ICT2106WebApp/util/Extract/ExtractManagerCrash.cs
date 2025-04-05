@@ -17,10 +17,10 @@
 // using MongoDB.Driver;
 // using Newtonsoft.Json; // For JsonConvert
 // using Newtonsoft.Json.Linq; // Bson - Binary JSON
-// using Utilities;
+// using ICT2106WebApp.mod1Grp3;
 
 // // this file for jonathan
-// namespace Utilities
+// namespace ICT2106WebApp.mod1Grp3
 // {
 // 	//  document fail safe?
 // 	public static partial class ExtractContent

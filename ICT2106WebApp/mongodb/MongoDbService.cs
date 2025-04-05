@@ -1,24 +1,26 @@
 using MongoDB.Driver;
-
-public class MongoDbService
+namespace ICT2106WebApp.mod1Grp3
 {
-	private readonly IMongoDatabase _database;
-
-	public MongoDbService()
+	public class MongoDbService
 	{
-		string connectionString =
-			"mongodb+srv://2301915:eD8eNLFZtqLAZRdM@inf2112.e9qpy.mongodb.net/?appName=inf2112";
-		string databaseName = "inf2112";
+		private readonly IMongoDatabase _database;
 
-		var client = new MongoClient(connectionString);
-		_database = client.GetDatabase(databaseName);
-	}
+		public MongoDbService()
+		{
+			string connectionString =
+				"mongodb+srv://2301915:eD8eNLFZtqLAZRdM@inf2112.e9qpy.mongodb.net/?appName=inf2112";
+			string databaseName = "inf2112";
 
-	public IMongoDatabase Database => _database;
+			var client = new MongoClient(connectionString);
+			_database = client.GetDatabase(databaseName);
+		}
 
-	// use this to access collection e.g. GetCollection<Docx>("docxCollection")
-	public IMongoCollection<T> GetCollection<T>(string name)
-	{
-		return _database.GetCollection<T>(name);
+		public IMongoDatabase Database => _database;
+
+		// use this to access collection e.g. GetCollection<Docx>("docxCollection")
+		public IMongoCollection<T> GetCollection<T>(string name)
+		{
+			return _database.GetCollection<T>(name);
+		}
 	}
 }

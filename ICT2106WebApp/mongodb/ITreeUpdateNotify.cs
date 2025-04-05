@@ -1,6 +1,9 @@
 using Utilities;
 
-public interface ITreeUpdateNotify
+namespace ICT2106WebApp.mod1Grp3
 {
-	Task NotifyUpdatedTree(AbstractNode node);
+	public interface ITreeUpdateNotify
+	{
+		Task NotifyUpdatedTree(AbstractNode node);
+	}
 }

@@ -9,7 +9,7 @@ using System.Xml.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Utilities;
+using ICT2106WebApp.mod1Grp3;
 using WP = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 public class TableStructureManager : iTableStructure

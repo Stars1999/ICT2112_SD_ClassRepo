@@ -23,7 +23,7 @@ using WordStyle = DocumentFormat.OpenXml.Wordprocessing.Style;
 using WordText = DocumentFormat.OpenXml.Wordprocessing.Text;
 using WPStyleValues = DocumentFormat.OpenXml.Wordprocessing.StyleValues;
 
-namespace Utilities
+namespace ICT2106WebApp.mod1Grp3
 {
 	public class DocumentProcessor : IDocumentUpdateNotify
 	// :

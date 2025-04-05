@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes; // And this one
 using MongoDB.Driver;
 using Newtonsoft.Json;
 
-namespace Utilities
+namespace ICT2106WebApp.mod1Grp3
 {
 	[BsonDiscriminator("AbstractNode")]
 	[BsonKnownTypes(typeof(CompositeNode))]

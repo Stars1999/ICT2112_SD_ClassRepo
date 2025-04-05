@@ -4,7 +4,6 @@ using Microsoft.Extensions.Options;
 
 // MongoDB packages
 using MongoDB.Driver;
-using ICT2106WebApp.mod1Grp3;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -2,7 +2,6 @@ using ICT2106WebApp.mod1Grp3;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using ICT2106WebApp.mod1Grp3;
 
 public class DocumentGateway_RDG
 	: ICrashRecoveryRetrieve,

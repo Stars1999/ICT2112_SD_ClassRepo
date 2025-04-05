@@ -74,14 +74,8 @@ namespace Utilities
 
 		// Abstract methods
 		public abstract Dictionary<string, object> GetNodeData(string purpose);
-		// public abstract void SetNodeData(
-		// 	string content,
-		// 	// List<Dictionary<string, object>> styling,
-		// 	bool? converted
-		// );
 		public abstract void SetNodeData(
 			string content,
-			// List<Dictionary<string, object>> styling,
 			bool converted
 		);
 	}

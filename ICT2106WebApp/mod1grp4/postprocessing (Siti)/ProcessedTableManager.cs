@@ -42,9 +42,7 @@ namespace ICT2106WebApp.mod1grp4
 				if (tableNode != null)
 				{
 					// Set the LaTeX content for the table node
-					tableNode.SetNodeData(processedTable.latexOutput,true);
-					// tableNode.SetNodeData(processedTable.latexOutput, null, null);
-					// tableNode.SetNodeData(null, null, true); // Mark the table as converted
+					tableNode.SetNodeData(processedTable.latexOutput,true); // Mark the table as converted
 					Console.WriteLine(
 						$"Updated group 3 table node {tableNode.GetNodeData("nodeinfo")["nodeId"]} with updated LaTeX content. (SITI)"
 					);
@@ -58,8 +56,7 @@ namespace ICT2106WebApp.mod1grp4
 								== "row"
 						)
 						{
-							// rowCompositeNode.SetNodeData(null, null, true); // Mark the row as converted
-							rowCompositeNode.SetNodeData(null,true);
+							rowCompositeNode.SetNodeData(null,true); // Mark the row as converted
 
 							foreach (var cellNode in rowCompositeNode.GetChildren())
 							{
@@ -70,9 +67,7 @@ namespace ICT2106WebApp.mod1grp4
 										.ToString() == "cell"
 								)
 								{
-									// cellAbstractNode.SetNodeData(null, null, true); // Mark the cell as converted
 									cellAbstractNode.SetNodeData(null, true); // Mark the cell as converted
-
 								}
 							}
 						}
